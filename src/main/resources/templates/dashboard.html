@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mount Carmel School - Admin Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="top-navbar">
+        <div class="nav-left">
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="35" height="35">
+                        <defs>
+                            <linearGradient id="bookGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#f6c544;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#f39c12;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <rect x="8" y="10" width="34" height="32" fill="url(#bookGradient)" rx="2"/>
+                        <rect x="10" y="12" width="30" height="28" fill="#f39c12" rx="1"/>
+                        <path d="M 25 12 L 25 40" stroke="#f6c544" stroke-width="2"/>
+                        <polygon points="15,20 35,20 25,15" fill="#2d3748"/>
+                        <rect x="24" y="20" width="2" height="8" fill="#2d3748"/>
+                        <circle cx="26" cy="29" r="1.5" fill="#e74c3c"/>
+                    </svg>
+                </div>
+                <span class="school-name">Mount Carmel School</span>
+            </div>
+            <div class="session-info">
+                <span class="session-label">Current Session:</span>
+                <span class="session-value">2023-24</span>
+            </div>
+        </div>
+        
+        <div class="nav-right">
+            <div class="search-container">
+                <input type="text" placeholder="Search By Student Name..." class="search-input">
+                <button class="search-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="nav-icons">
+                <button class="icon-btn" title="USC">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </button>
+                <button class="icon-btn" title="Messages">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </button>
+                <button class="icon-btn" title="Calendar">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                </button>
+                <button class="icon-btn" title="Tasks">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 11 12 14 22 4"></polyline>
+                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                    </svg>
+                </button>
+                <button class="icon-btn" title="Notifications">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                </button>
+                <button class="icon-btn user-btn" title="Profile">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-menu">
+                <a href="#" class="menu-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    </svg>
+                    <span>Front Office</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    <span>Student Information</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="1" x2="12" y2="23"></line>
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
+                    <span>Fees Collection</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span>Income</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="1" x2="12" y2="23"></line>
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
+                    <span>Expenses</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <span>Attendance</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                    </svg>
+                    <span>Examinations</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                    </svg>
+                    <span>Academics</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                    <span>Human Resource</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <span>Communicate</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    <span>Download Center</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Warning Banner -->
+            <div class="warning-banner">
+                <strong>This development mode is for developer use only.</strong>
+                <p>This development mode is enabled in the main index.php file after finishing your tweak or development remove the development mode from your page.</p>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="quick-links">
+                <a href="#" class="quick-link">Your School Name</a>
+                <a href="#" class="quick-link">Current Selected Session</a>
+                <a href="#" class="quick-link">Google Map</a>
+                <a href="#" class="quick-link">Frequently used link</a>
+                <a href="#" class="quick-link">Currency changes become December 2023</a>
+                <a href="#" class="quick-link">Language switcher</a>
+                <a href="#" class="quick-link">Switch branch</a>
+                <a href="#" class="quick-link">Calendar</a>
+                <a href="#" class="quick-link">Chat</a>
+                <a href="#" class="quick-link">User Login and logout</a>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="stats-grid">
+                <div class="stat-card stat-card-green">
+                    <div class="stat-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-title">MONTHLY FEES COLLECTION</div>
+                        <div class="stat-value">$9,691.00</div>
+                    </div>
+                </div>
+
+                <div class="stat-card stat-card-pink">
+                    <div class="stat-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-title">MONTHLY EXPENSES</div>
+                        <div class="stat-value">$420.00</div>
+                    </div>
+                </div>
+
+                <div class="stat-card stat-card-cyan">
+                    <div class="stat-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-title">STUDENT</div>
+                        <div class="stat-value">18</div>
+                    </div>
+                </div>
+
+                <div class="stat-card stat-card-orange">
+                    <div class="stat-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-title">ADMIN</div>
+                        <div class="stat-value">1</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="charts-row">
+                <div class="chart-card">
+                    <h3 class="chart-title">Fees Collection & Expenses For December 2023</h3>
+                    <canvas id="feesChart"></canvas>
+                </div>
+
+                <div class="chart-card">
+                    <h3 class="chart-title">Students Present Today</h3>
+                    <div class="donut-chart-container">
+                        <canvas id="studentsPresentChart"></canvas>
+                        <div class="chart-legend">
+                            <div class="legend-item">
+                                <span class="legend-color" style="background: #48bb78;"></span>
+                                <span>Donation</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background: #f6ad55;"></span>
+                                <span>Fees</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background: #4299e1;"></span>
+                                <span>Miscellaneous</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-info-item">
+                            <span class="stat-label">CONVERTED LEADS</span>
+                            <span class="stat-number">0/0</span>
+                        </div>
+                        <div class="stat-info-item">
+                            <span class="stat-label">STAFF PRESENT TODAY</span>
+                            <span class="stat-number">0/4</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <h3 class="chart-title">Expense - December 2023</h3>
+                    <div class="donut-chart-container">
+                        <canvas id="expenseChart"></canvas>
+                        <div class="chart-legend">
+                            <div class="legend-item">
+                                <span class="legend-color" style="background: #9f7aea;"></span>
+                                <span>Electricity Bill</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background: #4299e1;"></span>
+                                <span>Miscellaneous</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background: #f6ad55;"></span>
+                                <span>Telephone Bill</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-info-item">
+                            <span class="stat-label">STUDENT PRESENT TODAY</span>
+                            <span class="stat-number">3/18</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Details Tables -->
+            <div class="details-row">
+                <div class="detail-table">
+                    <h3 class="table-title">Fees Overview</h3>
+                    <table>
+                        <tr>
+                            <td>UNPAID</td>
+                            <td class="text-right">$2,668.00</td>
+                        </tr>
+                        <tr>
+                            <td>PARTIAL</td>
+                            <td class="text-right">0%</td>
+                        </tr>
+                        <tr>
+                            <td>PAID</td>
+                            <td class="text-right">16.13%</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="detail-table">
+                    <h3 class="table-title">Enquiry Overview</h3>
+                    <table>
+                        <tr>
+                            <td>ACTIVE</td>
+                            <td class="text-right">0%</td>
+                        </tr>
+                        <tr>
+                            <td>WON</td>
+                            <td class="text-right">0%</td>
+                        </tr>
+                        <tr>
+                            <td>PASSIVE</td>
+                            <td class="text-right">0%</td>
+                        </tr>
+                        <tr>
+                            <td>LOST</td>
+                            <td class="text-right">0%</td>
+                        </tr>
+                        <tr>
+                            <td>DEAD</td>
+                            <td class="text-right">0%</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="detail-table">
+                    <h3 class="table-title">Library Overview</h3>
+                    <table>
+                        <tr>
+                            <td>ISSUED</td>
+                            <td class="text-right">3.3%</td>
+                        </tr>
+                        <tr>
+                            <td>RETURNED</td>
+                            <td class="text-right"></td>
+                        </tr>
+                        <tr>
+                            <td>ISSUED OUT OF 300</td>
+                            <td class="text-right">3.3%</td>
+                        </tr>
+                        <tr>
+                            <td>AVAILABLE OUT OF 300</td>
+                            <td class="text-right">96.5%</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="detail-table">
+                    <h3 class="table-title">Student Today Attendance</h3>
+                    <table>
+                        <tr>
+                            <td>PRESENT</td>
+                            <td class="text-right">5.56%</td>
+                        </tr>
+                        <tr>
+                            <td>LATE</td>
+                            <td class="text-right">5.56%</td>
+                        </tr>
+                        <tr>
+                            <td>ABSENT</td>
+                            <td class="text-right">11.11%</td>
+                        </tr>
+                        <tr>
+                            <td>HALF DAY</td>
+                            <td class="text-right">5.56%</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Fees Collection Chart -->
+            <div class="full-width-chart">
+                <h3 class="chart-title">Fees Collection & Expenses For Session 2023-24</h3>
+                <canvas id="feesCollectionYearChart"></canvas>
+            </div>
+
+            <!-- Calendar Section -->
+            <div class="calendar-section">
+                <div class="calendar-header">
+                    <button class="calendar-nav-btn">&lt;</button>
+                    <button class="calendar-nav-btn">&gt;</button>
+                    <button class="calendar-view-btn active">Today</button>
+                    <div class="calendar-title">December 20 – 26 2023</div>
+                    <div class="calendar-view-tabs">
+                        <button class="view-tab">Month</button>
+                        <button class="view-tab active">Week</button>
+                        <button class="view-tab">Day</button>
+                    </div>
+                </div>
+                <div class="calendar-grid">
+                    <div class="calendar-time-col">
+                        <div class="time-label">all-day</div>
+                        <div class="time-label">2am</div>
+                        <div class="time-label">3am</div>
+                        <div class="time-label">4am</div>
+                        <div class="time-label">5am</div>
+                        <div class="time-label">6am</div>
+                        <div class="time-label">7am</div>
+                        <div class="time-label">8am</div>
+                        <div class="time-label">9am</div>
+                        <div class="time-label">10am</div>
+                        <div class="time-label">11am</div>
+                        <div class="time-label">12pm</div>
+                        <div class="time-label">1pm</div>
+                        <div class="time-label">2pm</div>
+                        <div class="time-label">3pm</div>
+                        <div class="time-label">4pm</div>
+                        <div class="time-label">5pm</div>
+                        <div class="time-label">6pm</div>
+                        <div class="time-label">7pm</div>
+                        <div class="time-label">8pm</div>
+                        <div class="time-label">9pm</div>
+                        <div class="time-label">10pm</div>
+                        <div class="time-label">11pm</div>
+                    </div>
+                    <div class="calendar-days">
+                        <div class="calendar-day-header">Wed 12/20</div>
+                        <div class="calendar-day-header">Thu 12/21</div>
+                        <div class="calendar-day-header">Fri 12/22</div>
+                        <div class="calendar-day-header">Sat 12/21</div>
+                        <div class="calendar-day-header">Sun 12/24</div>
+                        <div class="calendar-day-header">Mon 12/25</div>
+                        <div class="calendar-day-header">Tue 12/26</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside class="right-sidebar">
+            <div class="user-card user-card-cyan">
+                <div class="user-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </div>
+                <div class="user-content">
+                    <div class="user-label">STUDENT</div>
+                    <div class="user-count">18</div>
+                </div>
+            </div>
+
+            <div class="user-card user-card-orange">
+                <div class="user-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                </div>
+                <div class="user-content">
+                    <div class="user-label">TEACHER</div>
+                    <div class="user-count">3</div>
+                </div>
+            </div>
+
+            <div class="user-card user-card-orange">
+                <div class="user-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="1" x2="12" y2="23"></line>
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
+                </div>
+                <div class="user-content">
+                    <div class="user-label">ACCOUNTANT</div>
+                    <div class="user-count">0</div>
+                </div>
+            </div>
+
+            <div class="user-card user-card-orange">
+                <div class="user-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                </div>
+                <div class="user-content">
+                    <div class="user-label">LIBRARIAN</div>
+                    <div class="user-count">0</div>
+                </div>
+            </div>
+
+            <div class="user-card user-card-orange">
+                <div class="user-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </div>
+                <div class="user-content">
+                    <div class="user-label">RECEPTIONIST</div>
+                    <div class="user-count">1</div>
+                </div>
+            </div>
+
+            <div class="user-card user-card-orange">
+                <div class="user-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5"></path>
+                        <path d="M2 12l10 5 10-5"></path>
+                    </svg>
+                </div>
+                <div class="user-content">
+                    <div class="user-label">SUPER ADMIN</div>
+                    <div class="user-count">1</div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>
