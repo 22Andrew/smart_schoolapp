@@ -63,20 +63,7 @@ src/
 
 ### Running the Application
 
-#### Option 1: Using Your IDE (Easiest Method)
-
-**IntelliJ IDEA / Eclipse / VS Code:**
-1. Open the project in your IDE
-2. Navigate to `src/main/java/com/kantechsolution/smart_school/SmartSchoolApplication.java`
-3. Right-click and select "Run"
-4. The application will start on `http://localhost:8080`
-
-#### Option 2: Using Maven Command Line
-```bash
-mvn spring-boot:run
-```
-
-#### Option 3: Using Maven Wrapper
+#### Using Maven Wrapper (Recommended)
 ```bash
 # On Windows
 .\mvnw.cmd spring-boot:run
@@ -85,9 +72,12 @@ mvn spring-boot:run
 ./mvnw spring-boot:run
 ```
 
-The application will start on `http://localhost:8080`
+#### Using Maven
+```bash
+mvn spring-boot:run
+```
 
-> 💡 **See [RUNNING_INSTRUCTIONS.md](RUNNING_INSTRUCTIONS.md) for detailed step-by-step instructions**
+The application will start on `http://localhost:8080`
 
 ## Accessing the Welcome Page
 

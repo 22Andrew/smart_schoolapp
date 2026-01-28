@@ -38,7 +38,7 @@
 
                 <h2 class="login-title">Admin Login</h2>
 
-                <form class="login-form" action="/perform-login" method="post">
+                <form class="login-form" th:action="@{/perform-login}" method="post">
                     <div class="form-group">
                         <input type="email" 
                                class="form-control" 
@@ -66,6 +66,9 @@
                             </svg>
                         </span>
                     </div>
+
+                    <!-- CSRF Token (automatically added by Thymeleaf) -->
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
                     <button type="submit" class="btn-signin">Sign In</button>
 
