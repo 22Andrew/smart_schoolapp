@@ -6,7 +6,7 @@ import lombok.*;
 import java.time.LocalDate;
 
 /**
- * AdmissionEnquiry entity for tracking admission enquiries
+ * AdmissionEnquiry entity representing admission enquiries
  */
 @Entity
 @Table(name = "admission_enquiries")
@@ -17,65 +17,52 @@ import java.time.LocalDate;
 @Builder
 public class AdmissionEnquiry extends BaseEntity {
     
-    @Column(name = "student_name", nullable = false, length = 100)
-    private String studentName;
+    @Column(nullable = false, length = 100)
+    private String name;
     
-    @Column(name = "date_of_birth")
-    private LocalDate dateOfBirth;
+    @Column(nullable = false, length = 20)
+    private String phone;
     
-    @Enumerated(EnumType.STRING)
-    @Column(length = 10)
-    private Gender gender;
-    
-    @Column(name = "parent_name", nullable = false, length = 100)
-    private String parentName;
-    
-    @Column(nullable = false, unique = true, length = 150)
+    @Column(length = 100)
     private String email;
-    
-    @Column(name = "phone_number", nullable = false, length = 20)
-    private String phoneNumber;
     
     @Column(length = 500)
     private String address;
     
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "grade_id")
-    private Grade interestedGrade;
+    @Column(length = 500)
+    private String description;
     
-    @Column(name = "previous_school", length = 200)
-    private String previousSchool;
-    
-    @Column(length = 1000)
-    private String message;
-    
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    @Builder.Default
-    private EnquiryStatus status = EnquiryStatus.NEW;
+    @Column(length = 500)
+    private String note;
     
     @Column(name = "enquiry_date", nullable = false)
-    private LocalDate enquiryDate;
+    private LocalDate date;
     
-    @Column(name = "follow_up_date")
+    @Column(name = "follow_up_date", nullable = false)
     private LocalDate followUpDate;
     
-    @Column(name = "admin_notes", length = 1000)
-    private String adminNotes;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", columnDefinition = "VARCHAR(20) NOT NULL", nullable = false)
+    @Builder.Default
+    private EnquiryStatus status = EnquiryStatus.ACTIVE;
     
-    public enum Gender {
-        MALE,
-        FEMALE,
-        OTHER
-    }
+    @Column(length = 100)
+    private String assigned;
+    
+    @Column(length = 100)
+    private String reference;
+    
+    @Column(nullable = false, length = 100)
+    private String source;
+    
+    @Column(name = "class_name", length = 50)
+    private String className;
+    
+    @Column(name = "child_count")
+    private Integer childCount;
     
     public enum EnquiryStatus {
-        NEW,
-        CONTACTED,
-        VISITED,
-        ENROLLED,
-        REJECTED,
-        NOT_INTERESTED,
-        FOLLOW_UP_REQUIRED
+        ACTIVE,
+        INACTIVE
     }
 }

@@ -22,6 +22,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/", "/home", "/css/**", "/js/**", "/images/**", 
                                "/about", "/features", "/contact", "/register").permitAll()
+                .requestMatchers("/api/**").authenticated()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
@@ -34,6 +35,9 @@ public class SecurityConfig {
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout")
                 .permitAll()
+            )
+            .csrf(csrf -> csrf
+                .ignoringRequestMatchers("/api/**")
             );
 
         return http.build();

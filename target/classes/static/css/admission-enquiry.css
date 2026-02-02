@@ -330,16 +330,205 @@
     cursor: not-allowed;
 }
 
+/* Admission Modal Styles */
+.admission-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.admission-modal.active {
+    display: flex;
+}
+
+.admission-modal-content {
+    background: #2c3e50;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 1200px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 10001;
+}
+
+.admission-modal .modal-header {
+    padding: 0.75rem 1.25rem;
+    border-bottom: 2px solid #34495e;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+    background: #000000;
+}
+
+.admission-modal .modal-title {
+    color: white;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.admission-modal .modal-body {
+    padding: 2rem;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.admission-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-row-modal {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+}
+
+.form-group-modal {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group-modal label {
+    color: white;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.form-input-modal,
+.form-select-modal {
+    background: #34495e;
+    border: 1px solid #4a5f7f;
+    color: white;
+    padding: 0.75rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    transition: border-color 0.3s;
+}
+
+.form-input-modal:focus,
+.form-select-modal:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+.form-select-modal option {
+    background: #34495e;
+    color: white;
+}
+
+.form-input-modal[type="date"]::-webkit-calendar-picker-indicator,
+.form-input-modal[type="number"]::-webkit-inner-spin-button,
+.form-input-modal[type="number"]::-webkit-outer-spin-button {
+    filter: invert(1);
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid #34495e;
+    margin-top: 1rem;
+}
+
+.btn-cancel,
+.btn-submit {
+    padding: 0.75rem 2rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s;
+}
+
+.btn-cancel {
+    background: #95a5a6;
+    color: white;
+}
+
+.btn-cancel:hover {
+    background: #7f8c8d;
+}
+
+.btn-submit {
+    background: #3498db;
+    color: white;
+}
+
+.btn-submit:hover {
+    background: #2980b9;
+}
+
+.btn-submit .btn-spinner {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 0.5rem;
+}
+
+.btn-submit:disabled {
+    cursor: not-allowed !important;
+    opacity: 0.7;
+}
+
 /* Responsive Design */
 @media (max-width: 1200px) {
     .form-row {
         grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .form-row-modal {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
 @media (max-width: 768px) {
     .form-row {
         grid-template-columns: 1fr;
+    }
+    
+    .form-row-modal {
+        grid-template-columns: 1fr;
+    }
+
+    .admission-modal {
+        padding: 1rem;
+    }
+
+    .admission-modal-content {
+        max-height: 95vh;
+    }
+
+    .admission-modal .modal-header {
+        padding: 1rem 1.5rem;
+    }
+
+    .admission-modal .modal-body {
+        padding: 1.5rem;
+    }
+
+    .modal-footer {
+        flex-direction: column;
+    }
+
+    .btn-cancel,
+    .btn-submit {
+        width: 100%;
     }
 
     .table-controls {

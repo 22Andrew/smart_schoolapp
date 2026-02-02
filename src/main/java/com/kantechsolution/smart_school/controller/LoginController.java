@@ -21,12 +21,6 @@ public class LoginController {
         return "dashboard";
     }
 
-    @GetMapping("/admission-enquiry")
-    public String admissionEnquiry(Model model) {
-        model.addAttribute("appName", "Smart School");
-        return "admission-enquiry";
-    }
-
     @PostMapping("/logout")
     public String logout(HttpSession session) {
         // Invalidate the session
