@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Postal Receive - Smart School</title>
+    <title>Complain - Smart School</title>
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
-    <link rel="stylesheet" th:href="@{/css/postal-receive.css}">
+    <link rel="stylesheet" th:href="@{/css/complain.css}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- SweetAlert2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -192,8 +192,8 @@
                         <a href="/visitors" class="submenu-item">Visitor Book</a>
                         <a href="/phone-call-log" class="submenu-item">Phone Call Log</a>
                         <a href="/dispatch" class="submenu-item">Postal Dispatch</a>
-                        <a href="/receive" class="submenu-item active">Postal Receive</a>
-                        <a href="/complain" class="submenu-item">Complain</a>
+                        <a href="/receive" class="submenu-item">Postal Receive</a>
+                        <a href="/complain" class="submenu-item active">Complain</a>
                         <a href="#" class="submenu-item">Setup Front Office</a>
                     </div>
                 </div>
@@ -479,37 +479,49 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="main-content postal-receive-page">
-            <div class="receive-container">
-                <!-- Left Panel: Add Postal Receive Form -->
-                <div class="add-receive-panel">
-                    <h2 class="panel-title">Add Postal Receive</h2>
-                    <form id="receiveForm">
-                        <input type="hidden" id="receiveId" name="id">
+        <main class="main-content complain-page">
+            <div class="complain-container">
+                <!-- Left Panel: Add Complain Form -->
+                <div class="add-complain-panel">
+                    <h2 class="panel-title">Add Complain</h2>
+                    <form id="complainForm">
+                        <input type="hidden" id="complainId" name="id">
                         
                         <div class="form-group">
-                            <label for="fromTitle">From Title <span class="required">*</span></label>
-                            <input type="text" id="fromTitle" name="fromTitle" class="form-control" required>
+                            <label for="complainType">Complaint Type <span class="required">*</span></label>
+                            <select id="complainType" name="complainType" class="form-control" required>
+                                <option value="">Select</option>
+                                <option value="Transport">Transport</option>
+                                <option value="Sports">Sports</option>
+                                <option value="Teacher">Teacher</option>
+                                <option value="Study">Study</option>
+                                <option value="Fees">Fees</option>
+                                <option value="Facilities">Facilities</option>
+                                <option value="Food">Food</option>
+                                <option value="Other">Other</option>
+                            </select>
                         </div>
                         
                         <div class="form-group">
-                            <label for="referenceNo">Reference No</label>
-                            <input type="text" id="referenceNo" name="referenceNo" class="form-control">
+                            <label for="source">Source <span class="required">*</span></label>
+                            <select id="source" name="source" class="form-control" required>
+                                <option value="">Select</option>
+                                <option value="Email">Email</option>
+                                <option value="Phone">Phone</option>
+                                <option value="In Person">In Person</option>
+                                <option value="Online">Online</option>
+                                <option value="Other">Other</option>
+                            </select>
                         </div>
                         
                         <div class="form-group">
-                            <label for="address">Address</label>
-                            <textarea id="address" name="address" class="form-control" rows="3"></textarea>
+                            <label for="complainBy">Complain By <span class="required">*</span></label>
+                            <input type="text" id="complainBy" name="complainBy" class="form-control" required>
                         </div>
                         
                         <div class="form-group">
-                            <label for="note">Note</label>
-                            <textarea id="note" name="note" class="form-control" rows="3"></textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="toTitle">To Title <span class="required">*</span></label>
-                            <input type="text" id="toTitle" name="toTitle" class="form-control" required>
+                            <label for="phone">Phone <span class="required">*</span></label>
+                            <input type="tel" id="phone" name="phone" class="form-control" required>
                         </div>
                         
                         <div class="form-group">
@@ -518,18 +530,35 @@
                         </div>
                         
                         <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea id="description" name="description" class="form-control" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="actionTaken">Action Taken</label>
+                            <textarea id="actionTaken" name="actionTaken" class="form-control" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="assigned">Assigned</label>
+                            <input type="text" id="assigned" name="assigned" class="form-control">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="note">Note</label>
+                            <textarea id="note" name="note" class="form-control" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
                             <label for="document">Attach Document</label>
-                            <div class="file-upload-container">
-                                <div class="file-upload-area" id="fileUploadArea">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                        <polyline points="17 8 12 3 7 8"></polyline>
-                                        <line x1="12" y1="3" x2="12" y2="15"></line>
-                                    </svg>
-                                    <span class="file-upload-text">Drag and drop a file here or click</span>
-                                </div>
+                            <div class="file-upload-area">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="17 8 12 3 7 8"></polyline>
+                                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                                </svg>
+                                <p>Drag and drop a file here or click</p>
                                 <input type="file" id="document" name="document" class="file-input" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
-                                <div id="fileName" class="file-name"></div>
                             </div>
                         </div>
                         
@@ -537,9 +566,9 @@
                     </form>
                 </div>
 
-                <!-- Right Panel: Postal Receive List -->
-                <div class="receive-list-panel">
-                    <h2 class="panel-title">Postal Receive List</h2>
+                <!-- Right Panel: Complain List -->
+                <div class="complain-list-panel">
+                    <h2 class="panel-title">Complaint List</h2>
                     
                     <div class="table-controls">
                         <div class="table-search">
@@ -573,12 +602,11 @@
                                     <polyline points="14 2 14 8 20 8"></polyline>
                                 </svg>
                             </button>
-                            <button class="icon-action-btn" id="pdfBtn" title="PDF">
+                            <button class="icon-action-btn" id="pdfBtn" title="Export to PDF">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                    <polyline points="14 2 14 8 20 8"></polyline>
-                                    <line x1="16" y1="13" x2="8" y2="13"></line>
-                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                                    <rect x="6" y="14" width="12" height="8"></rect>
                                 </svg>
                             </button>
                             <button class="icon-action-btn" id="printBtn" title="Print">
@@ -605,18 +633,22 @@
                                 <div class="dropdown-content">
                                     <label class="column-toggle-item">
                                         <input type="checkbox" class="column-toggle" data-column="0" checked>
-                                        <span>From Title</span>
+                                        <span>Complain #</span>
                                     </label>
                                     <label class="column-toggle-item">
                                         <input type="checkbox" class="column-toggle" data-column="1" checked>
-                                        <span>Reference No</span>
+                                        <span>Complaint Type</span>
                                     </label>
                                     <label class="column-toggle-item">
                                         <input type="checkbox" class="column-toggle" data-column="2" checked>
-                                        <span>To Title</span>
+                                        <span>Name</span>
                                     </label>
                                     <label class="column-toggle-item">
                                         <input type="checkbox" class="column-toggle" data-column="3" checked>
+                                        <span>Phone</span>
+                                    </label>
+                                    <label class="column-toggle-item">
+                                        <input type="checkbox" class="column-toggle" data-column="4" checked>
                                         <span>Date</span>
                                     </label>
                                 </div>
@@ -625,19 +657,20 @@
                     </div>
 
                     <div class="table-responsive">
-                        <table class="data-table" id="receiveTable">
+                        <table class="data-table" id="complainTable">
                             <thead>
                                 <tr>
-                                    <th>From Title</th>
-                                    <th>Reference No</th>
-                                    <th>To Title</th>
+                                    <th>Complain #</th>
+                                    <th>Complaint Type</th>
+                                    <th>Name</th>
+                                    <th>Phone</th>
                                     <th>Date</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody id="receiveTableBody">
+                            <tbody id="complainTableBody">
                                 <tr>
-                                    <td colspan="5" style="text-align: center; padding: 40px;">No receive records found</td>
+                                    <td colspan="6" style="text-align: center; padding: 40px;">No complain records found</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -831,6 +864,6 @@
     </div>
 
     <script th:src="@{/js/dashboard.js}"></script>
-    <script th:src="@{/js/postal-receive.js}"></script>
+    <script th:src="@{/js/complain.js}"></script>
 </body>
 </html>
