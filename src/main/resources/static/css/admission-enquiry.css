@@ -188,6 +188,70 @@
     border-color: #5a7fa0;
 }
 
+/* Column Visibility Dropdown */
+.table-actions {
+    position: relative;
+}
+
+.column-visibility-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 0.5rem;
+    background: #34495e;
+    border: 1px solid #4a5f7f;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    min-width: 200px;
+    display: none;
+}
+
+.column-visibility-dropdown.active {
+    display: block;
+}
+
+.dropdown-header {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #4a5f7f;
+    background: #2c3e50;
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.dropdown-content {
+    padding: 0.5rem 0;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.column-toggle-item {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    color: #ecf0f1;
+    font-size: 0.85rem;
+}
+
+.column-toggle-item:hover {
+    background: #3a4f65;
+}
+
+.column-toggle-item input[type="checkbox"] {
+    margin-right: 0.75rem;
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    accent-color: #3498db;
+}
+
+.column-toggle-item span {
+    user-select: none;
+}
+
 /* Data Table */
 .table-responsive {
     overflow-x: auto;

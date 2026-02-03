@@ -10,6 +10,10 @@
     <!-- SweetAlert2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Export Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
     <!-- Top Navigation Bar -->
@@ -185,7 +189,7 @@
                     </a>
                     <div class="submenu" id="submenu-front-office">
                         <a href="/admission-enquiry" class="submenu-item">Admission Enquiry</a>
-                        <a href="#" class="submenu-item">Visitor Book</a>
+                        <a href="/visitors" class="submenu-item">Visitor Book</a>
                         <a href="#" class="submenu-item">Phone Call Log</a>
                         <a href="#" class="submenu-item">Postal Dispatch</a>
                         <a href="#" class="submenu-item">Postal Receive</a>
@@ -942,26 +946,26 @@
                             <option value="100">100</option>
                             <option value="200">200</option>
                         </select>
-                        <button class="icon-action-btn" title="Copy">
+                        <button class="icon-action-btn" id="copyBtn" title="Copy">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                                 <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                             </svg>
                         </button>
-                        <button class="icon-action-btn" title="Excel">
+                        <button class="icon-action-btn" id="excelBtn" title="Excel">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                                 <polyline points="14 2 14 8 20 8"></polyline>
                                 <line x1="9" y1="15" x2="15" y2="15"></line>
                             </svg>
                         </button>
-                        <button class="icon-action-btn" title="CSV">
+                        <button class="icon-action-btn" id="csvBtn" title="CSV">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                                 <polyline points="14 2 14 8 20 8"></polyline>
                             </svg>
                         </button>
-                        <button class="icon-action-btn" title="PDF">
+                        <button class="icon-action-btn" id="pdfBtn" title="PDF">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                                 <polyline points="14 2 14 8 20 8"></polyline>
@@ -969,14 +973,14 @@
                                 <line x1="16" y1="17" x2="8" y2="17"></line>
                             </svg>
                         </button>
-                        <button class="icon-action-btn" title="Print">
+                        <button class="icon-action-btn" id="printBtn" title="Print">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <polyline points="6 9 6 2 18 2 18 9"></polyline>
                                 <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
                                 <rect x="6" y="14" width="12" height="8"></rect>
                             </svg>
                         </button>
-                        <button class="icon-action-btn" title="Column Visibility">
+                        <button class="icon-action-btn" id="columnVisibilityBtn" title="Column Visibility">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <rect x="3" y="3" width="7" height="7"></rect>
                                 <rect x="14" y="3" width="7" height="7"></rect>
@@ -984,6 +988,39 @@
                                 <rect x="3" y="14" width="7" height="7"></rect>
                             </svg>
                         </button>
+                        
+                        <!-- Column Visibility Dropdown -->
+                        <div class="column-visibility-dropdown" id="columnVisibilityDropdown">
+                            <div class="dropdown-header">
+                                <span>Toggle Columns</span>
+                            </div>
+                            <div class="dropdown-content">
+                                <label class="column-toggle-item">
+                                    <input type="checkbox" class="column-toggle" data-column="0" checked>
+                                    <span>Name</span>
+                                </label>
+                                <label class="column-toggle-item">
+                                    <input type="checkbox" class="column-toggle" data-column="1" checked>
+                                    <span>Phone</span>
+                                </label>
+                                <label class="column-toggle-item">
+                                    <input type="checkbox" class="column-toggle" data-column="2" checked>
+                                    <span>Source</span>
+                                </label>
+                                <label class="column-toggle-item">
+                                    <input type="checkbox" class="column-toggle" data-column="3" checked>
+                                    <span>Enquiry Date</span>
+                                </label>
+                                <label class="column-toggle-item">
+                                    <input type="checkbox" class="column-toggle" data-column="4" checked>
+                                    <span>Next Follow Up Date</span>
+                                </label>
+                                <label class="column-toggle-item">
+                                    <input type="checkbox" class="column-toggle" data-column="5" checked>
+                                    <span>Status</span>
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -1399,7 +1436,7 @@
                         </div>
                         <ul class="category-links">
                             <li><a href="/admission-enquiry">Admission Enquiry</a></li>
-                            <li><a href="#">Visitor Book</a></li>
+                            <li><a href="/visitors">Visitor Book</a></li>
                             <li><a href="#">Phone Call Log</a></li>
                             <li><a href="#">Postal Dispatch</a></li>
                             <li><a href="#">Postal Receive</a></li>
@@ -2529,6 +2566,493 @@
                 if (e.key === 'Escape' && admissionModal.classList.contains('active')) {
                     closeModal();
                 }
+            });
+
+            // ===== SEARCH FUNCTIONALITY =====
+            
+            // 1. Criteria Form Search (Filter functionality)
+            const criteriaForm = document.querySelector('.criteria-form');
+            const classSelect = document.getElementById('class');
+            const sourceSelect = document.getElementById('source');
+            const enquiryFromDate = document.getElementById('enquiryFromDate');
+            const enquiryToDate = document.getElementById('enquiryToDate');
+            const statusSelect = document.getElementById('status');
+            
+            if (criteriaForm) {
+                criteriaForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Get filter values
+                    const classValue = classSelect.value.toLowerCase();
+                    const sourceValue = sourceSelect.value.toLowerCase();
+                    const fromDate = enquiryFromDate.value ? new Date(enquiryFromDate.value) : null;
+                    const toDate = enquiryToDate.value ? new Date(enquiryToDate.value) : null;
+                    const statusValue = statusSelect.value.toLowerCase();
+                    
+                    // Get all table rows
+                    const tableRows = document.querySelectorAll('.data-table tbody tr');
+                    let visibleCount = 0;
+                    
+                    tableRows.forEach(row => {
+                        let shouldShow = true;
+                        
+                        // Get row data
+                        const cells = row.querySelectorAll('td');
+                        if (cells.length < 6) return;
+                        
+                        const rowName = cells[0].textContent.trim();
+                        const rowPhone = cells[1].textContent.trim();
+                        const rowSource = cells[2].textContent.trim().toLowerCase();
+                        const rowDateStr = cells[3].textContent.trim();
+                        const rowStatus = cells[5].textContent.trim().toLowerCase();
+                        
+                        // Parse row date (format: MM/DD/YYYY)
+                        let rowDate = null;
+                        if (rowDateStr) {
+                            const dateParts = rowDateStr.split('/');
+                            if (dateParts.length === 3) {
+                                rowDate = new Date(dateParts[2], dateParts[0] - 1, dateParts[1]);
+                            }
+                        }
+                        
+                        // Apply filters
+                        // Note: Class filter would need class data in the table to work properly
+                        // Currently the table doesn't have a class column, so we skip class filtering
+                        
+                        // Filter by source
+                        if (sourceValue && !rowSource.includes(sourceValue)) {
+                            shouldShow = false;
+                        }
+                        
+                        // Filter by date range
+                        if (fromDate && rowDate && rowDate < fromDate) {
+                            shouldShow = false;
+                        }
+                        if (toDate && rowDate && rowDate > toDate) {
+                            shouldShow = false;
+                        }
+                        
+                        // Filter by status
+                        if (statusValue && statusValue !== rowStatus) {
+                            shouldShow = false;
+                        }
+                        
+                        // Show/hide row
+                        if (shouldShow) {
+                            row.style.display = '';
+                            visibleCount++;
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                    
+                    // Update showing info
+                    const showingInfo = document.querySelector('.showing-info');
+                    if (showingInfo) {
+                        const totalRows = tableRows.length;
+                        showingInfo.textContent = `Showing 1 to ${visibleCount} of ${totalRows} entries (filtered)`;
+                    }
+                });
+            }
+            
+            // 2. Table Search Input (Real-time search)
+            const tableSearchInput = document.querySelector('.table-search-input');
+            
+            if (tableSearchInput) {
+                tableSearchInput.addEventListener('input', function(e) {
+                    const searchTerm = e.target.value.toLowerCase().trim();
+                    const tableRows = document.querySelectorAll('.data-table tbody tr');
+                    let visibleCount = 0;
+                    
+                    tableRows.forEach(row => {
+                        // Get all cell text content
+                        const rowText = Array.from(row.querySelectorAll('td'))
+                            .map(cell => cell.textContent.trim().toLowerCase())
+                            .join(' ');
+                        
+                        // Check if search term is found in any cell
+                        if (rowText.includes(searchTerm)) {
+                            row.style.display = '';
+                            visibleCount++;
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                    
+                    // Update showing info
+                    const showingInfo = document.querySelector('.showing-info');
+                    if (showingInfo) {
+                        const totalRows = tableRows.length;
+                        if (searchTerm) {
+                            showingInfo.textContent = `Showing 1 to ${visibleCount} of ${totalRows} entries (filtered)`;
+                        } else {
+                            showingInfo.textContent = `Showing 1 to ${visibleCount} of ${totalRows} entries`;
+                        }
+                    }
+                });
+            }
+
+            // ===== EXPORT FUNCTIONALITY =====
+            
+            // Helper function to get visible table data (respects search/filter)
+            function getTableData() {
+                const table = document.querySelector('.data-table');
+                const headers = [];
+                const data = [];
+                
+                // Get headers (excluding Action column)
+                const headerCells = table.querySelectorAll('thead th');
+                headerCells.forEach((th, index) => {
+                    if (index < headerCells.length - 1) { // Skip last column (Action)
+                        headers.push(th.textContent.trim());
+                    }
+                });
+                
+                // Get visible rows data (excluding Action column)
+                const rows = table.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    // Only get data from visible rows
+                    if (row.style.display !== 'none') {
+                        const rowData = [];
+                        const cells = row.querySelectorAll('td');
+                        cells.forEach((cell, index) => {
+                            if (index < cells.length - 1) { // Skip last column (Action)
+                                rowData.push(cell.textContent.trim());
+                            }
+                        });
+                        data.push(rowData);
+                    }
+                });
+                
+                return { headers, data };
+            }
+            
+            // 1. Copy to Clipboard
+            const copyBtn = document.getElementById('copyBtn');
+            if (copyBtn) {
+                copyBtn.addEventListener('click', function() {
+                    const { headers, data } = getTableData();
+                    
+                    // Create text format
+                    let text = headers.join('\t') + '\n';
+                    data.forEach(row => {
+                        text += row.join('\t') + '\n';
+                    });
+                    
+                    // Copy to clipboard
+                    navigator.clipboard.writeText(text).then(() => {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Copied!',
+                            text: 'Table data copied to clipboard',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    }).catch(err => {
+                        console.error('Failed to copy:', err);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Failed to copy data to clipboard',
+                            confirmButtonColor: '#ef4444'
+                        });
+                    });
+                });
+            }
+            
+            // 2. Export to Excel
+            const excelBtn = document.getElementById('excelBtn');
+            if (excelBtn) {
+                excelBtn.addEventListener('click', function() {
+                    const { headers, data } = getTableData();
+                    
+                    // Create worksheet data
+                    const wsData = [headers, ...data];
+                    
+                    // Create workbook and worksheet
+                    const wb = XLSX.utils.book_new();
+                    const ws = XLSX.utils.aoa_to_sheet(wsData);
+                    
+                    // Set column widths
+                    ws['!cols'] = headers.map(() => ({ wch: 20 }));
+                    
+                    // Add worksheet to workbook
+                    XLSX.utils.book_append_sheet(wb, ws, 'Admission Enquiry');
+                    
+                    // Generate file name with timestamp
+                    const timestamp = new Date().toISOString().split('T')[0];
+                    const fileName = `Admission_Enquiry_${timestamp}.xlsx`;
+                    
+                    // Save file
+                    XLSX.writeFile(wb, fileName);
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Exported!',
+                        text: 'Excel file downloaded successfully',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                });
+            }
+            
+            // 3. Export to CSV
+            const csvBtn = document.getElementById('csvBtn');
+            if (csvBtn) {
+                csvBtn.addEventListener('click', function() {
+                    const { headers, data } = getTableData();
+                    
+                    // Create CSV content
+                    let csvContent = headers.join(',') + '\n';
+                    data.forEach(row => {
+                        // Escape commas and quotes in data
+                        const escapedRow = row.map(cell => {
+                            if (cell.includes(',') || cell.includes('"') || cell.includes('\n')) {
+                                return `"${cell.replace(/"/g, '""')}"`;
+                            }
+                            return cell;
+                        });
+                        csvContent += escapedRow.join(',') + '\n';
+                    });
+                    
+                    // Create blob and download
+                    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                    const link = document.createElement('a');
+                    const url = URL.createObjectURL(blob);
+                    
+                    const timestamp = new Date().toISOString().split('T')[0];
+                    const fileName = `Admission_Enquiry_${timestamp}.csv`;
+                    
+                    link.setAttribute('href', url);
+                    link.setAttribute('download', fileName);
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Exported!',
+                        text: 'CSV file downloaded successfully',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                });
+            }
+            
+            // 4. Export to PDF
+            const pdfBtn = document.getElementById('pdfBtn');
+            if (pdfBtn) {
+                pdfBtn.addEventListener('click', function() {
+                    const { headers, data } = getTableData();
+                    
+                    // Initialize jsPDF
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF();
+                    
+                    // Add title
+                    doc.setFontSize(16);
+                    doc.text('Admission Enquiry Report', 14, 15);
+                    
+                    // Add date
+                    doc.setFontSize(10);
+                    const currentDate = new Date().toLocaleDateString();
+                    doc.text(`Generated on: ${currentDate}`, 14, 22);
+                    
+                    // Add table
+                    doc.autoTable({
+                        head: [headers],
+                        body: data,
+                        startY: 28,
+                        theme: 'grid',
+                        headStyles: {
+                            fillColor: [44, 62, 80],
+                            textColor: [255, 255, 255],
+                            fontStyle: 'bold'
+                        },
+                        styles: {
+                            fontSize: 9,
+                            cellPadding: 3
+                        },
+                        columnStyles: {
+                            0: { cellWidth: 30 },
+                            1: { cellWidth: 25 },
+                            2: { cellWidth: 30 },
+                            3: { cellWidth: 25 },
+                            4: { cellWidth: 25 },
+                            5: { cellWidth: 20 }
+                        }
+                    });
+                    
+                    // Save PDF
+                    const timestamp = new Date().toISOString().split('T')[0];
+                    const fileName = `Admission_Enquiry_${timestamp}.pdf`;
+                    doc.save(fileName);
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Exported!',
+                        text: 'PDF file downloaded successfully',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                });
+            }
+            
+            // 5. Print Table
+            const printBtn = document.getElementById('printBtn');
+            if (printBtn) {
+                printBtn.addEventListener('click', function() {
+                    const { headers, data } = getTableData();
+                    
+                    // Create print window content
+                    let printContent = `
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <title>Admission Enquiry - Print</title>
+                            <style>
+                                @media print {
+                                    @page {
+                                        size: landscape;
+                                        margin: 1cm;
+                                    }
+                                }
+                                body {
+                                    font-family: Arial, sans-serif;
+                                    margin: 20px;
+                                }
+                                h1 {
+                                    color: #2c3e50;
+                                    margin-bottom: 10px;
+                                }
+                                .print-date {
+                                    color: #7f8c8d;
+                                    margin-bottom: 20px;
+                                    font-size: 14px;
+                                }
+                                table {
+                                    width: 100%;
+                                    border-collapse: collapse;
+                                    margin-top: 20px;
+                                }
+                                th, td {
+                                    border: 1px solid #ddd;
+                                    padding: 12px;
+                                    text-align: left;
+                                }
+                                th {
+                                    background-color: #2c3e50;
+                                    color: white;
+                                    font-weight: bold;
+                                }
+                                tr:nth-child(even) {
+                                    background-color: #f9f9f9;
+                                }
+                                tr:hover {
+                                    background-color: #f5f5f5;
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <h1>Admission Enquiry Report</h1>
+                            <div class="print-date">Generated on: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</div>
+                            <table>
+                                <thead>
+                                    <tr>
+                    `;
+                    
+                    // Add headers
+                    headers.forEach(header => {
+                        printContent += `<th>${header}</th>`;
+                    });
+                    
+                    printContent += `
+                                    </tr>
+                                </thead>
+                                <tbody>
+                    `;
+                    
+                    // Add data rows
+                    data.forEach(row => {
+                        printContent += '<tr>';
+                        row.forEach(cell => {
+                            printContent += `<td>${cell}</td>`;
+                        });
+                        printContent += '</tr>';
+                    });
+                    
+                    printContent += `
+                                </tbody>
+                            </table>
+                        </body>
+                        </html>
+                    `;
+                    
+                    // Open print window
+                    const printWindow = window.open('', '_blank');
+                    printWindow.document.write(printContent);
+                    printWindow.document.close();
+                    
+                    // Wait for content to load, then print
+                    printWindow.onload = function() {
+                        printWindow.print();
+                    };
+                });
+            }
+
+            // ===== COLUMN VISIBILITY FUNCTIONALITY =====
+            
+            const columnVisibilityBtn = document.getElementById('columnVisibilityBtn');
+            const columnVisibilityDropdown = document.getElementById('columnVisibilityDropdown');
+            const columnToggles = document.querySelectorAll('.column-toggle');
+            
+            // Toggle dropdown visibility
+            if (columnVisibilityBtn) {
+                columnVisibilityBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    columnVisibilityDropdown.classList.toggle('active');
+                });
+            }
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (columnVisibilityDropdown && !columnVisibilityDropdown.contains(e.target) && e.target !== columnVisibilityBtn) {
+                    columnVisibilityDropdown.classList.remove('active');
+                }
+            });
+            
+            // Prevent dropdown from closing when clicking inside it
+            if (columnVisibilityDropdown) {
+                columnVisibilityDropdown.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            }
+            
+            // Handle column visibility toggle
+            columnToggles.forEach(toggle => {
+                toggle.addEventListener('change', function() {
+                    const columnIndex = parseInt(this.getAttribute('data-column'));
+                    const isVisible = this.checked;
+                    
+                    // Get the table
+                    const table = document.querySelector('.data-table');
+                    
+                    // Toggle header cell
+                    const headerCells = table.querySelectorAll('thead th');
+                    if (headerCells[columnIndex]) {
+                        headerCells[columnIndex].style.display = isVisible ? '' : 'none';
+                    }
+                    
+                    // Toggle body cells in all rows
+                    const rows = table.querySelectorAll('tbody tr');
+                    rows.forEach(row => {
+                        const cells = row.querySelectorAll('td');
+                        if (cells[columnIndex]) {
+                            cells[columnIndex].style.display = isVisible ? '' : 'none';
+                        }
+                    });
+                });
             });
         });
     </script>

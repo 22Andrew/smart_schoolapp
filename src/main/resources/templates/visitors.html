@@ -3,10 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mount Carmel School - Admin Dashboard</title>
+    <title>Visitor List - Smart School</title>
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/visitors.css}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Export Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
     <!-- Top Navigation Bar -->
@@ -44,7 +51,7 @@
                 <span class="session-value">2023-24</span>
             </div>
         </div>
-        
+
         <div class="nav-right">
             <div class="search-container">
                 <input type="text" placeholder="Search By Student Name..." class="search-input">
@@ -55,7 +62,7 @@
                     </svg>
                 </button>
             </div>
-            
+
             <div class="nav-icons">
                 <button class="icon-btn" title="Currency">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -95,7 +102,7 @@
                             <circle cx="12" cy="7" r="4"></circle>
                         </svg>
                     </button>
-                    
+
                     <!-- Profile Dropdown -->
                     <div class="profile-dropdown" id="profileDropdown">
                         <div class="profile-dropdown-header">
@@ -858,441 +865,301 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="main-content">
-            <!-- Top Summary Boxes -->
-            <div class="mini-stats">
-                <div class="mini-stat">
-                    <div class="mini-stat-title">FEES AWAITING PAYMENT</div>
-                    <div class="mini-stat-value">5/31</div>
-                </div>
-                <div class="mini-stat">
-                    <div class="mini-stat-title">CONVERTED LEADS</div>
-                    <div class="mini-stat-value">0/0</div>
-                </div>
-                <div class="mini-stat">
-                    <div class="mini-stat-title">STAFF PRESENT TODAY</div>
-                    <div class="mini-stat-value">0/4</div>
-                </div>
-                <div class="mini-stat">
-                    <div class="mini-stat-title">STUDENT PRESENT TODAY</div>
-                    <div class="mini-stat-value">3/18</div>
-                </div>
-            </div>
-
-            <!-- Statistics Cards -->
-            <div class="stats-grid">
-                <div class="stat-card stat-card-green">
-                    <div class="stat-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="12" y1="1" x2="12" y2="23"></line>
-                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+        <main class="main-content visitors-page">
+            <!-- Visitor List Section -->
+            <section class="table-section">
+                <div class="table-header">
+                    <h2 class="section-title">Visitor List</h2>
+                    <button class="btn-add" id="addVisitorBtn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
                         </svg>
-                    </div>
-                    <div class="stat-content">
-                        <div class="stat-title">MONTHLY FEES COLLECTION</div>
-                        <div class="stat-value">$9,691.00</div>
-                    </div>
-                </div>
-
-                <div class="stat-card stat-card-pink">
-                    <div class="stat-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-                        </svg>
-                    </div>
-                    <div class="stat-content">
-                        <div class="stat-title">MONTHLY EXPENSES</div>
-                        <div class="stat-value">$420.00</div>
-                    </div>
-                </div>
-
-                <div class="stat-card stat-card-cyan">
-                    <div class="stat-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                    </div>
-                    <div class="stat-content">
-                        <div class="stat-title">STUDENT</div>
-                        <div class="stat-value">18</div>
-                    </div>
-                </div>
-
-                <div class="stat-card stat-card-orange">
-                    <div class="stat-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="9" cy="7" r="4"></circle>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                        </svg>
-                    </div>
-                    <div class="stat-content">
-                        <div class="stat-title">ADMIN</div>
-                        <div class="stat-value">1</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Charts Grid (matches screenshot layout) -->
-            <div class="charts-grid charts-grid-2">
-                <div class="chart-card chart-card-tall">
-                    <h3 class="chart-title">Fees Collection & Expenses For December 2023</h3>
-                    <div class="chart-canvas-wrap">
-                        <canvas id="feesChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="chart-card chart-card-tall">
-                    <h3 class="chart-title">Income - December 2023</h3>
-                    <div class="donut-chart-container">
-                        <canvas id="studentsPresentChart"></canvas>
-                        <div class="chart-legend">
-                            <div class="legend-item">
-                                <span class="legend-color" style="background: #48bb78;"></span>
-                                <span>Donation</span>
-                            </div>
-                            <div class="legend-item">
-                                <span class="legend-color" style="background: #f6ad55;"></span>
-                                <span>Rent</span>
-                            </div>
-                            <div class="legend-item">
-                                <span class="legend-color" style="background: #4299e1;"></span>
-                                <span>Miscellaneous</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="charts-grid charts-grid-2">
-                <div class="chart-card chart-card-tall">
-                    <h3 class="chart-title">Fees Collection & Expenses For Session 2023-24</h3>
-                    <div class="chart-canvas-wrap chart-canvas-wrap-lg">
-                        <canvas id="feesCollectionYearChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="chart-card chart-card-tall">
-                    <h3 class="chart-title">Expense - December 2023</h3>
-                    <div class="donut-chart-container">
-                        <canvas id="expenseChart"></canvas>
-                        <div class="chart-legend">
-                            <div class="legend-item">
-                                <span class="legend-color" style="background: #9f7aea;"></span>
-                                <span>Electricity Bill</span>
-                            </div>
-                            <div class="legend-item">
-                                <span class="legend-color" style="background: #4299e1;"></span>
-                                <span>Miscellaneous</span>
-                            </div>
-                            <div class="legend-item">
-                                <span class="legend-color" style="background: #f6ad55;"></span>
-                                <span>Telephone Bill</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Details Tables -->
-            <div class="details-row">
-                <div class="detail-table">
-                    <h3 class="table-title">Fees Overview</h3>
-                    <table>
-                        <tr>
-                            <td>UNPAID</td>
-                            <td class="text-right">$2,668.00</td>
-                        </tr>
-                        <tr>
-                            <td>PARTIAL</td>
-                            <td class="text-right">0%</td>
-                        </tr>
-                        <tr>
-                            <td>PAID</td>
-                            <td class="text-right">16.13%</td>
-                        </tr>
-                    </table>
-                </div>
-
-                <div class="detail-table">
-                    <h3 class="table-title">Enquiry Overview</h3>
-                    <table>
-                        <tr>
-                            <td>ACTIVE</td>
-                            <td class="text-right">0%</td>
-                        </tr>
-                        <tr>
-                            <td>WON</td>
-                            <td class="text-right">0%</td>
-                        </tr>
-                        <tr>
-                            <td>PASSIVE</td>
-                            <td class="text-right">0%</td>
-                        </tr>
-                        <tr>
-                            <td>LOST</td>
-                            <td class="text-right">0%</td>
-                        </tr>
-                        <tr>
-                            <td>DEAD</td>
-                            <td class="text-right">0%</td>
-                        </tr>
-                    </table>
-                </div>
-
-                <div class="detail-table">
-                    <h3 class="table-title">Library Overview</h3>
-                    <table>
-                        <tr>
-                            <td>ISSUED</td>
-                            <td class="text-right">3.3%</td>
-                        </tr>
-                        <tr>
-                            <td>RETURNED</td>
-                            <td class="text-right"></td>
-                        </tr>
-                        <tr>
-                            <td>ISSUED OUT OF 300</td>
-                            <td class="text-right">3.3%</td>
-                        </tr>
-                        <tr>
-                            <td>AVAILABLE OUT OF 300</td>
-                            <td class="text-right">96.5%</td>
-                        </tr>
-                    </table>
-                </div>
-
-                <div class="detail-table">
-                    <h3 class="table-title">Student Today Attendance</h3>
-                    <table>
-                        <tr>
-                            <td>PRESENT</td>
-                            <td class="text-right">5.56%</td>
-                        </tr>
-                        <tr>
-                            <td>LATE</td>
-                            <td class="text-right">5.56%</td>
-                        </tr>
-                        <tr>
-                            <td>ABSENT</td>
-                            <td class="text-right">11.11%</td>
-                        </tr>
-                        <tr>
-                            <td>HALF DAY</td>
-                            <td class="text-right">5.56%</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-
-            <!-- User Statistics Cards -->
-            <div class="user-stats-section">
-                <div class="user-card user-card-cyan">
-                    <div class="user-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                    </div>
-                    <div class="user-content">
-                        <div class="user-label">STUDENT</div>
-                        <div class="user-count">18</div>
-                    </div>
-                </div>
-
-                <div class="user-card user-card-orange">
-                    <div class="user-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="9" cy="7" r="4"></circle>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                        </svg>
-                    </div>
-                    <div class="user-content">
-                        <div class="user-label">TEACHER</div>
-                        <div class="user-count">3</div>
-                    </div>
-                </div>
-
-                <div class="user-card user-card-orange">
-                    <div class="user-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="12" y1="1" x2="12" y2="23"></line>
-                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                        </svg>
-                    </div>
-                    <div class="user-content">
-                        <div class="user-label">ACCOUNTANT</div>
-                        <div class="user-count">0</div>
-                    </div>
-                </div>
-
-                <div class="user-card user-card-orange">
-                    <div class="user-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                        </svg>
-                    </div>
-                    <div class="user-content">
-                        <div class="user-label">LIBRARIAN</div>
-                        <div class="user-count">0</div>
-                    </div>
-                </div>
-
-                <div class="user-card user-card-orange">
-                    <div class="user-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                    </div>
-                    <div class="user-content">
-                        <div class="user-label">RECEPTIONIST</div>
-                        <div class="user-count">1</div>
-                    </div>
-                </div>
-
-                <div class="user-card user-card-orange">
-                    <div class="user-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                            <path d="M2 17l10 5 10-5"></path>
-                            <path d="M2 12l10 5 10-5"></path>
-                        </svg>
-                    </div>
-                    <div class="user-content">
-                        <div class="user-label">SUPER ADMIN</div>
-                        <div class="user-count">1</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Calendar Section -->
-            <div class="calendar-section">
-                <div class="calendar-header">
-                    <button class="calendar-nav-btn" id="prevBtn" aria-label="Previous">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="15 18 9 12 15 6"></polyline>
-                        </svg>
+                        Add
                     </button>
-                    <button class="calendar-nav-btn" id="nextBtn" aria-label="Next">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                    </button>
-                    <button class="calendar-view-btn" id="todayBtn">Today</button>
-                    <div class="calendar-title" id="calendarTitle">January 2026</div>
-                    <div class="calendar-view-tabs">
-                        <button class="view-tab" data-view="month">Month</button>
-                        <button class="view-tab active" data-view="week">Week</button>
-                        <button class="view-tab" data-view="day">Day</button>
-                    </div>
                 </div>
-                
-                <!-- Month View -->
-                <div class="calendar-month-view" id="monthView" style="display: none;">
-                    <div class="month-weekdays">
-                        <div class="month-weekday">Sun</div>
-                        <div class="month-weekday">Mon</div>
-                        <div class="month-weekday">Tue</div>
-                        <div class="month-weekday">Wed</div>
-                        <div class="month-weekday">Thu</div>
-                        <div class="month-weekday">Fri</div>
-                        <div class="month-weekday">Sat</div>
+
+                <div class="table-controls">
+                    <div class="table-search">
+                        <input type="text" class="table-search-input" placeholder="Search">
                     </div>
-                    <div class="month-days-grid" id="monthDaysGrid">
-                        <!-- Days will be generated by JavaScript -->
+                    <div class="table-actions">
+                        <select class="entries-select">
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                            <option value="250">250</option>
+                            <option value="500">500</option>
+                        </select>
+                        <button class="icon-action-btn" id="copyBtn" title="Copy">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                        </button>
+                        <button class="icon-action-btn" id="excelBtn" title="Export to Excel">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
+                        </button>
+                        <button class="icon-action-btn" id="csvBtn" title="Export to CSV">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                            </svg>
+                        </button>
+                        <button class="icon-action-btn" id="pdfBtn" title="Export to PDF">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                            </svg>
+                        </button>
+                        <button class="icon-action-btn" id="printBtn" title="Print">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                                <rect x="6" y="14" width="12" height="8"></rect>
+                            </svg>
+                        </button>
+                        <button class="icon-action-btn" id="columnVisibilityBtn" title="Column Visibility">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
+                            </svg>
+                        </button>
+                        
+                        <!-- Column Visibility Dropdown -->
+                        <div class="column-visibility-dropdown" id="columnVisibilityDropdown">
+                            <div class="dropdown-header">
+                                <span>Toggle Columns</span>
+                            </div>
+                            <div class="dropdown-content">
+                                <label class="column-toggle-item">
+                                    <input type="checkbox" data-column="0" checked>
+                                    <span>Purpose</span>
+                                </label>
+                                <label class="column-toggle-item">
+                                    <input type="checkbox" data-column="1" checked>
+                                    <span>Meeting With</span>
+                                </label>
+                                <label class="column-toggle-item">
+                                    <input type="checkbox" data-column="2" checked>
+                                    <span>Visitor Name</span>
+                                </label>
+                                <label class="column-toggle-item">
+                                    <input type="checkbox" data-column="3" checked>
+                                    <span>Phone</span>
+                                </label>
+                                <label class="column-toggle-item">
+                                    <input type="checkbox" data-column="4" checked>
+                                    <span>ID Card</span>
+                                </label>
+                                <label class="column-toggle-item">
+                                    <input type="checkbox" data-column="5" checked>
+                                    <span>Number Of Person</span>
+                                </label>
+                                <label class="column-toggle-item">
+                                    <input type="checkbox" data-column="6" checked>
+                                    <span>Date</span>
+                                </label>
+                                <label class="column-toggle-item">
+                                    <input type="checkbox" data-column="7" checked>
+                                    <span>In Time</span>
+                                </label>
+                                <label class="column-toggle-item">
+                                    <input type="checkbox" data-column="8" checked>
+                                    <span>Out Time</span>
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Week View -->
-                <div class="calendar-week-view" id="weekView">
-                    <div class="calendar-grid">
-                        <div class="calendar-time-col">
-                            <div class="time-label time-label-header"></div>
-                            <div class="time-label">12am</div>
-                            <div class="time-label">1am</div>
-                            <div class="time-label">2am</div>
-                            <div class="time-label">3am</div>
-                            <div class="time-label">4am</div>
-                            <div class="time-label">5am</div>
-                            <div class="time-label">6am</div>
-                            <div class="time-label">7am</div>
-                            <div class="time-label">8am</div>
-                            <div class="time-label">9am</div>
-                            <div class="time-label">10am</div>
-                            <div class="time-label">11am</div>
-                            <div class="time-label">12pm</div>
-                            <div class="time-label">1pm</div>
-                            <div class="time-label">2pm</div>
-                            <div class="time-label">3pm</div>
-                            <div class="time-label">4pm</div>
-                            <div class="time-label">5pm</div>
-                            <div class="time-label">6pm</div>
-                            <div class="time-label">7pm</div>
-                            <div class="time-label">8pm</div>
-                            <div class="time-label">9pm</div>
-                            <div class="time-label">10pm</div>
-                            <div class="time-label">11pm</div>
-                        </div>
-                        <div class="calendar-days-container">
-                            <div class="calendar-days-headers" id="weekDaysHeaders">
-                                <!-- Headers will be generated by JavaScript -->
-                            </div>
-                            <div class="calendar-days-body" id="weekDaysBody">
-                                <!-- Day columns will be generated by JavaScript -->
-                            </div>
-                        </div>
-                    </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Purpose</th>
+                                <th>Meeting With</th>
+                                <th>Visitor Name</th>
+                                <th>Phone</th>
+                                <th>ID Card</th>
+                                <th>Number Of Person</th>
+                                <th>Date</th>
+                                <th>In Time</th>
+                                <th>Out Time</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:if="${visitors == null || visitors.isEmpty()}">
+                                <td colspan="10" style="text-align: center;">No visitor records found</td>
+                            </tr>
+                            <tr th:each="visitor : ${visitors}">
+                                <td th:text="${visitor.purpose}">Parent Teacher Meeting</td>
+                                <td th:text="${visitor.meetingWith}">Student (RAM -7656)</td>
+                                <td th:text="${visitor.visitorName}">David</td>
+                                <td th:text="${visitor.phone}">56677467</td>
+                                <td th:text="${visitor.idCard}">234</td>
+                                <td th:text="${visitor.numberOfPerson}">2</td>
+                                <td th:text="${#temporals.format(visitor.date, 'MM/dd/yyyy')}">01/24/2026</td>
+                                <td th:text="${#temporals.format(visitor.inTime, 'hh:mm a')}">01:13 PM</td>
+                                <td th:text="${visitor.outTime != null ? #temporals.format(visitor.outTime, 'hh:mm a') : ''}">02:15 PM</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-action btn-info" th:data-id="${visitor.id}" title="View Details">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                                <line x1="9" y1="9" x2="15" y2="9"></line>
+                                                <line x1="9" y1="15" x2="15" y2="15"></line>
+                                            </svg>
+                                        </button>
+                                        <button class="btn-action btn-edit" th:data-id="${visitor.id}" title="Edit">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M12 20h9"></path>
+                                                <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="btn-action btn-delete" th:data-id="${visitor.id}" title="Delete">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <polyline points="3 6 5 6 21 6"></polyline>
+                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                                <line x1="10" y1="11" x2="10" y2="17"></line>
+                                                <line x1="14" y1="11" x2="14" y2="17"></line>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
-                <!-- Day View -->
-                <div class="calendar-day-view" id="dayView" style="display: none;">
-                    <div class="calendar-grid">
-                        <div class="calendar-time-col">
-                            <div class="time-label time-label-header"></div>
-                            <div class="time-label">12am</div>
-                            <div class="time-label">1am</div>
-                            <div class="time-label">2am</div>
-                            <div class="time-label">3am</div>
-                            <div class="time-label">4am</div>
-                            <div class="time-label">5am</div>
-                            <div class="time-label">6am</div>
-                            <div class="time-label">7am</div>
-                            <div class="time-label">8am</div>
-                            <div class="time-label">9am</div>
-                            <div class="time-label">10am</div>
-                            <div class="time-label">11am</div>
-                            <div class="time-label">12pm</div>
-                            <div class="time-label">1pm</div>
-                            <div class="time-label">2pm</div>
-                            <div class="time-label">3pm</div>
-                            <div class="time-label">4pm</div>
-                            <div class="time-label">5pm</div>
-                            <div class="time-label">6pm</div>
-                            <div class="time-label">7pm</div>
-                            <div class="time-label">8pm</div>
-                            <div class="time-label">9pm</div>
-                            <div class="time-label">10pm</div>
-                            <div class="time-label">11pm</div>
-                        </div>
-                        <div class="calendar-days-container">
-                            <div class="calendar-days-headers" id="dayHeader">
-                                <!-- Header will be generated by JavaScript -->
-                            </div>
-                            <div class="calendar-days-body" id="dayBody">
-                                <!-- Day column will be generated by JavaScript -->
-                            </div>
-                        </div>
+                <div class="table-footer">
+                    <div class="showing-info">Showing 1 to <span th:text="${visitors != null ? visitors.size() : 0}">0</span> of <span th:text="${visitors != null ? visitors.size() : 0}">0</span> entries</div>
+                    <div class="pagination">
+                        <button class="pagination-btn" disabled>‹</button>
+                        <button class="pagination-btn active">1</button>
+                        <button class="pagination-btn" disabled>›</button>
                     </div>
                 </div>
-            </div>
+            </section>
         </main>
+    </div>
+
+    <!-- Add/Edit Visitor Modal -->
+    <div class="visitor-modal" id="visitorModal">
+        <div class="visitor-modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Add Visitor</h3>
+                <button class="modal-close-btn" id="visitorModalCloseBtn" type="button" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="visitor-form" id="visitorForm">
+                    <input type="hidden" id="visitorId">
+                    
+                    <div class="form-row-modal">
+                        <div class="form-group-modal">
+                            <label for="purpose">Purpose <span class="required">*</span></label>
+                            <select id="purpose" class="form-select-modal" required>
+                                <option value="">Select</option>
+                                <option value="Parent Teacher Meeting">Parent Teacher Meeting</option>
+                                <option value="Marketing">Marketing</option>
+                                <option value="School Events">School Events</option>
+                                <option value="Student Meeting">Student Meeting</option>
+                                <option value="Interview">Interview</option>
+                                <option value="General Inquiry">General Inquiry</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group-modal">
+                            <label for="meetingWith">Meeting With <span class="required">*</span></label>
+                            <select id="meetingWith" class="form-select-modal" required>
+                                <option value="">Select</option>
+                                <option value="Principal">Principal</option>
+                                <option value="Vice Principal">Vice Principal</option>
+                                <option value="Teacher">Teacher</option>
+                                <option value="Admin Staff">Admin Staff</option>
+                                <option value="Student">Student</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group-modal">
+                            <label for="visitorName">Visitor Name <span class="required">*</span></label>
+                            <input type="text" id="visitorName" class="form-input-modal" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row-modal">
+                        <div class="form-group-modal">
+                            <label for="phone">Phone</label>
+                            <input type="tel" id="phone" class="form-input-modal">
+                        </div>
+                        <div class="form-group-modal">
+                            <label for="idCard">ID Card</label>
+                            <input type="text" id="idCard" class="form-input-modal">
+                        </div>
+                        <div class="form-group-modal">
+                            <label for="numberOfPerson">Number Of Person</label>
+                            <input type="number" id="numberOfPerson" class="form-input-modal" min="1">
+                        </div>
+                    </div>
+
+                    <div class="form-row-modal">
+                        <div class="form-group-modal">
+                            <label for="date">Date <span class="required">*</span></label>
+                            <input type="date" id="date" class="form-input-modal" required>
+                        </div>
+                        <div class="form-group-modal">
+                            <label for="inTime">In Time</label>
+                            <input type="time" id="inTime" class="form-input-modal">
+                        </div>
+                        <div class="form-group-modal">
+                            <label for="outTime">Out Time</label>
+                            <input type="time" id="outTime" class="form-input-modal">
+                        </div>
+                    </div>
+
+                    <div class="form-row-modal">
+                        <div class="form-group-modal">
+                            <label for="attachDocument">Attach Document</label>
+                            <div class="file-upload-area" id="fileUploadArea">
+                                <input type="file" id="attachDocument" class="file-input" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                                <div class="file-upload-content">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="17 8 12 3 7 8"></polyline>
+                                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                                    </svg>
+                                    <p class="file-upload-text">Drag and drop a file here or click</p>
+                                    <p class="file-name" id="fileName"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group-modal" style="grid-column: span 2;">
+                            <label for="note">Note</label>
+                            <textarea id="note" class="form-textarea-modal" rows="5"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn-submit" id="submitBtn">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
     <!-- Quick Links Modal -->
@@ -1485,533 +1352,504 @@
                             <li><a href="#">Events</a></li>
                         </ul>
                     </div>
-
-                    <!-- Annual Calendar -->
-                    <div class="quick-link-category">
-                        <div class="category-header">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                <line x1="16" y1="2" x2="16" y2="6"></line>
-                                <line x1="8" y1="2" x2="8" y2="6"></line>
-                                <line x1="3" y1="10" x2="21" y2="10"></line>
-                            </svg>
-                            <h3>Annual Calendar</h3>
-                        </div>
-                        <ul class="category-links">
-                            <li><a href="#">Annual Calendar</a></li>
-                            <li><a href="#">Holiday Type</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Attendance -->
-                    <div class="quick-link-category">
-                        <div class="category-header">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                <line x1="16" y1="2" x2="16" y2="6"></line>
-                                <line x1="8" y1="2" x2="8" y2="6"></line>
-                                <line x1="3" y1="10" x2="21" y2="10"></line>
-                            </svg>
-                            <h3>Attendance</h3>
-                        </div>
-                        <ul class="category-links">
-                            <li><a href="#">Student Attendance</a></li>
-                            <li><a href="#">Approve Leave</a></li>
-                            <li><a href="#">Attendance By Date</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Behaviour Records -->
-                    <div class="quick-link-category">
-                        <div class="category-header">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                <polyline points="14 2 14 8 20 8"></polyline>
-                                <line x1="12" y1="18" x2="12" y2="12"></line>
-                                <line x1="9" y1="15" x2="15" y2="15"></line>
-                            </svg>
-                            <h3>Behaviour Records</h3>
-                        </div>
-                        <ul class="category-links">
-                            <li><a href="#">Assign Incident</a></li>
-                            <li><a href="#">Incidents</a></li>
-                            <li><a href="#">Reports</a></li>
-                            <li><a href="#">Setting</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- CBSE Examination -->
-                    <div class="quick-link-category">
-                        <div class="category-header">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                <polyline points="14 2 14 8 20 8"></polyline>
-                            </svg>
-                            <h3>CBSE Examination</h3>
-                        </div>
-                        <ul class="category-links">
-                            <li><a href="#">Exam</a></li>
-                            <li><a href="#">Exam Schedule</a></li>
-                            <li><a href="#">Print Marksheet</a></li>
-                            <li><a href="#">Template</a></li>
-                            <li><a href="#">Assign Observation</a></li>
-                            <li><a href="#">Admit Card</a></li>
-                            <li><a href="#">Reports</a></li>
-                            <li><a href="#">Setting</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Certificate -->
-                    <div class="quick-link-category">
-                        <div class="category-header">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="8" r="7"></circle>
-                                <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
-                            </svg>
-                            <h3>Certificate</h3>
-                        </div>
-                        <ul class="category-links">
-                            <li><a href="#">Transfer Certificate</a></li>
-                            <li><a href="#">Student Certificate</a></li>
-                            <li><a href="#">Generate Certificate</a></li>
-                            <li><a href="#">Student ID Card</a></li>
-                            <li><a href="#">Generate ID Card</a></li>
-                            <li><a href="#">Staff ID Card</a></li>
-                            <li><a href="#">Generate Staff ID Card</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Download Center -->
-                    <div class="quick-link-category">
-                        <div class="category-header">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                <polyline points="7 10 12 15 17 10"></polyline>
-                                <line x1="12" y1="15" x2="12" y2="3"></line>
-                            </svg>
-                            <h3>Download Center</h3>
-                        </div>
-                        <ul class="category-links">
-                            <li><a href="#">Upload/Share Content</a></li>
-                            <li><a href="#">Content Share List</a></li>
-                            <li><a href="#">Video Tutorial</a></li>
-                            <li><a href="#">Content Type</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Examinations -->
-                    <div class="quick-link-category">
-                        <div class="category-header">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                <polyline points="14 2 14 8 20 8"></polyline>
-                                <line x1="16" y1="13" x2="8" y2="13"></line>
-                                <line x1="16" y1="17" x2="8" y2="17"></line>
-                                <polyline points="10 9 9 9 8 9"></polyline>
-                            </svg>
-                            <h3>Examinations</h3>
-                        </div>
-                        <ul class="category-links">
-                            <li><a href="#">Exam Group</a></li>
-                            <li><a href="#">Exam Schedule</a></li>
-                            <li><a href="#">Exam Result</a></li>
-                            <li><a href="#">Design Admit Card</a></li>
-                            <li><a href="#">Print Admit Card</a></li>
-                            <li><a href="#">Design Marksheet</a></li>
-                            <li><a href="#">Print Marksheet</a></li>
-                            <li><a href="#">Marks Grade</a></li>
-                            <li><a href="#">Marks Division</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Expenses -->
-                    <div class="quick-link-category">
-                        <div class="category-header">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="12" y1="1" x2="12" y2="23"></line>
-                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                            </svg>
-                            <h3>Expenses</h3>
-                        </div>
-                        <ul class="category-links">
-                            <li><a href="#">Add Expense</a></li>
-                            <li><a href="#">Search Expense</a></li>
-                            <li><a href="#">Expense Head</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Fees Collection -->
-                    <div class="quick-link-category">
-                        <div class="category-header">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-                                <line x1="1" y1="10" x2="23" y2="10"></line>
-                            </svg>
-                            <h3>Fees Collection</h3>
-                        </div>
-                        <ul class="category-links">
-                            <li><a href="#">Collect Fees</a></li>
-                            <li><a href="#">Offline Bank Payments</a></li>
-                            <li><a href="#">Search Fees Payment</a></li>
-                            <li><a href="#">Search Due Fees</a></li>
-                            <li><a href="#">Fees Master</a></li>
-                            <li><a href="#">Quick Fees</a></li>
-                            <li><a href="#">Fees Group</a></li>
-                            <li><a href="#">Fees Type</a></li>
-                            <li><a href="#">Fees Discount</a></li>
-                            <li><a href="#">Fees Carry Forward</a></li>
-                            <li><a href="#">Fees Reminder</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Front CMS -->
-                    <div class="quick-link-category">
-                        <div class="category-header">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                                <line x1="8" y1="21" x2="16" y2="21"></line>
-                                <line x1="12" y1="17" x2="12" y2="21"></line>
-                            </svg>
-                            <h3>Front CMS</h3>
-                        </div>
-                        <ul class="category-links">
-                            <li><a href="#">Event</a></li>
-                            <li><a href="#">Gallery</a></li>
-                            <li><a href="#">News</a></li>
-                            <li><a href="#">Media Manager</a></li>
-                            <li><a href="#">Pages</a></li>
-                            <li><a href="#">Menus</a></li>
-                            <li><a href="#">Banner Images</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Gmeet Live Classes -->
-                    <div class="quick-link-category">
-                        <div class="category-header">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polygon points="23 7 16 12 23 17 23 7"></polygon>
-                                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
-                            </svg>
-                            <h3>Gmeet Live Classes</h3>
-                        </div>
-                        <ul class="category-links">
-                            <li><a href="#">Live Classes</a></li>
-                            <li><a href="#">Live Meeting</a></li>
-                            <li><a href="#">Live Classes Report</a></li>
-                            <li><a href="#">Live Meeting Report</a></li>
-                            <li><a href="#">Setting</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Homework -->
-                    <div class="quick-link-category">
-                        <div class="category-header">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                <polyline points="14 2 14 8 20 8"></polyline>
-                                <line x1="16" y1="13" x2="8" y2="13"></line>
-                                <line x1="16" y1="17" x2="8" y2="17"></line>
-                            </svg>
-                            <h3>Homework</h3>
-                        </div>
-                        <ul class="category-links">
-                            <li><a href="#">Add Homework</a></li>
-                            <li><a href="#">Daily Assignment</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Hostel -->
-                    <div class="quick-link-category">
-                        <div class="category-header">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                            </svg>
-                            <h3>Hostel</h3>
-                        </div>
-                        <ul class="category-links">
-                            <li><a href="#">Hostel Rooms</a></li>
-                            <li><a href="#">Room Type</a></li>
-                            <li><a href="#">Hostel</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Human Resource -->
-                    <div class="quick-link-category">
-                        <div class="category-header">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="9" cy="7" r="4"></circle>
-                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                            </svg>
-                            <h3>Human Resource</h3>
-                        </div>
-                        <ul class="category-links">
-                            <li><a href="#">Staff Directory</a></li>
-                            <li><a href="#">Staff Attendance</a></li>
-                            <li><a href="#">Payroll</a></li>
-                            <li><a href="#">Approve Leave Request</a></li>
-                            <li><a href="#">Apply Leave</a></li>
-                            <li><a href="#">Leave Type</a></li>
-                            <li><a href="#">Teachers Rating</a></li>
-                            <li><a href="#">Department</a></li>
-                            <li><a href="#">Designation</a></li>
-                            <li><a href="#">Disabled Staff</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Income -->
-                    <div class="quick-link-category">
-                        <div class="category-header">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="12" y1="1" x2="12" y2="23"></line>
-                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                            </svg>
-                            <h3>Income</h3>
-                        </div>
-                        <ul class="category-links">
-                            <li><a href="#">Add Income</a></li>
-                            <li><a href="#">Search Income</a></li>
-                            <li><a href="#">Income Head</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Inventory -->
-                    <div class="quick-link-category">
-                        <div class="category-header">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line>
-                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                                <line x1="12" y1="22.08" x2="12" y2="12"></line>
-                            </svg>
-                            <h3>Inventory</h3>
-                        </div>
-                        <ul class="category-links">
-                            <li><a href="#">Issue Item</a></li>
-                            <li><a href="#">Add Item Stock</a></li>
-                            <li><a href="#">Add Item</a></li>
-                            <li><a href="#">Item Category</a></li>
-                            <li><a href="#">Item Store</a></li>
-                            <li><a href="#">Item Supplier</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Lesson Plan -->
-                    <div class="quick-link-category">
-                        <div class="category-header">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                            </svg>
-                            <h3>Lesson Plan</h3>
-                        </div>
-                        <ul class="category-links">
-                            <li><a href="#">Copy Old Lessons</a></li>
-                            <li><a href="#">Manage Lesson Plan</a></li>
-                            <li><a href="#">Manage Syllabus Status</a></li>
-                            <li><a href="#">Lesson</a></li>
-                            <li><a href="#">Topic</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Online Examinations -->
-                    <div class="quick-link-category">
-                        <div class="category-header">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                                <line x1="8" y1="21" x2="16" y2="21"></line>
-                                <line x1="12" y1="17" x2="12" y2="21"></line>
-                            </svg>
-                            <h3>Online Examinations</h3>
-                        </div>
-                        <ul class="category-links">
-                            <li><a href="#">Online Exam</a></li>
-                            <li><a href="#">Question Bank</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- QR Code Attendance -->
-                    <div class="quick-link-category">
-                        <div class="category-header">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="3" width="7" height="7"></rect>
-                                <rect x="14" y="3" width="7" height="7"></rect>
-                                <rect x="14" y="14" width="7" height="7"></rect>
-                                <rect x="3" y="14" width="7" height="7"></rect>
-                            </svg>
-                            <h3>QR Code Attendance</h3>
-                        </div>
-                        <ul class="category-links">
-                            <li><a href="#">Attendance</a></li>
-                            <li><a href="#">Setting</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Quick Fees -->
-                    <div class="quick-link-category">
-                        <div class="category-header">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="12" y1="1" x2="12" y2="23"></line>
-                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                            </svg>
-                            <h3>Quick Fees</h3>
-                        </div>
-                        <ul class="category-links">
-                            <li><a href="#">Student Information</a></li>
-                            <li><a href="#">Finance</a></li>
-                            <li><a href="#">Attendance</a></li>
-                            <li><a href="#">Examinations</a></li>
-                            <li><a href="#">Online Examinations</a></li>
-                            <li><a href="#">Lesson Plan</a></li>
-                            <li><a href="#">Homework</a></li>
-                            <li><a href="#">Human Resource</a></li>
-                            <li><a href="#">Library</a></li>
-                            <li><a href="#">Inventory</a></li>
-                            <li><a href="#">Transport</a></li>
-                            <li><a href="#">Hostel</a></li>
-                            <li><a href="#">Alumni</a></li>
-                            <li><a href="#">User Log</a></li>
-                            <li><a href="#">Audit Trail Report</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Reports -->
-                    <div class="quick-link-category">
-                        <div class="category-header">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                <polyline points="14 2 14 8 20 8"></polyline>
-                                <line x1="16" y1="13" x2="8" y2="13"></line>
-                                <line x1="16" y1="17" x2="8" y2="17"></line>
-                                <polyline points="10 9 9 9 8 9"></polyline>
-                            </svg>
-                            <h3>Reports</h3>
-                        </div>
-                        <ul class="category-links">
-                            <li><a href="#">Student Information</a></li>
-                            <li><a href="#">Finance</a></li>
-                            <li><a href="#">Attendance</a></li>
-                            <li><a href="#">Examinations</a></li>
-                            <li><a href="#">Online Examinations</a></li>
-                            <li><a href="#">Lesson Plan</a></li>
-                            <li><a href="#">Homework</a></li>
-                            <li><a href="#">Human Resource</a></li>
-                            <li><a href="#">Library</a></li>
-                            <li><a href="#">Inventory</a></li>
-                            <li><a href="#">Transport</a></li>
-                            <li><a href="#">Hostel</a></li>
-                            <li><a href="#">Alumni</a></li>
-                            <li><a href="#">User Log</a></li>
-                            <li><a href="#">Audit Trail Report</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Student CV -->
-                    <div class="quick-link-category">
-                        <div class="category-header">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                <polyline points="14 2 14 8 20 8"></polyline>
-                            </svg>
-                            <h3>Student CV</h3>
-                        </div>
-                        <ul class="category-links">
-                            <li><a href="#">Build CV</a></li>
-                            <li><a href="#">Download CV</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- TFA -->
-                    <div class="quick-link-category">
-                        <div class="category-header">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                            </svg>
-                            <h3>TFA</h3>
-                        </div>
-                        <ul class="category-links">
-                            <li><a href="#">Settings</a></li>
-                            <li><a href="#">Report</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Thermal Print -->
-                    <div class="quick-link-category">
-                        <div class="category-header">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="6 9 6 2 18 2 18 9"></polyline>
-                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-                                <rect x="6" y="14" width="12" height="8"></rect>
-                            </svg>
-                            <h3>Thermal Print</h3>
-                        </div>
-                        <ul class="category-links">
-                            <li><a href="#">Fees Master</a></li>
-                            <li><a href="#">Pickup Point</a></li>
-                            <li><a href="#">Routes</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Transport -->
-                    <div class="quick-link-category">
-                        <div class="category-header">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="1" y="3" width="15" height="13"></rect>
-                                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
-                                <circle cx="5.5" cy="18.5" r="2.5"></circle>
-                                <circle cx="18.5" cy="18.5" r="2.5"></circle>
-                            </svg>
-                            <h3>Transport</h3>
-                        </div>
-                        <ul class="category-links">
-                            <li><a href="#">Fees Master</a></li>
-                            <li><a href="#">Pickup Point</a></li>
-                            <li><a href="#">Routes</a></li>
-                            <li><a href="#">Vehicles</a></li>
-                            <li><a href="#">Assign Vehicle</a></li>
-                            <li><a href="#">Route Pickup Point</a></li>
-                            <li><a href="#">Student Transport Fees</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Whatsapp Messaging -->
-                    <div class="quick-link-category">
-                        <div class="category-header">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-                            </svg>
-                            <h3>Whatsapp Messaging</h3>
-                        </div>
-                        <ul class="category-links">
-                            <li><a href="#">Settings</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Zoom Live Classes -->
-                    <div class="quick-link-category">
-                        <div class="category-header">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polygon points="23 7 16 12 23 17 23 7"></polygon>
-                                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
-                            </svg>
-                            <h3>Zoom Live Classes</h3>
-                        </div>
-                        <ul class="category-links">
-                            <li><a href="#">Live Meeting</a></li>
-                            <li><a href="#">Live Classes</a></li>
-                            <li><a href="#">Live Classes Report</a></li>
-                            <li><a href="#">Live Meeting Report</a></li>
-                            <li><a href="#">Setting</a></li>
-                        </ul>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script th:src="@{/js/dashboard.js}"></script>
+    <script>
+        // Modal Management
+        const modal = document.getElementById('visitorModal');
+        const addBtn = document.getElementById('addVisitorBtn');
+        const visitorModalCloseBtn = document.getElementById('visitorModalCloseBtn');
+        const visitorForm = document.getElementById('visitorForm');
+        const modalTitle = document.getElementById('modalTitle');
+        let currentVisitorId = null;
+
+        // Open modal for adding
+        addBtn.addEventListener('click', () => {
+            modalTitle.textContent = 'Add Visitor';
+            visitorForm.reset();
+            currentVisitorId = null;
+            document.getElementById('visitorId').value = '';
+            document.getElementById('fileName').textContent = '';
+            
+            // Set default date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date').value = today;
+            
+            // Set default time to current time
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const currentTime = `${hours}:${minutes}`;
+            document.getElementById('inTime').value = currentTime;
+            
+            modal.classList.add('active');
+        });
+
+        // Close modal
+        if (visitorModalCloseBtn) {
+            visitorModalCloseBtn.addEventListener('click', () => {
+                modal.classList.remove('active');
+            });
+        }
+
+        // Close modal on outside click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+
+        // File Upload Handling
+        const fileUploadArea = document.getElementById('fileUploadArea');
+        const fileInput = document.getElementById('attachDocument');
+        const fileNameDisplay = document.getElementById('fileName');
+
+        if (fileUploadArea && fileInput) {
+            // Click to upload
+            fileUploadArea.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            // File selected
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    fileNameDisplay.textContent = file.name;
+                }
+            });
+
+            // Drag and drop
+            fileUploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                fileUploadArea.classList.add('drag-over');
+            });
+
+            fileUploadArea.addEventListener('dragleave', () => {
+                fileUploadArea.classList.remove('drag-over');
+            });
+
+            fileUploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                fileUploadArea.classList.remove('drag-over');
+                
+                const file = e.dataTransfer.files[0];
+                if (file) {
+                    fileInput.files = e.dataTransfer.files;
+                    fileNameDisplay.textContent = file.name;
+                }
+            });
+        }
+
+        // Form Submit
+        visitorForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const originalBtnText = submitBtn.innerHTML;
+            
+            // Disable button and show spinner
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = 'Saving... <span class="btn-spinner"></span>';
+            
+            const visitorData = {
+                purpose: document.getElementById('purpose').value,
+                meetingWith: document.getElementById('meetingWith').value,
+                visitorName: document.getElementById('visitorName').value,
+                phone: document.getElementById('phone').value,
+                idCard: document.getElementById('idCard').value,
+                numberOfPerson: parseInt(document.getElementById('numberOfPerson').value) || null,
+                date: document.getElementById('date').value,
+                inTime: document.getElementById('inTime').value,
+                outTime: document.getElementById('outTime').value || null,
+                note: document.getElementById('note').value
+            };
+
+            try {
+                const url = currentVisitorId ? `/api/visitors/${currentVisitorId}` : '/api/visitors';
+                const method = currentVisitorId ? 'PUT' : 'POST';
+                
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(visitorData)
+                });
+
+                const result = await response.json();
+
+                // Re-enable button
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+
+                if (result.success) {
+                    modal.classList.remove('active');
+                    await Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: result.message,
+                        showConfirmButton: true,
+                        confirmButtonColor: '#3498db',
+                        confirmButtonText: 'OK'
+                    });
+                    window.location.reload();
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: result.message,
+                        confirmButtonColor: '#3498db'
+                    });
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'An error occurred while saving the visitor record',
+                    confirmButtonColor: '#3498db'
+                });
+            }
+        });
+
+        // Edit Button Handler
+        document.addEventListener('click', async (e) => {
+            if (e.target.closest('.btn-edit')) {
+                const btn = e.target.closest('.btn-edit');
+                const visitorId = btn.getAttribute('data-id');
+                
+                try {
+                    const response = await fetch(`/api/visitors/${visitorId}`);
+                    const visitor = await response.json();
+                    
+                    modalTitle.textContent = 'Edit Visitor';
+                    currentVisitorId = visitorId;
+                    document.getElementById('visitorId').value = visitorId;
+                    
+                    // Set select fields
+                    const purposeSelect = document.getElementById('purpose');
+                    const meetingWithSelect = document.getElementById('meetingWith');
+                    
+                    // Set purpose - if value not in options, add it
+                    if (visitor.purpose) {
+                        let purposeExists = Array.from(purposeSelect.options).some(opt => opt.value === visitor.purpose);
+                        if (!purposeExists && visitor.purpose !== '') {
+                            const option = new Option(visitor.purpose, visitor.purpose, true, true);
+                            purposeSelect.add(option);
+                        } else {
+                            purposeSelect.value = visitor.purpose;
+                        }
+                    }
+                    
+                    // Set meeting with - if value not in options, add it
+                    if (visitor.meetingWith) {
+                        let meetingExists = Array.from(meetingWithSelect.options).some(opt => opt.value === visitor.meetingWith);
+                        if (!meetingExists && visitor.meetingWith !== '') {
+                            const option = new Option(visitor.meetingWith, visitor.meetingWith, true, true);
+                            meetingWithSelect.add(option);
+                        } else {
+                            meetingWithSelect.value = visitor.meetingWith;
+                        }
+                    }
+                    
+                    document.getElementById('visitorName').value = visitor.visitorName;
+                    document.getElementById('phone').value = visitor.phone || '';
+                    document.getElementById('idCard').value = visitor.idCard || '';
+                    document.getElementById('numberOfPerson').value = visitor.numberOfPerson || '';
+                    document.getElementById('date').value = visitor.date;
+                    document.getElementById('inTime').value = visitor.inTime || '';
+                    document.getElementById('outTime').value = visitor.outTime || '';
+                    document.getElementById('note').value = visitor.note || '';
+                    document.getElementById('fileName').textContent = '';
+                    
+                    modal.classList.add('active');
+                } catch (error) {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Failed to load visitor data',
+                        confirmButtonColor: '#ef4444'
+                    });
+                }
+            }
+        });
+
+        // Delete Button Handler
+        document.addEventListener('click', async (e) => {
+            if (e.target.closest('.btn-delete')) {
+                const btn = e.target.closest('.btn-delete');
+                const visitorId = btn.getAttribute('data-id');
+                
+                const result = await Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#ef4444',
+                    cancelButtonColor: '#95a5a6',
+                    confirmButtonText: 'Yes, delete it!'
+                });
+
+                if (result.isConfirmed) {
+                    try {
+                        const response = await fetch(`/api/visitors/${visitorId}`, {
+                            method: 'DELETE'
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (result.success) {
+                            await Swal.fire({
+                                icon: 'success',
+                                title: 'Deleted!',
+                                text: result.message,
+                                showConfirmButton: true,
+                                confirmButtonColor: '#3498db',
+                                confirmButtonText: 'OK'
+                            });
+                            window.location.reload();
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: result.message,
+                                confirmButtonColor: '#3498db'
+                            });
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Failed to delete visitor record',
+                            confirmButtonColor: '#3498db'
+                        });
+                    }
+                }
+            }
+        });
+
+        // Search functionality
+        const searchInput = document.querySelector('.table-search-input');
+        if (searchInput) {
+            searchInput.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase().trim();
+                const tableRows = document.querySelectorAll('.data-table tbody tr');
+                let visibleCount = 0;
+                
+                tableRows.forEach(row => {
+                    const rowText = Array.from(row.querySelectorAll('td'))
+                        .map(cell => cell.textContent.trim().toLowerCase())
+                        .join(' ');
+                    
+                    if (rowText.includes(searchTerm)) {
+                        row.style.display = '';
+                        visibleCount++;
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+                
+                const showingInfo = document.querySelector('.showing-info');
+                if (showingInfo) {
+                    const totalRows = tableRows.length;
+                    if (searchTerm) {
+                        showingInfo.textContent = `Showing 1 to ${visibleCount} of ${totalRows} entries (filtered)`;
+                    } else {
+                        showingInfo.textContent = `Showing 1 to ${visibleCount} of ${totalRows} entries`;
+                    }
+                }
+            });
+        }
+
+        // Export Functions
+        function getTableData() {
+            const table = document.querySelector('.data-table');
+            const headers = [];
+            const data = [];
+            
+            const headerCells = table.querySelectorAll('thead th');
+            headerCells.forEach((th, index) => {
+                if (index < headerCells.length - 1) {
+                    headers.push(th.textContent.trim());
+                }
+            });
+            
+            const rows = table.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                if (row.style.display !== 'none') {
+                    const rowData = [];
+                    const cells = row.querySelectorAll('td');
+                    cells.forEach((cell, index) => {
+                        if (index < cells.length - 1) {
+                            rowData.push(cell.textContent.trim());
+                        }
+                    });
+                    if (rowData.length > 0) {
+                        data.push(rowData);
+                    }
+                }
+            });
+            
+            return { headers, data };
+        }
+
+        // Copy Button
+        document.getElementById('copyBtn')?.addEventListener('click', function() {
+            const { headers, data } = getTableData();
+            let text = headers.join('\t') + '\n';
+            data.forEach(row => {
+                text += row.join('\t') + '\n';
+            });
+            
+            navigator.clipboard.writeText(text).then(() => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Copied!',
+                    text: 'Table data copied to clipboard',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            });
+        });
+
+        // Excel Export
+        document.getElementById('excelBtn')?.addEventListener('click', function() {
+            const { headers, data } = getTableData();
+            const wsData = [headers, ...data];
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(wsData);
+            ws['!cols'] = headers.map(() => ({ wch: 20 }));
+            XLSX.utils.book_append_sheet(wb, ws, 'Visitors');
+            const timestamp = new Date().toISOString().split('T')[0];
+            XLSX.writeFile(wb, `Visitors_${timestamp}.xlsx`);
+            
+            Swal.fire({
+                icon: 'success',
+                title: 'Exported!',
+                text: 'Excel file downloaded successfully',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        });
+
+        // CSV Export
+        document.getElementById('csvBtn')?.addEventListener('click', function() {
+            const { headers, data } = getTableData();
+            let csvContent = headers.join(',') + '\n';
+            data.forEach(row => {
+                const escapedRow = row.map(cell => {
+                    if (cell.includes(',') || cell.includes('"') || cell.includes('\n')) {
+                        return `"${cell.replace(/"/g, '""')}"`;
+                    }
+                    return cell;
+                });
+                csvContent += escapedRow.join(',') + '\n';
+            });
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            const timestamp = new Date().toISOString().split('T')[0];
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', `Visitors_${timestamp}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            Swal.fire({
+                icon: 'success',
+                title: 'Exported!',
+                text: 'CSV file downloaded successfully',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        });
+
+        // PDF Export
+        document.getElementById('pdfBtn')?.addEventListener('click', function() {
+            const { headers, data } = getTableData();
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('l', 'mm', 'a4');
+            
+            doc.setFontSize(16);
+            doc.text('Visitor List', 14, 15);
+            
+            doc.autoTable({
+                head: [headers],
+                body: data,
+                startY: 25,
+                theme: 'grid',
+                styles: { fontSize: 8 },
+                headStyles: { fillColor: [44, 62, 80] }
+            });
+            
+            const timestamp = new Date().toISOString().split('T')[0];
+            doc.save(`Visitors_${timestamp}.pdf`);
+            
+            Swal.fire({
+                icon: 'success',
+                title: 'Exported!',
+                text: 'PDF file downloaded successfully',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        });
+
+        // Print Button
+        document.getElementById('printBtn')?.addEventListener('click', function() {
+            window.print();
+        });
+
+        // Column Visibility Functionality
+        const columnVisibilityBtn = document.getElementById('columnVisibilityBtn');
+        const columnVisibilityDropdown = document.getElementById('columnVisibilityDropdown');
+
+        if (columnVisibilityBtn && columnVisibilityDropdown) {
+            // Toggle dropdown
+            columnVisibilityBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                columnVisibilityDropdown.classList.toggle('active');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!columnVisibilityDropdown.contains(e.target) && e.target !== columnVisibilityBtn) {
+                    columnVisibilityDropdown.classList.remove('active');
+                }
+            });
+
+            // Handle column toggle
+            const columnCheckboxes = columnVisibilityDropdown.querySelectorAll('input[type="checkbox"]');
+            columnCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const columnIndex = parseInt(this.getAttribute('data-column'));
+                    const table = document.querySelector('.data-table');
+                    const isChecked = this.checked;
+
+                    // Toggle header cell
+                    const headerCell = table.querySelector(`thead th:nth-child(${columnIndex + 1})`);
+                    if (headerCell) {
+                        headerCell.style.display = isChecked ? '' : 'none';
+                    }
+
+                    // Toggle body cells
+                    const bodyCells = table.querySelectorAll(`tbody td:nth-child(${columnIndex + 1})`);
+                    bodyCells.forEach(cell => {
+                        cell.style.display = isChecked ? '' : 'none';
+                    });
+                });
+            });
+        }
+    </script>
 </body>
 </html>
