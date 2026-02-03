@@ -192,7 +192,7 @@
                         <a href="/visitors" class="submenu-item">Visitor Book</a>
                         <a href="/phone-call-log" class="submenu-item">Phone Call Log</a>
                         <a href="/dispatch" class="submenu-item active">Postal Dispatch</a>
-                        <a href="#" class="submenu-item">Postal Receive</a>
+                        <a href="/receive" class="submenu-item">Postal Receive</a>
                         <a href="#" class="submenu-item">Complain</a>
                         <a href="#" class="submenu-item">Setup Front Office</a>
                     </div>
@@ -658,17 +658,39 @@
 
     <!-- Quick Links Modal -->
     <div class="quick-links-modal" id="quickLinksModal">
-        <div class="quick-links-content">
-            <div class="quick-links-header">
-                <h3>Quick Links</h3>
-                <button class="quick-links-close" id="closeQuickLinks">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Quick Links</h2>
+                <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
                         <line x1="6" y1="6" x2="18" y2="18"></line>
                     </svg>
                 </button>
             </div>
-            <div class="quick-links-body">
+            <div class="modal-body">
+                <div class="quick-links-grid">
+                <!-- Communicate -->
+                <div class="quick-link-category">
+                    <div class="category-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        <h3>Communicate</h3>
+                    </div>
+                    <ul class="category-links">
+                        <li><a href="#">Notice Board</a></li>
+                        <li><a href="#">Send Email</a></li>
+                        <li><a href="#">Send SMS</a></li>
+                        <li><a href="#">Email / SMS Log</a></li>
+                        <li><a href="#">Schedule Email SMS Log</a></li>
+                        <li><a href="#">Login Credentials Send</a></li>
+                        <li><a href="#">Email Template</a></li>
+                        <li><a href="#">SMS Template</a></li>
+                    </ul>
+                </div>
+
                 <!-- Front Office -->
                 <div class="quick-link-category">
                     <div class="category-header">
@@ -683,9 +705,126 @@
                         <li><a href="/visitors">Visitor Book</a></li>
                         <li><a href="/phone-call-log">Phone Call Log</a></li>
                         <li><a href="/dispatch">Postal Dispatch</a></li>
-                        <li><a href="#">Postal Receive</a></li>
+                        <li><a href="/receive">Postal Receive</a></li>
                         <li><a href="#">Complain</a></li>
+                        <li><a href="#">Setup Front Office</a></li>
                     </ul>
+                </div>
+
+                <!-- Library -->
+                <div class="quick-link-category">
+                    <div class="category-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg>
+                        <h3>Library</h3>
+                    </div>
+                    <ul class="category-links">
+                        <li><a href="#">Book List</a></li>
+                        <li><a href="#">Issue - Return</a></li>
+                        <li><a href="#">Add Student</a></li>
+                        <li><a href="#">Add Staff Member</a></li>
+                    </ul>
+                </div>
+
+                <!-- Student Information -->
+                <div class="quick-link-category">
+                    <div class="category-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <h3>Student Information</h3>
+                    </div>
+                    <ul class="category-links">
+                        <li><a href="#">Student Details</a></li>
+                        <li><a href="#">Student Admission</a></li>
+                        <li><a href="#">Online Admission</a></li>
+                        <li><a href="#">Disabled Students</a></li>
+                        <li><a href="#">Multi Class Student</a></li>
+                        <li><a href="#">Bulk Delete</a></li>
+                        <li><a href="#">Student Categories</a></li>
+                        <li><a href="#">Student House</a></li>
+                        <li><a href="#">Disable Reason</a></li>
+                    </ul>
+                </div>
+
+                <!-- Multi Branch -->
+                <div class="quick-link-category">
+                    <div class="category-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="2" y1="12" x2="22" y2="12"></line>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                        </svg>
+                        <h3>Multi Branch</h3>
+                    </div>
+                    <ul class="category-links">
+                        <li><a href="#">Overview</a></li>
+                        <li><a href="#">Report</a></li>
+                        <li><a href="#">Setting</a></li>
+                    </ul>
+                </div>
+
+                <!-- Online Course -->
+                <div class="quick-link-category">
+                    <div class="category-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            <line x1="8" y1="21" x2="16" y2="21"></line>
+                            <line x1="12" y1="17" x2="12" y2="21"></line>
+                        </svg>
+                        <h3>Online Course</h3>
+                    </div>
+                    <ul class="category-links">
+                        <li><a href="#">Online Course</a></li>
+                        <li><a href="#">Question Bank</a></li>
+                        <li><a href="#">Offline Payment</a></li>
+                        <li><a href="#">Course Category</a></li>
+                        <li><a href="#">Certificate Template</a></li>
+                        <li><a href="#">Online Course Report</a></li>
+                        <li><a href="#">Setting</a></li>
+                    </ul>
+                </div>
+
+                <!-- System Setting -->
+                <div class="quick-link-category">
+                    <div class="category-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M12 1v6m0 6v6M5.6 5.6l4.2 4.2m4.2 4.2l4.2 4.2M1 12h6m6 0h6M5.6 18.4l4.2-4.2m4.2-4.2l4.2-4.2"></path>
+                        </svg>
+                        <h3>System Setting</h3>
+                    </div>
+                    <ul class="category-links">
+                        <li><a href="#">General Setting</a></li>
+                        <li><a href="#">Session Setting</a></li>
+                        <li><a href="#">Notification Setting</a></li>
+                        <li><a href="#">SMS Setting</a></li>
+                        <li><a href="#">Email Setting</a></li>
+                        <li><a href="#">Payment Methods</a></li>
+                        <li><a href="#">Roles Permissions</a></li>
+                        <li><a href="#">Backup Restore</a></li>
+                    </ul>
+                </div>
+
+                <!-- Alumni -->
+                <div class="quick-link-category">
+                    <div class="category-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        <h3>Alumni</h3>
+                    </div>
+                    <ul class="category-links">
+                        <li><a href="#">Manage Alumni</a></li>
+                        <li><a href="#">Events</a></li>
+                    </ul>
+                </div>
                 </div>
             </div>
         </div>
