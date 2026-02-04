@@ -411,6 +411,30 @@ columnToggles.forEach(toggle => {
     });
 });
 
+// Quick Links Modal
+const quickLinksBtn = document.getElementById('quickLinksBtn');
+const quickLinksModal = document.getElementById('quickLinksModal');
+const modalCloseBtn = document.getElementById('modalCloseBtn');
+const modalOverlay = document.getElementById('modalOverlay');
+
+if (quickLinksBtn) {
+    quickLinksBtn.addEventListener('click', () => {
+        quickLinksModal.classList.add('active');
+    });
+}
+
+if (modalCloseBtn) {
+    modalCloseBtn.addEventListener('click', () => {
+        quickLinksModal.classList.remove('active');
+    });
+}
+
+if (modalOverlay) {
+    modalOverlay.addEventListener('click', () => {
+        quickLinksModal.classList.remove('active');
+    });
+}
+
 // Initialize
 loadComplainRecords();
 

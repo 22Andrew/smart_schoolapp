@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phone Call Log - Smart School</title>
+    <title>Setup Front Office - Smart School</title>
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
-    <link rel="stylesheet" th:href="@{/css/phone-call-log.css}">
+    <link rel="stylesheet" th:href="@{/css/visitorspurpose.css}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- SweetAlert2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -143,7 +143,7 @@
 
     <!-- Main Container -->
     <div class="main-container">
-        <!-- Sidebar (Same as visitors page) -->
+        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-top">
                 <div class="sidebar-session">
@@ -190,11 +190,11 @@
                     <div class="submenu active" id="submenu-front-office">
                         <a href="/admission-enquiry" class="submenu-item">Admission Enquiry</a>
                         <a href="/visitors" class="submenu-item">Visitor Book</a>
-                        <a href="/phone-call-log" class="submenu-item active">Phone Call Log</a>
+                        <a href="/phone-call-log" class="submenu-item">Phone Call Log</a>
                         <a href="/dispatch" class="submenu-item">Postal Dispatch</a>
                         <a href="/receive" class="submenu-item">Postal Receive</a>
                         <a href="/complain" class="submenu-item">Complain</a>
-                        <a href="/visitorspurpose" class="submenu-item">Setup Front Office</a>
+                        <a href="/visitorspurpose" class="submenu-item active">Setup Front Office</a>
                     </div>
                 </div>
                 <div class="menu-item-wrapper">
@@ -479,139 +479,450 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="main-content phone-call-log-page">
-            <div class="call-log-container">
-                <!-- Left Panel: Add Phone Call Form -->
-                <div class="add-call-panel">
-                    <h2 class="panel-title">Add Phone Call Log</h2>
-                    <form id="callForm">
-                        <input type="hidden" id="callId" name="id">
-                        
-                        <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" id="name" name="name" class="form-control" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="phone">Phone <span class="required">*</span></label>
-                            <input type="tel" id="phone" name="phone" class="form-control" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="date">Date <span class="required">*</span></label>
-                            <input type="date" id="date" name="date" class="form-control" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="description">Description</label>
-                            <textarea id="description" name="description" class="form-control" rows="3"></textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="followUpDate">Next Follow Up Date</label>
-                            <input type="date" id="followUpDate" name="followUpDate" class="form-control">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="callDuration">Call Duration</label>
-                            <input type="number" id="callDuration" name="callDuration" class="form-control" min="0" step="1" placeholder="Duration in minutes">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="note">Note</label>
-                            <textarea id="note" name="note" class="form-control" rows="3"></textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Call Type</label>
-                            <div class="radio-group">
-                                <label class="radio-label">
-                                    <input type="radio" name="callType" id="callTypeIncoming" value="Incoming" required>
-                                    <span>Incoming</span>
-                                </label>
-                                <label class="radio-label">
-                                    <input type="radio" name="callType" id="callTypeOutgoing" value="Outgoing">
-                                    <span>Outgoing</span>
-                                </label>
-                            </div>
-                        </div>
-                        
-                        <button type="submit" class="btn-save-primary">Save</button>
-                    </form>
+        <main class="main-content visitorspurpose-page">
+            <div class="purpose-container">
+                <!-- Left Panel: Tabs -->
+                <div class="tabs-panel">
+                    <button class="tab-item active" data-tab="purpose">Purpose</button>
+                    <button class="tab-item" data-tab="complaint-type">Complaint Type</button>
+                    <button class="tab-item" data-tab="source">Source</button>
+                    <button class="tab-item" data-tab="reference">Reference</button>
                 </div>
 
-                <!-- Right Panel: Phone Call Log List -->
-                <div class="call-list-panel">
-                    <h2 class="panel-title">Phone Call Log List</h2>
-                    
-                    <div class="table-controls">
-                        <div class="table-search">
-                            <input type="text" class="table-search-input" id="searchInput" placeholder="Search">
+                <!-- Middle Panel: Add Form -->
+                <div class="add-form-panel">
+                    <!-- Purpose Form -->
+                    <div class="tab-content active" id="purpose-content">
+                        <h2 class="panel-title">Add Purpose</h2>
+                        <form id="purposeForm">
+                            <input type="hidden" id="purposeId" name="id">
+                            
+                            <div class="form-group">
+                                <label for="purposeName">Purpose <span class="required">*</span></label>
+                                <input type="text" id="purposeName" name="purposeName" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="purposeDescription">Description</label>
+                                <textarea id="purposeDescription" name="purposeDescription" class="form-control" rows="3"></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn-save-primary">Save</button>
+                        </form>
+                    </div>
+
+                    <!-- Complaint Type Form -->
+                    <div class="tab-content" id="complaint-type-content">
+                        <h2 class="panel-title">Add Complaint Type</h2>
+                        <form id="complaintTypeForm">
+                            <input type="hidden" id="complaintTypeId" name="id">
+                            
+                            <div class="form-group">
+                                <label for="complaintTypeName">Complaint Type <span class="required">*</span></label>
+                                <input type="text" id="complaintTypeName" name="complaintTypeName" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="complaintTypeDescription">Description</label>
+                                <textarea id="complaintTypeDescription" name="complaintTypeDescription" class="form-control" rows="3"></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn-save-primary">Save</button>
+                        </form>
+                    </div>
+
+                    <!-- Source Form -->
+                    <div class="tab-content" id="source-content">
+                        <h2 class="panel-title">Add Source</h2>
+                        <form id="sourceForm">
+                            <input type="hidden" id="sourceId" name="id">
+                            
+                            <div class="form-group">
+                                <label for="sourceName">Source <span class="required">*</span></label>
+                                <input type="text" id="sourceName" name="sourceName" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="sourceDescription">Description</label>
+                                <textarea id="sourceDescription" name="sourceDescription" class="form-control" rows="3"></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn-save-primary">Save</button>
+                        </form>
+                    </div>
+
+                    <!-- Reference Form -->
+                    <div class="tab-content" id="reference-content">
+                        <h2 class="panel-title">Add Reference</h2>
+                        <form id="referenceForm">
+                            <input type="hidden" id="referenceId" name="id">
+                            
+                            <div class="form-group">
+                                <label for="referenceName">Reference <span class="required">*</span></label>
+                                <input type="text" id="referenceName" name="referenceName" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="referenceDescription">Description</label>
+                                <textarea id="referenceDescription" name="referenceDescription" class="form-control" rows="3"></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn-save-primary">Save</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Right Panel: List View -->
+                <div class="list-panel">
+                    <!-- Purpose List -->
+                    <div class="list-content active" id="purpose-list">
+                        <h2 class="panel-title">Purpose List</h2>
+                        
+                        <div class="table-controls">
+                            <div class="table-search">
+                                <input type="text" class="table-search-input" id="purposeSearchInput" placeholder="Search">
+                            </div>
+                            <div class="table-actions">
+                                <select class="entries-select" id="purposeEntriesSelect">
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                    <option value="250">250</option>
+                                    <option value="500">500</option>
+                                </select>
+                                <button class="icon-action-btn" id="purposeCopyBtn" title="Copy">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                                <button class="icon-action-btn" id="purposeExcelBtn" title="Export to Excel">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                                        <polyline points="10 9 9 9 8 9"></polyline>
+                                    </svg>
+                                </button>
+                                <button class="icon-action-btn" id="purposeCsvBtn" title="Export to CSV">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                    </svg>
+                                </button>
+                                <button class="icon-action-btn" id="purposePdfBtn" title="Export to PDF">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                                        <polyline points="10 9 9 9 8 9"></polyline>
+                                    </svg>
+                                </button>
+                                <button class="icon-action-btn" id="purposePrintBtn" title="Print">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                                        <rect x="6" y="14" width="12" height="8"></rect>
+                                    </svg>
+                                </button>
+                                <button class="icon-action-btn" id="purposeColumnBtn" title="Column Visibility">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="3" width="7" height="7"></rect>
+                                        <rect x="14" y="3" width="7" height="7"></rect>
+                                        <rect x="14" y="14" width="7" height="7"></rect>
+                                        <rect x="3" y="14" width="7" height="7"></rect>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
-                        <div class="table-actions">
-                            <select class="entries-select" id="entriesSelect">
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                                <option value="250">250</option>
-                                <option value="500">500</option>
-                            </select>
-                            <button class="icon-action-btn" id="copyBtn" title="Copy">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                                </svg>
-                            </button>
-                            <button class="icon-action-btn" id="excelBtn" title="Export to Excel">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                    <polyline points="14 2 14 8 20 8"></polyline>
-                                    <line x1="16" y1="13" x2="8" y2="13"></line>
-                                    <line x1="16" y1="17" x2="8" y2="17"></line>
-                                    <polyline points="10 9 9 9 8 9"></polyline>
-                                </svg>
-                            </button>
-                            <button class="icon-action-btn" id="csvBtn" title="Export to CSV">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                    <polyline points="14 2 14 8 20 8"></polyline>
-                                </svg>
-                            </button>
-                            <button class="icon-action-btn" id="pdfBtn" title="Export to PDF">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="6 9 6 2 18 2 18 9"></polyline>
-                                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-                                    <rect x="6" y="14" width="12" height="8"></rect>
-                                </svg>
-                            </button>
+
+                        <div class="table-responsive">
+                            <table class="data-table" id="purposeTable">
+                                <thead>
+                                    <tr>
+                                        <th>Purpose</th>
+                                        <th>Description</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="purposeTableBody">
+                                    <!-- Data will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="table-footer">
+                            <div class="showing-info">Showing <span id="purposeShowingStart">1</span> to <span id="purposeShowingEnd">7</span> of <span id="purposeTotalEntries">7</span> entries</div>
+                            <div class="pagination" id="purposePagination">
+                                <button class="pagination-btn" disabled>‹</button>
+                                <button class="pagination-btn active">1</button>
+                                <button class="pagination-btn" disabled>›</button>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="table-responsive">
-                        <table class="data-table" id="callLogTable">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Phone</th>
-                                    <th>Date</th>
-                                    <th>Next Follow Up Date</th>
-                                    <th>Call Type</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="callLogTableBody">
-                                <tr>
-                                    <td colspan="6" style="text-align: center; padding: 40px;">No call records found</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <!-- Complaint Type List -->
+                    <div class="list-content" id="complaint-type-list">
+                        <h2 class="panel-title">Complaint Type List</h2>
+                        
+                        <div class="table-controls">
+                            <div class="table-search">
+                                <input type="text" class="table-search-input" id="complaintTypeSearchInput" placeholder="Search">
+                            </div>
+                            <div class="table-actions">
+                                <select class="entries-select" id="complaintTypeEntriesSelect">
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                    <option value="250">250</option>
+                                    <option value="500">500</option>
+                                </select>
+                                <button class="icon-action-btn" id="complaintTypeCopyBtn" title="Copy">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                                <button class="icon-action-btn" id="complaintTypeExcelBtn" title="Export to Excel">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                                        <polyline points="10 9 9 9 8 9"></polyline>
+                                    </svg>
+                                </button>
+                                <button class="icon-action-btn" id="complaintTypeCsvBtn" title="Export to CSV">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                    </svg>
+                                </button>
+                                <button class="icon-action-btn" id="complaintTypePdfBtn" title="Export to PDF">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                                        <polyline points="10 9 9 9 8 9"></polyline>
+                                    </svg>
+                                </button>
+                                <button class="icon-action-btn" id="complaintTypePrintBtn" title="Print">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                                        <rect x="6" y="14" width="12" height="8"></rect>
+                                    </svg>
+                                </button>
+                                <button class="icon-action-btn" id="complaintTypeColumnBtn" title="Column Visibility">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="3" width="7" height="7"></rect>
+                                        <rect x="14" y="3" width="7" height="7"></rect>
+                                        <rect x="14" y="14" width="7" height="7"></rect>
+                                        <rect x="3" y="14" width="7" height="7"></rect>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="data-table" id="complaintTypeTable">
+                                <thead>
+                                    <tr>
+                                        <th>Complaint Type</th>
+                                        <th>Description</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="complaintTypeTableBody">
+                                    <!-- Data will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="table-footer">
+                            <div class="showing-info">Showing <span id="complaintTypeShowingStart">0</span> to <span id="complaintTypeShowingEnd">0</span> of <span id="complaintTypeTotalEntries">0</span> entries</div>
+                            <div class="pagination" id="complaintTypePagination">
+                                <button class="pagination-btn" disabled>‹</button>
+                                <button class="pagination-btn active">1</button>
+                                <button class="pagination-btn" disabled>›</button>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="table-footer">
-                        <div class="showing-info">Showing <span id="showingStart">0</span> to <span id="showingEnd">0</span> of <span id="totalEntries">0</span> entries</div>
-                        <div class="pagination" id="pagination">
-                            <button class="pagination-btn" disabled>‹</button>
-                            <button class="pagination-btn active">1</button>
-                            <button class="pagination-btn" disabled>›</button>
+                    <!-- Source List -->
+                    <div class="list-content" id="source-list">
+                        <h2 class="panel-title">Source List</h2>
+                        
+                        <div class="table-controls">
+                            <div class="table-search">
+                                <input type="text" class="table-search-input" id="sourceSearchInput" placeholder="Search">
+                            </div>
+                            <div class="table-actions">
+                                <select class="entries-select" id="sourceEntriesSelect">
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                    <option value="250">250</option>
+                                    <option value="500">500</option>
+                                </select>
+                                <button class="icon-action-btn" id="sourceCopyBtn" title="Copy">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                                <button class="icon-action-btn" id="sourceExcelBtn" title="Export to Excel">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                                        <polyline points="10 9 9 9 8 9"></polyline>
+                                    </svg>
+                                </button>
+                                <button class="icon-action-btn" id="sourceCsvBtn" title="Export to CSV">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                    </svg>
+                                </button>
+                                <button class="icon-action-btn" id="sourcePdfBtn" title="Export to PDF">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                                        <polyline points="10 9 9 9 8 9"></polyline>
+                                    </svg>
+                                </button>
+                                <button class="icon-action-btn" id="sourcePrintBtn" title="Print">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                                        <rect x="6" y="14" width="12" height="8"></rect>
+                                    </svg>
+                                </button>
+                                <button class="icon-action-btn" id="sourceColumnBtn" title="Column Visibility">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="3" width="7" height="7"></rect>
+                                        <rect x="14" y="3" width="7" height="7"></rect>
+                                        <rect x="14" y="14" width="7" height="7"></rect>
+                                        <rect x="3" y="14" width="7" height="7"></rect>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="data-table" id="sourceTable">
+                                <thead>
+                                    <tr>
+                                        <th>Source</th>
+                                        <th>Description</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sourceTableBody">
+                                    <!-- Data will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="table-footer">
+                            <div class="showing-info">Showing <span id="sourceShowingStart">0</span> to <span id="sourceShowingEnd">0</span> of <span id="sourceTotalEntries">0</span> entries</div>
+                            <div class="pagination" id="sourcePagination">
+                                <button class="pagination-btn" disabled>‹</button>
+                                <button class="pagination-btn active">1</button>
+                                <button class="pagination-btn" disabled>›</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reference List -->
+                    <div class="list-content" id="reference-list">
+                        <h2 class="panel-title">Reference List</h2>
+                        
+                        <div class="table-controls">
+                            <div class="table-search">
+                                <input type="text" class="table-search-input" id="referenceSearchInput" placeholder="Search">
+                            </div>
+                            <div class="table-actions">
+                                <select class="entries-select" id="referenceEntriesSelect">
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                    <option value="250">250</option>
+                                    <option value="500">500</option>
+                                </select>
+                                <button class="icon-action-btn" id="referenceCopyBtn" title="Copy">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                                <button class="icon-action-btn" id="referenceExcelBtn" title="Export to Excel">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                                        <polyline points="10 9 9 9 8 9"></polyline>
+                                    </svg>
+                                </button>
+                                <button class="icon-action-btn" id="referenceCsvBtn" title="Export to CSV">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                    </svg>
+                                </button>
+                                <button class="icon-action-btn" id="referencePdfBtn" title="Export to PDF">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                                        <polyline points="10 9 9 9 8 9"></polyline>
+                                    </svg>
+                                </button>
+                                <button class="icon-action-btn" id="referencePrintBtn" title="Print">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                                        <rect x="6" y="14" width="12" height="8"></rect>
+                                    </svg>
+                                </button>
+                                <button class="icon-action-btn" id="referenceColumnBtn" title="Column Visibility">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="3" width="7" height="7"></rect>
+                                        <rect x="14" y="3" width="7" height="7"></rect>
+                                        <rect x="14" y="14" width="7" height="7"></rect>
+                                        <rect x="3" y="14" width="7" height="7"></rect>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="data-table" id="referenceTable">
+                                <thead>
+                                    <tr>
+                                        <th>Reference</th>
+                                        <th>Description</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="referenceTableBody">
+                                    <!-- Data will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="table-footer">
+                            <div class="showing-info">Showing <span id="referenceShowingStart">0</span> to <span id="referenceShowingEnd">0</span> of <span id="referenceTotalEntries">0</span> entries</div>
+                            <div class="pagination" id="referencePagination">
+                                <button class="pagination-btn" disabled>‹</button>
+                                <button class="pagination-btn active">1</button>
+                                <button class="pagination-btn" disabled>›</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -794,6 +1105,6 @@
     </div>
 
     <script th:src="@{/js/dashboard.js}"></script>
-    <script th:src="@{/js/phone-call-log.js}"></script>
+    <script th:src="@{/js/visitorspurpose.js}"></script>
 </body>
 </html>

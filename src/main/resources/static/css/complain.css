@@ -491,7 +491,7 @@ textarea.form-control {
     position: relative;
 }
 
-/* Quick Links Modal */
+/* Quick Links Modal - Centered in content area */
 .quick-links-modal {
     display: none;
     position: fixed;
@@ -499,89 +499,113 @@ textarea.form-control {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    z-index: 9998;
+    z-index: 9999;
     align-items: center;
     justify-content: center;
 }
 
-.quick-links-content {
-    background: #1e293b;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 600px;
-    max-height: 80vh;
-    overflow-y: auto;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+.quick-links-modal.active {
+    display: flex;
 }
 
-.quick-links-header {
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+}
+
+.modal-content {
+    position: relative;
+    background-color: #ffffff;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 1200px;
+    max-height: 85vh;
+    overflow: hidden;
+    z-index: 10001;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    margin: auto;
+}
+
+.modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 24px;
-    border-bottom: 1px solid #334155;
+    padding: 20px 30px;
+    border-bottom: 1px solid #e2e8f0;
 }
 
-.quick-links-header h3 {
-    font-size: 20px;
+.modal-title {
+    font-size: 24px;
     font-weight: 600;
-    color: #f1f5f9;
+    color: #2d3748;
     margin: 0;
 }
 
-.quick-links-close {
+.modal-close-btn {
     background: none;
     border: none;
     cursor: pointer;
-    padding: 4px;
+    padding: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.3s ease;
+    transition: transform 0.2s;
 }
 
-.quick-links-close:hover {
-    transform: rotate(90deg);
+.modal-close-btn:hover {
+    transform: scale(1.1);
 }
 
-.quick-links-close svg {
-    stroke: #cbd5e1;
-    width: 24px;
-    height: 24px;
+.modal-close-btn svg {
+    color: #718096;
 }
 
-.quick-links-body {
-    padding: 24px;
+.modal-body {
+    padding: 30px;
+    max-height: calc(90vh - 80px);
+    overflow-y: auto;
+}
+
+.quick-links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
 }
 
 .quick-link-category {
-    margin-bottom: 24px;
+    background-color: #f7fafc;
+    border-radius: 8px;
+    padding: 20px;
 }
 
 .category-header {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 12px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e2e8f0;
 }
 
 .category-header svg {
-    width: 18px;
-    height: 18px;
-    stroke: #3b82f6;
+    color: #3182ce;
 }
 
 .category-header h3 {
     font-size: 16px;
     font-weight: 600;
-    color: #f1f5f9;
+    color: #2d3748;
     margin: 0;
 }
 
 .category-links {
     list-style: none;
-    padding-left: 28px;
+    padding: 0;
     margin: 0;
 }
 
@@ -590,14 +614,19 @@ textarea.form-control {
 }
 
 .category-links a {
-    color: #cbd5e1;
+    color: #4a5568;
     text-decoration: none;
     font-size: 14px;
-    transition: color 0.3s ease;
+    display: block;
+    padding: 6px 10px;
+    border-radius: 4px;
+    transition: all 0.2s;
 }
 
 .category-links a:hover {
-    color: #3b82f6;
+    background-color: #e2e8f0;
+    color: #3182ce;
+    padding-left: 15px;
 }
 
 /* Responsive Design */
@@ -652,6 +681,29 @@ textarea.form-control {
     .table-footer {
         flex-direction: column;
         gap: 12px;
+    }
+
+    /* Quick Links Modal responsive */
+    .modal-content {
+        width: 95%;
+        max-height: 95vh;
+    }
+
+    .modal-header {
+        padding: 15px 20px;
+    }
+
+    .modal-title {
+        font-size: 20px;
+    }
+
+    .modal-body {
+        padding: 20px;
+    }
+
+    .quick-links-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
     }
 }
 
