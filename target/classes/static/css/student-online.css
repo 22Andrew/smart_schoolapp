@@ -1,0 +1,259 @@
+/* Online Admission - Student List Page */
+.student-online-page {
+    background: #e8edf2;
+    padding: 20px;
+    min-height: calc(100vh - 80px);
+}
+
+.student-list-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.list-title {
+    margin: 0 0 1.25rem;
+    color: #f1f5f9;
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+.table-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.table-search {
+    flex: 1;
+    min-width: 180px;
+    max-width: 280px;
+}
+
+.table-search-input {
+    width: 100%;
+    background: #0f172a;
+    border: 1px solid #334155;
+    color: #f1f5f9;
+    padding: 0.55rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-family: inherit;
+}
+
+.table-search-input::placeholder {
+    color: #64748b;
+}
+
+.table-search-input:focus {
+    outline: none;
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+}
+
+.table-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.entries-select {
+    background: #0f172a;
+    border: 1px solid #334155;
+    color: #f1f5f9;
+    padding: 0.5rem 0.65rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-family: inherit;
+}
+
+.icon-action-btn {
+    background: transparent;
+    border: 1px solid #334155;
+    color: #94a3b8;
+    padding: 0.45rem;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.icon-action-btn:hover {
+    background: #334155;
+    color: #f1f5f9;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1200px;
+}
+
+.data-table thead th {
+    background: #243342;
+    color: #ecf0f1;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-align: left;
+    padding: 0.8rem 0.65rem;
+    border-bottom: 1px solid #334155;
+    white-space: nowrap;
+}
+
+.data-table tbody td {
+    color: #cbd5e1;
+    font-size: 0.82rem;
+    padding: 0.75rem 0.65rem;
+    border-bottom: 1px solid #334155;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.data-table tbody tr:hover {
+    background: rgba(51, 65, 85, 0.35);
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.28rem 0.55rem;
+    border-radius: 3px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.status-danger {
+    background: #dc2626;
+    color: #fff;
+}
+
+.status-success {
+    background: #16a34a;
+    color: #fff;
+}
+
+.enrolled-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1.5px solid #94a3b8;
+    color: #f1f5f9;
+    font-size: 0.8rem;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.enrolled-yes {
+    border-color: #94a3b8;
+}
+
+.enrolled-no {
+    border-color: #64748b;
+    color: #cbd5e1;
+}
+
+.action-buttons {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.btn-action {
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #fff;
+    transition: opacity 0.2s ease;
+}
+
+.btn-action:hover {
+    opacity: 0.85;
+}
+
+.btn-view,
+.btn-edit,
+.btn-delete {
+    background: #6366f1;
+}
+
+.table-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid #334155;
+}
+
+.showing-info {
+    color: #94a3b8;
+    font-size: 0.85rem;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.pagination-btn {
+    min-width: 32px;
+    height: 32px;
+    padding: 0 0.5rem;
+    background: #0f172a;
+    border: 1px solid #334155;
+    color: #cbd5e1;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.pagination-btn.active {
+    background: #8b5cf6;
+    border-color: #8b5cf6;
+    color: #fff;
+}
+
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+    .student-online-page {
+        padding: 12px;
+    }
+
+    .table-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .table-search {
+        max-width: none;
+    }
+
+    .table-actions {
+        flex-wrap: wrap;
+    }
+}

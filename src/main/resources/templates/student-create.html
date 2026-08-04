@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Postal Receive - Smart School</title>
+    <title>Student Admission - Smart School</title>
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
-    <link rel="stylesheet" th:href="@{/css/postal-receive.css}">
+    <link rel="stylesheet" th:href="@{/css/student-create.css}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- SweetAlert2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -143,7 +143,7 @@
 
     <!-- Main Container -->
     <div class="main-container">
-        <!-- Sidebar -->
+        <!-- Sidebar (Same as visitors page) -->
         <aside class="sidebar">
             <div class="sidebar-top">
                 <div class="sidebar-session">
@@ -173,7 +173,7 @@
             </div>
             <div class="sidebar-menu">
                 <div class="menu-item-wrapper">
-                    <a href="#" class="menu-item menu-item-expandable active" data-submenu="front-office">
+                    <a href="#" class="menu-item menu-item-expandable" data-submenu="front-office">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
                             <path d="M16 3h-3a2 2 0 0 0-2 2v2"></path>
@@ -187,18 +187,18 @@
                             <polyline points="9 18 15 12 9 6"></polyline>
                         </svg>
                     </a>
-                    <div class="submenu active" id="submenu-front-office">
+                    <div class="submenu" id="submenu-front-office">
                         <a href="/admission-enquiry" class="submenu-item">Admission Enquiry</a>
                         <a href="/visitors" class="submenu-item">Visitor Book</a>
                         <a href="/phone-call-log" class="submenu-item">Phone Call Log</a>
                         <a href="/dispatch" class="submenu-item">Postal Dispatch</a>
-                        <a href="/receive" class="submenu-item active">Postal Receive</a>
+                        <a href="/receive" class="submenu-item">Postal Receive</a>
                         <a href="/complain" class="submenu-item">Complain</a>
                         <a href="/visitorspurpose" class="submenu-item">Setup Front Office</a>
                     </div>
                 </div>
                 <div class="menu-item-wrapper">
-                    <a href="#" class="menu-item menu-item-expandable" data-submenu="student-information">
+                    <a href="#" class="menu-item menu-item-expandable active" data-submenu="student-information">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                             <circle cx="9" cy="7" r="4"></circle>
@@ -210,9 +210,9 @@
                             <polyline points="9 18 15 12 9 6"></polyline>
                         </svg>
                     </a>
-                    <div class="submenu" id="submenu-student-information">
+                    <div class="submenu active" id="submenu-student-information">
                         <a href="/student/search" class="submenu-item">Student Details</a>
-                        <a href="/student/create" class="submenu-item">Student Admission</a>
+                        <a href="/student/create" class="submenu-item active">Student Admission</a>
                         <a href="/student/onlinestudent" class="submenu-item">Online Admission</a>
                         <a href="/student/disablestudentslist" class="submenu-item">Disabled Students</a>
                         <a href="#" class="submenu-item">Multi Class Student</a>
@@ -479,179 +479,639 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="main-content postal-receive-page">
-            <div class="receive-container">
-                <!-- Left Panel: Add Postal Receive Form -->
-                <div class="add-receive-panel">
-                    <h2 class="panel-title">Add Postal Receive</h2>
-                    <form id="receiveForm">
-                        <input type="hidden" id="receiveId" name="id">
-                        
-                        <div class="form-group">
-                            <label for="fromTitle">From Title <span class="required">*</span></label>
-                            <input type="text" id="fromTitle" name="fromTitle" class="form-control" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="referenceNo">Reference No</label>
-                            <input type="text" id="referenceNo" name="referenceNo" class="form-control">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="address">Address</label>
-                            <textarea id="address" name="address" class="form-control" rows="3"></textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="note">Note</label>
-                            <textarea id="note" name="note" class="form-control" rows="3"></textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="toTitle">To Title <span class="required">*</span></label>
-                            <input type="text" id="toTitle" name="toTitle" class="form-control" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="date">Date <span class="required">*</span></label>
-                            <input type="date" id="date" name="date" class="form-control" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="document">Attach Document</label>
-                            <div class="file-upload-container">
-                                <div class="file-upload-area" id="fileUploadArea">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                        <polyline points="17 8 12 3 7 8"></polyline>
-                                        <line x1="12" y1="3" x2="12" y2="15"></line>
-                                    </svg>
-                                    <span class="file-upload-text">Drag and drop a file here or click</span>
-                                </div>
-                                <input type="file" id="document" name="document" class="file-input" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
-                                <div id="fileName" class="file-name"></div>
-                            </div>
-                        </div>
-                        
-                        <button type="submit" class="btn-save-primary">Save</button>
-                    </form>
+        <main class="main-content student-create-page">
+            <div class="admission-card">
+                <div class="admission-header">
+                    <h2 class="admission-title">Student Admission</h2>
+                    <button type="button" class="btn-import" id="importStudentBtn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        Import Student
+                    </button>
                 </div>
 
-                <!-- Right Panel: Postal Receive List -->
-                <div class="receive-list-panel">
-                    <h2 class="panel-title">Postal Receive List</h2>
-                    
-                    <div class="table-controls">
-                        <div class="table-search">
-                            <input type="text" class="table-search-input" id="searchInput" placeholder="Search">
+                <form id="studentAdmissionForm" class="admission-form">
+                    <div class="form-grid cols-4">
+                        <div class="form-group">
+                            <label for="admissionNo">Admission No <span class="required">*</span></label>
+                            <input type="text" id="admissionNo" name="admissionNo" class="form-control" required>
                         </div>
-                        <div class="table-actions">
-                            <select class="entries-select" id="entriesSelect">
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                                <option value="250">250</option>
-                                <option value="500">500</option>
+                        <div class="form-group">
+                            <label for="rollNumber">Roll Number</label>
+                            <input type="text" id="rollNumber" name="rollNumber" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="classSelect">Class <span class="required">*</span></label>
+                            <select id="classSelect" name="className" class="form-control" required>
+                                <option value="">Select</option>
+                                <option value="1">Class 1</option>
+                                <option value="2">Class 2</option>
+                                <option value="3">Class 3</option>
+                                <option value="4">Class 4</option>
+                                <option value="5">Class 5</option>
+                                <option value="6">Class 6</option>
+                                <option value="7">Class 7</option>
+                                <option value="8">Class 8</option>
+                                <option value="9">Class 9</option>
+                                <option value="10">Class 10</option>
+                                <option value="11">Class 11</option>
+                                <option value="12">Class 12</option>
                             </select>
-                            <button class="icon-action-btn" id="copyBtn" title="Copy">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </div>
+                        <div class="form-group">
+                            <label for="sectionSelect">Section <span class="required">*</span></label>
+                            <select id="sectionSelect" name="section" class="form-control" required>
+                                <option value="">Select</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-grid cols-4">
+                        <div class="form-group">
+                            <label for="firstName">First Name <span class="required">*</span></label>
+                            <input type="text" id="firstName" name="firstName" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" id="lastName" name="lastName" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Gender <span class="required">*</span></label>
+                            <select id="gender" name="gender" class="form-control" required>
+                                <option value="">Select</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="dateOfBirth">Date Of Birth <span class="required">*</span></label>
+                            <input type="date" id="dateOfBirth" name="dateOfBirth" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-grid cols-4">
+                        <div class="form-group">
+                            <label for="category">Category</label>
+                            <select id="category" name="category" class="form-control">
+                                <option value="">Select</option>
+                                <option value="General">General</option>
+                                <option value="OBC">OBC</option>
+                                <option value="SC">SC</option>
+                                <option value="ST">ST</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="religion">Religion</label>
+                            <input type="text" id="religion" name="religion" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="mobileNumber">Mobile Number</label>
+                            <input type="tel" id="mobileNumber" name="mobileNumber" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-grid cols-4">
+                        <div class="form-group">
+                            <label for="admissionDate">Admission Date</label>
+                            <input type="date" id="admissionDate" name="admissionDate" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="studentPhoto">Student Photo (100px X 100px)</label>
+                            <div class="file-upload-box" data-file-input="studentPhoto">
+                                <input type="file" id="studentPhoto" name="studentPhoto" accept="image/*" hidden>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
                                 </svg>
-                            </button>
-                            <button class="icon-action-btn" id="excelBtn" title="Export to Excel">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                    <polyline points="14 2 14 8 20 8"></polyline>
-                                    <line x1="16" y1="13" x2="8" y2="13"></line>
-                                    <line x1="16" y1="17" x2="8" y2="17"></line>
-                                    <polyline points="10 9 9 9 8 9"></polyline>
+                                <span>Drag and drop a file here or click</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="bloodGroup">Blood Group</label>
+                            <select id="bloodGroup" name="bloodGroup" class="form-control">
+                                <option value="">Select</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="house">House</label>
+                            <select id="house" name="house" class="form-control">
+                                <option value="">Select</option>
+                                <option value="Red">Red</option>
+                                <option value="Blue">Blue</option>
+                                <option value="Green">Green</option>
+                                <option value="Yellow">Yellow</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-grid cols-4 sibling-row">
+                        <div class="form-group">
+                            <label for="height">Height</label>
+                            <input type="text" id="height" name="height" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="weight">Weight</label>
+                            <input type="text" id="weight" name="weight" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="measurementDate">Measurement Date</label>
+                            <input type="date" id="measurementDate" name="measurementDate" class="form-control">
+                        </div>
+                        <div class="form-group sibling-link-group">
+                            <label>&nbsp;</label>
+                            <button type="button" class="btn-add-sibling" id="addSiblingBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
                                 </svg>
+                                Add Sibling
                             </button>
-                            <button class="icon-action-btn" id="csvBtn" title="Export to CSV">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                    <polyline points="14 2 14 8 20 8"></polyline>
-                                </svg>
-                            </button>
-                            <button class="icon-action-btn" id="pdfBtn" title="PDF">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                    <polyline points="14 2 14 8 20 8"></polyline>
-                                    <line x1="16" y1="13" x2="8" y2="13"></line>
-                                    <line x1="16" y1="17" x2="8" y2="17"></line>
-                                </svg>
-                            </button>
-                            <button class="icon-action-btn" id="printBtn" title="Print">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="6 9 6 2 18 2 18 9"></polyline>
-                                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-                                    <rect x="6" y="14" width="12" height="8"></rect>
-                                </svg>
-                            </button>
-                            <button class="icon-action-btn" id="columnVisibilityBtn" title="Column Visibility">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="3" y="3" width="7" height="7"></rect>
-                                    <rect x="14" y="3" width="7" height="7"></rect>
-                                    <rect x="14" y="14" width="7" height="7"></rect>
-                                    <rect x="3" y="14" width="7" height="7"></rect>
-                                </svg>
-                            </button>
-                            
-                            <!-- Column Visibility Dropdown -->
-                            <div class="column-visibility-dropdown" id="columnVisibilityDropdown">
-                                <div class="dropdown-header">
-                                    <span>Toggle Columns</span>
-                                </div>
-                                <div class="dropdown-content">
-                                    <label class="column-toggle-item">
-                                        <input type="checkbox" class="column-toggle" data-column="0" checked>
-                                        <span>From Title</span>
-                                    </label>
-                                    <label class="column-toggle-item">
-                                        <input type="checkbox" class="column-toggle" data-column="1" checked>
-                                        <span>Reference No</span>
-                                    </label>
-                                    <label class="column-toggle-item">
-                                        <input type="checkbox" class="column-toggle" data-column="2" checked>
-                                        <span>To Title</span>
-                                    </label>
-                                    <label class="column-toggle-item">
-                                        <input type="checkbox" class="column-toggle" data-column="3" checked>
-                                        <span>Date</span>
-                                    </label>
-                                </div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid cols-1">
+                        <div class="form-group">
+                            <label for="medicalHistory">Medical History</label>
+                            <input type="text" id="medicalHistory" name="medicalHistory" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="section-divider">
+                        <span>Transport Details</span>
+                    </div>
+
+                    <div class="form-grid cols-3">
+                        <div class="form-group">
+                            <label for="routeList">Route List</label>
+                            <select id="routeList" name="routeList" class="form-control">
+                                <option value="">Select</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="pickupPoint">Pickup Point</label>
+                            <select id="pickupPoint" name="pickupPoint" class="form-control">
+                                <option value="">Select</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="feesMonth">Fees Month</label>
+                            <select id="feesMonth" name="feesMonth" class="form-control">
+                                <option value="">Select Month</option>
+                                <option value="January">January</option>
+                                <option value="February">February</option>
+                                <option value="March">March</option>
+                                <option value="April">April</option>
+                                <option value="May">May</option>
+                                <option value="June">June</option>
+                                <option value="July">July</option>
+                                <option value="August">August</option>
+                                <option value="September">September</option>
+                                <option value="October">October</option>
+                                <option value="November">November</option>
+                                <option value="December">December</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="section-divider">
+                        <span>Hostel Details</span>
+                    </div>
+
+                    <div class="form-grid cols-2 hostel-grid">
+                        <div class="form-group">
+                            <label for="hostel">Hostel</label>
+                            <select id="hostel" name="hostel" class="form-control">
+                                <option value="">Select</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="roomNo">Room No.</label>
+                            <select id="roomNo" name="roomNo" class="form-control">
+                                <option value="">Select</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="fees-details-section">
+                        <div class="fees-details-header">
+                            <span>Fees Details</span>
+                        </div>
+                        <div class="fees-details-list" id="feesDetailsList">
+                            <div class="fees-item">
+                                <button type="button" class="fees-expand-btn" aria-label="Expand">+</button>
+                                <label class="fees-item-label">
+                                    <input type="checkbox" name="fees" value="class1-general" class="fees-checkbox">
+                                    <span class="fees-name">Class 1 General</span>
+                                </label>
+                                <span class="fees-amount">8,710.00</span>
+                            </div>
+                            <div class="fees-item">
+                                <button type="button" class="fees-expand-btn" aria-label="Expand">+</button>
+                                <label class="fees-item-label">
+                                    <input type="checkbox" name="fees" value="class1-lumpsum" class="fees-checkbox">
+                                    <span class="fees-name">Class 1 Lump Sum</span>
+                                </label>
+                                <span class="fees-amount">400.00</span>
+                            </div>
+                            <div class="fees-item">
+                                <button type="button" class="fees-expand-btn" aria-label="Expand">+</button>
+                                <label class="fees-item-label">
+                                    <input type="checkbox" name="fees" value="class1-installment" class="fees-checkbox">
+                                    <span class="fees-name">Class 1-I Installment</span>
+                                </label>
+                                <span class="fees-amount">300.00</span>
+                            </div>
+                            <div class="fees-item">
+                                <button type="button" class="fees-expand-btn" aria-label="Expand">+</button>
+                                <label class="fees-item-label">
+                                    <input type="checkbox" name="fees" value="class2-general" class="fees-checkbox">
+                                    <span class="fees-name">Class 2 General</span>
+                                </label>
+                                <span class="fees-amount">6,550.00</span>
+                            </div>
+                            <div class="fees-item">
+                                <button type="button" class="fees-expand-btn" aria-label="Expand">+</button>
+                                <label class="fees-item-label">
+                                    <input type="checkbox" name="fees" value="class2-lumpsum" class="fees-checkbox">
+                                    <span class="fees-name">Class 2 Lump Sum</span>
+                                </label>
+                                <span class="fees-amount">350.00</span>
+                            </div>
+                            <div class="fees-item">
+                                <button type="button" class="fees-expand-btn" aria-label="Expand">+</button>
+                                <label class="fees-item-label">
+                                    <input type="checkbox" name="fees" value="balance-master" class="fees-checkbox">
+                                    <span class="fees-name">Balance Master</span>
+                                </label>
+                                <span class="fees-amount">0.00</span>
+                            </div>
+                            <div class="fees-item">
+                                <button type="button" class="fees-expand-btn" aria-label="Expand">+</button>
+                                <label class="fees-item-label">
+                                    <input type="checkbox" name="fees" value="class3-general" class="fees-checkbox">
+                                    <span class="fees-name">Class 3 General</span>
+                                </label>
+                                <span class="fees-amount">7,800.00</span>
+                            </div>
+                            <div class="fees-item">
+                                <button type="button" class="fees-expand-btn" aria-label="Expand">+</button>
+                                <label class="fees-item-label">
+                                    <input type="checkbox" name="fees" value="class4-general" class="fees-checkbox">
+                                    <span class="fees-name">Class 4 General</span>
+                                </label>
+                                <span class="fees-amount">8,840.00</span>
+                            </div>
+                            <div class="fees-item">
+                                <button type="button" class="fees-expand-btn" aria-label="Expand">+</button>
+                                <label class="fees-item-label">
+                                    <input type="checkbox" name="fees" value="exam" class="fees-checkbox">
+                                    <span class="fees-name">Exam</span>
+                                </label>
+                                <span class="fees-amount">250.00</span>
+                            </div>
+                            <div class="fees-item">
+                                <button type="button" class="fees-expand-btn" aria-label="Expand">+</button>
+                                <label class="fees-item-label">
+                                    <input type="checkbox" name="fees" value="fees" class="fees-checkbox">
+                                    <span class="fees-name">Fees</span>
+                                </label>
+                                <span class="fees-amount">0.00</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="table-responsive">
-                        <table class="data-table" id="receiveTable">
-                            <thead>
-                                <tr>
-                                    <th>From Title</th>
-                                    <th>Reference No</th>
-                                    <th>To Title</th>
-                                    <th>Date</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="receiveTableBody">
-                                <tr>
-                                    <td colspan="5" style="text-align: center; padding: 40px;">No receive records found</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="table-footer">
-                        <div class="showing-info">Showing <span id="showingStart">0</span> to <span id="showingEnd">0</span> of <span id="totalEntries">0</span> entries</div>
-                        <div class="pagination" id="pagination">
-                            <button class="pagination-btn" disabled>‹</button>
-                            <button class="pagination-btn active">1</button>
-                            <button class="pagination-btn" disabled>›</button>
+                    <div class="fees-details-section">
+                        <div class="fees-details-header">
+                            <span>Fees Discount Details</span>
+                        </div>
+                        <div class="fees-details-list" id="feesDiscountList">
+                            <div class="fees-item">
+                                <button type="button" class="fees-expand-btn" aria-label="Expand">+</button>
+                                <label class="fees-item-label">
+                                    <input type="checkbox" name="feesDiscount" value="rksdisc01" class="fees-checkbox">
+                                    <span class="fees-name">RKS Discount 1 - rksdisc01</span>
+                                </label>
+                            </div>
+                            <div class="fees-item">
+                                <button type="button" class="fees-expand-btn" aria-label="Expand">+</button>
+                                <label class="fees-item-label">
+                                    <input type="checkbox" name="feesDiscount" value="sibling-disc" class="fees-checkbox">
+                                    <span class="fees-name">Sibling Discount - sibling-disc</span>
+                                </label>
+                            </div>
+                            <div class="fees-item">
+                                <button type="button" class="fees-expand-btn" aria-label="Expand">+</button>
+                                <label class="fees-item-label">
+                                    <input type="checkbox" name="feesDiscount" value="handicap-disc" class="fees-checkbox">
+                                    <span class="fees-name">Handicapped Discount - handicap-disc</span>
+                                </label>
+                            </div>
+                            <div class="fees-item">
+                                <button type="button" class="fees-expand-btn" aria-label="Expand">+</button>
+                                <label class="fees-item-label">
+                                    <input type="checkbox" name="feesDiscount" value="cls-top-disc" class="fees-checkbox">
+                                    <span class="fees-name">Class Topper Discount - cls-top-disc</span>
+                                </label>
+                            </div>
                         </div>
                     </div>
-                </div>
+
+                    <div class="fees-details-header parent-guardian-header">
+                        <span>Parent Guardian Detail</span>
+                    </div>
+
+                    <div class="form-grid cols-4">
+                        <div class="form-group">
+                            <label for="fatherName">Father Name</label>
+                            <input type="text" id="fatherName" name="fatherName" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="fatherPhone">Father Phone</label>
+                            <input type="tel" id="fatherPhone" name="fatherPhone" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="fatherOccupation">Father Occupation</label>
+                            <input type="text" id="fatherOccupation" name="fatherOccupation" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="fatherPhoto">Father Photo (100px X 100px)</label>
+                            <div class="file-upload-box" data-file-input="fatherPhoto">
+                                <input type="file" id="fatherPhoto" name="fatherPhoto" accept="image/*" hidden>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
+                                </svg>
+                                <span>Drag and drop a file here or click</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid cols-4">
+                        <div class="form-group">
+                            <label for="motherName">Mother Name</label>
+                            <input type="text" id="motherName" name="motherName" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="motherPhone">Mother Phone</label>
+                            <input type="tel" id="motherPhone" name="motherPhone" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="motherOccupation">Mother Occupation</label>
+                            <input type="text" id="motherOccupation" name="motherOccupation" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="motherPhoto">Mother Photo (100px X 100px)</label>
+                            <div class="file-upload-box" data-file-input="motherPhoto">
+                                <input type="file" id="motherPhoto" name="motherPhoto" accept="image/*" hidden>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
+                                </svg>
+                                <span>Drag and drop a file here or click</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid cols-1">
+                        <div class="form-group">
+                            <label>If Guardian Is <span class="required">*</span></label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="guardianIs" value="Father" required>
+                                    <span>Father</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="guardianIs" value="Mother">
+                                    <span>Mother</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="guardianIs" value="Other">
+                                    <span>Other</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid cols-4">
+                        <div class="form-group">
+                            <label for="guardianName">Guardian Name <span class="required">*</span></label>
+                            <input type="text" id="guardianName" name="guardianName" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="guardianRelation">Guardian Relation</label>
+                            <input type="text" id="guardianRelation" name="guardianRelation" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="guardianEmail">Guardian Email</label>
+                            <input type="email" id="guardianEmail" name="guardianEmail" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="guardianPhoto">Guardian Photo (100px X 100px)</label>
+                            <div class="file-upload-box" data-file-input="guardianPhoto">
+                                <input type="file" id="guardianPhoto" name="guardianPhoto" accept="image/*" hidden>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
+                                </svg>
+                                <span>Drag and drop a file here or click</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid guardian-bottom-row">
+                        <div class="form-group">
+                            <label for="guardianPhone">Guardian Phone <span class="required">*</span></label>
+                            <input type="tel" id="guardianPhone" name="guardianPhone" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="guardianOccupation">Guardian Occupation</label>
+                            <input type="text" id="guardianOccupation" name="guardianOccupation" class="form-control">
+                        </div>
+                        <div class="form-group guardian-address-group">
+                            <label for="guardianAddress">Guardian Address</label>
+                            <input type="text" id="guardianAddress" name="guardianAddress" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="more-details-section" id="moreDetailsSection">
+                        <button type="button" class="more-details-toggle" id="moreDetailsToggle" aria-expanded="true">
+                            <span>Add More Details</span>
+                            <span class="more-details-icon" aria-hidden="true">
+                                <svg class="icon-minus" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                                <svg class="icon-plus" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                            </span>
+                        </button>
+
+                        <div class="more-details-body" id="moreDetailsBody">
+                            <div class="fees-details-header">
+                                <span>Student Address Details</span>
+                            </div>
+
+                            <div class="address-checkboxes">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="guardianIsCurrentAddress" name="guardianIsCurrentAddress">
+                                    <span>If Guardian Address Is Current Address</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="permanentIsCurrentAddress" name="permanentIsCurrentAddress">
+                                    <span>If Permanent Address Is Current Address</span>
+                                </label>
+                            </div>
+
+                            <div class="form-grid cols-2">
+                                <div class="form-group">
+                                    <label for="currentAddress">Current Address</label>
+                                    <textarea id="currentAddress" name="currentAddress" class="form-control textarea-control" rows="4"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="permanentAddress">Permanent Address</label>
+                                    <textarea id="permanentAddress" name="permanentAddress" class="form-control textarea-control" rows="4"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="fees-details-header misc-header">
+                                <span>Miscellaneous Details</span>
+                            </div>
+
+                            <div class="form-grid cols-3">
+                                <div class="form-group">
+                                    <label for="bankAccountNumber">Bank Account Number</label>
+                                    <input type="text" id="bankAccountNumber" name="bankAccountNumber" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="bankName">Bank Name</label>
+                                    <input type="text" id="bankName" name="bankName" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="ifscCode">IFSC Code</label>
+                                    <input type="text" id="ifscCode" name="ifscCode" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="form-grid cols-3">
+                                <div class="form-group">
+                                    <label for="nationalId">National Identification Number</label>
+                                    <input type="text" id="nationalId" name="nationalId" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="localId">Local Identification Number</label>
+                                    <input type="text" id="localId" name="localId" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label>RTE</label>
+                                    <div class="radio-group">
+                                        <label class="radio-label">
+                                            <input type="radio" name="rte" value="Yes">
+                                            <span>Yes</span>
+                                        </label>
+                                        <label class="radio-label">
+                                            <input type="radio" name="rte" value="No" checked>
+                                            <span>No</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-grid cols-2">
+                                <div class="form-group">
+                                    <label for="previousSchoolDetails">Previous School Details</label>
+                                    <textarea id="previousSchoolDetails" name="previousSchoolDetails" class="form-control textarea-control" rows="4"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="note">Note</label>
+                                    <textarea id="note" name="note" class="form-control textarea-control" rows="4"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="upload-documents-section">
+                                <div class="fees-details-header">
+                                    <span>Upload Documents</span>
+                                </div>
+                                <div class="upload-documents-grid">
+                                    <div class="upload-documents-column">
+                                        <div class="upload-documents-head">
+                                            <span class="upload-col-num">#</span>
+                                            <span class="upload-col-title">Title</span>
+                                            <span class="upload-col-docs">Documents</span>
+                                        </div>
+                                        <div class="upload-documents-row">
+                                            <span class="upload-row-num">1</span>
+                                            <input type="text" name="documentTitle1" class="form-control" aria-label="Document title 1">
+                                            <div class="file-upload-box" data-file-input="documentFile1">
+                                                <input type="file" id="documentFile1" name="documentFile1" hidden>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                                    <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
+                                                </svg>
+                                                <span>Drag and drop a file here or click</span>
+                                            </div>
+                                        </div>
+                                        <div class="upload-documents-row">
+                                            <span class="upload-row-num">2</span>
+                                            <input type="text" name="documentTitle2" class="form-control" aria-label="Document title 2">
+                                            <div class="file-upload-box" data-file-input="documentFile2">
+                                                <input type="file" id="documentFile2" name="documentFile2" hidden>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                                    <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
+                                                </svg>
+                                                <span>Drag and drop a file here or click</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="upload-documents-column">
+                                        <div class="upload-documents-head">
+                                            <span class="upload-col-num">#</span>
+                                            <span class="upload-col-title">Title</span>
+                                            <span class="upload-col-docs">Documents</span>
+                                        </div>
+                                        <div class="upload-documents-row">
+                                            <span class="upload-row-num">3</span>
+                                            <input type="text" name="documentTitle3" class="form-control" aria-label="Document title 3">
+                                            <div class="file-upload-box" data-file-input="documentFile3">
+                                                <input type="file" id="documentFile3" name="documentFile3" hidden>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                                    <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
+                                                </svg>
+                                                <span>Drag and drop a file here or click</span>
+                                            </div>
+                                        </div>
+                                        <div class="upload-documents-row">
+                                            <span class="upload-row-num">4</span>
+                                            <input type="text" name="documentTitle4" class="form-control" aria-label="Document title 4">
+                                            <div class="file-upload-box" data-file-input="documentFile4">
+                                                <input type="file" id="documentFile4" name="documentFile4" hidden>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                                    <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
+                                                </svg>
+                                                <span>Drag and drop a file here or click</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
         </main>
     </div>
@@ -831,6 +1291,6 @@
     </div>
 
     <script th:src="@{/js/dashboard.js}"></script>
-    <script th:src="@{/js/postal-receive.js}"></script>
+    <script th:src="@{/js/student-create.js}"></script>
 </body>
 </html>
