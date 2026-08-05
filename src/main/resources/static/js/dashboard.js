@@ -312,32 +312,44 @@ document.addEventListener('DOMContentLoaded', function() {
     // Auto-expand menu and activate submenu item based on current page
     function setActiveMenuFromCurrentPage() {
         const currentPath = window.location.pathname;
-        
-        // Find all submenu items
         const allSubmenuItems = document.querySelectorAll('.submenu-item');
-        
+
+        // Clear previous submenu highlights so only one item stays active
+        allSubmenuItems.forEach(item => item.classList.remove('active'));
+
+        let bestMatch = null;
+        let bestLength = -1;
+
         allSubmenuItems.forEach(item => {
             const itemHref = item.getAttribute('href');
-            
-            // Check if this submenu item's href matches the current page
-            if (itemHref && currentPath.includes(itemHref)) {
-                // Mark this submenu item as active
-                item.classList.add('active');
-                
-                // Find and expand the parent menu
-                const parentSubmenu = item.closest('.submenu');
-                if (parentSubmenu) {
-                    parentSubmenu.classList.add('open');
-                    
-                    // Find and mark the parent menu item as expanded
-                    const parentMenuId = parentSubmenu.id.replace('submenu-', '');
-                    const parentMenuItem = document.querySelector(`.menu-item-expandable[data-submenu="${parentMenuId}"]`);
-                    if (parentMenuItem) {
-                        parentMenuItem.classList.add('expanded');
-                    }
-                }
+            if (!itemHref || itemHref === '#') return;
+
+            // Exact match, or nested path (e.g. /timetable matches /timetable/create)
+            // Avoid false positives like /hostel matching /hostelroom
+            const isExact = currentPath === itemHref;
+            const isNested = currentPath.startsWith(itemHref + '/');
+            if (!isExact && !isNested) return;
+
+            if (itemHref.length > bestLength) {
+                bestMatch = item;
+                bestLength = itemHref.length;
             }
         });
+
+        if (!bestMatch) return;
+
+        bestMatch.classList.add('active');
+
+        const parentSubmenu = bestMatch.closest('.submenu');
+        if (parentSubmenu) {
+            parentSubmenu.classList.add('open');
+
+            const parentMenuId = parentSubmenu.id.replace('submenu-', '');
+            const parentMenuItem = document.querySelector(`.menu-item-expandable[data-submenu="${parentMenuId}"]`);
+            if (parentMenuItem) {
+                parentMenuItem.classList.add('expanded');
+            }
+        }
     }
     
     // Call on page load

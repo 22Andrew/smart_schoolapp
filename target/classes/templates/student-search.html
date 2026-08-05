@@ -215,11 +215,11 @@
                         <a href="/student/create" class="submenu-item">Student Admission</a>
                         <a href="/student/onlinestudent" class="submenu-item">Online Admission</a>
                         <a href="/student/disablestudentslist" class="submenu-item">Disabled Students</a>
-                        <a href="#" class="submenu-item">Multi Class Student</a>
-                        <a href="#" class="submenu-item">Bulk Delete</a>
-                        <a href="#" class="submenu-item">Student Categories</a>
-                        <a href="#" class="submenu-item">Student House</a>
-                        <a href="#" class="submenu-item">Disable Reason</a>
+                        <a href="/student/multiclass" class="submenu-item">Multi Class Student</a>
+                        <a href="/student/bulkdelete" class="submenu-item">Bulk Delete</a>
+                        <a href="/category" class="submenu-item">Student Categories</a>
+                        <a href="/schoolhouse" class="submenu-item">Student House</a>
+                        <a href="/disablereason" class="submenu-item">Disable Reason</a>
                     </div>
                 </div>
                 <div class="menu-item-wrapper">
@@ -291,14 +291,14 @@
                         </svg>
                     </a>
                     <div class="submenu" id="submenu-academics">
-                        <a href="#" class="submenu-item">Class Timetable</a>
-                        <a href="#" class="submenu-item">Teachers Timetable</a>
-                        <a href="#" class="submenu-item">Assign Class Teacher</a>
-                        <a href="#" class="submenu-item">Promote Students</a>
-                        <a href="#" class="submenu-item">Subject Group</a>
-                        <a href="#" class="submenu-item">Subjects</a>
-                        <a href="#" class="submenu-item">Class</a>
-                        <a href="#" class="submenu-item">Sections</a>
+                        <a href="/classreport" class="submenu-item">Class Timetable</a>
+                        <a href="/timetable/mytimetable" class="submenu-item">Teachers Timetable</a>
+                        <a href="/teacher/assignclassteacher" class="submenu-item">Assign Class Teacher</a>
+                        <a href="/promotetransfer" class="submenu-item">Promote Students</a>
+                        <a href="/subjectgroup" class="submenu-item">Subject Group</a>
+                        <a href="/subject" class="submenu-item">Subjects</a>
+                        <a href="/classes" class="submenu-item">Class</a>
+                        <a href="/sections" class="submenu-item">Sections</a>
                     </div>
                 </div>
                 <div class="menu-item-wrapper">
@@ -426,9 +426,9 @@
                         </svg>
                     </a>
                     <div class="submenu" id="submenu-hostel">
-                        <a href="#" class="submenu-item">Hostel Rooms</a>
-                        <a href="#" class="submenu-item">Room Type</a>
-                        <a href="#" class="submenu-item">Hostel</a>
+                        <a href="/hostelroom" class="submenu-item">Hostel Rooms</a>
+                        <a href="/roomtype" class="submenu-item">Room Type</a>
+                        <a href="/hostel" class="submenu-item">Hostel</a>
                     </div>
                 </div>
                 <div class="menu-item-wrapper">
@@ -489,28 +489,12 @@
                             <label for="classSelect">Class <span class="required">*</span></label>
                             <select id="classSelect" class="form-select">
                                 <option value="">Select</option>
-                                <option value="1">Class 1</option>
-                                <option value="2">Class 2</option>
-                                <option value="3">Class 3</option>
-                                <option value="4">Class 4</option>
-                                <option value="5">Class 5</option>
-                                <option value="6">Class 6</option>
-                                <option value="7">Class 7</option>
-                                <option value="8">Class 8</option>
-                                <option value="9">Class 9</option>
-                                <option value="10">Class 10</option>
-                                <option value="11">Class 11</option>
-                                <option value="12">Class 12</option>
                             </select>
                         </div>
                         <div class="form-group section-group">
                             <label for="sectionSelect">Section</label>
                             <select id="sectionSelect" class="form-select">
                                 <option value="">Select</option>
-                                <option value="A">A</option>
-                                <option value="B">B</option>
-                                <option value="C">C</option>
-                                <option value="D">D</option>
                             </select>
                         </div>
                         <div class="form-group form-submit">
@@ -542,24 +526,87 @@
             <!-- Student Results Section -->
             <div class="table-section">
                 <div class="view-tabs">
-                    <button type="button" class="view-tab active" data-view="list">List View</button>
-                    <button type="button" class="view-tab" data-view="details">Details View</button>
+                    <button type="button" class="view-tab active" data-view="list">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="8" y1="6" x2="21" y2="6"></line>
+                            <line x1="8" y1="12" x2="21" y2="12"></line>
+                            <line x1="8" y1="18" x2="21" y2="18"></line>
+                            <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                            <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                            <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                        </svg>
+                        List View
+                    </button>
+                    <button type="button" class="view-tab" data-view="details">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                        Details View
+                    </button>
                 </div>
 
                 <div class="view-panel active" id="listViewPanel">
+                    <div class="table-controls">
+                        <div class="table-search">
+                            <svg class="table-search-icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <input type="text" id="tableSearchInput" class="table-search-input" placeholder="Search">
+                        </div>
+                        <div class="table-actions">
+                            <select class="entries-select" id="entriesSelect">
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="50" selected>50</option>
+                                <option value="100">100</option>
+                            </select>
+                            <button type="button" class="icon-action-btn" id="copyBtn" title="Copy">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                </svg>
+                            </button>
+                            <button type="button" class="icon-action-btn" id="excelBtn" title="Excel">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                </svg>
+                            </button>
+                            <button type="button" class="icon-action-btn" id="pdfBtn" title="PDF">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                </svg>
+                            </button>
+                            <button type="button" class="icon-action-btn" id="printBtn" title="Print">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                                    <rect x="6" y="14" width="12" height="8"></rect>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
                     <div class="table-responsive">
                         <table class="data-table" id="studentTable">
                             <thead>
                                 <tr>
-                                    <th>Admission No</th>
-                                    <th>Student Name</th>
-                                    <th>Roll No.</th>
-                                    <th>Class</th>
-                                    <th>Father Name</th>
-                                    <th>Date Of Birth</th>
-                                    <th>Gender</th>
-                                    <th>Category</th>
-                                    <th>Mobile Number</th>
+                                    <th data-sort="admissionNo">Admission No <span class="sort-icon">⇅</span></th>
+                                    <th data-sort="name">Student Name <span class="sort-icon">⇅</span></th>
+                                    <th data-sort="rollNumber">Roll No. <span class="sort-icon">⇅</span></th>
+                                    <th data-sort="class">Class <span class="sort-icon">⇅</span></th>
+                                    <th data-sort="fatherName">Father Name <span class="sort-icon">⇅</span></th>
+                                    <th data-sort="dateOfBirth">Date Of Birth <span class="sort-icon">⇅</span></th>
+                                    <th data-sort="gender">Gender <span class="sort-icon">⇅</span></th>
+                                    <th data-sort="category">Category <span class="sort-icon">⇅</span></th>
+                                    <th data-sort="mobileNumber">Mobile Number <span class="sort-icon">⇅</span></th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -587,12 +634,18 @@
                         </table>
                     </div>
                     <div class="table-footer">
-                        <div class="showing-info">Showing 0 to 0 of 0 entries</div>
+                        <div class="showing-info" id="showingInfo">Showing 0 to 0 of 0 entries</div>
+                        <div class="pagination" id="pagination">
+                            <button type="button" class="pagination-btn" id="prevPageBtn" disabled>‹</button>
+                            <button type="button" class="pagination-btn active" data-page="1">1</button>
+                            <button type="button" class="pagination-btn" id="nextPageBtn" disabled>›</button>
+                        </div>
                     </div>
                 </div>
 
                 <div class="view-panel" id="detailsViewPanel">
-                    <div class="empty-state details-empty">
+                    <div class="details-list" id="detailsList"></div>
+                    <div class="empty-state details-empty" id="detailsEmptyState">
                         <p class="empty-message">No data available in table</p>
                         <div class="empty-illustration">
                             <svg xmlns="http://www.w3.org/2000/svg" width="120" height="100" viewBox="0 0 120 100" fill="none">
@@ -696,11 +749,11 @@
                         <li><a href="/student/create">Student Admission</a></li>
                         <li><a href="/student/onlinestudent">Online Admission</a></li>
                         <li><a href="/student/disablestudentslist">Disabled Students</a></li>
-                        <li><a href="#">Multi Class Student</a></li>
-                        <li><a href="#">Bulk Delete</a></li>
-                        <li><a href="#">Student Categories</a></li>
-                        <li><a href="#">Student House</a></li>
-                        <li><a href="#">Disable Reason</a></li>
+                        <li><a href="/student/multiclass">Multi Class Student</a></li>
+                        <li><a href="/student/bulkdelete">Bulk Delete</a></li>
+                        <li><a href="/category">Student Categories</a></li>
+                        <li><a href="/schoolhouse">Student House</a></li>
+                        <li><a href="/disablereason">Disable Reason</a></li>
                     </ul>
                 </div>
 

@@ -32,8 +32,7 @@ public class Subject extends BaseEntity {
     private SubjectType subjectType;
     
     public enum SubjectType {
-        CORE,
-        ELECTIVE,
-        EXTRACURRICULAR
+        THEORY,
+        PRACTICAL
     }
 }

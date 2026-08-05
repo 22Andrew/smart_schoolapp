@@ -1,0 +1,241 @@
+/* Promote Students Page */
+.promotetransfer-page {
+    background: #e8edf2;
+    padding: 20px;
+    min-height: calc(100vh - 80px);
+}
+
+.promote-panel {
+    background: #1e293b;
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem 1.5rem;
+    border: 1px solid #334155;
+    margin-bottom: 1.25rem;
+}
+
+.panel-title {
+    color: #f1f5f9;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 1.1rem 0;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid #334155;
+}
+
+.promote-subtitle {
+    color: #f1f5f9;
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0.35rem 0 1rem;
+}
+
+.criteria-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.criteria-row-source,
+.criteria-row-target {
+    gap: 1.25rem;
+}
+
+.criteria-row-target {
+    margin-bottom: 0;
+}
+
+.form-group {
+    flex: 0 0 200px;
+    max-width: 240px;
+    display: flex;
+    flex-direction: column;
+}
+
+.criteria-row-source .form-group-wide,
+.criteria-row-target .form-group-wide {
+    flex: 1 1 280px;
+    max-width: 420px;
+    min-width: 240px;
+}
+
+.criteria-row-source .form-select,
+.criteria-row-target .form-select {
+    height: 46px;
+    font-size: 0.95rem;
+}
+
+.criteria-row-target .form-submit {
+    flex: 0 0 auto;
+    max-width: none;
+    min-width: 0;
+}
+
+.form-group label {
+    color: #e2e8f0;
+    font-size: 0.85rem;
+    margin-bottom: 0.45rem;
+    font-weight: 500;
+}
+
+.required {
+    color: #ef4444;
+}
+
+.form-select {
+    width: 100%;
+    height: 40px;
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 4px;
+    color: #f1f5f9;
+    padding: 0.55rem 2rem 0.55rem 0.75rem;
+    font-size: 0.9rem;
+    font-family: inherit;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%94a3b8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    cursor: pointer;
+}
+
+.form-select option {
+    background: #0f172a;
+    color: #f1f5f9;
+}
+
+.form-select:focus {
+    outline: none;
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+}
+
+.form-submit {
+    margin-left: auto;
+    flex: 0 0 auto;
+}
+
+.btn-search,
+.btn-promote {
+    background: #8b5cf6;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    height: 40px;
+    padding: 0 1.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.btn-search:hover,
+.btn-promote:hover {
+    background: #7c3aed;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px;
+}
+
+.data-table thead th {
+    background: #243342;
+    color: #ecf0f1;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-align: left;
+    padding: 0.8rem 0.65rem;
+    border-bottom: 1px solid #334155;
+    white-space: nowrap;
+}
+
+.data-table tbody td {
+    color: #cbd5e1;
+    font-size: 0.85rem;
+    padding: 0.75rem 0.65rem;
+    border-bottom: 1px solid #334155;
+    vertical-align: middle;
+}
+
+.data-table tbody tr:nth-child(even) {
+    background: rgba(36, 51, 66, 0.35);
+}
+
+.data-table tbody tr:hover {
+    background: rgba(51, 65, 85, 0.45);
+}
+
+.row-checkbox {
+    width: 16px;
+    height: 16px;
+    accent-color: #8b5cf6;
+    cursor: pointer;
+}
+
+.radio-inline-group {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    flex-wrap: wrap;
+}
+
+.radio-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: #e2e8f0;
+    font-size: 0.85rem;
+    cursor: pointer;
+    margin: 0;
+}
+
+.radio-inline input {
+    accent-color: #8b5cf6;
+    cursor: pointer;
+}
+
+.promote-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.1rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid #334155;
+}
+
+.empty-row td {
+    text-align: center;
+    color: #94a3b8;
+    padding: 1.5rem 0.75rem;
+}
+
+@media (max-width: 768px) {
+    .promotetransfer-page {
+        padding: 12px;
+    }
+
+    .form-group,
+    .criteria-row-source .form-group-wide,
+    .criteria-row-target .form-group-wide {
+        flex: 1 1 100%;
+        max-width: none;
+        min-width: 0;
+    }
+
+    .form-submit {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .btn-search,
+    .btn-promote {
+        width: 100%;
+    }
+}

@@ -215,11 +215,11 @@
                         <a href="/student/create" class="submenu-item active">Student Admission</a>
                         <a href="/student/onlinestudent" class="submenu-item">Online Admission</a>
                         <a href="/student/disablestudentslist" class="submenu-item">Disabled Students</a>
-                        <a href="#" class="submenu-item">Multi Class Student</a>
-                        <a href="#" class="submenu-item">Bulk Delete</a>
-                        <a href="#" class="submenu-item">Student Categories</a>
-                        <a href="#" class="submenu-item">Student House</a>
-                        <a href="#" class="submenu-item">Disable Reason</a>
+                        <a href="/student/multiclass" class="submenu-item">Multi Class Student</a>
+                        <a href="/student/bulkdelete" class="submenu-item">Bulk Delete</a>
+                        <a href="/category" class="submenu-item">Student Categories</a>
+                        <a href="/schoolhouse" class="submenu-item">Student House</a>
+                        <a href="/disablereason" class="submenu-item">Disable Reason</a>
                     </div>
                 </div>
                 <div class="menu-item-wrapper">
@@ -291,14 +291,14 @@
                         </svg>
                     </a>
                     <div class="submenu" id="submenu-academics">
-                        <a href="#" class="submenu-item">Class Timetable</a>
-                        <a href="#" class="submenu-item">Teachers Timetable</a>
-                        <a href="#" class="submenu-item">Assign Class Teacher</a>
-                        <a href="#" class="submenu-item">Promote Students</a>
-                        <a href="#" class="submenu-item">Subject Group</a>
-                        <a href="#" class="submenu-item">Subjects</a>
-                        <a href="#" class="submenu-item">Class</a>
-                        <a href="#" class="submenu-item">Sections</a>
+                        <a href="/classreport" class="submenu-item">Class Timetable</a>
+                        <a href="/timetable/mytimetable" class="submenu-item">Teachers Timetable</a>
+                        <a href="/teacher/assignclassteacher" class="submenu-item">Assign Class Teacher</a>
+                        <a href="/promotetransfer" class="submenu-item">Promote Students</a>
+                        <a href="/subjectgroup" class="submenu-item">Subject Group</a>
+                        <a href="/subject" class="submenu-item">Subjects</a>
+                        <a href="/classes" class="submenu-item">Class</a>
+                        <a href="/sections" class="submenu-item">Sections</a>
                     </div>
                 </div>
                 <div class="menu-item-wrapper">
@@ -426,9 +426,9 @@
                         </svg>
                     </a>
                     <div class="submenu" id="submenu-hostel">
-                        <a href="#" class="submenu-item">Hostel Rooms</a>
-                        <a href="#" class="submenu-item">Room Type</a>
-                        <a href="#" class="submenu-item">Hostel</a>
+                        <a href="/hostelroom" class="submenu-item">Hostel Rooms</a>
+                        <a href="/roomtype" class="submenu-item">Room Type</a>
+                        <a href="/hostel" class="submenu-item">Hostel</a>
                     </div>
                 </div>
                 <div class="menu-item-wrapper">
@@ -507,28 +507,12 @@
                             <label for="classSelect">Class <span class="required">*</span></label>
                             <select id="classSelect" name="className" class="form-control" required>
                                 <option value="">Select</option>
-                                <option value="1">Class 1</option>
-                                <option value="2">Class 2</option>
-                                <option value="3">Class 3</option>
-                                <option value="4">Class 4</option>
-                                <option value="5">Class 5</option>
-                                <option value="6">Class 6</option>
-                                <option value="7">Class 7</option>
-                                <option value="8">Class 8</option>
-                                <option value="9">Class 9</option>
-                                <option value="10">Class 10</option>
-                                <option value="11">Class 11</option>
-                                <option value="12">Class 12</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="sectionSelect">Section <span class="required">*</span></label>
                             <select id="sectionSelect" name="section" class="form-control" required>
                                 <option value="">Select</option>
-                                <option value="A">A</option>
-                                <option value="B">B</option>
-                                <option value="C">C</option>
-                                <option value="D">D</option>
                             </select>
                         </div>
                     </div>
@@ -562,10 +546,6 @@
                             <label for="category">Category</label>
                             <select id="category" name="category" class="form-control">
                                 <option value="">Select</option>
-                                <option value="General">General</option>
-                                <option value="OBC">OBC</option>
-                                <option value="SC">SC</option>
-                                <option value="ST">ST</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -615,10 +595,6 @@
                             <label for="house">House</label>
                             <select id="house" name="house" class="form-control">
                                 <option value="">Select</option>
-                                <option value="Red">Red</option>
-                                <option value="Blue">Blue</option>
-                                <option value="Green">Green</option>
-                                <option value="Yellow">Yellow</option>
                             </select>
                         </div>
                     </div>
@@ -1111,6 +1087,10 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-save" id="saveAdmissionBtn">Save</button>
+                    </div>
                 </form>
             </div>
         </main>
@@ -1202,11 +1182,11 @@
                         <li><a href="/student/create">Student Admission</a></li>
                         <li><a href="/student/onlinestudent">Online Admission</a></li>
                         <li><a href="/student/disablestudentslist">Disabled Students</a></li>
-                        <li><a href="#">Multi Class Student</a></li>
-                        <li><a href="#">Bulk Delete</a></li>
-                        <li><a href="#">Student Categories</a></li>
-                        <li><a href="#">Student House</a></li>
-                        <li><a href="#">Disable Reason</a></li>
+                        <li><a href="/student/multiclass">Multi Class Student</a></li>
+                        <li><a href="/student/bulkdelete">Bulk Delete</a></li>
+                        <li><a href="/category">Student Categories</a></li>
+                        <li><a href="/schoolhouse">Student House</a></li>
+                        <li><a href="/disablereason">Disable Reason</a></li>
                     </ul>
                 </div>
 
