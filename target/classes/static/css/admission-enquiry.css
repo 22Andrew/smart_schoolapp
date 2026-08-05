@@ -5,7 +5,7 @@
 
 /* Criteria Section */
 .criteria-section {
-    background: #2c3e50;
+    background: #1e293b;
     padding: 1.5rem;
     border-radius: 8px;
     margin-bottom: 1.5rem;
@@ -47,8 +47,8 @@
 
 .form-select,
 .form-input {
-    background: #34495e;
-    border: 1px solid #4a5f7f;
+    background: #0f172a;
+    border: 1px solid #334155;
     color: white;
     padding: 0.65rem;
     border-radius: 4px;
@@ -57,7 +57,7 @@
 }
 
 .form-select option {
-    background: #34495e;
+    background: #0f172a;
     color: white;
 }
 
@@ -93,7 +93,7 @@
 
 /* Table Section */
 .table-section {
-    background: #2c3e50;
+    background: #1e293b;
     padding: 1.5rem;
     border-radius: 8px;
 }
@@ -142,8 +142,8 @@
 
 .table-search-input {
     width: 100%;
-    background: #34495e;
-    border: 1px solid #4a5f7f;
+    background: #0f172a;
+    border: 1px solid #334155;
     color: white;
     padding: 0.5rem;
     border-radius: 4px;
@@ -161,8 +161,8 @@
 }
 
 .entries-select {
-    background: #34495e;
-    border: 1px solid #4a5f7f;
+    background: #0f172a;
+    border: 1px solid #334155;
     color: white;
     padding: 0.5rem;
     border-radius: 4px;
@@ -171,7 +171,7 @@
 
 .icon-action-btn {
     background: transparent;
-    border: 1px solid #4a5f7f;
+    border: 1px solid #334155;
     color: #95a5a6;
     padding: 0.5rem;
     border-radius: 4px;
@@ -183,7 +183,7 @@
 }
 
 .icon-action-btn:hover {
-    background: #34495e;
+    background: #0f172a;
     color: white;
     border-color: #5a7fa0;
 }
@@ -198,8 +198,8 @@
     top: 100%;
     right: 0;
     margin-top: 0.5rem;
-    background: #34495e;
-    border: 1px solid #4a5f7f;
+    background: #0f172a;
+    border: 1px solid #334155;
     border-radius: 4px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     z-index: 1000;
@@ -213,8 +213,8 @@
 
 .dropdown-header {
     padding: 0.75rem 1rem;
-    border-bottom: 1px solid #4a5f7f;
-    background: #2c3e50;
+    border-bottom: 1px solid #334155;
+    background: #1e293b;
     color: white;
     font-weight: 600;
     font-size: 0.9rem;
@@ -237,7 +237,7 @@
 }
 
 .column-toggle-item:hover {
-    background: #3a4f65;
+    background: #334155;
 }
 
 .column-toggle-item input[type="checkbox"] {
@@ -261,13 +261,13 @@
 .data-table {
     width: 100%;
     border-collapse: collapse;
-    background: #34495e;
+    background: #0f172a;
     border-radius: 4px;
     overflow: hidden;
 }
 
 .data-table thead {
-    background: #2c3e50;
+    background: #1e293b;
 }
 
 .data-table th {
@@ -276,17 +276,17 @@
     font-size: 0.85rem;
     font-weight: 600;
     color: white;
-    border-bottom: 2px solid #4a5f7f;
+    border-bottom: 2px solid #334155;
     white-space: nowrap;
 }
 
 .data-table tbody tr {
-    border-bottom: 1px solid #4a5f7f;
+    border-bottom: 1px solid #334155;
     transition: background 0.2s;
 }
 
 .data-table tbody tr:hover {
-    background: #3a4f65;
+    background: #334155;
 }
 
 .data-table tbody tr:nth-child(odd) {
@@ -294,7 +294,7 @@
 }
 
 .data-table tbody tr:nth-child(odd):hover {
-    background: #3a4f65;
+    background: #334155;
 }
 
 .data-table td {
@@ -353,7 +353,7 @@
     justify-content: space-between;
     align-items: center;
     padding-top: 1rem;
-    border-top: 1px solid #4a5f7f;
+    border-top: 1px solid #334155;
 }
 
 .showing-info {
@@ -368,7 +368,7 @@
 
 .pagination-btn {
     background: transparent;
-    border: 1px solid #4a5f7f;
+    border: 1px solid #334155;
     color: #95a5a6;
     padding: 0.4rem 0.75rem;
     border-radius: 4px;
@@ -378,7 +378,7 @@
 }
 
 .pagination-btn:hover:not(:disabled) {
-    background: #34495e;
+    background: #0f172a;
     color: white;
     border-color: #5a7fa0;
 }
@@ -413,7 +413,7 @@
 }
 
 .admission-modal-content {
-    background: #2c3e50;
+    background: #1e293b;
     border-radius: 8px;
     width: 100%;
     max-width: 1200px;
@@ -427,7 +427,7 @@
 
 .admission-modal .modal-header {
     padding: 0.75rem 1.25rem;
-    border-bottom: 2px solid #34495e;
+    border-bottom: 2px solid #0f172a;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -474,8 +474,8 @@
 
 .form-input-modal,
 .form-select-modal {
-    background: #34495e;
-    border: 1px solid #4a5f7f;
+    background: #0f172a;
+    border: 1px solid #334155;
     color: white;
     padding: 0.75rem;
     border-radius: 4px;
@@ -491,7 +491,7 @@
 }
 
 .form-select-modal option {
-    background: #34495e;
+    background: #0f172a;
     color: white;
 }
 
@@ -506,7 +506,7 @@
     justify-content: flex-end;
     gap: 1rem;
     padding-top: 1.5rem;
-    border-top: 2px solid #34495e;
+    border-top: 2px solid #0f172a;
     margin-top: 1rem;
 }
 
