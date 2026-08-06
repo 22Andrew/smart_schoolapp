@@ -161,6 +161,9 @@ public class StudentAdmission {
     @Column(name = "note", columnDefinition = "TEXT")
     private String note;
 
+    @Column(name = "photo_path", length = 500)
+    private String photoPath;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -560,6 +563,14 @@ public class StudentAdmission {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public String getPhotoPath() {
+        return photoPath;
+    }
+
+    public void setPhotoPath(String photoPath) {
+        this.photoPath = photoPath;
     }
 
     public LocalDateTime getCreatedAt() {

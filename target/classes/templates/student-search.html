@@ -235,14 +235,15 @@
                     </a>
                     <div class="submenu" id="submenu-fees-collection">
                         <a href="#" class="submenu-item">Collect Fees</a>
-                        <a href="#" class="submenu-item">Search Fees Payment</a>
-                        <a href="#" class="submenu-item">Search Due Fees</a>
-                        <a href="#" class="submenu-item">Fees Master</a>
-                        <a href="#" class="submenu-item">Fees Group</a>
-                        <a href="#" class="submenu-item">Fees Type</a>
-                        <a href="#" class="submenu-item">Fees Discount</a>
-                        <a href="#" class="submenu-item">Fees Carry Forward</a>
-                        <a href="#" class="submenu-item">Fees Reminder</a>
+                        <a href="/offlinepayment" class="submenu-item">Offline Bank Payments</a>
+                        <a href="/studentfee/searchpayment" class="submenu-item">Search Fees Payment</a>
+                        <a href="/feesearchr" class="submenu-item">Search Due Fees</a>
+                        <a href="/feemaster" class="submenu-item">Fees Master</a>
+                        <a href="/feegroup/index" class="submenu-item">Fees Group</a>
+                        <a href="/feetype" class="submenu-item">Fees Type</a>
+                        <a href="/feediscount" class="submenu-item">Fees Discount</a>
+                        <a href="/feesforward/index" class="submenu-item">Fees Carry Forward</a>
+                        <a href="/feereminder/setting" class="submenu-item">Fees Reminder</a>
                     </div>
                 </div>
                 <div class="menu-item-wrapper">
@@ -598,15 +599,15 @@
                         <table class="data-table" id="studentTable">
                             <thead>
                                 <tr>
-                                    <th data-sort="admissionNo">Admission No <span class="sort-icon">⇅</span></th>
-                                    <th data-sort="name">Student Name <span class="sort-icon">⇅</span></th>
-                                    <th data-sort="rollNumber">Roll No. <span class="sort-icon">⇅</span></th>
-                                    <th data-sort="class">Class <span class="sort-icon">⇅</span></th>
-                                    <th data-sort="fatherName">Father Name <span class="sort-icon">⇅</span></th>
-                                    <th data-sort="dateOfBirth">Date Of Birth <span class="sort-icon">⇅</span></th>
-                                    <th data-sort="gender">Gender <span class="sort-icon">⇅</span></th>
-                                    <th data-sort="category">Category <span class="sort-icon">⇅</span></th>
-                                    <th data-sort="mobileNumber">Mobile Number <span class="sort-icon">⇅</span></th>
+                                    <th data-sort="admissionNo">Admission No <span class="sort-icon">â‡…</span></th>
+                                    <th data-sort="name">Student Name <span class="sort-icon">â‡…</span></th>
+                                    <th data-sort="rollNumber">Roll No. <span class="sort-icon">â‡…</span></th>
+                                    <th data-sort="class">Class <span class="sort-icon">â‡…</span></th>
+                                    <th data-sort="fatherName">Father Name <span class="sort-icon">â‡…</span></th>
+                                    <th data-sort="dateOfBirth">Date Of Birth <span class="sort-icon">â‡…</span></th>
+                                    <th data-sort="gender">Gender <span class="sort-icon">â‡…</span></th>
+                                    <th data-sort="category">Category <span class="sort-icon">â‡…</span></th>
+                                    <th data-sort="mobileNumber">Mobile Number <span class="sort-icon">â‡…</span></th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -626,7 +627,7 @@
                                                     <path d="M57 62h6M60 59v6" stroke="#94a3b8" stroke-width="1.5"/>
                                                 </svg>
                                             </div>
-                                            <p class="empty-hint">← Add new record or search with different criteria.</p>
+                                            <p class="empty-hint">â† Add new record or search with different criteria.</p>
                                         </div>
                                     </td>
                                 </tr>
@@ -636,9 +637,9 @@
                     <div class="table-footer">
                         <div class="showing-info" id="showingInfo">Showing 0 to 0 of 0 entries</div>
                         <div class="pagination" id="pagination">
-                            <button type="button" class="pagination-btn" id="prevPageBtn" disabled>‹</button>
+                            <button type="button" class="pagination-btn" id="prevPageBtn" disabled>â€¹</button>
                             <button type="button" class="pagination-btn active" data-page="1">1</button>
-                            <button type="button" class="pagination-btn" id="nextPageBtn" disabled>›</button>
+                            <button type="button" class="pagination-btn" id="nextPageBtn" disabled>â€º</button>
                         </div>
                     </div>
                 </div>
@@ -656,7 +657,7 @@
                                 <rect x="85" y="18" width="22" height="28" rx="2" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.5" transform="rotate(12 96 32)"/>
                             </svg>
                         </div>
-                        <p class="empty-hint">← Add new record or search with different criteria.</p>
+                        <p class="empty-hint">â† Add new record or search with different criteria.</p>
                     </div>
                 </div>
             </div>
@@ -841,3 +842,4 @@
     <script th:src="@{/js/student-search.js}"></script>
 </body>
 </html>
+

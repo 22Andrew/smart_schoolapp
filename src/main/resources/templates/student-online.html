@@ -234,15 +234,16 @@
                         </svg>
                     </a>
                     <div class="submenu" id="submenu-fees-collection">
-                        <a href="#" class="submenu-item">Collect Fees</a>
-                        <a href="#" class="submenu-item">Search Fees Payment</a>
-                        <a href="#" class="submenu-item">Search Due Fees</a>
-                        <a href="#" class="submenu-item">Fees Master</a>
-                        <a href="#" class="submenu-item">Fees Group</a>
-                        <a href="#" class="submenu-item">Fees Type</a>
-                        <a href="#" class="submenu-item">Fees Discount</a>
-                        <a href="#" class="submenu-item">Fees Carry Forward</a>
-                        <a href="#" class="submenu-item">Fees Reminder</a>
+                        <a href="/studentfee" class="submenu-item">Collect Fees</a>
+                        <a href="/offlinepayment" class="submenu-item">Offline Bank Payments</a>
+                        <a href="/studentfee/searchpayment" class="submenu-item">Search Fees Payment</a>
+                        <a href="/feesearchr" class="submenu-item">Search Due Fees</a>
+                        <a href="/feemaster" class="submenu-item">Fees Master</a>
+                        <a href="/feegroup/index" class="submenu-item">Fees Group</a>
+                        <a href="/feetype" class="submenu-item">Fees Type</a>
+                        <a href="/feediscount" class="submenu-item">Fees Discount</a>
+                        <a href="/feesforward/index" class="submenu-item">Fees Carry Forward</a>
+                        <a href="/feereminder/setting" class="submenu-item">Fees Reminder</a>
                     </div>
                 </div>
                 <div class="menu-item-wrapper">
@@ -561,7 +562,7 @@
                                 <td>8908908908</td>
                                 <td><span class="status-badge status-danger">Not Submitted</span></td>
                                 <td><span class="status-badge status-danger">Unpaid</span></td>
-                                <td><span class="enrolled-icon enrolled-yes" title="Enrolled">✓</span></td>
+                                <td><span class="enrolled-icon enrolled-yes" title="Enrolled">âœ“</span></td>
                                 <td>01/16/2026</td>
                                 <td>
                                     <div class="action-buttons">
@@ -588,7 +589,7 @@
                                 <td>1234567890</td>
                                 <td><span class="status-badge status-success">Submitted (01/16/2026)</span></td>
                                 <td><span class="status-badge status-success">Paid</span></td>
-                                <td><span class="enrolled-icon enrolled-no" title="Not Enrolled">−</span></td>
+                                <td><span class="enrolled-icon enrolled-no" title="Not Enrolled">âˆ’</span></td>
                                 <td>01/16/2026</td>
                                 <td>
                                     <div class="action-buttons">
@@ -615,7 +616,7 @@
                                 <td>8908098098</td>
                                 <td><span class="status-badge status-success">Submitted (01/16/2026)</span></td>
                                 <td><span class="status-badge status-success">Paid</span></td>
-                                <td><span class="enrolled-icon enrolled-yes" title="Enrolled">✓</span></td>
+                                <td><span class="enrolled-icon enrolled-yes" title="Enrolled">âœ“</span></td>
                                 <td>01/16/2026</td>
                                 <td>
                                     <div class="action-buttons">
@@ -639,7 +640,7 @@
                                 <td>8604563201</td>
                                 <td><span class="status-badge status-danger">Not Submitted</span></td>
                                 <td><span class="status-badge status-danger">Unpaid</span></td>
-                                <td><span class="enrolled-icon enrolled-no" title="Not Enrolled">−</span></td>
+                                <td><span class="enrolled-icon enrolled-no" title="Not Enrolled">âˆ’</span></td>
                                 <td>01/15/2026</td>
                                 <td>
                                     <div class="action-buttons">
@@ -666,7 +667,7 @@
                                 <td>8908908909</td>
                                 <td><span class="status-badge status-danger">Not Submitted</span></td>
                                 <td><span class="status-badge status-danger">Unpaid</span></td>
-                                <td><span class="enrolled-icon enrolled-no" title="Not Enrolled">−</span></td>
+                                <td><span class="enrolled-icon enrolled-no" title="Not Enrolled">âˆ’</span></td>
                                 <td>01/15/2026</td>
                                 <td>
                                     <div class="action-buttons">
@@ -693,7 +694,7 @@
                                 <td>8080908090</td>
                                 <td><span class="status-badge status-danger">Not Submitted</span></td>
                                 <td><span class="status-badge status-danger">Unpaid</span></td>
-                                <td><span class="enrolled-icon enrolled-no" title="Not Enrolled">−</span></td>
+                                <td><span class="enrolled-icon enrolled-no" title="Not Enrolled">âˆ’</span></td>
                                 <td>01/15/2026</td>
                                 <td>
                                     <div class="action-buttons">
@@ -720,7 +721,7 @@
                                 <td>8908908909</td>
                                 <td><span class="status-badge status-danger">Not Submitted</span></td>
                                 <td><span class="status-badge status-danger">Unpaid</span></td>
-                                <td><span class="enrolled-icon enrolled-no" title="Not Enrolled">−</span></td>
+                                <td><span class="enrolled-icon enrolled-no" title="Not Enrolled">âˆ’</span></td>
                                 <td>01/15/2026</td>
                                 <td>
                                     <div class="action-buttons">
@@ -743,9 +744,9 @@
                 <div class="table-footer">
                     <div class="showing-info">Showing 1 to 7 of 7 entries</div>
                     <div class="pagination">
-                        <button type="button" class="pagination-btn" disabled>‹</button>
+                        <button type="button" class="pagination-btn" disabled>â€¹</button>
                         <button type="button" class="pagination-btn active">1</button>
-                        <button type="button" class="pagination-btn" disabled>›</button>
+                        <button type="button" class="pagination-btn" disabled>â€º</button>
                     </div>
                 </div>
             </div>
@@ -930,3 +931,4 @@
     <script th:src="@{/js/student-online.js}"></script>
 </body>
 </html>
+

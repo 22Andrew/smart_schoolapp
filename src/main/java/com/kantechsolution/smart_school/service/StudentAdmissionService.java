@@ -1,5 +1,6 @@
 package com.kantechsolution.smart_school.service;
 
+import com.kantechsolution.smart_school.config.UploadStorage;
 import com.kantechsolution.smart_school.model.Hostel;
 import com.kantechsolution.smart_school.model.HostelRoom;
 import com.kantechsolution.smart_school.model.SchoolClass;
@@ -15,7 +16,12 @@ import com.kantechsolution.smart_school.repository.StudentCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -24,6 +30,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class StudentAdmissionService {
@@ -39,6 +46,9 @@ public class StudentAdmissionService {
 
     @Autowired
     private SchoolHouseRepository schoolHouseRepository;
+
+    @Autowired
+    private UploadStorage uploadStorage;
 
     @Autowired
     private HostelRepository hostelRepository;
@@ -77,16 +87,32 @@ public class StudentAdmissionService {
 
     @Transactional
     public Map<String, Object> createAdmission(Map<String, Object> payload) {
+        return createAdmission(payload, null);
+    }
+
+    @Transactional
+    public Map<String, Object> createAdmission(Map<String, Object> payload, MultipartFile studentPhoto) {
         StudentAdmission admission = new StudentAdmission();
         applyFields(admission, payload, null);
+        if (studentPhoto != null && !studentPhoto.isEmpty()) {
+            admission.setPhotoPath(storeStudentPhoto(studentPhoto));
+        }
         return toMap(studentAdmissionRepository.save(admission));
     }
 
     @Transactional
     public Map<String, Object> updateAdmission(Long id, Map<String, Object> payload) {
+        return updateAdmission(id, payload, null);
+    }
+
+    @Transactional
+    public Map<String, Object> updateAdmission(Long id, Map<String, Object> payload, MultipartFile studentPhoto) {
         StudentAdmission existing = studentAdmissionRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Student admission not found"));
         applyFields(existing, payload, id);
+        if (studentPhoto != null && !studentPhoto.isEmpty()) {
+            existing.setPhotoPath(storeStudentPhoto(studentPhoto));
+        }
         return toMap(studentAdmissionRepository.save(existing));
     }
 
@@ -178,6 +204,48 @@ public class StudentAdmissionService {
         admission.setRte(optionalText(payload.get("rte")));
         admission.setPreviousSchoolDetails(optionalText(payload.get("previousSchoolDetails")));
         admission.setNote(optionalText(payload.get("note")));
+        if (payload.containsKey("photoPath")) {
+            admission.setPhotoPath(optionalText(payload.get("photoPath")));
+        }
+    }
+
+    private String storeStudentPhoto(MultipartFile studentPhoto) {
+        String originalName = studentPhoto.getOriginalFilename();
+        String contentType = studentPhoto.getContentType() == null ? "" : studentPhoto.getContentType().toLowerCase(Locale.ROOT);
+        String extension = "";
+        if (originalName != null && originalName.contains(".")) {
+            extension = originalName.substring(originalName.lastIndexOf('.')).toLowerCase(Locale.ROOT);
+        }
+        if (extension.isBlank()) {
+            if (contentType.contains("png")) extension = ".png";
+            else if (contentType.contains("gif")) extension = ".gif";
+            else if (contentType.contains("webp")) extension = ".webp";
+            else extension = ".jpg";
+        }
+
+        boolean allowedExtension = extension.equals(".jpg") || extension.equals(".jpeg")
+                || extension.equals(".png") || extension.equals(".gif") || extension.equals(".webp");
+        boolean allowedContentType = contentType.startsWith("image/");
+        if (!allowedExtension && !allowedContentType) {
+            throw new IllegalArgumentException("Student photo must be an image (jpg, png, gif, or webp)");
+        }
+        if (!allowedExtension) {
+            extension = ".jpg";
+        }
+
+        try {
+            Path uploadDir = uploadStorage.getStudentsDir();
+            Files.createDirectories(uploadDir);
+            String filename = UUID.randomUUID().toString().replace("-", "") + extension;
+            Path target = uploadDir.resolve(filename);
+            Files.copy(studentPhoto.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
+            if (!Files.exists(target) || Files.size(target) == 0) {
+                throw new IllegalArgumentException("Failed to store student photo");
+            }
+            return "/uploads/students/" + filename;
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Failed to store student photo: " + e.getMessage());
+        }
     }
 
     private Map<String, Object> toMap(StudentAdmission row) {
@@ -235,6 +303,8 @@ public class StudentAdmissionService {
         map.put("rte", row.getRte());
         map.put("previousSchoolDetails", row.getPreviousSchoolDetails());
         map.put("note", row.getNote());
+        map.put("photoPath", row.getPhotoPath());
+        map.put("photoUrl", row.getPhotoPath());
         return map;
     }
 

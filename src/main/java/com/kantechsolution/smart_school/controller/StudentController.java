@@ -41,6 +41,15 @@ public class StudentController {
     }
 
     /**
+     * Show individual student profile / view page
+     */
+    @GetMapping("/student/view/{id}")
+    public String showStudentViewPage(@PathVariable Long id, Model model) {
+        model.addAttribute("studentId", id);
+        return "student-view";
+    }
+
+    /**
      * Show student admission / create page
      */
     @GetMapping("/student/create")

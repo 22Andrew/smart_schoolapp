@@ -52,7 +52,13 @@ document.addEventListener('DOMContentLoaded', function () {
         return text;
     }
 
-    function avatarHtml() {
+    function avatarHtml(photoUrl, altText) {
+        if (photoUrl) {
+            return ''
+                + '<div class="detail-avatar">'
+                + '<img src="' + escapeHtml(photoUrl) + '" alt="' + escapeHtml(altText || 'Student') + '">'
+                + '</div>';
+        }
         return ''
             + '<div class="detail-avatar" aria-hidden="true">'
             + '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="80" height="80">'
@@ -61,12 +67,13 @@ document.addEventListener('DOMContentLoaded', function () {
             + '</svg></div>';
     }
 
-    function actionButtonsHtml() {
+    function actionButtonsHtml(viewUrl) {
+        const href = viewUrl || '#';
         return ''
-            + '<button type="button" class="btn-action btn-menu" title="More">'
+            + '<a href="' + href + '" class="btn-action btn-menu" title="View">'
             + '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'
             + '<line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line>'
-            + '</svg></button>'
+            + '</svg></a>'
             + '<button type="button" class="btn-action btn-edit" title="Edit">'
             + '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'
             + '<path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>'
@@ -84,8 +91,8 @@ document.addEventListener('DOMContentLoaded', function () {
             + '</svg></button>';
     }
 
-    function detailsActionButtonsHtml() {
-        return '<div class="detail-actions">' + actionButtonsHtml() + '</div>';
+    function detailsActionButtonsHtml(viewUrl) {
+        return '<div class="detail-actions">' + actionButtonsHtml(viewUrl) + '</div>';
     }
 
     function emptyStateHtml(colspan) {
@@ -227,9 +234,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         studentTableBody.innerHTML = pageRows.map(function (row) {
             const name = studentFullName(row) || 'Student';
+            const viewUrl = '/student/view/' + encodeURIComponent(String(row.id));
             return '<tr data-id="' + escapeHtml(String(row.id)) + '">'
                 + '<td>' + escapeHtml(row.admissionNo || '') + '</td>'
-                + '<td><a href="#" class="student-link">' + escapeHtml(name) + '</a></td>'
+                + '<td><a href="' + viewUrl + '" class="student-link">' + escapeHtml(name) + '</a></td>'
                 + '<td>' + escapeHtml(row.rollNumber || '') + '</td>'
                 + '<td>' + escapeHtml(classLabel(row)) + '</td>'
                 + '<td>' + escapeHtml(row.fatherName || '') + '</td>'
@@ -237,7 +245,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 + '<td>' + escapeHtml(row.gender || '') + '</td>'
                 + '<td>' + escapeHtml(row.categoryName || '') + '</td>'
                 + '<td>' + escapeHtml(row.mobileNumber || '') + '</td>'
-                + '<td class="action-cell">' + actionButtonsHtml() + '</td>'
+                + '<td class="action-cell">' + actionButtonsHtml(viewUrl) + '</td>'
                 + '</tr>';
         }).join('');
 
@@ -258,11 +266,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
         detailsList.innerHTML = students.map(function (row) {
             const phone = row.guardianPhone || row.mobileNumber || '';
+            const viewUrl = '/student/view/' + encodeURIComponent(String(row.id));
+            const fullName = studentFullName(row) || 'Student';
             return ''
                 + '<div class="student-detail-card" data-id="' + escapeHtml(String(row.id)) + '">'
-                + avatarHtml()
+                + avatarHtml(row.photoUrl || row.photoPath || '', fullName)
                 + '<div class="detail-main">'
-                + '<h3 class="detail-name">' + escapeHtml(studentFullName(row) || 'Student') + '</h3>'
+                + '<h3 class="detail-name"><a href="' + viewUrl + '" class="student-link">'
+                + escapeHtml(fullName) + '</a></h3>'
                 + '<div class="detail-columns">'
                 + '<div class="detail-col">'
                 + '<p><strong>Class:</strong> ' + escapeHtml(classLabel(row) || '-') + '</p>'
@@ -280,7 +291,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 + '</div>'
                 + '</div>'
                 + '</div>'
-                + detailsActionButtonsHtml()
+                + detailsActionButtonsHtml(viewUrl)
                 + '</div>';
         }).join('');
     }
@@ -288,19 +299,6 @@ document.addEventListener('DOMContentLoaded', function () {
     function renderStudents() {
         renderListTable();
         renderDetails();
-    }
-
-    function showStudentDetails(id) {
-        tabs.forEach(function (t) {
-            t.classList.toggle('active', t.getAttribute('data-view') === 'details');
-        });
-        listPanel.classList.remove('active');
-        detailsPanel.classList.add('active');
-
-        const card = detailsList.querySelector('.student-detail-card[data-id="' + id + '"]');
-        if (card) {
-            card.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
     }
 
     function rowsToTsv(rows) {
@@ -582,22 +580,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     studentTableBody.addEventListener('click', function (e) {
-        const row = e.target.closest('tr[data-id]');
-        if (!row) return;
-        const id = row.getAttribute('data-id');
-
-        if (e.target.closest('.student-link') || e.target.closest('.btn-menu')) {
-            e.preventDefault();
-            showStudentDetails(id);
-            return;
-        }
-
         if (e.target.closest('.btn-print')) {
+            e.preventDefault();
             window.print();
             return;
         }
 
         if (e.target.closest('.btn-edit') || e.target.closest('.btn-fees')) {
+            e.preventDefault();
             Swal.fire({
                 icon: 'info',
                 title: 'Coming Soon',
@@ -610,10 +600,12 @@ document.addEventListener('DOMContentLoaded', function () {
     if (detailsList) {
         detailsList.addEventListener('click', function (e) {
             if (e.target.closest('.btn-print')) {
+                e.preventDefault();
                 window.print();
                 return;
             }
-            if (e.target.closest('.btn-edit') || e.target.closest('.btn-fees') || e.target.closest('.btn-menu')) {
+            if (e.target.closest('.btn-edit') || e.target.closest('.btn-fees')) {
+                e.preventDefault();
                 Swal.fire({
                     icon: 'info',
                     title: 'Coming Soon',

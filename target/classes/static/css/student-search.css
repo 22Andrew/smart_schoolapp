@@ -394,10 +394,12 @@
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
 }
 
-.detail-avatar svg {
+.detail-avatar svg,
+.detail-avatar img {
     display: block;
     width: 100%;
     height: 100%;
+    object-fit: cover;
 }
 
 .detail-main {
@@ -476,6 +478,7 @@
     align-items: center;
     justify-content: center;
     padding: 0;
+    text-decoration: none;
 }
 
 .btn-action:hover {

@@ -21,14 +21,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const labelSpan = box.querySelector('span');
 
-        box.addEventListener('click', function () {
+        box.addEventListener('click', function (e) {
+            if (e.target === input) return;
             input.click();
+        });
+
+        input.addEventListener('click', function (e) {
+            e.stopPropagation();
         });
 
         input.addEventListener('change', function () {
             if (input.files && input.files[0]) {
                 box.classList.add('has-file');
-                labelSpan.textContent = input.files[0].name;
+                if (labelSpan) labelSpan.textContent = input.files[0].name;
             }
         });
 
@@ -384,23 +389,49 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             try {
+                const formData = new FormData();
+                formData.append(
+                    'data',
+                    new Blob([JSON.stringify(payload)], { type: 'application/json' }),
+                    'data.json'
+                );
+
+                const photoInput = document.getElementById('studentPhoto');
+                const hasPhoto = !!(photoInput && photoInput.files && photoInput.files[0]);
+                if (hasPhoto) {
+                    formData.append('studentPhoto', photoInput.files[0], photoInput.files[0].name);
+                }
+
                 const response = await fetch('/api/student-admissions', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: formData
                 });
                 if (!response.ok) {
                     const err = await response.json().catch(function () { return {}; });
                     throw new Error(err.message || 'Failed to save student admission');
                 }
 
+                const saved = await response.json().catch(function () { return {}; });
+                if (hasPhoto && !saved.photoUrl && !saved.photoPath) {
+                    throw new Error('Student was saved, but the photo was not stored. Please try uploading again.');
+                }
+
                 await Swal.fire({
                     icon: 'success',
                     title: 'Saved',
-                    text: 'Student admission saved successfully.',
+                    text: hasPhoto
+                        ? 'Student admission and photo saved successfully.'
+                        : 'Student admission saved successfully.',
                     confirmButtonColor: '#8b5cf6'
                 });
                 admissionForm.reset();
+                document.querySelectorAll('.file-upload-box').forEach(function (box) {
+                    box.classList.remove('has-file');
+                    const span = box.querySelector('span');
+                    if (span) {
+                        span.textContent = 'Drag and drop a file here or click';
+                    }
+                });
                 fillSectionSelect();
                 fillRoomNoSelect();
                 if (document.getElementById('admissionDate')) {

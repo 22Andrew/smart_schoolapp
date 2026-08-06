@@ -311,7 +311,43 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Auto-expand menu and activate submenu item based on current page
     function setActiveMenuFromCurrentPage() {
-        const currentPath = window.location.pathname;
+        let currentPath = window.location.pathname;
+        // Keep Student Details menu active on individual student profile pages
+        if (/^\/student\/view\/\d+\/?$/.test(currentPath)) {
+            currentPath = '/student/search';
+        }
+        // Normalize Fees Group aliases
+        if (currentPath === '/feegroup' || currentPath === '/feegroup/') {
+            currentPath = '/feegroup/index';
+        }
+        // Normalize Fees Carry Forward aliases
+        if (currentPath === '/feesforward' || currentPath === '/feesforward/') {
+            currentPath = '/feesforward/index';
+        }
+        // Normalize Fees Reminder aliases
+        if (currentPath === '/feereminder' || currentPath === '/feereminder/' || currentPath === '/feereminder/settings') {
+            currentPath = '/feereminder/setting';
+        }
+        // Keep Fees Master menu active on assign page
+        if (/^\/feemaster\/assign\/\d+\/?$/.test(currentPath)) {
+            currentPath = '/feemaster';
+        }
+        // Keep Collect Fees menu active on student add-fee page
+        if (/^\/studentfee\/addfee\/\d+\/?$/.test(currentPath)) {
+            currentPath = '/studentfee';
+        }
+        // Normalize Collect Fees trailing slash
+        if (currentPath === '/studentfee/') {
+            currentPath = '/studentfee';
+        }
+        // Normalize Search Fees Payment trailing slash
+        if (currentPath === '/studentfee/searchpayment/') {
+            currentPath = '/studentfee/searchpayment';
+        }
+        // Normalize Offline Bank Payments trailing slash
+        if (currentPath === '/offlinepayment/') {
+            currentPath = '/offlinepayment';
+        }
         const allSubmenuItems = document.querySelectorAll('.submenu-item');
 
         // Clear previous submenu highlights so only one item stays active

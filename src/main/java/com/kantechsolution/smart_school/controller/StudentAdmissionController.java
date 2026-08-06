@@ -3,9 +3,11 @@ package com.kantechsolution.smart_school.controller;
 import com.kantechsolution.smart_school.service.StudentAdmissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,9 +53,9 @@ public class StudentAdmissionController {
         }
     }
 
-    @PostMapping("/api/student-admissions")
+    @PostMapping(value = "/api/student-admissions", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<?> createAdmission(@RequestBody Map<String, Object> payload) {
+    public ResponseEntity<?> createAdmissionJson(@RequestBody Map<String, Object> payload) {
         try {
             Map<String, Object> saved = studentAdmissionService.createAdmission(payload);
             return ResponseEntity.status(HttpStatus.CREATED).body(saved);
@@ -65,11 +67,49 @@ public class StudentAdmissionController {
         }
     }
 
-    @PutMapping("/api/student-admissions/{id}")
+    @PostMapping(value = "/api/student-admissions", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
-    public ResponseEntity<?> updateAdmission(@PathVariable Long id, @RequestBody Map<String, Object> payload) {
+    public ResponseEntity<?> createAdmissionMultipart(
+            @RequestPart("data") Map<String, Object> payload,
+            @RequestPart(value = "studentPhoto", required = false) MultipartFile studentPhoto
+    ) {
+        try {
+            Map<String, Object> saved = studentAdmissionService.createAdmission(payload, studentPhoto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(errorBody(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorBody("Failed to create student admission"));
+        }
+    }
+
+    @PutMapping(value = "/api/student-admissions/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<?> updateAdmissionJson(@PathVariable Long id, @RequestBody Map<String, Object> payload) {
         try {
             Map<String, Object> updated = studentAdmissionService.updateAdmission(id, payload);
+            return ResponseEntity.ok(updated);
+        } catch (IllegalArgumentException e) {
+            if ("Student admission not found".equals(e.getMessage())) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.badRequest().body(errorBody(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorBody("Failed to update student admission"));
+        }
+    }
+
+    @PutMapping(value = "/api/student-admissions/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseBody
+    public ResponseEntity<?> updateAdmissionMultipart(
+            @PathVariable Long id,
+            @RequestPart("data") Map<String, Object> payload,
+            @RequestPart(value = "studentPhoto", required = false) MultipartFile studentPhoto
+    ) {
+        try {
+            Map<String, Object> updated = studentAdmissionService.updateAdmission(id, payload, studentPhoto);
             return ResponseEntity.ok(updated);
         } catch (IllegalArgumentException e) {
             if ("Student admission not found".equals(e.getMessage())) {
