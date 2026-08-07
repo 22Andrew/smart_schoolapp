@@ -164,6 +164,27 @@ public class StudentAdmission {
     @Column(name = "photo_path", length = 500)
     private String photoPath;
 
+    @Column(name = "disabled", nullable = false, columnDefinition = "BIT(1) DEFAULT 0")
+    private boolean disabled = false;
+
+    @Column(name = "disable_reason", length = 255)
+    private String disableReason;
+
+    @Column(name = "online_admission", nullable = false, columnDefinition = "BIT(1) DEFAULT 0")
+    private boolean onlineAdmission = false;
+
+    @Column(name = "reference_no", length = 50)
+    private String referenceNo;
+
+    @Column(name = "form_status", length = 50)
+    private String formStatus = "Submitted";
+
+    @Column(name = "payment_status", length = 50)
+    private String paymentStatus = "Unpaid";
+
+    @Column(name = "enrolled", nullable = false, columnDefinition = "BIT(1) DEFAULT 1")
+    private boolean enrolled = true;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -571,6 +592,62 @@ public class StudentAdmission {
 
     public void setPhotoPath(String photoPath) {
         this.photoPath = photoPath;
+    }
+
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
+
+    public String getDisableReason() {
+        return disableReason;
+    }
+
+    public void setDisableReason(String disableReason) {
+        this.disableReason = disableReason;
+    }
+
+    public boolean isOnlineAdmission() {
+        return onlineAdmission;
+    }
+
+    public void setOnlineAdmission(boolean onlineAdmission) {
+        this.onlineAdmission = onlineAdmission;
+    }
+
+    public String getReferenceNo() {
+        return referenceNo;
+    }
+
+    public void setReferenceNo(String referenceNo) {
+        this.referenceNo = referenceNo;
+    }
+
+    public String getFormStatus() {
+        return formStatus;
+    }
+
+    public void setFormStatus(String formStatus) {
+        this.formStatus = formStatus;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public boolean isEnrolled() {
+        return enrolled;
+    }
+
+    public void setEnrolled(boolean enrolled) {
+        this.enrolled = enrolled;
     }
 
     public LocalDateTime getCreatedAt() {

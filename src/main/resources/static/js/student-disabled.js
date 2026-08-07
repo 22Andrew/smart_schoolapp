@@ -4,6 +4,19 @@ document.addEventListener('DOMContentLoaded', function () {
     const tabs = document.querySelectorAll('.view-tab');
     const listPanel = document.getElementById('listViewPanel');
     const detailsPanel = document.getElementById('detailsViewPanel');
+    const classSelect = document.getElementById('classSelect');
+    const sectionSelect = document.getElementById('sectionSelect');
+    const keywordSearch = document.getElementById('keywordSearch');
+    const classSectionSearchBtn = document.getElementById('classSectionSearchBtn');
+    const keywordSearchBtn = document.getElementById('keywordSearchBtn');
+    const searchInput = document.getElementById('searchInput') || document.querySelector('.table-search-input');
+    const showingInfo = document.querySelector('.showing-info');
+    const entriesSelect = document.getElementById('entriesSelect');
+
+    let classes = [];
+    let students = [];
+    let currentPage = 1;
+    let pageSize = 50;
 
     tabs.forEach(function (tab) {
         tab.addEventListener('click', function () {
@@ -19,266 +32,203 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
-    const showingInfo = document.querySelector('.showing-info');
-    const searchInput = document.getElementById('searchInput') || document.querySelector('.table-search-input');
 
-    function getTableRows() {
-        if (!tableBody) return [];
-        return Array.from(tableBody.querySelectorAll('tr'));
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text == null ? '' : String(text);
+        return div.innerHTML;
     }
 
-    function updateShowingInfo(visibleCount, searchTerm) {
+    function populateSections() {
+        const selected = classes.find(function (c) { return String(c.id) === String(classSelect.value); });
+        const current = sectionSelect.value;
+        sectionSelect.innerHTML = '<option value="">Select</option>';
+        const sections = selected && Array.isArray(selected.sections) ? selected.sections : [];
+        sections.forEach(function (name) {
+            const option = document.createElement('option');
+            option.value = name;
+            option.textContent = name;
+            sectionSelect.appendChild(option);
+        });
+        if (current) sectionSelect.value = current;
+    }
+
+    async function loadClasses() {
+        const response = await fetch('/api/classes');
+        if (!response.ok) throw new Error('Failed to load classes');
+        classes = await response.json();
+        classSelect.innerHTML = '<option value="">Select</option>';
+        classes.forEach(function (item) {
+            const option = document.createElement('option');
+            option.value = item.id;
+            option.textContent = item.name;
+            classSelect.appendChild(option);
+        });
+    }
+
+    function getFiltered() {
+        const term = searchInput ? searchInput.value.toLowerCase().trim() : '';
+        if (!term) return students.slice();
+        return students.filter(function (item) {
+            const haystack = [
+                item.admissionNo, item.studentName, item.classLabel, item.fatherName,
+                item.disableReason, item.gender, item.mobileNumber
+            ].join(' ').toLowerCase();
+            return haystack.indexOf(term) !== -1;
+        });
+    }
+
+    function updateShowingInfo(from, to, total) {
         if (!showingInfo) return;
-        const totalRows = getTableRows().length;
-        const entryLabel = totalRows === 1 ? 'entry' : 'entries';
-        if (visibleCount === 0) {
+        if (!total) {
             showingInfo.textContent = 'Showing 0 to 0 of 0 entries';
             return;
         }
-        if (searchTerm) {
-            showingInfo.textContent = 'Showing 1 to ' + visibleCount + ' of ' + totalRows + ' ' + entryLabel + ' (filtered)';
-        } else {
-            showingInfo.textContent = 'Showing 1 to ' + visibleCount + ' of ' + totalRows + ' ' + entryLabel;
+        showingInfo.textContent = 'Showing ' + from + ' to ' + to + ' of ' + total + ' entries';
+    }
+
+    function renderPagination(total, totalPages) {
+        const pagination = document.querySelector('.pagination');
+        if (!pagination) return;
+        let html = '<button type="button" class="pagination-btn" data-nav="prev"' + (currentPage <= 1 ? ' disabled' : '') + '>&lt;</button>';
+        for (let i = 1; i <= totalPages; i++) {
+            html += '<button type="button" class="pagination-btn' + (i === currentPage ? ' active' : '') + '" data-page="' + i + '">' + i + '</button>';
         }
+        html += '<button type="button" class="pagination-btn" data-nav="next"' + (currentPage >= totalPages || !total ? ' disabled' : '') + '>&gt;</button>';
+        pagination.innerHTML = html;
     }
 
-    // Table search (same behavior as admission enquiry)
-    if (searchInput && tableBody) {
-        searchInput.addEventListener('input', function (e) {
-            const searchTerm = e.target.value.toLowerCase().trim();
-            let visibleCount = 0;
+    function renderRows() {
+        const filtered = getFiltered();
+        const total = filtered.length;
+        const totalPages = Math.max(1, Math.ceil(total / pageSize) || 1);
+        if (currentPage > totalPages) currentPage = totalPages;
+        const start = (currentPage - 1) * pageSize;
+        const pageRows = filtered.slice(start, start + pageSize);
 
-            getTableRows().forEach(function (row) {
-                const rowText = Array.from(row.querySelectorAll('td'))
-                    .map(function (cell) { return cell.textContent.trim().toLowerCase(); })
-                    .join(' ');
+        if (!pageRows.length) {
+            tableBody.innerHTML = '<tr class="no-data-row"><td colspan="8" style="text-align:center;color:#94a3b8;">No disabled students found</td></tr>';
+            updateShowingInfo(0, 0, 0);
+            renderPagination(0, 1);
+            return;
+        }
 
-                if (!searchTerm || rowText.indexOf(searchTerm) !== -1) {
-                    row.style.display = '';
-                    visibleCount++;
-                } else {
-                    row.style.display = 'none';
-                }
+        tableBody.innerHTML = pageRows.map(function (item) {
+            return '<tr data-id="' + escapeHtml(item.id) + '">'
+                + '<td>' + escapeHtml(item.admissionNo || '') + '</td>'
+                + '<td><a class="student-link" href="/student/view/' + escapeHtml(item.id) + '">' + escapeHtml(item.studentName || '') + '</a></td>'
+                + '<td>' + escapeHtml(item.classLabel || '') + '</td>'
+                + '<td>' + escapeHtml(item.fatherName || '') + '</td>'
+                + '<td>' + escapeHtml(item.disableReason || '') + '</td>'
+                + '<td>' + escapeHtml(item.gender || '') + '</td>'
+                + '<td>' + escapeHtml(item.mobileNumber || '') + '</td>'
+                + '<td><button type="button" class="btn-action btn-enable" data-id="' + escapeHtml(item.id) + '">Enable</button></td>'
+                + '</tr>';
+        }).join('');
+
+        updateShowingInfo(start + 1, Math.min(start + pageSize, total), total);
+        renderPagination(total, totalPages);
+    }
+
+    async function searchDisabled(params) {
+        const query = new URLSearchParams();
+        query.set('disabled', 'true');
+        if (params.classId) query.set('classId', params.classId);
+        if (params.section) query.set('section', params.section);
+        if (params.keyword) query.set('keyword', params.keyword);
+        const response = await fetch('/api/student-admissions?' + query.toString());
+        if (!response.ok) {
+            const err = await response.json().catch(function () { return {}; });
+            throw new Error(err.message || 'Failed to search disabled students');
+        }
+        students = await response.json();
+        currentPage = 1;
+        renderRows();
+    }
+
+    async function enableStudent(id) {
+        const confirm = await Swal.fire({
+            icon: 'question',
+            title: 'Enable student?',
+            text: 'This will restore the student as active.',
+            showCancelButton: true,
+            confirmButtonColor: '#8b5cf6',
+            confirmButtonText: 'Enable'
+        });
+        if (!confirm.isConfirmed) return;
+        const response = await fetch('/api/student-admissions/' + encodeURIComponent(id) + '/enable', { method: 'POST' });
+        const data = await response.json().catch(function () { return {}; });
+        if (!response.ok) throw new Error(data.message || 'Failed to enable student');
+        await searchDisabled({
+            classId: classSelect.value,
+            section: sectionSelect.value,
+            keyword: keywordSearch ? keywordSearch.value.trim() : ''
+        });
+        Swal.fire({ icon: 'success', title: 'Enabled', timer: 1400, showConfirmButton: false });
+    }
+
+    if (classSelect) classSelect.addEventListener('change', populateSections);
+
+    if (classSectionSearchBtn) {
+        classSectionSearchBtn.addEventListener('click', function () {
+            searchDisabled({
+                classId: classSelect.value,
+                section: sectionSelect.value
+            }).catch(function (error) {
+                Swal.fire({ icon: 'error', title: 'Error', text: error.message, confirmButtonColor: '#8b5cf6' });
             });
-
-            updateShowingInfo(visibleCount, searchTerm);
         });
     }
 
-    // Helper: get visible table data (excludes Action column)
-    function getTableData() {
-        const headers = [];
-        const data = [];
-        if (!table) return { headers: headers, data: data };
-
-        const headerCells = table.querySelectorAll('thead th');
-        headerCells.forEach(function (th, index) {
-            if (index < headerCells.length - 1) {
-                headers.push(th.textContent.trim());
+    if (keywordSearchBtn) {
+        keywordSearchBtn.addEventListener('click', function () {
+            const keyword = keywordSearch ? keywordSearch.value.trim() : '';
+            if (!keyword) {
+                Swal.fire({ icon: 'warning', title: 'Keyword Required', text: 'Please enter a keyword.', confirmButtonColor: '#8b5cf6' });
+                return;
             }
-        });
-
-        getTableRows().forEach(function (row) {
-            if (row.style.display === 'none') return;
-            const rowData = [];
-            const cells = row.querySelectorAll('td');
-            cells.forEach(function (cell, index) {
-                if (index < cells.length - 1) {
-                    rowData.push(cell.textContent.trim().replace(/\s+/g, ' '));
-                }
-            });
-            data.push(rowData);
-        });
-
-        return { headers: headers, data: data };
-    }
-
-    // Copy
-    const copyBtn = document.getElementById('copyBtn');
-    if (copyBtn) {
-        copyBtn.addEventListener('click', function () {
-            const result = getTableData();
-            let text = result.headers.join('\t') + '\n';
-            result.data.forEach(function (row) {
-                text += row.join('\t') + '\n';
-            });
-
-            navigator.clipboard.writeText(text).then(function () {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Copied!',
-                    text: 'Table data copied to clipboard',
-                    timer: 2000,
-                    showConfirmButton: false
-                });
-            }).catch(function () {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Failed to copy data to clipboard',
-                    confirmButtonColor: '#ef4444'
-                });
+            searchDisabled({ keyword: keyword }).catch(function (error) {
+                Swal.fire({ icon: 'error', title: 'Error', text: error.message, confirmButtonColor: '#8b5cf6' });
             });
         });
     }
 
-    // Excel
-    const excelBtn = document.getElementById('excelBtn');
-    if (excelBtn) {
-        excelBtn.addEventListener('click', function () {
-            const result = getTableData();
-            const wsData = [result.headers].concat(result.data);
-            const wb = XLSX.utils.book_new();
-            const ws = XLSX.utils.aoa_to_sheet(wsData);
-            ws['!cols'] = result.headers.map(function () { return { wch: 20 }; });
-            XLSX.utils.book_append_sheet(wb, ws, 'Disabled Students');
+    if (searchInput) searchInput.addEventListener('input', function () { currentPage = 1; renderRows(); });
+    if (entriesSelect) {
+        pageSize = parseInt(entriesSelect.value, 10) || 50;
+        entriesSelect.addEventListener('change', function () {
+            pageSize = parseInt(entriesSelect.value, 10) || 50;
+            currentPage = 1;
+            renderRows();
+        });
+    }
 
-            const timestamp = new Date().toISOString().split('T')[0];
-            XLSX.writeFile(wb, 'Disabled_Students_' + timestamp + '.xlsx');
+    const pagination = document.querySelector('.pagination');
+    if (pagination) {
+        pagination.addEventListener('click', function (e) {
+            const btn = e.target.closest('.pagination-btn');
+            if (!btn || btn.disabled) return;
+            const filtered = getFiltered();
+            const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize) || 1);
+            if (btn.getAttribute('data-nav') === 'prev') currentPage = Math.max(1, currentPage - 1);
+            else if (btn.getAttribute('data-nav') === 'next') currentPage = Math.min(totalPages, currentPage + 1);
+            else if (btn.getAttribute('data-page')) currentPage = parseInt(btn.getAttribute('data-page'), 10) || 1;
+            renderRows();
+        });
+    }
 
-            Swal.fire({
-                icon: 'success',
-                title: 'Exported!',
-                text: 'Excel file downloaded successfully',
-                timer: 2000,
-                showConfirmButton: false
+    if (tableBody) {
+        tableBody.addEventListener('click', function (e) {
+            const btn = e.target.closest('.btn-enable');
+            if (!btn) return;
+            enableStudent(btn.getAttribute('data-id')).catch(function (error) {
+                Swal.fire({ icon: 'error', title: 'Error', text: error.message, confirmButtonColor: '#8b5cf6' });
             });
         });
     }
 
-    // CSV
-    const csvBtn = document.getElementById('csvBtn');
-    if (csvBtn) {
-        csvBtn.addEventListener('click', function () {
-            const result = getTableData();
-            let csvContent = result.headers.join(',') + '\n';
-            result.data.forEach(function (row) {
-                const escapedRow = row.map(function (cell) {
-                    if (cell.indexOf(',') !== -1 || cell.indexOf('"') !== -1 || cell.indexOf('\n') !== -1) {
-                        return '"' + cell.replace(/"/g, '""') + '"';
-                    }
-                    return cell;
-                });
-                csvContent += escapedRow.join(',') + '\n';
-            });
-
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            const url = URL.createObjectURL(blob);
-            const timestamp = new Date().toISOString().split('T')[0];
-
-            link.setAttribute('href', url);
-            link.setAttribute('download', 'Disabled_Students_' + timestamp + '.csv');
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-
-            Swal.fire({
-                icon: 'success',
-                title: 'Exported!',
-                text: 'CSV file downloaded successfully',
-                timer: 2000,
-                showConfirmButton: false
-            });
-        });
-    }
-
-    // PDF
-    const pdfBtn = document.getElementById('pdfBtn');
-    if (pdfBtn) {
-        pdfBtn.addEventListener('click', function () {
-            const result = getTableData();
-            const jsPDF = window.jspdf.jsPDF;
-            const doc = new jsPDF('l', 'pt', 'a4');
-
-            doc.setFontSize(16);
-            doc.text('Disabled Students List', 40, 40);
-            doc.setFontSize(10);
-            doc.text('Generated on: ' + new Date().toLocaleDateString(), 40, 58);
-
-            doc.autoTable({
-                head: [result.headers],
-                body: result.data,
-                startY: 70,
-                theme: 'grid',
-                headStyles: {
-                    fillColor: [44, 62, 80],
-                    textColor: [255, 255, 255],
-                    fontStyle: 'bold'
-                },
-                styles: {
-                    fontSize: 8,
-                    cellPadding: 3
-                }
-            });
-
-            const timestamp = new Date().toISOString().split('T')[0];
-            doc.save('Disabled_Students_' + timestamp + '.pdf');
-
-            Swal.fire({
-                icon: 'success',
-                title: 'Exported!',
-                text: 'PDF file downloaded successfully',
-                timer: 2000,
-                showConfirmButton: false
-            });
-        });
-    }
-
-    // Print
-    const printBtn = document.getElementById('printBtn');
-    if (printBtn) {
-        printBtn.addEventListener('click', function () {
-            const result = getTableData();
-            let printContent = ''
-                + '<!DOCTYPE html><html><head><title>Disabled Students - Print</title><style>'
-                + '@media print { @page { size: landscape; margin: 1cm; } }'
-                + 'body { font-family: Arial, sans-serif; margin: 20px; }'
-                + 'h1 { color: #2c3e50; margin-bottom: 10px; }'
-                + '.print-date { color: #7f8c8d; margin-bottom: 20px; font-size: 14px; }'
-                + 'table { width: 100%; border-collapse: collapse; margin-top: 20px; }'
-                + 'th, td { border: 1px solid #ddd; padding: 10px; text-align: left; font-size: 12px; }'
-                + 'th { background-color: #2c3e50; color: white; font-weight: bold; }'
-                + 'tr:nth-child(even) { background-color: #f9f9f9; }'
-                + '</style></head><body>'
-                + '<h1>Disabled Students List</h1>'
-                + '<div class="print-date">Generated on: ' + new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString() + '</div>'
-                + '<table><thead><tr>';
-
-            result.headers.forEach(function (header) {
-                printContent += '<th>' + header + '</th>';
-            });
-            printContent += '</tr></thead><tbody>';
-
-            result.data.forEach(function (row) {
-                printContent += '<tr>';
-                row.forEach(function (cell) {
-                    printContent += '<td>' + cell + '</td>';
-                });
-                printContent += '</tr>';
-            });
-
-            printContent += '</tbody></table></body></html>';
-
-            const printWindow = window.open('', '_blank');
-            printWindow.document.write(printContent);
-            printWindow.document.close();
-            printWindow.onload = function () {
-                printWindow.focus();
-                printWindow.print();
-            };
-        });
-    }
-
-    document.querySelectorAll('.btn-menu').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            Swal.fire({
-                icon: 'info',
-                title: 'Student Actions',
-                text: 'Enable student and more actions will be available soon.',
-                confirmButtonColor: '#8b5cf6'
-            });
-        });
+    Promise.all([loadClasses(), searchDisabled({})]).catch(function (error) {
+        console.error(error);
+        tableBody.innerHTML = '<tr class="no-data-row"><td colspan="8" style="text-align:center;color:#94a3b8;">Failed to load disabled students</td></tr>';
     });
 });

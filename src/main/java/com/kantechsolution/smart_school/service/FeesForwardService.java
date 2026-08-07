@@ -32,7 +32,7 @@ public class FeesForwardService {
             throw new IllegalArgumentException("Section is required");
         }
 
-        List<StudentAdmission> students = studentAdmissionRepository.search(classId, normalizedSection, null);
+        List<StudentAdmission> students = studentAdmissionRepository.search(classId, normalizedSection, null, null, null);
         Map<Long, FeesForward> existingByStudent = new HashMap<>();
         for (FeesForward row : feesForwardRepository.findByClassIdAndSectionIgnoreCase(classId, normalizedSection)) {
             existingByStudent.put(row.getStudentAdmissionId(), row);

@@ -6,41 +6,73 @@ document.addEventListener('DOMContentLoaded', function () {
     const selectAll = document.getElementById('selectAll');
     const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
     const criteriaForm = document.getElementById('criteriaForm');
+    const classSelect = document.getElementById('classSelect');
+    const sectionSelect = document.getElementById('sectionSelect');
+    const entriesSelect = document.getElementById('entriesSelect');
 
-    function getTableRows() {
-        return tableBody ? Array.from(tableBody.querySelectorAll('tr')) : [];
+    let classes = [];
+    let students = [];
+    let currentPage = 1;
+    let pageSize = 50;
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text == null ? '' : String(text);
+        return div.innerHTML;
     }
 
-    function getVisibleRows() {
-        return getTableRows().filter(function (row) {
-            return row.style.display !== 'none';
+    function formatDate(value) {
+        if (!value) return '';
+        const text = String(value);
+        if (text.includes('-')) {
+            const parts = text.split('T')[0].split('-');
+            if (parts.length === 3) return parts[1] + '/' + parts[2] + '/' + parts[0];
+        }
+        return text;
+    }
+
+    function populateSections() {
+        const selected = classes.find(function (c) { return String(c.id) === String(classSelect.value); });
+        const current = sectionSelect.value;
+        sectionSelect.innerHTML = '<option value="">Select</option>';
+        const sections = selected && Array.isArray(selected.sections) ? selected.sections : [];
+        sections.forEach(function (name) {
+            const option = document.createElement('option');
+            option.value = name;
+            option.textContent = name;
+            sectionSelect.appendChild(option);
+        });
+        if (current) sectionSelect.value = current;
+    }
+
+    async function loadClasses() {
+        const response = await fetch('/api/classes');
+        if (!response.ok) throw new Error('Failed to load classes');
+        classes = await response.json();
+        classSelect.innerHTML = '<option value="">Select</option>';
+        classes.forEach(function (item) {
+            const option = document.createElement('option');
+            option.value = item.id;
+            option.textContent = item.name;
+            classSelect.appendChild(option);
         });
     }
 
-    function getRowCheckboxes(visibleOnly) {
-        const rows = visibleOnly ? getVisibleRows() : getTableRows();
-        return rows.map(function (row) {
-            return row.querySelector('.row-checkbox');
-        }).filter(Boolean);
-    }
-
-    function updateShowingInfo(visibleCount, searchTerm) {
-        if (!showingInfo) return;
-        const totalRows = getTableRows().length;
-        if (visibleCount === 0) {
-            showingInfo.textContent = 'Showing 0 to 0 of 0 entries';
-            return;
-        }
-        if (searchTerm) {
-            showingInfo.textContent = 'Showing 1 to ' + visibleCount + ' of ' + totalRows + ' entries (filtered)';
-        } else {
-            showingInfo.textContent = 'Showing 1 to ' + visibleCount + ' of ' + totalRows + ' entries';
-        }
+    function getFiltered() {
+        const term = searchInput ? searchInput.value.toLowerCase().trim() : '';
+        if (!term) return students.slice();
+        return students.filter(function (item) {
+            const haystack = [
+                item.admissionNo, item.studentName, item.classLabel,
+                item.dateOfBirth, item.gender, item.categoryName, item.mobileNumber
+            ].join(' ').toLowerCase();
+            return haystack.indexOf(term) !== -1;
+        });
     }
 
     function syncSelectAllState() {
         if (!selectAll) return;
-        const boxes = getRowCheckboxes(true);
+        const boxes = Array.from(tableBody.querySelectorAll('.row-checkbox'));
         if (!boxes.length) {
             selectAll.checked = false;
             selectAll.indeterminate = false;
@@ -51,128 +83,176 @@ document.addEventListener('DOMContentLoaded', function () {
         selectAll.indeterminate = checkedCount > 0 && checkedCount < boxes.length;
     }
 
+    function updateShowingInfo(from, to, total) {
+        if (!showingInfo) return;
+        if (!total) {
+            showingInfo.textContent = 'Showing 0 to 0 of 0 entries';
+            return;
+        }
+        showingInfo.textContent = 'Showing ' + from + ' to ' + to + ' of ' + total + ' entries';
+    }
+
+    function renderPagination(total, totalPages) {
+        const pagination = document.querySelector('.pagination');
+        if (!pagination) return;
+        let html = '<button type="button" class="pagination-btn" data-nav="prev"' + (currentPage <= 1 ? ' disabled' : '') + '>&lt;</button>';
+        for (let i = 1; i <= totalPages; i++) {
+            html += '<button type="button" class="pagination-btn' + (i === currentPage ? ' active' : '') + '" data-page="' + i + '">' + i + '</button>';
+        }
+        html += '<button type="button" class="pagination-btn" data-nav="next"' + (currentPage >= totalPages || !total ? ' disabled' : '') + '>&gt;</button>';
+        pagination.innerHTML = html;
+    }
+
+    function renderRows() {
+        const filtered = getFiltered();
+        const total = filtered.length;
+        const totalPages = Math.max(1, Math.ceil(total / pageSize) || 1);
+        if (currentPage > totalPages) currentPage = totalPages;
+        const start = (currentPage - 1) * pageSize;
+        const pageRows = filtered.slice(start, start + pageSize);
+
+        if (!pageRows.length) {
+            tableBody.innerHTML = '<tr class="no-data-row"><td colspan="9" style="text-align:center;color:#94a3b8;">No students found</td></tr>';
+            updateShowingInfo(0, 0, 0);
+            renderPagination(0, 1);
+            syncSelectAllState();
+            return;
+        }
+
+        tableBody.innerHTML = pageRows.map(function (item, index) {
+            return '<tr data-id="' + escapeHtml(item.id) + '">'
+                + '<td><input type="checkbox" class="row-checkbox" value="' + escapeHtml(item.id) + '"></td>'
+                + '<td>' + (start + index + 1) + '</td>'
+                + '<td>' + escapeHtml(item.admissionNo || '') + '</td>'
+                + '<td>' + escapeHtml(item.studentName || '') + '</td>'
+                + '<td>' + escapeHtml(item.classLabel || '') + '</td>'
+                + '<td>' + escapeHtml(formatDate(item.dateOfBirth)) + '</td>'
+                + '<td>' + escapeHtml(item.gender || '') + '</td>'
+                + '<td>' + escapeHtml(item.categoryName || '') + '</td>'
+                + '<td>' + escapeHtml(item.mobileNumber || '') + '</td>'
+                + '</tr>';
+        }).join('');
+
+        updateShowingInfo(start + 1, Math.min(start + pageSize, total), total);
+        renderPagination(total, totalPages);
+        syncSelectAllState();
+    }
+
+    async function searchStudents() {
+        const classId = classSelect.value;
+        if (!classId) {
+            Swal.fire({ icon: 'warning', title: 'Class Required', text: 'Please select a class.', confirmButtonColor: '#8b5cf6' });
+            return;
+        }
+        const query = new URLSearchParams();
+        query.set('classId', classId);
+        if (sectionSelect.value) query.set('section', sectionSelect.value);
+        const response = await fetch('/api/student-admissions?' + query.toString());
+        if (!response.ok) {
+            const err = await response.json().catch(function () { return {}; });
+            throw new Error(err.message || 'Failed to search students');
+        }
+        students = await response.json();
+        currentPage = 1;
+        renderRows();
+    }
+
+    async function bulkDelete() {
+        const selected = Array.from(tableBody.querySelectorAll('.row-checkbox:checked')).map(function (box) {
+            return box.value;
+        });
+        if (!selected.length) {
+            Swal.fire({ icon: 'warning', title: 'No Students Selected', text: 'Please select at least one student to delete.', confirmButtonColor: '#8b5cf6' });
+            return;
+        }
+        const confirm = await Swal.fire({
+            icon: 'warning',
+            title: 'Delete Selected Students?',
+            text: selected.length + ' student(s) will be deleted. This cannot be undone.',
+            showCancelButton: true,
+            confirmButtonColor: '#dc2626',
+            confirmButtonText: 'Delete'
+        });
+        if (!confirm.isConfirmed) return;
+
+        const response = await fetch('/api/student-admissions/bulk-delete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ids: selected })
+        });
+        const data = await response.json().catch(function () { return {}; });
+        if (!response.ok) throw new Error(data.message || 'Failed to delete students');
+        await searchStudents();
+        Swal.fire({ icon: 'success', title: 'Deleted', text: (data.deleted || selected.length) + ' student(s) deleted.', timer: 1600, showConfirmButton: false });
+    }
+
+    if (classSelect) classSelect.addEventListener('change', populateSections);
     if (criteriaForm) {
         criteriaForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            Swal.fire({
-                icon: 'success',
-                title: 'Search Complete',
-                text: 'Student list updated for the selected criteria.',
-                timer: 1500,
-                showConfirmButton: false
+            searchStudents().catch(function (error) {
+                Swal.fire({ icon: 'error', title: 'Error', text: error.message, confirmButtonColor: '#8b5cf6' });
             });
         });
     }
-
-    if (searchInput && tableBody) {
-        searchInput.addEventListener('input', function (e) {
-            const searchTerm = e.target.value.toLowerCase().trim();
-            let visibleCount = 0;
-
-            getTableRows().forEach(function (row) {
-                const rowText = Array.from(row.querySelectorAll('td'))
-                    .map(function (cell) { return cell.textContent.trim().toLowerCase(); })
-                    .join(' ');
-
-                if (!searchTerm || rowText.indexOf(searchTerm) !== -1) {
-                    row.style.display = '';
-                    visibleCount++;
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-
-            updateShowingInfo(visibleCount, searchTerm);
-            syncSelectAllState();
+    if (searchInput) searchInput.addEventListener('input', function () { currentPage = 1; renderRows(); });
+    if (entriesSelect) {
+        pageSize = parseInt(entriesSelect.value, 10) || 50;
+        entriesSelect.addEventListener('change', function () {
+            pageSize = parseInt(entriesSelect.value, 10) || 50;
+            currentPage = 1;
+            renderRows();
         });
     }
-
     if (selectAll) {
         selectAll.addEventListener('change', function () {
-            getRowCheckboxes(true).forEach(function (box) {
+            tableBody.querySelectorAll('.row-checkbox').forEach(function (box) {
                 box.checked = selectAll.checked;
             });
             selectAll.indeterminate = false;
         });
     }
-
-    getRowCheckboxes(false).forEach(function (box) {
-        box.addEventListener('change', syncSelectAllState);
-    });
-
+    if (tableBody) {
+        tableBody.addEventListener('change', function (e) {
+            if (e.target.classList.contains('row-checkbox')) syncSelectAllState();
+        });
+    }
     if (bulkDeleteBtn) {
         bulkDeleteBtn.addEventListener('click', function () {
-            const selected = getRowCheckboxes(true).filter(function (box) { return box.checked; });
-            if (!selected.length) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'No Students Selected',
-                    text: 'Please select at least one student to delete.',
-                    confirmButtonColor: '#8b5cf6'
-                });
-                return;
-            }
-
-            Swal.fire({
-                icon: 'warning',
-                title: 'Delete Selected Students?',
-                text: selected.length + ' student(s) will be deleted. This cannot be undone.',
-                showCancelButton: true,
-                confirmButtonColor: '#dc2626',
-                cancelButtonColor: '#64748b',
-                confirmButtonText: 'Delete'
-            }).then(function (result) {
-                if (!result.isConfirmed) return;
-
-                selected.forEach(function (box) {
-                    const row = box.closest('tr');
-                    if (row) row.remove();
-                });
-
-                // Renumber remaining rows
-                getTableRows().forEach(function (row, index) {
-                    const numCell = row.children[1];
-                    if (numCell) numCell.textContent = String(index + 1);
-                });
-
-                const remaining = getVisibleRows().length;
-                updateShowingInfo(remaining, searchInput ? searchInput.value.trim() : '');
-                syncSelectAllState();
-
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Deleted',
-                    text: selected.length + ' student(s) deleted.',
-                    timer: 1600,
-                    showConfirmButton: false
-                });
+            bulkDelete().catch(function (error) {
+                Swal.fire({ icon: 'error', title: 'Error', text: error.message, confirmButtonColor: '#8b5cf6' });
             });
         });
     }
 
+    const pagination = document.querySelector('.pagination');
+    if (pagination) {
+        pagination.addEventListener('click', function (e) {
+            const btn = e.target.closest('.pagination-btn');
+            if (!btn || btn.disabled) return;
+            const filtered = getFiltered();
+            const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize) || 1);
+            if (btn.getAttribute('data-nav') === 'prev') currentPage = Math.max(1, currentPage - 1);
+            else if (btn.getAttribute('data-nav') === 'next') currentPage = Math.min(totalPages, currentPage + 1);
+            else if (btn.getAttribute('data-page')) currentPage = parseInt(btn.getAttribute('data-page'), 10) || 1;
+            renderRows();
+        });
+    }
+
     function getTableData() {
-        const headers = [];
-        const data = [];
-        if (!table) return { headers: headers, data: data };
-
-        const headerCells = table.querySelectorAll('thead th');
-        headerCells.forEach(function (th, index) {
-            if (index > 0) {
-                headers.push(th.textContent.trim());
-            }
+        const headers = ['#', 'Admission No', 'Student Name', 'Class', 'Date Of Birth', 'Gender', 'Category', 'Mobile Number'];
+        const data = getFiltered().map(function (item, index) {
+            return [
+                index + 1,
+                item.admissionNo || '',
+                item.studentName || '',
+                item.classLabel || '',
+                formatDate(item.dateOfBirth),
+                item.gender || '',
+                item.categoryName || '',
+                item.mobileNumber || ''
+            ];
         });
-
-        getVisibleRows().forEach(function (row) {
-            const rowData = [];
-            const cells = row.querySelectorAll('td');
-            cells.forEach(function (cell, index) {
-                if (index > 0) {
-                    rowData.push(cell.textContent.trim().replace(/\s+/g, ' '));
-                }
-            });
-            data.push(rowData);
-        });
-
         return { headers: headers, data: data };
     }
 
@@ -181,189 +261,48 @@ document.addEventListener('DOMContentLoaded', function () {
         copyBtn.addEventListener('click', function () {
             const result = getTableData();
             let text = result.headers.join('\t') + '\n';
-            result.data.forEach(function (row) {
-                text += row.join('\t') + '\n';
-            });
+            result.data.forEach(function (row) { text += row.join('\t') + '\n'; });
             navigator.clipboard.writeText(text).then(function () {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Copied!',
-                    text: 'Table data copied to clipboard',
-                    timer: 2000,
-                    showConfirmButton: false
-                });
+                Swal.fire({ icon: 'success', title: 'Copied!', timer: 1500, showConfirmButton: false });
             });
         });
     }
-
     const excelBtn = document.getElementById('excelBtn');
     if (excelBtn) {
         excelBtn.addEventListener('click', function () {
             const result = getTableData();
-            const wsData = [result.headers].concat(result.data);
             const wb = XLSX.utils.book_new();
-            const ws = XLSX.utils.aoa_to_sheet(wsData);
-            ws['!cols'] = result.headers.map(function () { return { wch: 18 }; });
+            const ws = XLSX.utils.aoa_to_sheet([result.headers].concat(result.data));
             XLSX.utils.book_append_sheet(wb, ws, 'Bulk Delete');
-            const timestamp = new Date().toISOString().split('T')[0];
-            XLSX.writeFile(wb, 'Bulk_Delete_' + timestamp + '.xlsx');
-            Swal.fire({
-                icon: 'success',
-                title: 'Exported!',
-                text: 'Excel file downloaded successfully',
-                timer: 2000,
-                showConfirmButton: false
-            });
+            XLSX.writeFile(wb, 'Bulk_Delete_Students.xlsx');
         });
     }
-
-    const csvBtn = document.getElementById('csvBtn');
-    if (csvBtn) {
-        csvBtn.addEventListener('click', function () {
-            const result = getTableData();
-            let csvContent = result.headers.join(',') + '\n';
-            result.data.forEach(function (row) {
-                const escapedRow = row.map(function (cell) {
-                    if (cell.indexOf(',') !== -1 || cell.indexOf('"') !== -1) {
-                        return '"' + cell.replace(/"/g, '""') + '"';
-                    }
-                    return cell;
-                });
-                csvContent += escapedRow.join(',') + '\n';
-            });
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            const url = URL.createObjectURL(blob);
-            const timestamp = new Date().toISOString().split('T')[0];
-            link.setAttribute('href', url);
-            link.setAttribute('download', 'Bulk_Delete_' + timestamp + '.csv');
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            Swal.fire({
-                icon: 'success',
-                title: 'Exported!',
-                text: 'CSV file downloaded successfully',
-                timer: 2000,
-                showConfirmButton: false
-            });
-        });
-    }
-
-    const pdfBtn = document.getElementById('pdfBtn');
-    if (pdfBtn) {
-        pdfBtn.addEventListener('click', function () {
-            const result = getTableData();
-            const jsPDF = window.jspdf.jsPDF;
-            const doc = new jsPDF('l', 'pt', 'a4');
-            doc.setFontSize(16);
-            doc.text('Bulk Delete - Student List', 40, 40);
-            doc.setFontSize(10);
-            doc.text('Generated on: ' + new Date().toLocaleDateString(), 40, 58);
-            doc.autoTable({
-                head: [result.headers],
-                body: result.data,
-                startY: 70,
-                theme: 'grid',
-                headStyles: {
-                    fillColor: [44, 62, 80],
-                    textColor: [255, 255, 255],
-                    fontStyle: 'bold'
-                },
-                styles: { fontSize: 8, cellPadding: 3 }
-            });
-            const timestamp = new Date().toISOString().split('T')[0];
-            doc.save('Bulk_Delete_' + timestamp + '.pdf');
-            Swal.fire({
-                icon: 'success',
-                title: 'Exported!',
-                text: 'PDF file downloaded successfully',
-                timer: 2000,
-                showConfirmButton: false
-            });
-        });
-    }
-
-    const printBtn = document.getElementById('printBtn');
-    if (printBtn) {
-        printBtn.addEventListener('click', function () {
-            const result = getTableData();
-            let printContent = ''
-                + '<!DOCTYPE html><html><head><title>Bulk Delete - Print</title><style>'
-                + '@media print { @page { size: landscape; margin: 1cm; } }'
-                + 'body { font-family: Arial, sans-serif; margin: 20px; }'
-                + 'h1 { color: #2c3e50; margin-bottom: 10px; }'
-                + 'table { width: 100%; border-collapse: collapse; margin-top: 20px; }'
-                + 'th, td { border: 1px solid #ddd; padding: 10px; text-align: left; font-size: 12px; }'
-                + 'th { background-color: #2c3e50; color: white; }'
-                + '</style></head><body>'
-                + '<h1>Bulk Delete - Student List</h1>'
-                + '<div>Generated on: ' + new Date().toLocaleString() + '</div>'
-                + '<table><thead><tr>';
-
-            result.headers.forEach(function (header) {
-                printContent += '<th>' + header + '</th>';
-            });
-            printContent += '</tr></thead><tbody>';
-            result.data.forEach(function (row) {
-                printContent += '<tr>';
-                row.forEach(function (cell) {
-                    printContent += '<td>' + cell + '</td>';
-                });
-                printContent += '</tr>';
-            });
-            printContent += '</tbody></table></body></html>';
-
-            const printWindow = window.open('', '_blank');
-            printWindow.document.write(printContent);
-            printWindow.document.close();
-            printWindow.onload = function () {
-                printWindow.focus();
-                printWindow.print();
-            };
-        });
-    }
-
-    // Column Visibility
-    const columnVisibilityBtn = document.getElementById('columnVisibilityBtn');
-    const columnVisibilityDropdown = document.getElementById('columnVisibilityDropdown');
-    const columnToggles = document.querySelectorAll('.column-toggle');
-
-    if (columnVisibilityBtn && columnVisibilityDropdown) {
-        columnVisibilityBtn.addEventListener('click', function (e) {
-            e.stopPropagation();
-            columnVisibilityDropdown.classList.toggle('active');
-        });
-
-        document.addEventListener('click', function (e) {
-            if (!columnVisibilityDropdown.contains(e.target) && e.target !== columnVisibilityBtn) {
-                columnVisibilityDropdown.classList.remove('active');
+    ['csvBtn', 'pdfBtn', 'printBtn'].forEach(function (id) {
+        const btn = document.getElementById(id);
+        if (!btn) return;
+        btn.addEventListener('click', function () {
+            if (id === 'csvBtn') {
+                const result = getTableData();
+                const lines = [result.headers.join(',')].concat(result.data.map(function (row) {
+                    return row.map(function (v) { return '"' + String(v).replace(/"/g, '""') + '"'; }).join(',');
+                }));
+                const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'Bulk_Delete_Students.csv';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            } else {
+                window.print();
             }
         });
+    });
 
-        columnVisibilityDropdown.addEventListener('click', function (e) {
-            e.stopPropagation();
-        });
-
-        columnToggles.forEach(function (toggle) {
-            toggle.addEventListener('change', function () {
-                const columnIndex = parseInt(this.getAttribute('data-column'), 10);
-                const isVisible = this.checked;
-                if (!table) return;
-
-                const headerCells = table.querySelectorAll('thead th');
-                if (headerCells[columnIndex]) {
-                    headerCells[columnIndex].style.display = isVisible ? '' : 'none';
-                }
-
-                table.querySelectorAll('tbody tr').forEach(function (row) {
-                    const cells = row.querySelectorAll('td');
-                    if (cells[columnIndex]) {
-                        cells[columnIndex].style.display = isVisible ? '' : 'none';
-                    }
-                });
-            });
-        });
-    }
+    loadClasses().catch(function (error) {
+        console.error(error);
+        Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to load classes.', confirmButtonColor: '#8b5cf6' });
+    });
 });

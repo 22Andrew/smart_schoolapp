@@ -24,6 +24,8 @@ public class UploadStorage {
     public void init() throws IOException {
         root = Paths.get(uploadDir).toAbsolutePath().normalize();
         Files.createDirectories(root.resolve("students"));
+        Files.createDirectories(root.resolve("courses"));
+        Files.createDirectories(root.resolve("lessons"));
     }
 
     public Path getRoot() {
@@ -32,5 +34,13 @@ public class UploadStorage {
 
     public Path getStudentsDir() {
         return root.resolve("students");
+    }
+
+    public Path getCoursesDir() {
+        return root.resolve("courses");
+    }
+
+    public Path getLessonsDir() {
+        return root.resolve("lessons");
     }
 }

@@ -9,7 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,14 +28,13 @@ public class StudentAdmissionController {
     public ResponseEntity<?> getAllAdmissions(
             @RequestParam(required = false) Long classId,
             @RequestParam(required = false) String section,
-            @RequestParam(required = false) String keyword
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) Boolean disabled,
+            @RequestParam(required = false) Boolean online
     ) {
         try {
-            if (classId == null && (section == null || section.isBlank())
-                    && (keyword == null || keyword.isBlank())) {
-                return ResponseEntity.ok(studentAdmissionService.getAllAdmissions());
-            }
-            return ResponseEntity.ok(studentAdmissionService.searchAdmissions(classId, section, keyword));
+            return ResponseEntity.ok(studentAdmissionService.searchAdmissions(
+                    classId, section, keyword, disabled, online));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(errorBody("Failed to load student admissions"));
@@ -133,6 +134,110 @@ public class StudentAdmissionController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(errorBody("Failed to delete student admission"));
+        }
+    }
+
+    @PostMapping("/api/student-admissions/bulk-delete")
+    @ResponseBody
+    public ResponseEntity<?> bulkDelete(@RequestBody Map<String, Object> payload) {
+        try {
+            List<Long> ids = new ArrayList<>();
+            Object raw = payload.get("ids");
+            if (raw instanceof List<?> list) {
+                for (Object value : list) {
+                    if (value != null && !String.valueOf(value).isBlank()) {
+                        ids.add(Long.valueOf(String.valueOf(value).trim()));
+                    }
+                }
+            }
+            int deleted = studentAdmissionService.bulkDeleteAdmissions(ids);
+            Map<String, Object> body = new HashMap<>();
+            body.put("deleted", deleted);
+            return ResponseEntity.ok(body);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(errorBody(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorBody("Failed to delete students"));
+        }
+    }
+
+    @PostMapping("/api/student-admissions/{id}/disable")
+    @ResponseBody
+    public ResponseEntity<?> disableStudent(@PathVariable Long id, @RequestBody(required = false) Map<String, Object> payload) {
+        try {
+            String reason = payload == null || payload.get("disableReason") == null
+                    ? null : String.valueOf(payload.get("disableReason"));
+            return ResponseEntity.ok(studentAdmissionService.setDisabledStatus(id, true, reason));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(errorBody(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorBody("Failed to disable student"));
+        }
+    }
+
+    @PostMapping("/api/student-admissions/{id}/enable")
+    @ResponseBody
+    public ResponseEntity<?> enableStudent(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(studentAdmissionService.setDisabledStatus(id, false, null));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(errorBody(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorBody("Failed to enable student"));
+        }
+    }
+
+    @GetMapping("/api/multi-class-students")
+    @ResponseBody
+    public ResponseEntity<?> searchMultiClass(
+            @RequestParam Long classId,
+            @RequestParam(required = false) String section
+    ) {
+        try {
+            return ResponseEntity.ok(studentAdmissionService.searchMultiClassStudents(classId, section));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(errorBody(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorBody("Failed to load multi-class students"));
+        }
+    }
+
+    @GetMapping("/api/student-admissions/{id}/class-assignments")
+    @ResponseBody
+    public ResponseEntity<?> getClassAssignments(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(studentAdmissionService.getClassAssignments(id));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorBody("Failed to load class assignments"));
+        }
+    }
+
+    @PutMapping("/api/student-admissions/{id}/class-assignments")
+    @ResponseBody
+    public ResponseEntity<?> saveClassAssignments(@PathVariable Long id, @RequestBody Map<String, Object> payload) {
+        try {
+            List<Map<String, Object>> items = new ArrayList<>();
+            Object raw = payload.get("assignments");
+            if (raw instanceof List<?> list) {
+                for (Object value : list) {
+                    if (value instanceof Map<?, ?> map) {
+                        Map<String, Object> item = new HashMap<>();
+                        map.forEach((k, v) -> item.put(String.valueOf(k), v));
+                        items.add(item);
+                    }
+                }
+            }
+            return ResponseEntity.ok(studentAdmissionService.saveClassAssignments(id, items));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(errorBody(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorBody("Failed to save class assignments"));
         }
     }
 

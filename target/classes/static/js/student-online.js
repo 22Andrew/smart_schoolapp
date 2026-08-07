@@ -3,267 +3,246 @@ document.addEventListener('DOMContentLoaded', function () {
     const tableBody = document.getElementById('onlineStudentTableBody');
     const showingInfo = document.querySelector('.showing-info');
     const searchInput = document.getElementById('searchInput') || document.querySelector('.table-search-input');
+    const entriesSelect = document.getElementById('entriesSelect');
 
-    function getTableRows() {
-        if (!tableBody) return [];
-        return Array.from(tableBody.querySelectorAll('tr'));
+    let students = [];
+    let currentPage = 1;
+    let pageSize = 50;
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text == null ? '' : String(text);
+        return div.innerHTML;
     }
 
-    function updateShowingInfo(visibleCount, searchTerm) {
+    function formatDate(value) {
+        if (!value) return '';
+        const text = String(value);
+        if (text.includes('T')) {
+            const d = text.split('T')[0];
+            const parts = d.split('-');
+            if (parts.length === 3) return parts[1] + '/' + parts[2] + '/' + parts[0];
+        }
+        if (text.includes('-')) {
+            const parts = text.split('-');
+            if (parts.length === 3) return parts[1] + '/' + parts[2] + '/' + parts[0];
+        }
+        return text;
+    }
+
+    function statusBadge(value, okValues) {
+        const text = value || '';
+        const ok = (okValues || []).some(function (v) { return v.toLowerCase() === text.toLowerCase(); });
+        const cls = ok ? 'status-success' : 'status-danger';
+        return '<span class="status-badge ' + cls + '">' + escapeHtml(text) + '</span>';
+    }
+
+    function getFiltered() {
+        const term = searchInput ? searchInput.value.toLowerCase().trim() : '';
+        if (!term) return students.slice();
+        return students.filter(function (item) {
+            const haystack = [
+                item.referenceNo, item.studentName, item.classLabel, item.fatherName,
+                item.dateOfBirth, item.gender, item.categoryName, item.mobileNumber,
+                item.formStatus, item.paymentStatus, item.createdAt
+            ].join(' ').toLowerCase();
+            return haystack.indexOf(term) !== -1;
+        });
+    }
+
+    function updateShowingInfo(from, to, total) {
         if (!showingInfo) return;
-        const totalRows = getTableRows().length;
-        if (visibleCount === 0) {
+        if (!total) {
             showingInfo.textContent = 'Showing 0 to 0 of 0 entries';
             return;
         }
-        if (searchTerm) {
-            showingInfo.textContent = 'Showing 1 to ' + visibleCount + ' of ' + totalRows + ' entries (filtered)';
-        } else {
-            showingInfo.textContent = 'Showing 1 to ' + visibleCount + ' of ' + totalRows + ' entries';
+        showingInfo.textContent = 'Showing ' + from + ' to ' + to + ' of ' + total + ' entries';
+    }
+
+    function renderPagination(total, totalPages) {
+        const pagination = document.querySelector('.pagination');
+        if (!pagination) return;
+        let html = '<button type="button" class="pagination-btn" data-nav="prev"' + (currentPage <= 1 ? ' disabled' : '') + '>&lt;</button>';
+        for (let i = 1; i <= totalPages; i++) {
+            html += '<button type="button" class="pagination-btn' + (i === currentPage ? ' active' : '') + '" data-page="' + i + '">' + i + '</button>';
         }
+        html += '<button type="button" class="pagination-btn" data-nav="next"' + (currentPage >= totalPages || !total ? ' disabled' : '') + '>&gt;</button>';
+        pagination.innerHTML = html;
     }
 
-    // Table search (same behavior as admission enquiry)
-    if (searchInput && tableBody) {
-        searchInput.addEventListener('input', function (e) {
-            const searchTerm = e.target.value.toLowerCase().trim();
-            let visibleCount = 0;
+    function renderRows() {
+        const filtered = getFiltered();
+        const total = filtered.length;
+        const totalPages = Math.max(1, Math.ceil(total / pageSize) || 1);
+        if (currentPage > totalPages) currentPage = totalPages;
+        const start = (currentPage - 1) * pageSize;
+        const pageRows = filtered.slice(start, start + pageSize);
 
-            getTableRows().forEach(function (row) {
-                const rowText = Array.from(row.querySelectorAll('td'))
-                    .map(function (cell) { return cell.textContent.trim().toLowerCase(); })
-                    .join(' ');
+        if (!pageRows.length) {
+            tableBody.innerHTML = '<tr class="no-data-row"><td colspan="13" style="text-align:center;color:#94a3b8;">No online admission students found</td></tr>';
+            updateShowingInfo(0, 0, 0);
+            renderPagination(0, 1);
+            return;
+        }
 
-                if (!searchTerm || rowText.indexOf(searchTerm) !== -1) {
-                    row.style.display = '';
-                    visibleCount++;
-                } else {
-                    row.style.display = 'none';
-                }
-            });
+        tableBody.innerHTML = pageRows.map(function (item) {
+            const enrolled = item.enrolled
+                ? '<span class="enrolled-icon enrolled-yes" title="Enrolled">✓</span>'
+                : '<span class="enrolled-icon enrolled-no" title="Not Enrolled">✗</span>';
+            return '<tr data-id="' + escapeHtml(item.id) + '">'
+                + '<td>' + escapeHtml(item.referenceNo || item.admissionNo || '') + '</td>'
+                + '<td><a class="student-link" href="/student/view/' + escapeHtml(item.id) + '">' + escapeHtml(item.studentName || '') + '</a></td>'
+                + '<td>' + escapeHtml(item.classLabel || '') + '</td>'
+                + '<td>' + escapeHtml(item.fatherName || '') + '</td>'
+                + '<td>' + escapeHtml(formatDate(item.dateOfBirth)) + '</td>'
+                + '<td>' + escapeHtml(item.gender || '') + '</td>'
+                + '<td>' + escapeHtml(item.categoryName || '') + '</td>'
+                + '<td>' + escapeHtml(item.mobileNumber || '') + '</td>'
+                + '<td>' + statusBadge(item.formStatus, ['Submitted']) + '</td>'
+                + '<td>' + statusBadge(item.paymentStatus, ['Paid']) + '</td>'
+                + '<td>' + enrolled + '</td>'
+                + '<td>' + escapeHtml(formatDate(item.createdAt)) + '</td>'
+                + '<td><div class="action-buttons">'
+                + '<a class="btn-action btn-view" href="/student/view/' + escapeHtml(item.id) + '" title="View">View</a>'
+                + '<a class="btn-action btn-edit" href="/student/create?id=' + escapeHtml(item.id) + '" title="Edit">Edit</a>'
+                + '<button type="button" class="btn-action btn-delete" data-id="' + escapeHtml(item.id) + '" title="Delete">Delete</button>'
+                + '</div></td></tr>';
+        }).join('');
 
-            updateShowingInfo(visibleCount, searchTerm);
+        updateShowingInfo(start + 1, Math.min(start + pageSize, total), total);
+        renderPagination(total, totalPages);
+    }
+
+    async function loadStudents() {
+        const response = await fetch('/api/student-admissions');
+        if (!response.ok) throw new Error('Failed to load students');
+        students = await response.json();
+        currentPage = 1;
+        renderRows();
+    }
+
+    async function deleteStudent(id) {
+        const confirm = await Swal.fire({
+            icon: 'warning',
+            title: 'Delete student?',
+            text: 'This cannot be undone.',
+            showCancelButton: true,
+            confirmButtonColor: '#dc2626',
+            confirmButtonText: 'Delete'
+        });
+        if (!confirm.isConfirmed) return;
+        const response = await fetch('/api/student-admissions/' + encodeURIComponent(id), { method: 'DELETE' });
+        if (!response.ok && response.status !== 204) {
+            const err = await response.json().catch(function () { return {}; });
+            throw new Error(err.message || 'Failed to delete student');
+        }
+        await loadStudents();
+        Swal.fire({ icon: 'success', title: 'Deleted', timer: 1400, showConfirmButton: false });
+    }
+
+    if (searchInput) searchInput.addEventListener('input', function () { currentPage = 1; renderRows(); });
+    if (entriesSelect) {
+        pageSize = parseInt(entriesSelect.value, 10) || 50;
+        entriesSelect.addEventListener('change', function () {
+            pageSize = parseInt(entriesSelect.value, 10) || 50;
+            currentPage = 1;
+            renderRows();
         });
     }
 
-    // Helper: get visible table data (excludes Action column)
+    const pagination = document.querySelector('.pagination');
+    if (pagination) {
+        pagination.addEventListener('click', function (e) {
+            const btn = e.target.closest('.pagination-btn');
+            if (!btn || btn.disabled) return;
+            const filtered = getFiltered();
+            const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize) || 1);
+            if (btn.getAttribute('data-nav') === 'prev') currentPage = Math.max(1, currentPage - 1);
+            else if (btn.getAttribute('data-nav') === 'next') currentPage = Math.min(totalPages, currentPage + 1);
+            else if (btn.getAttribute('data-page')) currentPage = parseInt(btn.getAttribute('data-page'), 10) || 1;
+            renderRows();
+        });
+    }
+
+    if (tableBody) {
+        tableBody.addEventListener('click', function (e) {
+            const btn = e.target.closest('.btn-delete');
+            if (!btn) return;
+            deleteStudent(btn.getAttribute('data-id')).catch(function (error) {
+                Swal.fire({ icon: 'error', title: 'Error', text: error.message, confirmButtonColor: '#8b5cf6' });
+            });
+        });
+    }
+
     function getTableData() {
-        const headers = [];
-        const data = [];
-        if (!table) return { headers: headers, data: data };
-
-        const headerCells = table.querySelectorAll('thead th');
-        headerCells.forEach(function (th, index) {
-            if (index < headerCells.length - 1) {
-                headers.push(th.textContent.trim());
-            }
+        const headers = ['Reference No', 'Student Name', 'Class', 'Father Name', 'Date Of Birth', 'Gender', 'Category', 'Student Mobile Number', 'Form Status', 'Payment Status', 'Enrolled', 'Created At'];
+        const data = getFiltered().map(function (item) {
+            return [
+                item.referenceNo || item.admissionNo || '',
+                item.studentName || '',
+                item.classLabel || '',
+                item.fatherName || '',
+                formatDate(item.dateOfBirth),
+                item.gender || '',
+                item.categoryName || '',
+                item.mobileNumber || '',
+                item.formStatus || '',
+                item.paymentStatus || '',
+                item.enrolled ? 'Yes' : 'No',
+                formatDate(item.createdAt)
+            ];
         });
-
-        getTableRows().forEach(function (row) {
-            if (row.style.display === 'none') return;
-            const rowData = [];
-            const cells = row.querySelectorAll('td');
-            cells.forEach(function (cell, index) {
-                if (index < cells.length - 1) {
-                    rowData.push(cell.textContent.trim().replace(/\s+/g, ' '));
-                }
-            });
-            data.push(rowData);
-        });
-
         return { headers: headers, data: data };
     }
 
-    // Copy
     const copyBtn = document.getElementById('copyBtn');
     if (copyBtn) {
         copyBtn.addEventListener('click', function () {
             const result = getTableData();
             let text = result.headers.join('\t') + '\n';
-            result.data.forEach(function (row) {
-                text += row.join('\t') + '\n';
-            });
-
+            result.data.forEach(function (row) { text += row.join('\t') + '\n'; });
             navigator.clipboard.writeText(text).then(function () {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Copied!',
-                    text: 'Table data copied to clipboard',
-                    timer: 2000,
-                    showConfirmButton: false
-                });
-            }).catch(function () {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Failed to copy data to clipboard',
-                    confirmButtonColor: '#ef4444'
-                });
+                Swal.fire({ icon: 'success', title: 'Copied!', timer: 1500, showConfirmButton: false });
             });
         });
     }
-
-    // Excel
     const excelBtn = document.getElementById('excelBtn');
     if (excelBtn) {
         excelBtn.addEventListener('click', function () {
             const result = getTableData();
-            const wsData = [result.headers].concat(result.data);
             const wb = XLSX.utils.book_new();
-            const ws = XLSX.utils.aoa_to_sheet(wsData);
-            ws['!cols'] = result.headers.map(function () { return { wch: 20 }; });
+            const ws = XLSX.utils.aoa_to_sheet([result.headers].concat(result.data));
             XLSX.utils.book_append_sheet(wb, ws, 'Online Admission');
-
-            const timestamp = new Date().toISOString().split('T')[0];
-            XLSX.writeFile(wb, 'Online_Admission_' + timestamp + '.xlsx');
-
-            Swal.fire({
-                icon: 'success',
-                title: 'Exported!',
-                text: 'Excel file downloaded successfully',
-                timer: 2000,
-                showConfirmButton: false
-            });
+            XLSX.writeFile(wb, 'Online_Admission.xlsx');
         });
     }
-
-    // CSV
-    const csvBtn = document.getElementById('csvBtn');
-    if (csvBtn) {
-        csvBtn.addEventListener('click', function () {
-            const result = getTableData();
-            let csvContent = result.headers.join(',') + '\n';
-            result.data.forEach(function (row) {
-                const escapedRow = row.map(function (cell) {
-                    if (cell.indexOf(',') !== -1 || cell.indexOf('"') !== -1 || cell.indexOf('\n') !== -1) {
-                        return '"' + cell.replace(/"/g, '""') + '"';
-                    }
-                    return cell;
-                });
-                csvContent += escapedRow.join(',') + '\n';
-            });
-
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            const url = URL.createObjectURL(blob);
-            const timestamp = new Date().toISOString().split('T')[0];
-
-            link.setAttribute('href', url);
-            link.setAttribute('download', 'Online_Admission_' + timestamp + '.csv');
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-
-            Swal.fire({
-                icon: 'success',
-                title: 'Exported!',
-                text: 'CSV file downloaded successfully',
-                timer: 2000,
-                showConfirmButton: false
-            });
-        });
-    }
-
-    // PDF
-    const pdfBtn = document.getElementById('pdfBtn');
-    if (pdfBtn) {
-        pdfBtn.addEventListener('click', function () {
-            const result = getTableData();
-            const jsPDF = window.jspdf.jsPDF;
-            const doc = new jsPDF('l', 'pt', 'a4');
-
-            doc.setFontSize(16);
-            doc.text('Online Admission - Student List', 40, 40);
-            doc.setFontSize(10);
-            doc.text('Generated on: ' + new Date().toLocaleDateString(), 40, 58);
-
-            doc.autoTable({
-                head: [result.headers],
-                body: result.data,
-                startY: 70,
-                theme: 'grid',
-                headStyles: {
-                    fillColor: [44, 62, 80],
-                    textColor: [255, 255, 255],
-                    fontStyle: 'bold'
-                },
-                styles: {
-                    fontSize: 8,
-                    cellPadding: 3
-                }
-            });
-
-            const timestamp = new Date().toISOString().split('T')[0];
-            doc.save('Online_Admission_' + timestamp + '.pdf');
-
-            Swal.fire({
-                icon: 'success',
-                title: 'Exported!',
-                text: 'PDF file downloaded successfully',
-                timer: 2000,
-                showConfirmButton: false
-            });
-        });
-    }
-
-    // Print
-    const printBtn = document.getElementById('printBtn');
-    if (printBtn) {
-        printBtn.addEventListener('click', function () {
-            const result = getTableData();
-            let printContent = ''
-                + '<!DOCTYPE html><html><head><title>Online Admission - Print</title><style>'
-                + '@media print { @page { size: landscape; margin: 1cm; } }'
-                + 'body { font-family: Arial, sans-serif; margin: 20px; }'
-                + 'h1 { color: #2c3e50; margin-bottom: 10px; }'
-                + '.print-date { color: #7f8c8d; margin-bottom: 20px; font-size: 14px; }'
-                + 'table { width: 100%; border-collapse: collapse; margin-top: 20px; }'
-                + 'th, td { border: 1px solid #ddd; padding: 10px; text-align: left; font-size: 12px; }'
-                + 'th { background-color: #2c3e50; color: white; font-weight: bold; }'
-                + 'tr:nth-child(even) { background-color: #f9f9f9; }'
-                + '</style></head><body>'
-                + '<h1>Online Admission - Student List</h1>'
-                + '<div class="print-date">Generated on: ' + new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString() + '</div>'
-                + '<table><thead><tr>';
-
-            result.headers.forEach(function (header) {
-                printContent += '<th>' + header + '</th>';
-            });
-            printContent += '</tr></thead><tbody>';
-
-            result.data.forEach(function (row) {
-                printContent += '<tr>';
-                row.forEach(function (cell) {
-                    printContent += '<td>' + cell + '</td>';
-                });
-                printContent += '</tr>';
-            });
-
-            printContent += '</tbody></table></body></html>';
-
-            const printWindow = window.open('', '_blank');
-            printWindow.document.write(printContent);
-            printWindow.document.close();
-            printWindow.onload = function () {
-                printWindow.focus();
-                printWindow.print();
-            };
-        });
-    }
-
-    // Delete confirmation
-    document.querySelectorAll('.btn-delete').forEach(function (btn) {
+    ['csvBtn', 'pdfBtn', 'printBtn'].forEach(function (id) {
+        const btn = document.getElementById(id);
+        if (!btn) return;
         btn.addEventListener('click', function () {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Delete Record?',
-                text: 'This action cannot be undone.',
-                showCancelButton: true,
-                confirmButtonColor: '#dc2626',
-                cancelButtonColor: '#64748b',
-                confirmButtonText: 'Delete'
-            });
+            if (id === 'csvBtn') {
+                const result = getTableData();
+                const lines = [result.headers.join(',')].concat(result.data.map(function (row) {
+                    return row.map(function (v) { return '"' + String(v).replace(/"/g, '""') + '"'; }).join(',');
+                }));
+                const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'Online_Admission.csv';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            } else {
+                window.print();
+            }
         });
+    });
+
+    loadStudents().catch(function (error) {
+        console.error(error);
+        tableBody.innerHTML = '<tr class="no-data-row"><td colspan="13" style="text-align:center;color:#94a3b8;">Failed to load students</td></tr>';
+        Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to load online admission students.', confirmButtonColor: '#8b5cf6' });
     });
 });

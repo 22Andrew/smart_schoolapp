@@ -348,6 +348,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (currentPath === '/offlinepayment/') {
             currentPath = '/offlinepayment';
         }
+        // Normalize Online Course aliases
+        if (currentPath === '/onlinecourse/course' || currentPath === '/onlinecourse/course/') {
+            currentPath = '/onlinecourse/course/index';
+        }
         const allSubmenuItems = document.querySelectorAll('.submenu-item');
 
         // Clear previous submenu highlights so only one item stays active

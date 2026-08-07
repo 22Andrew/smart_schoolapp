@@ -22,6 +22,8 @@ public interface StudentAdmissionRepository extends JpaRepository<StudentAdmissi
             SELECT s FROM StudentAdmission s
             WHERE (:classId IS NULL OR s.schoolClass.id = :classId)
               AND (:section IS NULL OR :section = '' OR LOWER(s.section) = LOWER(:section))
+              AND (:disabled IS NULL OR s.disabled = :disabled)
+              AND (:onlineAdmission IS NULL OR s.onlineAdmission = :onlineAdmission)
               AND (
                    :keyword IS NULL OR :keyword = ''
                    OR LOWER(s.firstName) LIKE LOWER(CONCAT('%', :keyword, '%'))
@@ -29,6 +31,7 @@ public interface StudentAdmissionRepository extends JpaRepository<StudentAdmissi
                    OR LOWER(CONCAT(COALESCE(s.firstName, ''), ' ', COALESCE(s.lastName, ''))) LIKE LOWER(CONCAT('%', :keyword, '%'))
                    OR LOWER(COALESCE(s.rollNumber, '')) LIKE LOWER(CONCAT('%', :keyword, '%'))
                    OR LOWER(COALESCE(s.admissionNo, '')) LIKE LOWER(CONCAT('%', :keyword, '%'))
+                   OR LOWER(COALESCE(s.referenceNo, '')) LIKE LOWER(CONCAT('%', :keyword, '%'))
                    OR LOWER(COALESCE(s.nationalId, '')) LIKE LOWER(CONCAT('%', :keyword, '%'))
                    OR LOWER(COALESCE(s.localId, '')) LIKE LOWER(CONCAT('%', :keyword, '%'))
                    OR LOWER(COALESCE(s.mobileNumber, '')) LIKE LOWER(CONCAT('%', :keyword, '%'))
@@ -38,6 +41,8 @@ public interface StudentAdmissionRepository extends JpaRepository<StudentAdmissi
     List<StudentAdmission> search(
             @Param("classId") Long classId,
             @Param("section") String section,
-            @Param("keyword") String keyword
+            @Param("keyword") String keyword,
+            @Param("disabled") Boolean disabled,
+            @Param("onlineAdmission") Boolean onlineAdmission
     );
 }

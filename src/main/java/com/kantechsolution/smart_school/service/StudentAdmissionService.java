@@ -7,12 +7,14 @@ import com.kantechsolution.smart_school.model.SchoolClass;
 import com.kantechsolution.smart_school.model.SchoolHouse;
 import com.kantechsolution.smart_school.model.StudentAdmission;
 import com.kantechsolution.smart_school.model.StudentCategory;
+import com.kantechsolution.smart_school.model.StudentClassAssignment;
 import com.kantechsolution.smart_school.repository.HostelRepository;
 import com.kantechsolution.smart_school.repository.HostelRoomRepository;
 import com.kantechsolution.smart_school.repository.SchoolClassRepository;
 import com.kantechsolution.smart_school.repository.SchoolHouseRepository;
 import com.kantechsolution.smart_school.repository.StudentAdmissionRepository;
 import com.kantechsolution.smart_school.repository.StudentCategoryRepository;
+import com.kantechsolution.smart_school.repository.StudentClassAssignmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,15 +58,22 @@ public class StudentAdmissionService {
     @Autowired
     private HostelRoomRepository hostelRoomRepository;
 
+    @Autowired
+    private StudentClassAssignmentRepository studentClassAssignmentRepository;
+
     public List<Map<String, Object>> getAllAdmissions() {
-        List<Map<String, Object>> result = new ArrayList<>();
-        for (StudentAdmission row : studentAdmissionRepository.findAllByOrderByIdDesc()) {
-            result.add(toMap(row));
-        }
-        return result;
+        return searchAdmissions(null, null, null, null, null);
     }
 
     public List<Map<String, Object>> searchAdmissions(Long classId, String section, String keyword) {
+        return searchAdmissions(classId, section, keyword, null, null);
+    }
+
+    public List<Map<String, Object>> searchAdmissions(Long classId,
+                                                      String section,
+                                                      String keyword,
+                                                      Boolean disabled,
+                                                      Boolean onlineAdmission) {
         String normalizedSection = section == null ? null : section.trim();
         String normalizedKeyword = keyword == null ? null : keyword.trim();
         if (normalizedSection != null && normalizedSection.isEmpty()) {
@@ -75,7 +84,8 @@ public class StudentAdmissionService {
         }
 
         List<Map<String, Object>> result = new ArrayList<>();
-        for (StudentAdmission row : studentAdmissionRepository.search(classId, normalizedSection, normalizedKeyword)) {
+        for (StudentAdmission row : studentAdmissionRepository.search(
+                classId, normalizedSection, normalizedKeyword, disabled, onlineAdmission)) {
             result.add(toMap(row));
         }
         return result;
@@ -121,7 +131,138 @@ public class StudentAdmissionService {
         if (!studentAdmissionRepository.existsById(id)) {
             throw new IllegalArgumentException("Student admission not found");
         }
+        studentClassAssignmentRepository.deleteByStudentAdmissionId(id);
         studentAdmissionRepository.deleteById(id);
+    }
+
+    @Transactional
+    public int bulkDeleteAdmissions(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            throw new IllegalArgumentException("Select at least one student to delete");
+        }
+        int deleted = 0;
+        for (Long id : ids) {
+            if (id == null) continue;
+            if (studentAdmissionRepository.existsById(id)) {
+                studentClassAssignmentRepository.deleteByStudentAdmissionId(id);
+                studentAdmissionRepository.deleteById(id);
+                deleted++;
+            }
+        }
+        return deleted;
+    }
+
+    @Transactional
+    public Map<String, Object> setDisabledStatus(Long id, boolean disabled, String disableReason) {
+        StudentAdmission existing = studentAdmissionRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Student admission not found"));
+        existing.setDisabled(disabled);
+        if (disabled) {
+            if (disableReason == null || disableReason.trim().isEmpty()) {
+                throw new IllegalArgumentException("Disable reason is required");
+            }
+            existing.setDisableReason(disableReason.trim());
+            existing.setEnrolled(false);
+        } else {
+            existing.setDisableReason(null);
+            existing.setEnrolled(true);
+        }
+        return toMap(studentAdmissionRepository.save(existing));
+    }
+
+    @Transactional(readOnly = true)
+    public List<Map<String, Object>> searchMultiClassStudents(Long classId, String section) {
+        if (classId == null) {
+            throw new IllegalArgumentException("Class is required");
+        }
+        List<Map<String, Object>> students = searchAdmissions(classId, section, null, false, null);
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (Map<String, Object> student : students) {
+            Long id = ((Number) student.get("id")).longValue();
+            Map<String, Object> row = new LinkedHashMap<>(student);
+            row.put("classAssignments", getClassAssignments(id));
+            result.add(row);
+        }
+        return result;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Map<String, Object>> getClassAssignments(Long studentAdmissionId) {
+        List<StudentClassAssignment> assignments =
+                studentClassAssignmentRepository.findByStudentAdmissionIdOrderByIdAsc(studentAdmissionId);
+        List<Map<String, Object>> rows = new ArrayList<>();
+        if (assignments.isEmpty()) {
+            studentAdmissionRepository.findById(studentAdmissionId).ifPresent(student -> {
+                Map<String, Object> primary = new LinkedHashMap<>();
+                primary.put("id", null);
+                primary.put("classId", student.getSchoolClass() != null ? student.getSchoolClass().getId() : null);
+                primary.put("className", student.getSchoolClass() != null ? student.getSchoolClass().getName() : null);
+                primary.put("section", student.getSection());
+                primary.put("primary", true);
+                rows.add(primary);
+            });
+            return rows;
+        }
+        for (StudentClassAssignment assignment : assignments) {
+            Map<String, Object> row = new LinkedHashMap<>();
+            row.put("id", assignment.getId());
+            row.put("classId", assignment.getSchoolClass() != null ? assignment.getSchoolClass().getId() : null);
+            row.put("className", assignment.getSchoolClass() != null ? assignment.getSchoolClass().getName() : null);
+            row.put("section", assignment.getSection());
+            row.put("primary", false);
+            rows.add(row);
+        }
+        return rows;
+    }
+
+    @Transactional
+    public List<Map<String, Object>> saveClassAssignments(Long studentAdmissionId, List<Map<String, Object>> items) {
+        StudentAdmission student = studentAdmissionRepository.findById(studentAdmissionId)
+                .orElseThrow(() -> new IllegalArgumentException("Student admission not found"));
+        if (items == null || items.isEmpty()) {
+            throw new IllegalArgumentException("At least one class/section is required");
+        }
+
+        studentClassAssignmentRepository.deleteByStudentAdmissionId(studentAdmissionId);
+
+        Map<String, Object> first = items.get(0);
+        Long primaryClassId = asLong(first.get("classId"));
+        if (primaryClassId == null) {
+            throw new IllegalArgumentException("Class is required");
+        }
+        String primarySection = requiredText(first.get("section"), "Section").toUpperCase(Locale.ROOT);
+        SchoolClass primaryClass = schoolClassRepository.findById(primaryClassId)
+                .orElseThrow(() -> new IllegalArgumentException("Selected class was not found"));
+        validateSection(primaryClass, primarySection);
+        student.setSchoolClass(primaryClass);
+        student.setSection(primarySection);
+        studentAdmissionRepository.save(student);
+
+        for (Map<String, Object> item : items) {
+            Long classId = asLong(item.get("classId"));
+            if (classId == null) {
+                throw new IllegalArgumentException("Class is required");
+            }
+            String section = requiredText(item.get("section"), "Section").toUpperCase(Locale.ROOT);
+            SchoolClass schoolClass = schoolClassRepository.findById(classId)
+                    .orElseThrow(() -> new IllegalArgumentException("Selected class was not found"));
+            validateSection(schoolClass, section);
+
+            StudentClassAssignment assignment = new StudentClassAssignment();
+            assignment.setStudentAdmissionId(studentAdmissionId);
+            assignment.setSchoolClass(schoolClass);
+            assignment.setSection(section);
+            studentClassAssignmentRepository.save(assignment);
+        }
+        return getClassAssignments(studentAdmissionId);
+    }
+
+    private void validateSection(SchoolClass schoolClass, String section) {
+        boolean sectionAllowed = schoolClass.getSections() != null && schoolClass.getSections().stream()
+                .anyMatch(s -> s != null && s.equalsIgnoreCase(section));
+        if (!sectionAllowed) {
+            throw new IllegalArgumentException("Section " + section + " is not available for the selected class");
+        }
     }
 
     private void applyFields(StudentAdmission admission, Map<String, Object> payload, Long currentId) {
@@ -206,6 +347,38 @@ public class StudentAdmissionService {
         admission.setNote(optionalText(payload.get("note")));
         if (payload.containsKey("photoPath")) {
             admission.setPhotoPath(optionalText(payload.get("photoPath")));
+        }
+        if (payload.containsKey("disabled")) {
+            admission.setDisabled(asBoolean(payload.get("disabled"), false));
+        }
+        if (payload.containsKey("disableReason")) {
+            admission.setDisableReason(optionalText(payload.get("disableReason")));
+        }
+        if (payload.containsKey("onlineAdmission")) {
+            admission.setOnlineAdmission(asBoolean(payload.get("onlineAdmission"), false));
+        }
+        if (payload.containsKey("referenceNo")) {
+            admission.setReferenceNo(optionalText(payload.get("referenceNo")));
+        }
+        if (payload.containsKey("formStatus")) {
+            String formStatus = optionalText(payload.get("formStatus"));
+            admission.setFormStatus(formStatus.isEmpty() ? "Submitted" : formStatus);
+        }
+        if (payload.containsKey("paymentStatus")) {
+            String paymentStatus = optionalText(payload.get("paymentStatus"));
+            admission.setPaymentStatus(paymentStatus.isEmpty() ? "Unpaid" : paymentStatus);
+        }
+        if (payload.containsKey("enrolled")) {
+            admission.setEnrolled(asBoolean(payload.get("enrolled"), true));
+        }
+        if (currentId == null && (admission.getReferenceNo() == null || admission.getReferenceNo().isBlank())) {
+            admission.setReferenceNo(admissionNo);
+        }
+        if (currentId == null && (admission.getFormStatus() == null || admission.getFormStatus().isBlank())) {
+            admission.setFormStatus("Submitted");
+        }
+        if (currentId == null && (admission.getPaymentStatus() == null || admission.getPaymentStatus().isBlank())) {
+            admission.setPaymentStatus("Unpaid");
         }
     }
 
@@ -305,7 +478,33 @@ public class StudentAdmissionService {
         map.put("note", row.getNote());
         map.put("photoPath", row.getPhotoPath());
         map.put("photoUrl", row.getPhotoPath());
+        map.put("disabled", row.isDisabled());
+        map.put("disableReason", row.getDisableReason());
+        map.put("onlineAdmission", row.isOnlineAdmission());
+        map.put("referenceNo", row.getReferenceNo() == null || row.getReferenceNo().isBlank()
+                ? row.getAdmissionNo() : row.getReferenceNo());
+        map.put("formStatus", row.getFormStatus() == null || row.getFormStatus().isBlank()
+                ? "Submitted" : row.getFormStatus());
+        map.put("paymentStatus", row.getPaymentStatus() == null || row.getPaymentStatus().isBlank()
+                ? "Unpaid" : row.getPaymentStatus());
+        map.put("enrolled", row.isEnrolled());
+        map.put("createdAt", row.getCreatedAt() != null ? row.getCreatedAt().toString() : null);
+        map.put("updatedAt", row.getUpdatedAt() != null ? row.getUpdatedAt().toString() : null);
+        String first = row.getFirstName() == null ? "" : row.getFirstName().trim();
+        String last = row.getLastName() == null ? "" : row.getLastName().trim();
+        map.put("studentName", (first + " " + last).trim());
+        String className = row.getSchoolClass() != null ? row.getSchoolClass().getName() : "";
+        String section = row.getSection() == null ? "" : row.getSection();
+        map.put("classLabel", className + (section.isBlank() ? "" : "(" + section + ")"));
         return map;
+    }
+
+    private boolean asBoolean(Object value, boolean defaultValue) {
+        if (value == null) return defaultValue;
+        if (value instanceof Boolean bool) return bool;
+        String text = String.valueOf(value).trim();
+        if (text.isEmpty()) return defaultValue;
+        return "true".equalsIgnoreCase(text) || "1".equals(text) || "yes".equalsIgnoreCase(text);
     }
 
     private StudentCategory resolveCategory(Long id) {
