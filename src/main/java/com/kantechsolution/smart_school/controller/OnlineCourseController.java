@@ -2,6 +2,7 @@ package com.kantechsolution.smart_school.controller;
 
 import com.kantechsolution.smart_school.service.OnlineCourseManageService;
 import com.kantechsolution.smart_school.service.OnlineCourseService;
+import com.kantechsolution.smart_school.service.OnlineCourseSettingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,9 +26,17 @@ public class OnlineCourseController {
     @Autowired
     private OnlineCourseManageService onlineCourseManageService;
 
+    @Autowired
+    private OnlineCourseSettingService onlineCourseSettingService;
+
     @GetMapping({"/onlinecourse/course/index", "/onlinecourse/course"})
     public String showOnlineCoursePage() {
         return "onlinecourse";
+    }
+
+    @GetMapping("/onlinecourse/course/setting")
+    public String showOnlineCourseSettingPage() {
+        return "onlinecourse-setting";
     }
 
     @GetMapping("/api/online-courses")
@@ -208,6 +217,56 @@ public class OnlineCourseController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(errorBody("Failed to delete course"));
+        }
+    }
+
+    @GetMapping("/api/online-course-settings")
+    @ResponseBody
+    public ResponseEntity<?> getSettings() {
+        try {
+            return ResponseEntity.ok(onlineCourseSettingService.getSettings());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorBody("Failed to load online course settings"));
+        }
+    }
+
+    @PutMapping("/api/online-course-settings/curriculum")
+    @ResponseBody
+    public ResponseEntity<?> saveCurriculum(@RequestBody Map<String, Object> body) {
+        try {
+            return ResponseEntity.ok(onlineCourseSettingService.saveCurriculum(body));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(errorBody(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorBody("Failed to save curriculum settings"));
+        }
+    }
+
+    @PutMapping("/api/online-course-settings/aws")
+    @ResponseBody
+    public ResponseEntity<?> saveAws(@RequestBody Map<String, Object> body) {
+        try {
+            return ResponseEntity.ok(onlineCourseSettingService.saveAws(body));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(errorBody(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorBody("Failed to save AWS settings"));
+        }
+    }
+
+    @PutMapping("/api/online-course-settings/guest")
+    @ResponseBody
+    public ResponseEntity<?> saveGuest(@RequestBody Map<String, Object> body) {
+        try {
+            return ResponseEntity.ok(onlineCourseSettingService.saveGuest(body));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(errorBody(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorBody("Failed to save guest user settings"));
         }
     }
 
