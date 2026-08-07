@@ -44,6 +44,8 @@ document.addEventListener('DOMContentLoaded', function () {
     let teachers = [];
     let outcomes = [];
     let previewFile = null;
+    let existingPreviewUrl = '';
+    let editingCourseId = null;
     let viewMode = 'grid';
 
     function escapeHtml(text) {
@@ -180,9 +182,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     async function loadLookups() {
-        const [classesRes, teachersRes] = await Promise.all([
+        const [classesRes, teachersRes, certRes, categoryRes] = await Promise.all([
             fetch('/api/classes'),
-            fetch('/api/class-teachers')
+            fetch('/api/class-teachers'),
+            fetch('/api/online-course-certificates'),
+            fetch('/api/online-course-categories')
         ]);
         if (!classesRes.ok) throw new Error('Failed to load classes');
         if (!teachersRes.ok) throw new Error('Failed to load teachers');
@@ -205,6 +209,37 @@ document.addEventListener('DOMContentLoaded', function () {
             option.setAttribute('data-name', item.name || item.teacherName || '');
             teacherSelect.appendChild(option);
         });
+
+        if (categoryRes.ok && categorySelect) {
+            const cats = await categoryRes.json();
+            const currentCategory = categorySelect.value;
+            categorySelect.innerHTML = '<option value="">Select</option>';
+            (Array.isArray(cats) ? cats : []).forEach(function (item) {
+                if (!item.categoryName) return;
+                const option = document.createElement('option');
+                option.value = item.categoryName;
+                option.textContent = item.categoryName;
+                categorySelect.appendChild(option);
+            });
+            if (currentCategory) categorySelect.value = currentCategory;
+        }
+
+        if (certRes.ok && certificateSelect) {
+            const certs = await certRes.json();
+            const current = certificateSelect.value;
+            certificateSelect.innerHTML = '<option value="">Select</option>'
+                + '<option value="Completion Certificate">Completion Certificate</option>'
+                + '<option value="Participation Certificate">Participation Certificate</option>'
+                + '<option value="None">None</option>';
+            (Array.isArray(certs) ? certs : []).forEach(function (item) {
+                if (!item.certificateName) return;
+                const option = document.createElement('option');
+                option.value = item.certificateName;
+                option.textContent = item.certificateName;
+                certificateSelect.appendChild(option);
+            });
+            if (current) certificateSelect.value = current;
+        }
     }
 
     function setPreviewFile(file) {
@@ -224,6 +259,8 @@ document.addEventListener('DOMContentLoaded', function () {
         form.reset();
         outcomes = [];
         previewFile = null;
+        existingPreviewUrl = '';
+        editingCourseId = null;
         renderOutcomes();
         descriptionEditor.innerHTML = '';
         previewImageThumb.hidden = true;
@@ -235,6 +272,8 @@ document.addEventListener('DOMContentLoaded', function () {
         discountInput.disabled = false;
         frontVisibilitySelect.value = 'Yes';
         previewPlatformSelect.value = 'Youtube';
+        const modalHeading = document.getElementById('addCourseTitle');
+        if (modalHeading) modalHeading.textContent = 'Add Course';
     }
 
     function openModal() {
@@ -245,10 +284,72 @@ document.addEventListener('DOMContentLoaded', function () {
         titleInput.focus();
     }
 
+    function openEditCourseModal(course) {
+        if (!course) return;
+        resetModal();
+        editingCourseId = course.id;
+        const modalHeading = document.getElementById('addCourseTitle');
+        if (modalHeading) modalHeading.textContent = 'Edit Course';
+
+        titleInput.value = course.title || '';
+        descriptionEditor.innerHTML = course.description || '';
+        outcomes = String(course.outcomes || '')
+            .split(/\r?\n|;/)
+            .map(function (s) { return s.trim(); })
+            .filter(Boolean);
+        renderOutcomes();
+
+        const classItem = classes.find(function (c) {
+            return String(c.name).toLowerCase() === String(course.classLabel || '').toLowerCase();
+        });
+        if (classItem) {
+            classSelect.value = classItem.id;
+            populateSections();
+            const selected = String(course.sectionLabels || '')
+                .split(',')
+                .map(function (s) { return s.trim(); })
+                .filter(Boolean);
+            Array.from(sectionSelect.options).forEach(function (opt) {
+                opt.selected = selected.indexOf(opt.value) !== -1;
+            });
+        }
+
+        if (course.instructorCode) {
+            teacherSelect.value = course.instructorCode;
+        }
+        previewPlatformSelect.value = course.previewPlatform || 'Youtube';
+        previewUrlInput.value = course.previewUrl || '';
+        freeCourseCheck.checked = !!course.freeCourse;
+        priceInput.value = course.price == null ? '' : course.price;
+        discountInput.value = course.discountPercent == null ? '' : course.discountPercent;
+        priceInput.disabled = !!course.freeCourse;
+        discountInput.disabled = !!course.freeCourse;
+        categorySelect.value = course.category || '';
+        frontVisibilitySelect.value = course.frontVisibility || 'Yes';
+        certificateSelect.value = course.certificate || '';
+
+        if (course.thumbnailUrl) {
+            existingPreviewUrl = course.thumbnailUrl;
+            previewImageThumb.src = course.thumbnailUrl;
+            previewImageThumb.hidden = false;
+            previewPlaceholder.hidden = true;
+        }
+
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        titleInput.focus();
+    }
+
     function closeModal() {
         modal.classList.remove('open');
         modal.setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = '';
+        editingCourseId = null;
+        existingPreviewUrl = '';
+        const manageOpen = typeof manageModal !== 'undefined' && manageModal && manageModal.classList.contains('open');
+        const previewOpen = typeof previewModal !== 'undefined' && previewModal && previewModal.classList.contains('open');
+        const lessonOpen = typeof addLessonModal !== 'undefined' && addLessonModal && addLessonModal.classList.contains('open');
+        document.body.style.overflow = (manageOpen || previewOpen || lessonOpen) ? 'hidden' : '';
     }
 
     function selectedSections() {
@@ -276,7 +377,7 @@ document.addEventListener('DOMContentLoaded', function () {
             Swal.fire({ icon: 'warning', title: 'Required', text: 'Description is required.', confirmButtonColor: '#8b5cf6' });
             return;
         }
-        if (!previewFile) {
+        if (!previewFile && !editingCourseId && !existingPreviewUrl) {
             Swal.fire({ icon: 'warning', title: 'Required', text: 'Inline Preview Image is required.', confirmButtonColor: '#8b5cf6' });
             return;
         }
@@ -321,19 +422,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const formData = new FormData();
         formData.append('data', new Blob([JSON.stringify(payload)], { type: 'application/json' }));
-        formData.append('previewImage', previewFile);
+        if (previewFile) {
+            formData.append('previewImage', previewFile);
+        }
 
         saveBtn.disabled = true;
         try {
-            const response = await fetch('/api/online-courses', { method: 'POST', body: formData });
+            const isEdit = !!editingCourseId;
+            const url = isEdit
+                ? '/api/online-courses/' + encodeURIComponent(editingCourseId)
+                : '/api/online-courses';
+            const response = await fetch(url, { method: isEdit ? 'PUT' : 'POST', body: formData });
             const data = await response.json().catch(function () { return {}; });
-            if (!response.ok) throw new Error(data.message || 'Failed to create course');
+            if (!response.ok) throw new Error(data.message || (isEdit ? 'Failed to update course' : 'Failed to create course'));
+            const editedId = editingCourseId;
             closeModal();
             await loadCourses();
+            if (manageState.course && String(manageState.course.id) === String(editedId)) {
+                await reloadManageData();
+            }
             Swal.fire({
                 icon: 'success',
                 title: 'Saved',
-                text: 'Course created successfully.',
+                text: isEdit ? 'Course updated successfully.' : 'Course created successfully.',
                 timer: 1500,
                 showConfirmButton: false
             });
@@ -341,7 +452,7 @@ document.addEventListener('DOMContentLoaded', function () {
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: error.message || 'Failed to create course.',
+                text: error.message || 'Failed to save course.',
                 confirmButtonColor: '#8b5cf6'
             });
         } finally {
@@ -923,6 +1034,132 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    async function promptAddContentType(sectionId) {
+        const choice = await Swal.fire({
+            title: 'Add Content',
+            input: 'select',
+            inputOptions: {
+                LESSON: 'Lesson',
+                QUIZ: 'Quiz',
+                EXAM: 'Exam',
+                ASSIGNMENT: 'Assignment'
+            },
+            inputPlaceholder: 'Select content type',
+            showCancelButton: true,
+            confirmButtonText: 'Continue',
+            confirmButtonColor: '#8b5cf6',
+            inputValidator: function (value) {
+                if (!value) return 'Please select a content type';
+                return null;
+            }
+        });
+        if (!choice.isConfirmed) return;
+        if (choice.value === 'LESSON') {
+            openAddLessonModal(sectionId);
+            return;
+        }
+        await promptSaveContent(sectionId, choice.value, null);
+    }
+
+    async function promptEditContent(contentId) {
+        let item = null;
+        (manageState.sections || []).forEach(function (section) {
+            (section.contents || []).forEach(function (content) {
+                if (String(content.id) === String(contentId)) item = content;
+            });
+        });
+        if (!item) {
+            throw new Error('Content not found');
+        }
+        await promptSaveContent(item.sectionId, item.contentType, item);
+    }
+
+    async function promptSaveContent(sectionId, contentType, existing) {
+        const type = String(contentType || 'QUIZ').toUpperCase();
+        const isEdit = !!existing;
+        let html = '<input id="swalContentTitle" class="swal2-input" placeholder="Title" value="'
+            + escapeHtml(existing ? existing.title : '') + '">';
+
+        if (type === 'EXAM') {
+            html += '<input id="swalExamFrom" class="swal2-input" placeholder="Exam From (MM/DD/YYYY)" value="'
+                + escapeHtml(existing ? existing.examFrom : '') + '">'
+                + '<input id="swalExamTo" class="swal2-input" placeholder="Exam To (MM/DD/YYYY)" value="'
+                + escapeHtml(existing ? existing.examTo : '') + '">'
+                + '<input id="swalExamDuration" class="swal2-input" placeholder="Exam Duration (HH:MM:SS)" value="'
+                + escapeHtml(existing ? existing.examDuration : '') + '">'
+                + '<input id="swalPassing" class="swal2-input" placeholder="Passing Percentage" value="'
+                + escapeHtml(existing && existing.passingPercentage != null ? existing.passingPercentage : '') + '">';
+        } else if (type === 'ASSIGNMENT') {
+            html += '<input id="swalAssignDate" class="swal2-input" placeholder="Assignment Date (MM/DD/YYYY)" value="'
+                + escapeHtml(existing ? existing.assignmentDate : '') + '">'
+                + '<input id="swalSubmitDate" class="swal2-input" placeholder="Submission Date (MM/DD/YYYY)" value="'
+                + escapeHtml(existing ? existing.submissionDate : '') + '">'
+                + '<input id="swalMaxMarks" class="swal2-input" placeholder="Max Marks" value="'
+                + escapeHtml(existing && existing.maxMarks != null ? existing.maxMarks : '') + '">';
+        } else if (type === 'LESSON') {
+            html += '<input id="swalDuration" class="swal2-input" placeholder="Duration (HH:MM:SS)" value="'
+                + escapeHtml(existing ? existing.duration : '') + '">'
+                + '<input id="swalVideoUrl" class="swal2-input" placeholder="YouTube URL" value="'
+                + escapeHtml(existing ? existing.videoUrl : '') + '">'
+                + '<textarea id="swalSummary" class="swal2-textarea" placeholder="Summary">'
+                + escapeHtml(existing ? existing.summary : '') + '</textarea>';
+        }
+
+        const result = await Swal.fire({
+            title: (isEdit ? 'Edit ' : 'Add ') + type.charAt(0) + type.slice(1).toLowerCase(),
+            html: html,
+            focusConfirm: false,
+            showCancelButton: true,
+            confirmButtonText: 'Save',
+            confirmButtonColor: '#8b5cf6',
+            preConfirm: function () {
+                const title = document.getElementById('swalContentTitle').value.trim();
+                if (!title) {
+                    Swal.showValidationMessage('Title is required');
+                    return false;
+                }
+                const payload = { contentType: type, title: title };
+                if (type === 'EXAM') {
+                    payload.examFrom = document.getElementById('swalExamFrom').value.trim();
+                    payload.examTo = document.getElementById('swalExamTo').value.trim();
+                    payload.examDuration = document.getElementById('swalExamDuration').value.trim();
+                    payload.passingPercentage = document.getElementById('swalPassing').value.trim();
+                } else if (type === 'ASSIGNMENT') {
+                    payload.assignmentDate = document.getElementById('swalAssignDate').value.trim();
+                    payload.submissionDate = document.getElementById('swalSubmitDate').value.trim();
+                    payload.maxMarks = document.getElementById('swalMaxMarks').value.trim();
+                } else if (type === 'LESSON') {
+                    payload.duration = document.getElementById('swalDuration').value.trim();
+                    payload.videoUrl = document.getElementById('swalVideoUrl').value.trim();
+                    payload.summary = document.getElementById('swalSummary').value.trim();
+                }
+                return payload;
+            }
+        });
+        if (!result.isConfirmed) return;
+
+        const url = isEdit
+            ? '/api/online-courses/contents/' + encodeURIComponent(existing.id)
+            : '/api/online-courses/sections/' + encodeURIComponent(sectionId) + '/contents';
+        const response = await fetch(url, {
+            method: isEdit ? 'PUT' : 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(result.value)
+        });
+        if (!response.ok) {
+            const err = await response.json().catch(function () { return {}; });
+            throw new Error(err.message || 'Failed to save content');
+        }
+        await reloadManageData();
+        await loadCourses();
+        Swal.fire({
+            icon: 'success',
+            title: 'Saved',
+            timer: 1200,
+            showConfirmButton: false
+        });
+    }
+
     async function promptEditSection(sectionId) {
         const section = manageState.sections.find(function (s) { return String(s.id) === String(sectionId); });
         const result = await Swal.fire({
@@ -1371,12 +1608,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     if (editCourseDetailBtn) {
         editCourseDetailBtn.addEventListener('click', function () {
-            Swal.fire({
-                icon: 'info',
-                title: 'Edit Course',
-                text: 'Course editing will be available soon.',
-                confirmButtonColor: '#8b5cf6'
-            });
+            if (!manageState.course) return;
+            const course = courses.find(function (item) {
+                return String(item.id) === String(manageState.course.id);
+            }) || manageState.course;
+            openEditCourseModal(course);
         });
     }
     if (deleteCourseDetailBtn) {
@@ -1393,19 +1629,13 @@ document.addEventListener('DOMContentLoaded', function () {
             const action = btn.getAttribute('data-action');
             const run = (function () {
                 if (action === 'add-content') {
-                    openAddLessonModal(btn.getAttribute('data-section-id'));
-                    return Promise.resolve();
+                    return promptAddContentType(btn.getAttribute('data-section-id'));
                 }
                 if (action === 'edit-section') return promptEditSection(btn.getAttribute('data-section-id'));
                 if (action === 'delete-section') return deleteSection(btn.getAttribute('data-section-id'));
                 if (action === 'delete-content') return deleteContent(btn.getAttribute('data-id'));
                 if (action === 'edit-content') {
-                    return Swal.fire({
-                        icon: 'info',
-                        title: 'Edit Content',
-                        text: 'Content editing will be available soon.',
-                        confirmButtonColor: '#8b5cf6'
-                    });
+                    return promptEditContent(btn.getAttribute('data-id'));
                 }
                 return Promise.resolve();
             })();

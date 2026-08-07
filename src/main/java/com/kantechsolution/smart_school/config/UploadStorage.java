@@ -26,6 +26,7 @@ public class UploadStorage {
         Files.createDirectories(root.resolve("students"));
         Files.createDirectories(root.resolve("courses"));
         Files.createDirectories(root.resolve("lessons"));
+        Files.createDirectories(root.resolve("certificates"));
     }
 
     public Path getRoot() {
@@ -42,5 +43,9 @@ public class UploadStorage {
 
     public Path getLessonsDir() {
         return root.resolve("lessons");
+    }
+
+    public Path getCertificatesDir() {
+        return root.resolve("certificates");
     }
 }

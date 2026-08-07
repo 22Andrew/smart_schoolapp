@@ -46,6 +46,41 @@ public class OnlineCourseService {
 
     @Transactional
     public Map<String, Object> createCourse(Map<String, Object> payload, MultipartFile previewImage) {
+        OnlineCourse course = new OnlineCourse();
+        applyCourseFields(course, payload, true);
+        course.setThemeColor("#8b5cf6");
+        course.setLessonCount(0);
+        course.setLessonDuration("00:00:00 H");
+        course.setExamCount(0);
+        course.setQuizCount(0);
+        course.setAssignmentCount(0);
+        course.setLastUpdated(LocalDate.now());
+        course.setPublished(true);
+        course.setCreatedByName("Joe Black");
+        course.setCreatedByCode("9000");
+
+        if (previewImage != null && !previewImage.isEmpty()) {
+            course.setThumbnailUrl(storeCourseImage(previewImage));
+        } else {
+            throw new IllegalArgumentException("Inline Preview Image is required");
+        }
+
+        return toRow(onlineCourseRepository.save(course));
+    }
+
+    @Transactional
+    public Map<String, Object> updateCourse(Long id, Map<String, Object> payload, MultipartFile previewImage) {
+        OnlineCourse course = onlineCourseRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Course not found"));
+        applyCourseFields(course, payload, false);
+        if (previewImage != null && !previewImage.isEmpty()) {
+            course.setThumbnailUrl(storeCourseImage(previewImage));
+        }
+        course.setLastUpdated(LocalDate.now());
+        return toRow(onlineCourseRepository.save(course));
+    }
+
+    private void applyCourseFields(OnlineCourse course, Map<String, Object> payload, boolean creating) {
         String title = text(payload.get("title"));
         if (title.isBlank()) {
             throw new IllegalArgumentException("Title is required");
@@ -77,7 +112,6 @@ public class OnlineCourseService {
             throw new IllegalArgumentException("Price is required");
         }
 
-        OnlineCourse course = new OnlineCourse();
         course.setTitle(title);
         course.setDescription(description);
         course.setOutcomes(text(payload.get("outcomes")));
@@ -94,24 +128,14 @@ public class OnlineCourseService {
         if (!freeCourse && course.getDiscountPercent() != null && course.getDiscountPercent() > 0 && price != null) {
             double discounted = price - (price * course.getDiscountPercent() / 100.0);
             course.setDiscountPrice(Math.max(0, Math.round(discounted * 100.0) / 100.0));
+        } else if (freeCourse) {
+            course.setDiscountPrice(null);
         }
         course.setFrontVisibility(blankTo(text(payload.get("frontVisibility")), "Yes"));
         course.setCertificate(text(payload.get("certificate")));
-        course.setThemeColor("#8b5cf6");
-        course.setLessonCount(0);
-        course.setLessonDuration("00:00:00 H");
-        course.setExamCount(0);
-        course.setQuizCount(0);
-        course.setAssignmentCount(0);
-        course.setLastUpdated(LocalDate.now());
-
-        if (previewImage != null && !previewImage.isEmpty()) {
-            course.setThumbnailUrl(storeCourseImage(previewImage));
-        } else {
-            throw new IllegalArgumentException("Inline Preview Image is required");
+        if (creating && course.getThemeColor() == null) {
+            course.setThemeColor("#8b5cf6");
         }
-
-        return toRow(onlineCourseRepository.save(course));
     }
 
     private Map<String, Object> toRow(OnlineCourse course) {
