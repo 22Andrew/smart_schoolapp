@@ -1,0 +1,69 @@
+package com.kantechsolution.smart_school.controller;
+
+import com.kantechsolution.smart_school.service.LessonPlanSyllabusStatusService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@Controller
+@RequiredArgsConstructor
+public class LessonPlanSyllabusStatusController {
+
+    private final LessonPlanSyllabusStatusService syllabusStatusService;
+
+    @GetMapping("/lessonplan/syllabus/status")
+    public String showSyllabusStatusPage() {
+        return "lessonplan-syllabus-status";
+    }
+
+    @GetMapping("/api/lesson-plan/syllabus/status")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> searchSyllabusStatus(
+            @RequestParam Long classId,
+            @RequestParam String section,
+            @RequestParam Long subjectGroupId,
+            @RequestParam Long subjectId) {
+        try {
+            return ResponseEntity.ok(syllabusStatusService.searchSyllabusStatus(
+                    classId, section, subjectGroupId, subjectId));
+        } catch (IllegalArgumentException e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "Failed to load syllabus status: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @PutMapping("/api/lesson-plan/syllabus/status/{topicId}")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> updateStatus(
+            @PathVariable Long topicId,
+            @RequestBody Map<String, Object> payload) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            Map<String, Object> updated = syllabusStatusService.updateStatus(topicId, payload);
+            response.put("success", true);
+            response.put("message", "Syllabus status updated successfully!");
+            response.put("data", updated);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Failed to update syllabus status: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+}

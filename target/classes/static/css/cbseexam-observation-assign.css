@@ -1,0 +1,268 @@
+/* Assign Observation Page */
+.observation-assign-page {
+    background: #e8edf2;
+    padding: 20px;
+    min-height: calc(100vh - 80px);
+}
+
+.observation-assign-page .grade-list-panel {
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+}
+
+.btn-secondary-action {
+    background: #8b5cf6;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    height: 38px;
+    padding: 0 0.95rem;
+    font-size: 0.88rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.btn-secondary-action:hover {
+    background: #7c3aed;
+}
+
+.empty-state-cell {
+    text-align: center;
+    padding: 3rem 1rem !important;
+}
+
+.empty-state-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: #94a3b8;
+}
+
+.empty-state-box .empty-title {
+    color: #ef4444;
+    font-weight: 600;
+}
+
+.empty-state-box .empty-subtitle {
+    color: #22c55e;
+    font-size: 0.88rem;
+}
+
+.assign-term-modal-dialog {
+    max-width: 760px;
+}
+
+.assign-term-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem 1rem;
+}
+
+.assign-term-grid .full-width {
+    grid-column: 1 / -1;
+}
+
+.parameter-modal-dialog {
+    max-width: 1100px;
+    width: min(1100px, calc(100vw - 2rem));
+    max-height: none;
+    overflow: visible;
+}
+
+.parameter-modal-body {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 1.5rem;
+    align-items: stretch;
+    overflow: visible;
+    padding: 1.35rem 1.5rem 1.5rem;
+}
+
+.parameter-form-panel,
+.parameter-list-panel {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.inner-panel-title {
+    margin: 0;
+    padding: 1rem 1.15rem;
+    color: #f1f5f9;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-bottom: 1px solid #334155;
+    background: rgba(15, 23, 42, 0.6);
+}
+
+.parameter-form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 1.15rem;
+    gap: 0.25rem;
+}
+
+.parameter-form .form-group {
+    margin-bottom: 0.5rem;
+}
+
+.parameter-form .form-group label {
+    display: block;
+    color: #e2e8f0;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 0.45rem;
+}
+
+.parameter-form .form-control {
+    width: 100%;
+    height: 40px;
+    box-sizing: border-box;
+    padding: 0.55rem 0.75rem;
+}
+
+.inner-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid #334155;
+}
+
+.parameter-list-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 1rem 1.15rem 1.15rem;
+    min-height: 360px;
+}
+
+.parameter-list-panel .compact-controls {
+    margin-bottom: 0.85rem;
+}
+
+.parameter-table-wrap {
+    flex: 1;
+    overflow-x: auto;
+    border: 1px solid #334155;
+    border-radius: 6px;
+    background: #1e293b;
+}
+
+.parameter-data-table {
+    min-width: 100%;
+    margin: 0;
+}
+
+.parameter-data-table thead th {
+    background: #243342;
+    padding: 0.75rem 1rem;
+}
+
+.parameter-data-table tbody td {
+    padding: 0.7rem 1rem;
+    vertical-align: middle;
+}
+
+.parameter-data-table .col-action {
+    width: 110px;
+    text-align: center;
+}
+
+.parameter-data-table .action-cell {
+    text-align: center;
+    white-space: nowrap;
+}
+
+.parameter-list-panel .compact-footer {
+    margin-top: 0.85rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #334155;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.compact-controls {
+    margin-bottom: 0.75rem;
+}
+
+.compact-footer {
+    margin-top: 0.75rem;
+}
+
+.observation-list-modal-dialog {
+    max-width: 1100px;
+}
+
+#observationModal:not([hidden]) {
+    z-index: 3100;
+}
+
+.observation-list-body {
+    padding-top: 0.75rem !important;
+}
+
+.inner-header-row {
+    margin-bottom: 0.75rem;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.observation-detail-row {
+    display: grid;
+    grid-template-columns: 1fr 160px auto;
+    gap: 0.75rem;
+    align-items: end;
+    margin-bottom: 0.75rem;
+}
+
+.observation-detail-row .detail-field label {
+    display: block;
+    color: #e2e8f0;
+    font-size: 0.85rem;
+    margin-bottom: 0.4rem;
+}
+
+.observation-detail-row .form-control {
+    width: 100%;
+}
+
+.observation-param-cell,
+.observation-marks-cell {
+    white-space: pre-line;
+}
+
+@media (max-width: 900px) {
+    .parameter-modal-body {
+        grid-template-columns: 1fr;
+    }
+
+    .parameter-list-content {
+        min-height: 280px;
+    }
+
+    .assign-term-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .observation-detail-row {
+        grid-template-columns: 1fr;
+    }
+}

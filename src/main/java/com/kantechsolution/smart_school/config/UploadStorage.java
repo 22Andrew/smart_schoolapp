@@ -27,6 +27,11 @@ public class UploadStorage {
         Files.createDirectories(root.resolve("courses"));
         Files.createDirectories(root.resolve("lessons"));
         Files.createDirectories(root.resolve("certificates"));
+        Files.createDirectories(root.resolve("admitcards"));
+        Files.createDirectories(root.resolve("marksheets"));
+        Files.createDirectories(root.resolve("leaves"));
+        Files.createDirectories(root.resolve("staff"));
+        Files.createDirectories(root.resolve("staff-documents"));
     }
 
     public Path getRoot() {
@@ -47,5 +52,25 @@ public class UploadStorage {
 
     public Path getCertificatesDir() {
         return root.resolve("certificates");
+    }
+
+    public Path getAdmitCardsDir() {
+        return root.resolve("admitcards");
+    }
+
+    public Path getMarksheetsDir() {
+        return root.resolve("marksheets");
+    }
+
+    public Path getLeavesDir() {
+        return root.resolve("leaves");
+    }
+
+    public Path getStaffDir() {
+        return root.resolve("staff");
+    }
+
+    public Path getStaffDocumentsDir() {
+        return root.resolve("staff-documents");
     }
 }

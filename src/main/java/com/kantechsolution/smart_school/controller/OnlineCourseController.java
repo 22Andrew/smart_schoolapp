@@ -601,6 +601,19 @@ public class OnlineCourseController {
         }
     }
 
+    @PostMapping("/api/online-course-questions/import")
+    @ResponseBody
+    public ResponseEntity<?> importQuestions(@RequestBody Map<String, Object> body) {
+        try {
+            return ResponseEntity.ok(onlineCourseQuestionService.importQuestions(body));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(errorBody(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorBody("Failed to import questions"));
+        }
+    }
+
     @GetMapping("/api/online-course-offline-payments")
     @ResponseBody
     public ResponseEntity<?> searchOfflinePayments(@RequestParam Long studentAdmissionId) {

@@ -352,9 +352,149 @@ document.addEventListener('DOMContentLoaded', function() {
         if (currentPath === '/onlinecourse/course' || currentPath === '/onlinecourse/course/') {
             currentPath = '/onlinecourse/course/index';
         }
+        // Normalize Behaviour Records aliases
+        if (currentPath.startsWith('/behaviour/report/')) {
+            currentPath = '/behaviour/report/studentincidentreport';
+        }
+        if (currentPath === '/behaviour/studentincidents/') {
+            currentPath = '/behaviour/studentincidents';
+        }
+        if (currentPath === '/behaviour/incidents/') {
+            currentPath = '/behaviour/incidents';
+        }
+        if (currentPath === '/behaviour/behavioursetting/') {
+            currentPath = '/behaviour/behavioursetting';
+        }
+        if (currentPath === '/gmeet/timetable/') {
+            currentPath = '/gmeet/timetable';
+        } else if (currentPath === '/gmeet/meeting/') {
+            currentPath = '/gmeet/meeting';
+        } else if (currentPath === '/gmeet/classreport/') {
+            currentPath = '/gmeet/classreport';
+        } else if (currentPath === '/gmeet/meetingreport/') {
+            currentPath = '/gmeet/meetingreport';
+        } else if (currentPath === '/gmeet/index/') {
+            currentPath = '/gmeet/index';
+        } else if (currentPath === '/conference/meeting/') {
+            currentPath = '/conference/meeting';
+        } else if (currentPath === '/conference/timetable/') {
+            currentPath = '/conference/timetable';
+        } else if (currentPath === '/conference/classreport/') {
+            currentPath = '/conference/classreport';
+        } else if (currentPath === '/conference/meetingreport/') {
+            currentPath = '/conference/meetingreport';
+        } else if (currentPath === '/conference/') {
+            currentPath = '/conference';
+        } else if (currentPath === '/income/') {
+            currentPath = '/income';
+        } else if (currentPath === '/income/incomesearch/') {
+            currentPath = '/income/incomesearch';
+        } else if (currentPath === '/income/incomehead/') {
+            currentPath = '/income/incomehead';
+        } else if (currentPath === '/expense/') {
+            currentPath = '/expense';
+        } else if (currentPath === '/expense/searchexpense/') {
+            currentPath = '/expense/searchexpense';
+        } else if (currentPath === '/expense/expensehead/') {
+            currentPath = '/expense/expensehead';
+        } else if (currentPath === '/qrattendance/attendance/index/') {
+            currentPath = '/qrattendance/attendance/index';
+        } else if (currentPath === '/qrattendance/qrsetting/index/') {
+            currentPath = '/qrattendance/qrsetting/index';
+        } else if (currentPath === '/examgroup/') {
+            currentPath = '/examgroup';
+        } else if (currentPath === '/cbseexam/exam/') {
+            currentPath = '/cbseexam/exam';
+        } else if (currentPath === '/cbseexam/cbsecategory/index/') {
+            currentPath = '/cbseexam/cbsecategory/index';
+        } else if (currentPath === '/cbseexam/cbsegrade/index/') {
+            currentPath = '/cbseexam/cbsegrade/index';
+        } else if (currentPath === '/cbseexam/cbseassessment/index/') {
+            currentPath = '/cbseexam/cbseassessment/index';
+        } else if (currentPath === '/cbseexam/cbseterm/index/') {
+            currentPath = '/cbseexam/cbseterm/index';
+        } else if (currentPath === '/cbseexam/report/examsubject/') {
+            currentPath = '/cbseexam/report/examsubject';
+        } else if (currentPath === '/cbseexam/report/examtemplate/') {
+            currentPath = '/cbseexam/report/examtemplate';
+        } else if (currentPath === '/cbseexam/cbseadmitcard/admitcard/') {
+            currentPath = '/cbseexam/cbseadmitcard/admitcard';
+        } else if (currentPath === '/cbseexam/observation/assign/') {
+            currentPath = '/cbseexam/observation/assign';
+        } else if (currentPath === '/cbseexam/template/') {
+            currentPath = '/cbseexam/template';
+        } else if (currentPath === '/cbseexam/result/marksheet/') {
+            currentPath = '/cbseexam/result/marksheet';
+        } else if (currentPath === '/cbseexam/exam/examtimetable/') {
+            currentPath = '/cbseexam/exam/examtimetable';
+        } else if (currentPath === '/cbseexam/exam/examschedule/') {
+            currentPath = '/cbseexam/exam/examschedule';
+        } else if (currentPath === '/cbseexam/examresult/') {
+            currentPath = '/cbseexam/examresult';
+        } else if (currentPath === '/admitcard/') {
+            currentPath = '/admitcard';
+        } else if (currentPath === '/examresult/admitcard/') {
+            currentPath = '/examresult/admitcard';
+        } else if (currentPath === '/examresult/marksheet/') {
+            currentPath = '/examresult/marksheet';
+        } else if (currentPath === '/emarksheet/') {
+            currentPath = '/emarksheet';
+        } else if (currentPath === '/grade/') {
+            currentPath = '/grade';
+        } else if (currentPath === '/marksdivision/') {
+            currentPath = '/marksdivision';
+        } else if (currentPath === '/stuattendance/index/') {
+            currentPath = '/stuattendance/index';
+        } else if (currentPath === '/approveleave/') {
+            currentPath = '/approveleave';
+        } else if (currentPath === '/stuattendence/attendencereport/') {
+            currentPath = '/stuattendence/attendencereport';
+        } else if (currentPath === '/onlineexam/') {
+            currentPath = '/onlineexam';
+        } else if (currentPath === '/question/') {
+            currentPath = '/question';
+        } else if (currentPath === '/holiday/index/') {
+            currentPath = '/holiday/index';
+        } else if (currentPath === '/holidaytype/') {
+            currentPath = '/holidaytype';
+        } else if (currentPath === '/lessonplan/topic/') {
+            currentPath = '/lessonplan/topic';
+        } else if (currentPath === '/lessonplan/syllabus/status/') {
+            currentPath = '/lessonplan/syllabus/status';
+        } else if (currentPath === '/lesson/') {
+            currentPath = '/lesson';
+        } else if (currentPath === '/syllabus/') {
+            currentPath = '/syllabus';
+        } else if (currentPath === '/lessonplan/copylesson/') {
+            currentPath = '/lessonplan/copylesson';
+        } else if (currentPath === '/staff/') {
+            currentPath = '/staff';
+        }
+        if (currentPath === '/multibranch/branch/overview/') {
+            currentPath = '/multibranch/branch/overview';
+        } else if (currentPath === '/multibranch/branch/') {
+            currentPath = '/multibranch/branch';
+        }
+        if (currentPath.startsWith('/multibranch/finance/')) {
+            if (currentPath.includes('payrollreport')) {
+                currentPath = '/multibranch/finance/payrollreport';
+            } else if (currentPath.includes('incomereport')) {
+                currentPath = '/multibranch/finance/incomereport';
+            } else if (currentPath.includes('expensereport')) {
+                currentPath = '/multibranch/finance/expensereport';
+            } else if (currentPath.includes('userlogreport')) {
+                currentPath = '/multibranch/finance/userlogreport';
+            } else {
+                currentPath = '/multibranch/finance/dailycollectionreport';
+            }
+        }
+
+        const expandableItems = document.querySelectorAll('.menu-item-expandable');
         const allSubmenuItems = document.querySelectorAll('.submenu-item');
 
-        // Clear previous submenu highlights so only one item stays active
+        // Reset sidebar state so JS controls expand/active consistently
+        expandableItems.forEach(item => item.classList.remove('expanded', 'active'));
+        document.querySelectorAll('.submenu').forEach(submenu => submenu.classList.remove('open', 'active'));
         allSubmenuItems.forEach(item => item.classList.remove('active'));
 
         let bestMatch = null;
@@ -375,6 +515,185 @@ document.addEventListener('DOMContentLoaded', function() {
                 bestLength = itemHref.length;
             }
         });
+
+        if (currentPath === '/cbseexam/cbsecategory/index'
+                || currentPath === '/cbseexam/cbsegrade/index'
+                || currentPath === '/cbseexam/cbseassessment/index'
+                || currentPath === '/cbseexam/cbseterm/index') {
+            const settingItem = document.querySelector('#submenu-cbse-examination a[href="/cbseexam/cbsecategory/index"]');
+            if (settingItem) {
+                bestMatch = settingItem;
+                bestLength = settingItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/cbseexam/report/examsubject') {
+            const reportsItem = document.querySelector('#submenu-cbse-examination a[href="/cbseexam/report/examsubject"]');
+            if (reportsItem) {
+                bestMatch = reportsItem;
+                bestLength = reportsItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/cbseexam/report/examtemplate') {
+            const reportsItem = document.querySelector('#submenu-cbse-examination a[href="/cbseexam/report/examsubject"]');
+            if (reportsItem) {
+                bestMatch = reportsItem;
+                bestLength = reportsItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/cbseexam/cbseadmitcard/admitcard') {
+            const admitCardItem = document.querySelector('#submenu-cbse-examination a[href="/cbseexam/cbseadmitcard/admitcard"]');
+            if (admitCardItem) {
+                bestMatch = admitCardItem;
+                bestLength = admitCardItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/cbseexam/observation/assign') {
+            const assignItem = document.querySelector('#submenu-cbse-examination a[href="/cbseexam/observation/assign"]');
+            if (assignItem) {
+                bestMatch = assignItem;
+                bestLength = assignItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/cbseexam/template') {
+            const templateItem = document.querySelector('#submenu-cbse-examination a[href="/cbseexam/template"]');
+            if (templateItem) {
+                bestMatch = templateItem;
+                bestLength = templateItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/cbseexam/result/marksheet') {
+            const marksheetItem = document.querySelector('#submenu-cbse-examination a[href="/cbseexam/result/marksheet"]');
+            if (marksheetItem) {
+                bestMatch = marksheetItem;
+                bestLength = marksheetItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/cbseexam/exam/examtimetable') {
+            const examScheduleItem = document.querySelector('#submenu-cbse-examination a[href="/cbseexam/exam/examtimetable"]');
+            if (examScheduleItem) {
+                bestMatch = examScheduleItem;
+                bestLength = examScheduleItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/cbseexam/exam/examschedule') {
+            const examScheduleItem = document.querySelector('#submenu-examinations a[href="/cbseexam/exam/examschedule"]');
+            if (examScheduleItem) {
+                bestMatch = examScheduleItem;
+                bestLength = examScheduleItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/cbseexam/examresult') {
+            const examResultItem = document.querySelector('#submenu-examinations a[href="/cbseexam/examresult"]');
+            if (examResultItem) {
+                bestMatch = examResultItem;
+                bestLength = examResultItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/admitcard') {
+            const designAdmitCardItem = document.querySelector('#submenu-examinations a[href="/admitcard"]');
+            if (designAdmitCardItem) {
+                bestMatch = designAdmitCardItem;
+                bestLength = designAdmitCardItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/examresult/admitcard') {
+            const printAdmitCardItem = document.querySelector('#submenu-examinations a[href="/examresult/admitcard"]');
+            if (printAdmitCardItem) {
+                bestMatch = printAdmitCardItem;
+                bestLength = printAdmitCardItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/emarksheet') {
+            const designMarksheetItem = document.querySelector('#submenu-examinations a[href="/emarksheet"]');
+            if (designMarksheetItem) {
+                bestMatch = designMarksheetItem;
+                bestLength = designMarksheetItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/examresult/marksheet') {
+            const printMarksheetItem = document.querySelector('#submenu-examinations a[href="/examresult/marksheet"]');
+            if (printMarksheetItem) {
+                bestMatch = printMarksheetItem;
+                bestLength = printMarksheetItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/grade') {
+            const marksGradeItem = document.querySelector('#submenu-examinations a[href="/grade"]');
+            if (marksGradeItem) {
+                bestMatch = marksGradeItem;
+                bestLength = marksGradeItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/marksdivision') {
+            const marksDivisionItem = document.querySelector('#submenu-examinations a[href="/marksdivision"]');
+            if (marksDivisionItem) {
+                bestMatch = marksDivisionItem;
+                bestLength = marksDivisionItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/stuattendance/index') {
+            const studentAttendanceItem = document.querySelector('#submenu-attendance a[href="/stuattendance/index"]');
+            if (studentAttendanceItem) {
+                bestMatch = studentAttendanceItem;
+                bestLength = studentAttendanceItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/approveleave') {
+            const approveLeaveItem = document.querySelector('#submenu-attendance a[href="/approveleave"]');
+            if (approveLeaveItem) {
+                bestMatch = approveLeaveItem;
+                bestLength = approveLeaveItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/stuattendence/attendencereport') {
+            const attendanceByDateItem = document.querySelector('#submenu-attendance a[href="/stuattendence/attendencereport"]');
+            if (attendanceByDateItem) {
+                bestMatch = attendanceByDateItem;
+                bestLength = attendanceByDateItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/onlineexam') {
+            const onlineExamItem = document.querySelector('#submenu-online-examinations a[href="/onlineexam"]');
+            if (onlineExamItem) {
+                bestMatch = onlineExamItem;
+                bestLength = onlineExamItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/question') {
+            const questionBankItem = document.querySelector('#submenu-online-examinations a[href="/question"]');
+            if (questionBankItem) {
+                bestMatch = questionBankItem;
+                bestLength = questionBankItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/holiday/index') {
+            const annualCalendarItem = document.querySelector('#submenu-annual-calendar a[href="/holiday/index"]');
+            if (annualCalendarItem) {
+                bestMatch = annualCalendarItem;
+                bestLength = annualCalendarItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/holidaytype') {
+            const holidayTypeItem = document.querySelector('#submenu-annual-calendar a[href="/holidaytype"]');
+            if (holidayTypeItem) {
+                bestMatch = holidayTypeItem;
+                bestLength = holidayTypeItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/lessonplan/topic') {
+            const topicItem = document.querySelector('#submenu-lesson-plan a[href="/lessonplan/topic"]');
+            if (topicItem) {
+                bestMatch = topicItem;
+                bestLength = topicItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/lessonplan/syllabus/status') {
+            const syllabusStatusItem = document.querySelector('#submenu-lesson-plan a[href="/lessonplan/syllabus/status"]');
+            if (syllabusStatusItem) {
+                bestMatch = syllabusStatusItem;
+                bestLength = syllabusStatusItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/lesson') {
+            const lessonItem = document.querySelector('#submenu-lesson-plan a[href="/lesson"]');
+            if (lessonItem) {
+                bestMatch = lessonItem;
+                bestLength = lessonItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/syllabus') {
+            const syllabusItem = document.querySelector('#submenu-lesson-plan a[href="/syllabus"]');
+            if (syllabusItem) {
+                bestMatch = syllabusItem;
+                bestLength = syllabusItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/lessonplan/copylesson') {
+            const copyLessonItem = document.querySelector('#submenu-lesson-plan a[href="/lessonplan/copylesson"]');
+            if (copyLessonItem) {
+                bestMatch = copyLessonItem;
+                bestLength = copyLessonItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/staff') {
+            const staffItem = document.querySelector('#submenu-human-resource a[href="/staff"]');
+            if (staffItem) {
+                bestMatch = staffItem;
+                bestLength = staffItem.getAttribute('href').length;
+            }
+        }
 
         if (!bestMatch) return;
 

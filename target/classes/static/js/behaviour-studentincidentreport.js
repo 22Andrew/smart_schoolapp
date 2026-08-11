@@ -1,0 +1,419 @@
+document.addEventListener('DOMContentLoaded', function () {
+    const classSelect = document.getElementById('classSelect');
+    const sectionSelect = document.getElementById('sectionSelect');
+    const searchBtn = document.getElementById('searchBtn');
+    const tableBody = document.getElementById('reportTableBody');
+    const tableSearchInput = document.getElementById('tableSearchInput');
+    const entriesSelect = document.getElementById('entriesSelect');
+    const showingInfo = document.getElementById('showingInfo');
+    const pagination = document.getElementById('pagination');
+    const incidentListModal = document.getElementById('incidentListModal');
+    const studentIncidentBody = document.getElementById('studentIncidentBody');
+
+    let classes = [];
+    let masterSections = [];
+    let students = [];
+    let currentPage = 1;
+    let pageSize = parseInt(entriesSelect && entriesSelect.value, 10) || 100;
+    let tableFilter = '';
+    let sortKey = '';
+    let sortDir = 'asc';
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text == null ? '' : String(text);
+        return div.innerHTML;
+    }
+
+    function studentFullName(row) {
+        return row.studentName || [row.firstName, row.lastName].filter(Boolean).join(' ').trim();
+    }
+
+    function classLabel(row) {
+        if (row.classLabel) return row.classLabel;
+        const className = row.className || '';
+        const section = row.section || '';
+        if (className && section) return className + ' (' + section + ')';
+        return className || section || '';
+    }
+
+    function formatDate(value) {
+        if (!value) return '';
+        const text = String(value).trim();
+        const isoMatch = text.match(/^(\d{4})-(\d{2})-(\d{2})/);
+        if (isoMatch) {
+            return isoMatch[3] + '/' + isoMatch[2] + '/' + isoMatch[1];
+        }
+        return text;
+    }
+
+    function emptyStateHtml() {
+        return ''
+            + '<tr class="empty-row"><td colspan="8">'
+            + '<div class="empty-state">'
+            + '<p class="empty-message">No data available in table</p>'
+            + '<p class="empty-hint">Select class and click Search.</p>'
+            + '</div></td></tr>';
+    }
+
+    function fillClassSelect() {
+        if (!classSelect) return;
+        const current = classSelect.value;
+        classSelect.innerHTML = '<option value="">Select</option>';
+        classes.forEach(function (item) {
+            const option = document.createElement('option');
+            option.value = String(item.id);
+            option.textContent = item.name;
+            classSelect.appendChild(option);
+        });
+        if (current) classSelect.value = current;
+    }
+
+    function fillSectionSelect(preferred) {
+        if (!sectionSelect) return;
+        sectionSelect.innerHTML = '<option value="">Select</option>';
+
+        const selectedClass = classes.find(function (c) {
+            return String(c.id) === String(classSelect.value);
+        });
+        const classSections = selectedClass && selectedClass.sections ? selectedClass.sections : [];
+        const sections = classSections.length
+            ? classSections
+            : masterSections.map(function (s) { return s.sectionName || s.name || s; });
+
+        sections.forEach(function (section) {
+            const value = String(section);
+            if (!value) return;
+            const option = document.createElement('option');
+            option.value = value;
+            option.textContent = value;
+            sectionSelect.appendChild(option);
+        });
+
+        if (preferred) sectionSelect.value = preferred;
+    }
+
+    function sortValue(row, key) {
+        switch (key) {
+            case 'admissionNo': return row.admissionNo || '';
+            case 'name': return studentFullName(row);
+            case 'class': return classLabel(row);
+            case 'gender': return row.gender || '';
+            case 'phone': return row.mobileNumber || '';
+            case 'totalIncidents': return Number(row.totalIncidents || 0);
+            case 'totalPoints': return Number(row.totalPoints || 0);
+            default: return '';
+        }
+    }
+
+    function getFilteredStudents() {
+        let rows = students.slice();
+        const filter = tableFilter.trim().toLowerCase();
+
+        if (filter) {
+            rows = rows.filter(function (row) {
+                const haystack = [
+                    row.admissionNo,
+                    studentFullName(row),
+                    classLabel(row),
+                    row.gender,
+                    row.mobileNumber,
+                    row.totalIncidents,
+                    row.totalPoints
+                ].join(' ').toLowerCase();
+                return haystack.indexOf(filter) !== -1;
+            });
+        }
+
+        if (sortKey) {
+            rows.sort(function (a, b) {
+                const av = sortValue(a, sortKey);
+                const bv = sortValue(b, sortKey);
+                if (typeof av === 'number' && typeof bv === 'number') {
+                    return sortDir === 'asc' ? av - bv : bv - av;
+                }
+                const as = String(av).toLowerCase();
+                const bs = String(bv).toLowerCase();
+                if (as < bs) return sortDir === 'asc' ? -1 : 1;
+                if (as > bs) return sortDir === 'asc' ? 1 : -1;
+                return 0;
+            });
+        }
+
+        return rows;
+    }
+
+    function actionButtonsHtml(row) {
+        return ''
+            + '<button type="button" class="btn-action btn-list" data-id="'
+            + escapeHtml(String(row.id)) + '" title="View Assigned Incidents">'
+            + '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'
+            + '<line x1="3" y1="12" x2="21" y2="12"></line>'
+            + '<line x1="3" y1="6" x2="21" y2="6"></line>'
+            + '<line x1="3" y1="18" x2="21" y2="18"></line>'
+            + '</svg></button>';
+    }
+
+    function renderPagination(total, totalPages) {
+        if (!pagination) return;
+        let html = '<button type="button" class="pagination-btn" data-nav="prev"'
+            + (currentPage <= 1 ? ' disabled' : '') + '>‹</button>';
+
+        for (let page = 1; page <= totalPages; page++) {
+            html += '<button type="button" class="pagination-btn'
+                + (page === currentPage ? ' active' : '')
+                + '" data-page="' + page + '">' + page + '</button>';
+        }
+
+        html += '<button type="button" class="pagination-btn" data-nav="next"'
+            + (currentPage >= totalPages || total === 0 ? ' disabled' : '') + '>›</button>';
+        pagination.innerHTML = html;
+    }
+
+    function renderTable() {
+        const filtered = getFilteredStudents();
+        const total = filtered.length;
+        const totalPages = Math.max(1, Math.ceil(total / pageSize) || 1);
+        if (currentPage > totalPages) currentPage = totalPages;
+
+        if (!total) {
+            tableBody.innerHTML = emptyStateHtml();
+            if (showingInfo) showingInfo.textContent = 'Showing 0 to 0 of 0 entries';
+            renderPagination(0, 1);
+            return;
+        }
+
+        const start = (currentPage - 1) * pageSize;
+        const end = Math.min(start + pageSize, total);
+        const pageRows = filtered.slice(start, end);
+
+        tableBody.innerHTML = pageRows.map(function (row) {
+            const name = studentFullName(row) || 'Student';
+            const viewUrl = '/student/view/' + encodeURIComponent(String(row.id));
+            return '<tr data-id="' + escapeHtml(String(row.id)) + '">'
+                + '<td>' + escapeHtml(row.admissionNo || '') + '</td>'
+                + '<td><a href="' + viewUrl + '" class="student-link">' + escapeHtml(name) + '</a></td>'
+                + '<td>' + escapeHtml(classLabel(row)) + '</td>'
+                + '<td>' + escapeHtml(row.gender || '') + '</td>'
+                + '<td>' + escapeHtml(row.mobileNumber || '') + '</td>'
+                + '<td>' + escapeHtml(String(row.totalIncidents == null ? 0 : row.totalIncidents)) + '</td>'
+                + '<td>' + escapeHtml(String(row.totalPoints == null ? 0 : row.totalPoints)) + '</td>'
+                + '<td class="action-cell">' + actionButtonsHtml(row) + '</td>'
+                + '</tr>';
+        }).join('');
+
+        if (showingInfo) {
+            showingInfo.textContent = 'Showing ' + (start + 1) + ' to ' + end + ' of ' + total + ' entries';
+        }
+        renderPagination(total, totalPages);
+    }
+
+    async function loadClasses() {
+        const response = await fetch('/api/classes');
+        if (!response.ok) throw new Error('Failed to load classes');
+        classes = await response.json();
+        fillClassSelect();
+        fillSectionSelect();
+    }
+
+    async function loadSections() {
+        const response = await fetch('/api/sections');
+        if (!response.ok) throw new Error('Failed to load sections');
+        masterSections = await response.json();
+        fillSectionSelect();
+    }
+
+    async function searchStudents() {
+        const classValue = classSelect ? classSelect.value : '';
+        if (!classValue) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Class Required',
+                text: 'Please select a class to search.',
+                confirmButtonColor: '#8b5cf6'
+            });
+            return;
+        }
+
+        const query = new URLSearchParams();
+        query.set('classId', classValue);
+        if (sectionSelect && sectionSelect.value) {
+            query.set('section', sectionSelect.value);
+        }
+
+        const response = await fetch('/api/behaviour/reports/student-incident?' + query.toString());
+        if (!response.ok) {
+            const err = await response.json().catch(function () { return {}; });
+            throw new Error(err.message || 'Failed to load report');
+        }
+
+        students = await response.json();
+        currentPage = 1;
+        renderTable();
+
+        if (!students.length) {
+            Swal.fire({
+                icon: 'info',
+                title: 'No Results',
+                text: 'No students found for the selected criteria.',
+                confirmButtonColor: '#8b5cf6'
+            });
+        }
+    }
+
+    async function openIncidentList(id) {
+        studentIncidentBody.innerHTML = '<tr class="empty-row"><td colspan="5">Loading...</td></tr>';
+        incidentListModal.hidden = false;
+
+        const response = await fetch('/api/behaviour/student-incidents/' + encodeURIComponent(id));
+        if (!response.ok) {
+            const err = await response.json().catch(function () { return {}; });
+            throw new Error(err.message || 'Failed to load incidents');
+        }
+        const rows = await response.json();
+        if (!rows.length) {
+            studentIncidentBody.innerHTML = '<tr class="empty-row"><td colspan="5">No incidents assigned.</td></tr>';
+            return;
+        }
+        studentIncidentBody.innerHTML = rows.map(function (row) {
+            return '<tr>'
+                + '<td>' + escapeHtml(row.title || '') + '</td>'
+                + '<td>' + escapeHtml(String(row.points == null ? 0 : row.points)) + '</td>'
+                + '<td>' + escapeHtml(formatDate(row.incidentDate)) + '</td>'
+                + '<td>' + escapeHtml(row.description || '') + '</td>'
+                + '<td>' + escapeHtml(row.assignedBy || 'System') + '</td>'
+                + '</tr>';
+        }).join('');
+    }
+
+    function closeListModal() {
+        incidentListModal.hidden = true;
+    }
+
+    function exportCsv() {
+        const rows = getFilteredStudents();
+        const lines = [['Admission No', 'Student Name', 'Class (Section)', 'Gender', 'Phone', 'Total Incidents', 'Total Points']];
+        rows.forEach(function (row) {
+            lines.push([
+                row.admissionNo || '',
+                studentFullName(row),
+                classLabel(row),
+                row.gender || '',
+                row.mobileNumber || '',
+                row.totalIncidents == null ? 0 : row.totalIncidents,
+                row.totalPoints == null ? 0 : row.totalPoints
+            ].map(function (value) {
+                return '"' + String(value).replace(/"/g, '""') + '"';
+            }).join(','));
+        });
+        const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'student-incident-report.csv';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }
+
+    if (classSelect) {
+        classSelect.addEventListener('change', function () {
+            fillSectionSelect();
+        });
+    }
+
+    if (searchBtn) {
+        searchBtn.addEventListener('click', function () {
+            searchStudents().catch(function (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: error.message || 'Failed to load report.',
+                    confirmButtonColor: '#8b5cf6'
+                });
+            });
+        });
+    }
+
+    if (tableSearchInput) {
+        tableSearchInput.addEventListener('input', function () {
+            tableFilter = tableSearchInput.value;
+            currentPage = 1;
+            renderTable();
+        });
+    }
+
+    if (entriesSelect) {
+        entriesSelect.addEventListener('change', function () {
+            pageSize = parseInt(entriesSelect.value, 10) || 100;
+            currentPage = 1;
+            renderTable();
+        });
+    }
+
+    if (pagination) {
+        pagination.addEventListener('click', function (e) {
+            const btn = e.target.closest('.pagination-btn');
+            if (!btn || btn.disabled) return;
+            if (btn.dataset.nav === 'prev') currentPage -= 1;
+            else if (btn.dataset.nav === 'next') currentPage += 1;
+            else if (btn.dataset.page) currentPage = parseInt(btn.dataset.page, 10);
+            renderTable();
+        });
+    }
+
+    document.querySelectorAll('#reportTable thead th[data-sort]').forEach(function (th) {
+        th.addEventListener('click', function () {
+            const key = th.getAttribute('data-sort');
+            if (sortKey === key) {
+                sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortKey = key;
+                sortDir = 'asc';
+            }
+            renderTable();
+        });
+    });
+
+    if (tableBody) {
+        tableBody.addEventListener('click', function (e) {
+            const listBtn = e.target.closest('.btn-list');
+            if (!listBtn) return;
+            openIncidentList(listBtn.dataset.id).catch(function (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: error.message || 'Failed to load incidents.',
+                    confirmButtonColor: '#8b5cf6'
+                });
+            });
+        });
+    }
+
+    document.querySelectorAll('[data-close-list]').forEach(function (el) {
+        el.addEventListener('click', closeListModal);
+    });
+
+    const excelBtn = document.getElementById('excelBtn');
+    const csvBtn = document.getElementById('csvBtn');
+    const pdfBtn = document.getElementById('pdfBtn');
+    const printBtn = document.getElementById('printBtn');
+
+    if (excelBtn) excelBtn.addEventListener('click', exportCsv);
+    if (csvBtn) csvBtn.addEventListener('click', exportCsv);
+    if (pdfBtn) pdfBtn.addEventListener('click', function () { window.print(); });
+    if (printBtn) printBtn.addEventListener('click', function () { window.print(); });
+
+    Promise.all([loadClasses(), loadSections()]).catch(function (error) {
+        console.error(error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Failed to load class/section options.',
+            confirmButtonColor: '#8b5cf6'
+        });
+    });
+
+    renderTable();
+});

@@ -173,7 +173,7 @@
             </div>
             <div class="sidebar-menu">
                 <div class="menu-item-wrapper">
-                    <a href="#" class="menu-item menu-item-expandable active" data-submenu="front-office">
+                    <a href="#" class="menu-item menu-item-expandable" data-submenu="front-office">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
                             <path d="M16 3h-3a2 2 0 0 0-2 2v2"></path>
@@ -283,17 +283,20 @@
                         </svg>
                     </a>
                     <div class="submenu" id="submenu-behaviour-records">
-                        <a href="#" class="submenu-item">Assign Incident</a>
-                        <a href="#" class="submenu-item">Incidents</a>
-                        <a href="#" class="submenu-item">Reports</a>
-                        <a href="#" class="submenu-item">Setting</a>
+                        <a href="/behaviour/studentincidents" class="submenu-item">Assign Incident</a>
+                        <a href="/behaviour/incidents" class="submenu-item">Incidents</a>
+                        <a href="/behaviour/report/studentincidentreport" class="submenu-item">Reports</a>
+                        <a href="/behaviour/behavioursetting" class="submenu-item">Setting</a>
                     </div>
                 </div>
                 <div class="menu-item-wrapper">
                     <a href="#" class="menu-item menu-item-expandable" data-submenu="multi-branch">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 8a3 3 0 1 0-2.83-4"></path>
+                            <path d="M7 8a3 3 0 1 1 2.83-4"></path>
+                            <path d="M12 20v-6"></path>
+                            <path d="M8 20v-6"></path>
+                            <path d="M16 20v-6"></path>
                         </svg>
                         <span>Multi Branch</span>
                         <svg class="menu-caret" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -301,9 +304,9 @@
                         </svg>
                     </a>
                     <div class="submenu" id="submenu-multi-branch">
-                        <a href="#" class="submenu-item">Overview</a>
-                        <a href="#" class="submenu-item">Report</a>
-                        <a href="#" class="submenu-item">Setting</a>
+                        <a href="/multibranch/branch/overview" class="submenu-item">Overview</a>
+                        <a href="/multibranch/finance/dailycollectionreport" class="submenu-item">Report</a>
+                        <a href="/multibranch/branch" class="submenu-item">Setting</a>
                     </div>
                 </div>
                 <div class="menu-item-wrapper">
@@ -318,11 +321,11 @@
                         </svg>
                     </a>
                     <div class="submenu" id="submenu-gmeet-live-classes">
-                        <a href="#" class="submenu-item">Live Classes</a>
-                        <a href="#" class="submenu-item">Live Meeting</a>
-                        <a href="#" class="submenu-item">Live Classes Report</a>
-                        <a href="#" class="submenu-item">Live Meeting Report</a>
-                        <a href="#" class="submenu-item">Setting</a>
+                        <a href="/gmeet/timetable" class="submenu-item">Live Classes</a>
+                        <a href="/gmeet/meeting" class="submenu-item">Live Meeting</a>
+                        <a href="/gmeet/classreport" class="submenu-item">Live Classes Report</a>
+                        <a href="/gmeet/meetingreport" class="submenu-item">Live Meeting Report</a>
+                        <a href="/gmeet/index" class="submenu-item">Setting</a>
                     </div>
                 </div>
                 <div class="menu-item-wrapper">
@@ -337,11 +340,11 @@
                         </svg>
                     </a>
                     <div class="submenu" id="submenu-zoom-live-classes">
-                        <a href="#" class="submenu-item">Live Classes</a>
-                        <a href="#" class="submenu-item">Live Meeting</a>
-                        <a href="#" class="submenu-item">Live Classes Report</a>
-                        <a href="#" class="submenu-item">Live Meeting Report</a>
-                        <a href="#" class="submenu-item">Setting</a>
+                        <a href="/conference/timetable" class="submenu-item">Live Classes</a>
+                        <a href="/conference/meeting" class="submenu-item">Live Meeting</a>
+                        <a href="/conference/classreport" class="submenu-item">Live Classes Report</a>
+                        <a href="/conference/meetingreport" class="submenu-item">Live Meeting Report</a>
+                        <a href="/conference" class="submenu-item">Setting</a>
                     </div>
                 </div>
                 <div class="menu-item-wrapper">
@@ -355,9 +358,9 @@
                         </svg>
                     </a>
                     <div class="submenu" id="submenu-income">
-                        <a href="#" class="submenu-item">Add Income</a>
-                        <a href="#" class="submenu-item">Search Income</a>
-                        <a href="#" class="submenu-item">Income Head</a>
+                        <a href="/income" class="submenu-item">Add Income</a>
+                        <a href="/income/incomesearch" class="submenu-item">Search Income</a>
+                        <a href="/income/incomehead" class="submenu-item">Income Head</a>
                     </div>
                 </div>
                 <div class="menu-item-wrapper">
@@ -373,9 +376,109 @@
                         </svg>
                     </a>
                     <div class="submenu" id="submenu-expenses">
-                        <a href="#" class="submenu-item">Add Expense</a>
-                        <a href="#" class="submenu-item">Search Expense</a>
-                        <a href="#" class="submenu-item">Expense Head</a>
+                        <a href="/expense" class="submenu-item">Add Expense</a>
+                        <a href="/expense/searchexpense" class="submenu-item">Search Expense</a>
+                        <a href="/expense/expensehead" class="submenu-item">Expense Head</a>
+                    </div>
+                </div>
+                <div class="menu-item-wrapper">
+                    <a href="#" class="menu-item menu-item-expandable" data-submenu="qr-code-attendance">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="6" height="6"></rect>
+                            <rect x="3" y="15" width="6" height="6"></rect>
+                            <rect x="15" y="3" width="6" height="6"></rect>
+                            <rect x="15" y="15" width="6" height="6"></rect>
+                        </svg>
+                        <span>QR Code Attendance</span>
+                        <svg class="menu-caret" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </a>
+                    <div class="submenu" id="submenu-qr-code-attendance">
+                        <a href="/qrattendance/attendance/index" class="submenu-item">Attendance</a>
+                        <a href="/qrattendance/qrsetting/index" class="submenu-item">Setting</a>
+                    </div>
+                </div>
+                <div class="menu-item-wrapper">
+                    <a href="#" class="menu-item menu-item-expandable" data-submenu="cbse-examination">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="8" y1="13" x2="16" y2="13"></line>
+                            <line x1="8" y1="17" x2="16" y2="17"></line>
+                        </svg>
+                        <span>CBSE Examination</span>
+                        <svg class="menu-caret" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </a>
+                    <div class="submenu" id="submenu-cbse-examination">
+                        <a href="/cbseexam/exam" class="submenu-item">Exam</a>
+                        <a href="/cbseexam/exam/examtimetable" class="submenu-item">Exam Schedule</a>
+                        <a href="/cbseexam/result/marksheet" class="submenu-item">Print Marksheet</a>
+                        <a href="/cbseexam/template" class="submenu-item">Template</a>
+                        <a href="/cbseexam/observation/assign" class="submenu-item">Assign Observation</a>
+                        <a href="#" class="submenu-item">Admit Card</a>
+                        <a href="/cbseexam/report/examsubject" class="submenu-item">Reports</a>
+                        <a href="/cbseexam/cbsecategory/index" class="submenu-item">Setting</a>
+                    </div>
+                </div>
+                <div class="menu-item-wrapper">
+                    <a href="#" class="menu-item menu-item-expandable" data-submenu="examinations">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                        </svg>
+                        <span>Examination</span>
+                        <svg class="menu-caret" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </a>
+                    <div class="submenu" id="submenu-examinations">
+                        <a href="/examgroup" class="submenu-item">Exam Group</a>
+                        <a href="/cbseexam/exam/examschedule" class="submenu-item">Exam Schedule</a>
+                        <a href="/cbseexam/examresult" class="submenu-item">Exam Result</a>
+                        <a href="/admitcard" class="submenu-item">Design Admit Card</a>
+                        <a href="/examresult/admitcard" class="submenu-item">Print Admit Card</a>
+                        <a href="/emarksheet" class="submenu-item">Design Marksheet</a>
+                        <a href="/examresult/marksheet" class="submenu-item">Print Marksheet</a>
+                        <a href="/grade" class="submenu-item">Marks Grade</a>
+                        <a href="/marksdivision" class="submenu-item">Marks Division</a>
+                    </div>
+                </div>
+                <div class="menu-item-wrapper">
+                    <a href="#" class="menu-item menu-item-expandable" data-submenu="attendance">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                        <span>Attendance</span>
+                        <svg class="menu-caret" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </a>
+                    <div class="submenu" id="submenu-attendance">
+                        <a href="/stuattendance/index" class="submenu-item">Student Attendance</a>
+                        <a href="/approveleave" class="submenu-item">Approve Leave</a>
+                        <a href="/stuattendence/attendencereport" class="submenu-item">Attendance By Date</a>
+                    </div>
+                </div>
+                <div class="menu-item-wrapper">
+                    <a href="#" class="menu-item menu-item-expandable" data-submenu="online-examinations">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M12 6v6l4 2"></path>
+                        </svg>
+                        <span>Online Examination</span>
+                        <svg class="menu-caret" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </a>
+                    <div class="submenu" id="submenu-online-examinations">
+                        <a href="/onlineexam" class="submenu-item">Online Exam</a>
+                        <a href="/question" class="submenu-item">Question Bank</a>
                     </div>
                 </div>
                 <div class="menu-item-wrapper">
@@ -401,6 +504,44 @@
                     </div>
                 </div>
                 <div class="menu-item-wrapper">
+                    <a href="#" class="menu-item menu-item-expandable" data-submenu="annual-calendar">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                        <span>Annual Calendar</span>
+                        <svg class="menu-caret" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </a>
+                    <div class="submenu" id="submenu-annual-calendar">
+                        <a href="/holiday/index" class="submenu-item">Annual Calendar</a>
+                        <a href="/holidaytype" class="submenu-item">Holiday Type</a>
+                    </div>
+                </div>
+                <div class="menu-item-wrapper">
+                    <a href="#" class="menu-item menu-item-expandable" data-submenu="lesson-plan">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            <line x1="8" y1="21" x2="16" y2="21"></line>
+                            <line x1="12" y1="17" x2="12" y2="21"></line>
+                        </svg>
+                        <span>Lesson Plan</span>
+                        <svg class="menu-caret" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </a>
+                    <div class="submenu" id="submenu-lesson-plan">
+                        <a href="/lessonplan/copylesson" class="submenu-item">Copy Old Lessons</a>
+                        <a href="/syllabus" class="submenu-item">Manage Lesson Plan</a>
+                        <a href="/lessonplan/syllabus/status" class="submenu-item">Manage Syllabus Status</a>
+                        <a href="/lesson" class="submenu-item">Lesson</a>
+                        <a href="/lessonplan/topic" class="submenu-item">Topic</a>
+                    </div>
+                </div>
+                <div class="menu-item-wrapper">
                     <a href="#" class="menu-item menu-item-expandable" data-submenu="human-resource">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
@@ -413,7 +554,7 @@
                         </svg>
                     </a>
                     <div class="submenu" id="submenu-human-resource">
-                        <a href="#" class="submenu-item">Staff Directory</a>
+                        <a href="/staff" class="submenu-item">Staff Directory</a>
                         <a href="#" class="submenu-item">Staff Attendance</a>
                         <a href="#" class="submenu-item">Payroll</a>
                         <a href="#" class="submenu-item">Approve Leave Request</a>
@@ -860,9 +1001,9 @@
                         <h3>Multi Branch</h3>
                     </div>
                     <ul class="category-links">
-                        <li><a href="#">Overview</a></li>
-                        <li><a href="#">Report</a></li>
-                        <li><a href="#">Setting</a></li>
+                        <li><a href="/multibranch/branch/overview">Overview</a></li>
+                        <li><a href="/multibranch/finance/dailycollectionreport">Report</a></li>
+                        <li><a href="/multibranch/branch">Setting</a></li>
                     </ul>
                 </div>
 

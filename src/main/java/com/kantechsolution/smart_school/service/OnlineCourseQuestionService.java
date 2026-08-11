@@ -94,6 +94,93 @@ public class OnlineCourseQuestionService {
         return result;
     }
 
+    @Transactional
+    public Map<String, Object> importQuestions(Map<String, Object> body) {
+        Object raw = body.get("questions");
+        if (!(raw instanceof List<?> list) || list.isEmpty()) {
+            throw new IllegalArgumentException("No questions found in the uploaded file");
+        }
+
+        int imported = 0;
+        int skipped = 0;
+        List<String> errors = new ArrayList<>();
+
+        for (int i = 0; i < list.size(); i++) {
+            Object rowObj = list.get(i);
+            if (!(rowObj instanceof Map<?, ?> rawMap)) {
+                skipped++;
+                continue;
+            }
+            Map<String, Object> row = new LinkedHashMap<>();
+            for (Map.Entry<?, ?> entry : rawMap.entrySet()) {
+                if (entry.getKey() != null) {
+                    row.put(String.valueOf(entry.getKey()), entry.getValue());
+                }
+            }
+            try {
+                String tagName = text(firstNonBlank(row.get("tagName"), row.get("questionTag"), row.get("Tag Name"), row.get("Question Tag")));
+                String type = text(firstNonBlank(row.get("questionType"), row.get("Question Type"), row.get("type")));
+                String level = text(firstNonBlank(row.get("level"), row.get("Question Level"), row.get("questionLevel")));
+                String questionText = text(firstNonBlank(row.get("questionText"), row.get("Question"), row.get("question")));
+                String correctAnswer = text(firstNonBlank(row.get("correctAnswer"), row.get("Correct Answer")));
+                String optionsJson = text(firstNonBlank(row.get("optionsJson"), row.get("Options"), row.get("options")));
+
+                if (tagName.isBlank() || type.isBlank() || level.isBlank() || questionText.isBlank()) {
+                    skipped++;
+                    errors.add("Row " + (i + 1) + ": missing required fields");
+                    continue;
+                }
+
+                OnlineCourseQuestionTag tag = resolveOrCreateTag(tagName);
+                OnlineCourseQuestion question = new OnlineCourseQuestion();
+                Map<String, Object> createBody = new LinkedHashMap<>();
+                createBody.put("tagId", tag.getId());
+                createBody.put("questionType", type);
+                createBody.put("level", level);
+                createBody.put("questionText", questionText);
+                createBody.put("correctAnswer", correctAnswer);
+                createBody.put("optionsJson", optionsJson);
+                createBody.put("createdBy", "Joe Black (9000)");
+                apply(question, createBody, true);
+                questionRepository.save(question);
+                imported++;
+            } catch (Exception e) {
+                skipped++;
+                errors.add("Row " + (i + 1) + ": " + e.getMessage());
+            }
+        }
+
+        if (imported == 0) {
+            throw new IllegalArgumentException(errors.isEmpty()
+                    ? "No valid questions found to import"
+                    : errors.get(0));
+        }
+
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("success", true);
+        result.put("imported", imported);
+        result.put("skipped", skipped);
+        result.put("errors", errors);
+        return result;
+    }
+
+    private OnlineCourseQuestionTag resolveOrCreateTag(String tagName) {
+        return tagRepository.findByTagNameIgnoreCase(tagName).orElseGet(() -> {
+            OnlineCourseQuestionTag tag = new OnlineCourseQuestionTag();
+            tag.setTagName(tagName.trim());
+            return tagRepository.save(tag);
+        });
+    }
+
+    private Object firstNonBlank(Object... values) {
+        for (Object value : values) {
+            if (value != null && !String.valueOf(value).trim().isEmpty()) {
+                return value;
+            }
+        }
+        return null;
+    }
+
     private void ensureSeed() {
         if (questionRepository.count() > 0) return;
         List<OnlineCourseQuestionTag> tags = tagRepository.findAllByOrderByTagNameAsc();

@@ -1,19 +1,24 @@
 .onlinecourse-setting-page {
-    padding: 1.25rem 1.5rem 2rem;
+    background: #e8edf2;
+    padding: 20px;
+    min-height: calc(100vh - 80px);
 }
 
 .setting-stack {
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
-    max-width: 1100px;
+    gap: 20px;
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
 }
 
 .setting-card {
     background: #1e293b;
     border: 1px solid #334155;
-    border-radius: 6px;
-    padding: 1.1rem 1.25rem 1rem;
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem 1.5rem;
+    width: 100%;
 }
 
 .setting-card-title {
@@ -203,6 +208,10 @@ body.swal2-shown > .swal2-container,
 }
 
 @media (max-width: 720px) {
+    .onlinecourse-setting-page {
+        padding: 12px;
+    }
+
     .setting-field {
         grid-template-columns: 1fr;
         gap: 0.4rem;

@@ -337,11 +337,11 @@
                         </svg>
                     </a>
                     <div class="submenu" id="submenu-zoom-live-classes">
-                        <a href="#" class="submenu-item">Live Classes</a>
-                        <a href="#" class="submenu-item">Live Meeting</a>
-                        <a href="#" class="submenu-item">Live Classes Report</a>
-                        <a href="#" class="submenu-item">Live Meeting Report</a>
-                        <a href="#" class="submenu-item">Setting</a>
+                        <a href="/conference/timetable" class="submenu-item">Live Classes</a>
+                        <a href="/conference/meeting" class="submenu-item">Live Meeting</a>
+                        <a href="/conference/classreport" class="submenu-item">Live Classes Report</a>
+                        <a href="/conference/meetingreport" class="submenu-item">Live Meeting Report</a>
+                        <a href="/conference" class="submenu-item">Setting</a>
                     </div>
                 </div>
                 <div class="menu-item-wrapper">
@@ -355,9 +355,9 @@
                         </svg>
                     </a>
                     <div class="submenu" id="submenu-income">
-                        <a href="#" class="submenu-item">Add Income</a>
-                        <a href="#" class="submenu-item">Search Income</a>
-                        <a href="#" class="submenu-item">Income Head</a>
+                        <a href="/income" class="submenu-item">Add Income</a>
+                        <a href="/income/incomesearch" class="submenu-item">Search Income</a>
+                        <a href="/income/incomehead" class="submenu-item">Income Head</a>
                     </div>
                 </div>
                 <div class="menu-item-wrapper">
@@ -373,9 +373,9 @@
                         </svg>
                     </a>
                     <div class="submenu" id="submenu-expenses">
-                        <a href="#" class="submenu-item">Add Expense</a>
-                        <a href="#" class="submenu-item">Search Expense</a>
-                        <a href="#" class="submenu-item">Expense Head</a>
+                        <a href="/expense" class="submenu-item">Add Expense</a>
+                        <a href="/expense/searchexpense" class="submenu-item">Search Expense</a>
+                        <a href="/expense/expensehead" class="submenu-item">Expense Head</a>
                     </div>
                 </div>
                 <div class="menu-item-wrapper">
@@ -401,6 +401,44 @@
                     </div>
                 </div>
                 <div class="menu-item-wrapper">
+                    <a href="#" class="menu-item menu-item-expandable" data-submenu="annual-calendar">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                        <span>Annual Calendar</span>
+                        <svg class="menu-caret" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </a>
+                    <div class="submenu" id="submenu-annual-calendar">
+                        <a href="/holiday/index" class="submenu-item">Annual Calendar</a>
+                        <a href="/holidaytype" class="submenu-item">Holiday Type</a>
+                    </div>
+                </div>
+                <div class="menu-item-wrapper">
+                    <a href="#" class="menu-item menu-item-expandable" data-submenu="lesson-plan">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            <line x1="8" y1="21" x2="16" y2="21"></line>
+                            <line x1="12" y1="17" x2="12" y2="21"></line>
+                        </svg>
+                        <span>Lesson Plan</span>
+                        <svg class="menu-caret" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </a>
+                    <div class="submenu" id="submenu-lesson-plan">
+                        <a href="/lessonplan/copylesson" class="submenu-item">Copy Old Lessons</a>
+                        <a href="/syllabus" class="submenu-item">Manage Lesson Plan</a>
+                        <a href="/lessonplan/syllabus/status" class="submenu-item">Manage Syllabus Status</a>
+                        <a href="/lesson" class="submenu-item">Lesson</a>
+                        <a href="/lessonplan/topic" class="submenu-item">Topic</a>
+                    </div>
+                </div>
+                <div class="menu-item-wrapper">
                     <a href="#" class="menu-item menu-item-expandable" data-submenu="human-resource">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
@@ -413,7 +451,7 @@
                         </svg>
                     </a>
                     <div class="submenu" id="submenu-human-resource">
-                        <a href="#" class="submenu-item">Staff Directory</a>
+                        <a href="/staff" class="submenu-item">Staff Directory</a>
                         <a href="#" class="submenu-item">Staff Attendance</a>
                         <a href="#" class="submenu-item">Payroll</a>
                         <a href="#" class="submenu-item">Approve Leave Request</a>

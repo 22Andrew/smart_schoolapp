@@ -438,10 +438,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     classId: classValue,
                     section: sectionSelect ? sectionSelect.value : ''
                 });
-            } catch (error) {
+    } catch (error) {
                 console.error(error);
-                Swal.fire({
-                    icon: 'error',
+        Swal.fire({
+            icon: 'error',
                     title: 'Error',
                     text: error.message || 'Failed to search students.',
                     confirmButtonColor: '#8b5cf6'
@@ -618,7 +618,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     Promise.all([loadClasses(), loadSections()]).catch(function (error) {
         console.error(error);
-        Swal.fire({
+    Swal.fire({
             icon: 'error',
             title: 'Error',
             text: 'Failed to load Class or Section lists.',
