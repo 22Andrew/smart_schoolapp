@@ -43,6 +43,8 @@ public class StaffMemberService implements ApplicationRunner {
 
     private final StaffMemberRepository repository;
     private final UploadStorage uploadStorage;
+    private final DepartmentService departmentService;
+    private final DesignationService designationService;
 
     @Override
     @Transactional
@@ -56,8 +58,8 @@ public class StaffMemberService implements ApplicationRunner {
     public Map<String, Object> formOptions() {
         Map<String, Object> options = new LinkedHashMap<>();
         options.put("roles", ROLE_OPTIONS);
-        options.put("designations", DESIGNATIONS);
-        options.put("departments", DEPARTMENTS);
+        options.put("designations", resolveDesignations());
+        options.put("departments", resolveDepartments());
         options.put("genders", List.of("Male", "Female", "Other"));
         options.put("maritalStatuses", List.of("Single", "Married", "Divorced", "Widowed"));
         options.put("contractTypes", CONTRACT_TYPES);
@@ -68,6 +70,29 @@ public class StaffMemberService implements ApplicationRunner {
         return repository.search(normalize(role), normalize(keyword)).stream()
                 .map(this::toMap)
                 .collect(Collectors.toList());
+    }
+
+    public List<Map<String, Object>> getAllDisabled() {
+        return repository.findByDisabledTrueOrderByFirstNameAscLastNameAsc().stream()
+                .map(this::toMap)
+                .collect(Collectors.toList());
+    }
+
+    public List<Map<String, Object>> searchDisabled(String role, String keyword) {
+        return repository.searchDisabled(normalize(role), normalize(keyword)).stream()
+                .map(this::toMap)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public Map<String, Object> enableStaff(Long id) {
+        StaffMember member = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Staff member not found"));
+        if (!Boolean.TRUE.equals(member.getDisabled())) {
+            throw new IllegalArgumentException("Staff member is already active");
+        }
+        member.setDisabled(false);
+        return toMap(repository.save(member));
     }
 
     public List<Map<String, Object>> getAllActive() {
@@ -331,7 +356,13 @@ public class StaffMemberService implements ApplicationRunner {
                         "9876543216", "Ground Floor, Reception", "ABCDE1240F"),
                 sample("654", "Teacher", "Teacher", "Academic",
                         "Aman", "Verma", "aman.verma@school.com", "Male",
-                        "9876543217", "1st Floor, Academic", "ABCDE1241F")
+                        "9876543217", "1st Floor, Academic", "ABCDE1241F"),
+                disabledSample("54545454", "Teacher,Faculty", "Faculty", "Academic",
+                        "Albert", "Thomas", "albert.thomas@school.com", "Male",
+                        "9522389875", "Mumbai, Maths", "ABCDE1242F"),
+                disabledSample("6332", "Teacher,Faculty", "Faculty", "Academic",
+                        "Jonathan", "Wood", "jonathan.wood@school.com", "Male",
+                        "", "Academic", "ABCDE1243F")
         );
         repository.saveAll(samples);
     }
@@ -358,6 +389,15 @@ public class StaffMemberService implements ApplicationRunner {
         return member;
     }
 
+    private StaffMember disabledSample(String staffId, String roles, String designation, String department,
+                                       String firstName, String lastName, String email, String gender,
+                                       String phone, String location, String pan) {
+        StaffMember member = sample(staffId, roles, designation, department,
+                firstName, lastName, email, gender, phone, location, pan);
+        member.setDisabled(true);
+        return member;
+    }
+
     private String requiredText(Object value) {
         String text = text(value);
         if (text.isBlank()) {
@@ -372,6 +412,16 @@ public class StaffMemberService implements ApplicationRunner {
 
     private String normalize(String value) {
         return value == null ? "" : value.trim();
+    }
+
+    private List<String> resolveDepartments() {
+        List<String> names = departmentService.getDepartmentNames();
+        return names.isEmpty() ? DEPARTMENTS : names;
+    }
+
+    private List<String> resolveDesignations() {
+        List<String> names = designationService.getDesignationNames();
+        return names.isEmpty() ? DESIGNATIONS : names;
     }
 
     private LocalDate parseDate(Object value) {

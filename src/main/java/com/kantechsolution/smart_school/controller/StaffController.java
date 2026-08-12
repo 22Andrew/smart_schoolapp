@@ -24,6 +24,53 @@ public class StaffController {
         return "staff";
     }
 
+    @GetMapping("/staff/add")
+    public String showAddStaffPage() {
+        return "staff";
+    }
+
+    @GetMapping("/staff/edit/{id}")
+    public String showEditStaffPage(@PathVariable Long id) {
+        return "staff";
+    }
+
+    @GetMapping("/staff/disablestafflist")
+    public String showDisabledStaffListPage() {
+        return "staff-disablestafflist";
+    }
+
+    @GetMapping("/api/staff/disabled")
+    @ResponseBody
+    public ResponseEntity<List<Map<String, Object>>> searchDisabledStaff(
+            @RequestParam(required = false) String role,
+            @RequestParam(required = false) String keyword) {
+        if ((role == null || role.isBlank()) && (keyword == null || keyword.isBlank())) {
+            return ResponseEntity.ok(staffMemberService.getAllDisabled());
+        }
+        return ResponseEntity.ok(staffMemberService.searchDisabled(role, keyword));
+    }
+
+    @PostMapping("/api/staff/{id}/enable")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> enableStaff(@PathVariable Long id) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            Map<String, Object> enabled = staffMemberService.enableStaff(id);
+            response.put("success", true);
+            response.put("message", "Staff member enabled successfully!");
+            response.put("data", enabled);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Failed to enable staff member: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
     @GetMapping("/api/staff/form-options")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getFormOptions() {

@@ -96,6 +96,13 @@ body {
     display: block;
 }
 
+.logo-icon .navbar-logo-img {
+    display: block;
+    width: 35px;
+    height: 35px;
+    object-fit: contain;
+}
+
 .school-name {
     font-size: 0.95rem;
     font-weight: 600;

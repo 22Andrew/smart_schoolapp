@@ -32,6 +32,7 @@ public class UploadStorage {
         Files.createDirectories(root.resolve("leaves"));
         Files.createDirectories(root.resolve("staff"));
         Files.createDirectories(root.resolve("staff-documents"));
+        Files.createDirectories(root.resolve("logos"));
     }
 
     public Path getRoot() {
@@ -72,5 +73,9 @@ public class UploadStorage {
 
     public Path getStaffDocumentsDir() {
         return root.resolve("staff-documents");
+    }
+
+    public Path getLogosDir() {
+        return root.resolve("logos");
     }
 }

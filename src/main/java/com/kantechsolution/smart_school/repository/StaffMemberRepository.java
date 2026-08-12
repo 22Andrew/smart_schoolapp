@@ -20,6 +20,25 @@ public interface StaffMemberRepository extends JpaRepository<StaffMember, Long> 
 
     List<StaffMember> findByDisabledFalseOrderByFirstNameAscLastNameAsc();
 
+    List<StaffMember> findByDisabledTrueOrderByFirstNameAscLastNameAsc();
+
+    @Query("""
+            SELECT s FROM StaffMember s
+            WHERE s.disabled = true
+            AND (:role IS NULL OR :role = '' OR LOWER(s.roles) LIKE LOWER(CONCAT('%', :role, '%')))
+            AND (:keyword IS NULL OR :keyword = '' OR
+                 LOWER(s.staffId) LIKE LOWER(CONCAT('%', :keyword, '%')) OR
+                 LOWER(s.firstName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR
+                 LOWER(s.lastName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR
+                 LOWER(s.email) LIKE LOWER(CONCAT('%', :keyword, '%')) OR
+                 LOWER(s.phone) LIKE LOWER(CONCAT('%', :keyword, '%')) OR
+                 LOWER(s.roles) LIKE LOWER(CONCAT('%', :keyword, '%')) OR
+                 LOWER(s.designation) LIKE LOWER(CONCAT('%', :keyword, '%')) OR
+                 LOWER(s.department) LIKE LOWER(CONCAT('%', :keyword, '%')))
+            ORDER BY s.firstName ASC, s.lastName ASC
+            """)
+    List<StaffMember> searchDisabled(@Param("role") String role, @Param("keyword") String keyword);
+
     @Query("""
             SELECT s FROM StaffMember s
             WHERE s.disabled = false

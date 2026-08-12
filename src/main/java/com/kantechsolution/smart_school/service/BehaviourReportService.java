@@ -2,8 +2,10 @@ package com.kantechsolution.smart_school.service;
 
 import com.kantechsolution.smart_school.model.BehaviourIncident;
 import com.kantechsolution.smart_school.model.BehaviourStudentIncident;
+import com.kantechsolution.smart_school.model.StudentAdmission;
 import com.kantechsolution.smart_school.repository.BehaviourIncidentRepository;
 import com.kantechsolution.smart_school.repository.BehaviourStudentIncidentRepository;
+import com.kantechsolution.smart_school.repository.StudentAdmissionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +30,7 @@ public class BehaviourReportService {
     private BehaviourIncidentRepository incidentRepository;
 
     @Autowired
-    private StudentAdmissionService studentAdmissionService;
+    private StudentAdmissionRepository studentAdmissionRepository;
 
     public List<Map<String, Object>> studentIncidentReport(Long classId, String section) {
         return studentIncidentService.studentIncidentReport(classId, section);
@@ -45,7 +47,7 @@ public class BehaviourReportService {
     }
 
     public List<Map<String, Object>> classWiseRankReport() {
-        List<Map<String, Object>> students = studentAdmissionService.searchAdmissions(null, null, null, false, null);
+        List<Map<String, Object>> students = loadStudentsForReport();
         Map<String, Agg> byClass = new LinkedHashMap<>();
 
         for (Map<String, Object> student : students) {
@@ -83,7 +85,7 @@ public class BehaviourReportService {
     }
 
     public List<Map<String, Object>> classSectionWiseRankReport() {
-        List<Map<String, Object>> students = studentAdmissionService.searchAdmissions(null, null, null, false, null);
+        List<Map<String, Object>> students = loadStudentsForReport();
         Map<String, Agg> byKey = new LinkedHashMap<>();
 
         for (Map<String, Object> student : students) {
@@ -131,7 +133,7 @@ public class BehaviourReportService {
     }
 
     public List<Map<String, Object>> houseWiseRankReport() {
-        List<Map<String, Object>> students = studentAdmissionService.searchAdmissions(null, null, null, false, null);
+        List<Map<String, Object>> students = loadStudentsForReport();
         Map<String, Agg> byHouse = new LinkedHashMap<>();
 
         for (Map<String, Object> student : students) {
@@ -186,6 +188,19 @@ public class BehaviourReportService {
         }
         rows.sort(Comparator.comparingLong((Map<String, Object> r) -> ((Number) r.get("totalAssigned")).longValue()).reversed());
         return rows;
+    }
+
+    private List<Map<String, Object>> loadStudentsForReport() {
+        List<Map<String, Object>> students = new ArrayList<>();
+        for (StudentAdmission row : studentAdmissionRepository.search(null, null, null, false, null)) {
+            Map<String, Object> map = new LinkedHashMap<>();
+            map.put("id", row.getId());
+            map.put("className", row.getSchoolClass() != null ? row.getSchoolClass().getName() : null);
+            map.put("section", row.getSection());
+            map.put("houseName", row.getHouse() != null ? row.getHouse().getName() : null);
+            students.add(map);
+        }
+        return students;
     }
 
     private Map<Long, Integer> pointsMap() {

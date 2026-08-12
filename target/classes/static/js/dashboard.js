@@ -1,3 +1,117 @@
+if (typeof window.applyAppBranding !== 'function') {
+(function () {
+    let cachedBranding = null;
+
+    async function fetchBranding(forceRefresh) {
+        if (forceRefresh) {
+            cachedBranding = null;
+        }
+        if (cachedBranding) {
+            return cachedBranding;
+        }
+
+        try {
+            const response = await fetch('/api/schsettings/branding');
+            if (!response.ok) {
+                return null;
+            }
+            cachedBranding = await response.json();
+            return cachedBranding;
+        } catch (error) {
+            console.warn('Failed to load app branding', error);
+            return null;
+        }
+    }
+
+    function setLogoImage(container, url, alt, className, size) {
+        if (!container || !url) {
+            return;
+        }
+
+        container.innerHTML = '';
+        const img = document.createElement('img');
+        img.src = url + (url.includes('?') ? '&' : '?') + 't=' + Date.now();
+        img.alt = alt || 'School logo';
+        if (className) {
+            img.className = className;
+        }
+        if (size) {
+            img.width = size;
+            img.height = size;
+        }
+        container.appendChild(img);
+    }
+
+    window.applyAppBranding = async function (forceRefresh) {
+        const branding = await fetchBranding(forceRefresh);
+        if (!branding) {
+            return;
+        }
+
+        const schoolName = branding.schoolName || 'Smart School';
+        const navbarLogo = branding.adminSmallLogo || branding.adminLogo;
+        const loginLogo = branding.adminLogo || branding.adminSmallLogo;
+
+        document.querySelectorAll('.brand-badge').forEach(function (el) {
+            el.textContent = schoolName;
+        });
+        document.querySelectorAll('.school-name').forEach(function (el) {
+            el.textContent = schoolName;
+        });
+
+        if (branding.session) {
+            document.querySelectorAll('.session-value, .sidebar-session-value').forEach(function (el) {
+                el.textContent = branding.session;
+            });
+        }
+
+        document.querySelectorAll('.top-navbar .logo-icon').forEach(function (el) {
+            if (navbarLogo) {
+                setLogoImage(el, navbarLogo, schoolName, 'navbar-logo-img', 35);
+            }
+        });
+
+        document.querySelectorAll('.login-left .logo-icon, .logo-section .logo-icon').forEach(function (el) {
+            if (loginLogo) {
+                setLogoImage(el, loginLogo, schoolName, 'login-logo-img', 50);
+            }
+        });
+
+        document.querySelectorAll('.logo-text').forEach(function (el) {
+            el.textContent = schoolName.toUpperCase();
+        });
+
+        if (branding.appLogo) {
+            let favicon = document.querySelector('link[rel="icon"]');
+            if (!favicon) {
+                favicon = document.createElement('link');
+                favicon.rel = 'icon';
+                document.head.appendChild(favicon);
+            }
+            favicon.href = branding.appLogo;
+        }
+
+        if (branding.printLogo) {
+            document.documentElement.style.setProperty('--brand-print-logo', 'url("' + branding.printLogo + '")');
+        }
+        if (branding.adminLogo) {
+            document.documentElement.style.setProperty('--brand-admin-logo', 'url("' + branding.adminLogo + '")');
+        }
+        if (branding.appLogo) {
+            document.documentElement.style.setProperty('--brand-app-logo', 'url("' + branding.appLogo + '")');
+        }
+
+        if (document.title && document.title.includes('Smart School') && schoolName !== 'Smart School') {
+            document.title = document.title.replace(/Smart School/g, schoolName);
+        }
+    };
+
+    document.addEventListener('DOMContentLoaded', function () {
+        window.applyAppBranding();
+    });
+})();
+}
+
 // Initialize Dashboard Charts
 document.addEventListener('DOMContentLoaded', function() {
     // Chart.js default configuration (only if Chart.js is loaded)
@@ -467,7 +581,31 @@ document.addEventListener('DOMContentLoaded', function() {
             currentPath = '/syllabus';
         } else if (currentPath === '/lessonplan/copylesson/') {
             currentPath = '/lessonplan/copylesson';
+        } else if (currentPath === '/staffattendance/index/') {
+            currentPath = '/staffattendance/index';
+        } else if (currentPath === '/payroll/') {
+            currentPath = '/payroll';
+        } else if (currentPath === '/leaverequest/') {
+            currentPath = '/leaverequest';
+        } else if (currentPath === '/staff/leaverequest/') {
+            currentPath = '/staff/leaverequest';
+        } else if (currentPath === '/staff/leavetypes/') {
+            currentPath = '/staff/leavetypes';
+        } else if (currentPath === '/staff/rating/') {
+            currentPath = '/staff/rating';
+        } else if (currentPath === '/department/') {
+            currentPath = '/department';
+        } else if (currentPath === '/designation/') {
+            currentPath = '/designation';
+        } else if (currentPath === '/schsettings/') {
+            currentPath = '/schsettings';
+        } else if (currentPath === '/schsettings/logo/') {
+            currentPath = '/schsettings/logo';
+        } else if (currentPath === '/staff/disablestafflist/') {
+            currentPath = '/staff/disablestafflist';
         } else if (currentPath === '/staff/') {
+            currentPath = '/staff';
+        } else if (currentPath.startsWith('/staff/edit/') || currentPath === '/staff/add') {
             currentPath = '/staff';
         }
         if (currentPath === '/multibranch/branch/overview/') {
@@ -692,6 +830,72 @@ document.addEventListener('DOMContentLoaded', function() {
             if (staffItem) {
                 bestMatch = staffItem;
                 bestLength = staffItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/staffattendance/index') {
+            const staffAttendanceItem = document.querySelector('#submenu-human-resource a[href="/staffattendance/index"]');
+            if (staffAttendanceItem) {
+                bestMatch = staffAttendanceItem;
+                bestLength = staffAttendanceItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/payroll') {
+            const payrollItem = document.querySelector('#submenu-human-resource a[href="/payroll"]');
+            if (payrollItem) {
+                bestMatch = payrollItem;
+                bestLength = payrollItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/leaverequest') {
+            const leaveRequestItem = document.querySelector('#submenu-human-resource a[href="/leaverequest"]');
+            if (leaveRequestItem) {
+                bestMatch = leaveRequestItem;
+                bestLength = leaveRequestItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/staff/leaverequest') {
+            const applyLeaveItem = document.querySelector('#submenu-human-resource a[href="/staff/leaverequest"]');
+            if (applyLeaveItem) {
+                bestMatch = applyLeaveItem;
+                bestLength = applyLeaveItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/staff/leavetypes') {
+            const leaveTypeItem = document.querySelector('#submenu-human-resource a[href="/staff/leavetypes"]');
+            if (leaveTypeItem) {
+                bestMatch = leaveTypeItem;
+                bestLength = leaveTypeItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/staff/rating') {
+            const teachersRatingItem = document.querySelector('#submenu-human-resource a[href="/staff/rating"]');
+            if (teachersRatingItem) {
+                bestMatch = teachersRatingItem;
+                bestLength = teachersRatingItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/department') {
+            const departmentItem = document.querySelector('#submenu-human-resource a[href="/department"]');
+            if (departmentItem) {
+                bestMatch = departmentItem;
+                bestLength = departmentItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/designation') {
+            const designationItem = document.querySelector('#submenu-human-resource a[href="/designation"]');
+            if (designationItem) {
+                bestMatch = designationItem;
+                bestLength = designationItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/staff/disablestafflist') {
+            const disabledStaffItem = document.querySelector('#submenu-human-resource a[href="/staff/disablestafflist"]');
+            if (disabledStaffItem) {
+                bestMatch = disabledStaffItem;
+                bestLength = disabledStaffItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/schsettings') {
+            const generalSettingItem = document.querySelector('#submenu-system-setting a[href="/schsettings"], #submenu-system-settings a[href="/schsettings"]');
+            if (generalSettingItem) {
+                bestMatch = generalSettingItem;
+                bestLength = generalSettingItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/schsettings/logo') {
+            const generalSettingItem = document.querySelector('#submenu-system-setting a[href="/schsettings"], #submenu-system-settings a[href="/schsettings"]');
+            if (generalSettingItem) {
+                bestMatch = generalSettingItem;
+                bestLength = generalSettingItem.getAttribute('href').length;
             }
         }
 

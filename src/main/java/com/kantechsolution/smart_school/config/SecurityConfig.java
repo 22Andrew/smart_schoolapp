@@ -22,6 +22,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/", "/home", "/css/**", "/js/**", "/images/**", "/uploads/**",
                                "/about", "/features", "/contact", "/register").permitAll()
+                .requestMatchers("/api/schsettings/branding").permitAll()
                 .requestMatchers("/api/**").authenticated()
                 .anyRequest().authenticated()
             )
