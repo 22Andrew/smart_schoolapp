@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mount Carmel School - Admin Dashboard</title>
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/app-theme.css}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
@@ -829,8 +830,8 @@
                     </a>
                     <div class="submenu" id="submenu-system-setting">
                         <a href="/schsettings" class="submenu-item">General Setting</a>
-                        <a href="#" class="submenu-item">Session Setting</a>
-                        <a href="#" class="submenu-item">Notification Setting</a>
+                        <a href="/sessions" class="submenu-item">Session Setting</a>
+                        <a href="/admin/notification/setting" class="submenu-item">Notification Setting</a>
                         <a href="#" class="submenu-item">Whatsapp Messaging</a>
                         <a href="#" class="submenu-item">SMS Setting</a>
                         <a href="#" class="submenu-item">Email Setting</a>
@@ -1460,8 +1461,8 @@
                         </div>
                         <ul class="category-links">
                             <li><a href="/schsettings">General Setting</a></li>
-                            <li><a href="#">Session Setting</a></li>
-                            <li><a href="#">Notification Setting</a></li>
+                            <li><a href="/sessions">Session Setting</a></li>
+                            <li><a href="/admin/notification/setting">Notification Setting</a></li>
                             <li><a href="#">SMS Setting</a></li>
                             <li><a href="#">Email Setting</a></li>
                             <li><a href="#">Payment Methods</a></li>

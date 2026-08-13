@@ -1,0 +1,1115 @@
+/* App-wide Light / Dark theme overrides */
+
+:root {
+    --theme-primary: #8b5cf6;
+    --theme-primary-dark: #7c3aed;
+    --theme-primary-soft: color-mix(in srgb, var(--theme-primary) 12%, #ffffff);
+    --theme-primary-border: color-mix(in srgb, var(--theme-primary) 40%, #d1d5db);
+    --app-icon-size: 18px;
+}
+
+/* Primary color on native checkboxes and radio buttons across the app */
+input[type="checkbox"],
+input[type="radio"] {
+    accent-color: var(--theme-primary) !important;
+}
+
+/* Custom toggle switches used in settings and module pages */
+.toggle-switch input:checked + .toggle-slider,
+.sgp-toggle-switch input:checked + .sgp-toggle-slider {
+    background: var(--theme-primary) !important;
+}
+
+body.theme-light {
+    background: #ffffff !important;
+    color: #111827 !important;
+}
+
+body.theme-dark {
+    background: #0f172a !important;
+    color: #f8fafc !important;
+}
+
+/* Layout shells */
+body.theme-light .main-content,
+body.theme-light .schsettings-page,
+body.theme-light main.main-content {
+    background: #ffffff !important;
+    color: #111827 !important;
+}
+
+body.theme-dark .main-content,
+body.theme-dark .schsettings-page,
+body.theme-dark main.main-content {
+    background: #1e293b !important;
+    color: #f8fafc !important;
+}
+
+/* Top navbar */
+body.theme-light .top-navbar {
+    background: #ffffff !important;
+    color: #111827 !important;
+    border-bottom: 1px solid #e5e7eb;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+}
+
+body.theme-light .top-navbar .hamburger-btn,
+body.theme-light .top-navbar .icon-btn,
+body.theme-light .top-navbar .session-label {
+    color: #374151 !important;
+}
+
+body.theme-light .top-navbar .school-name {
+    color: #047857 !important;
+}
+
+body.theme-light .top-navbar .session-value {
+    color: #111827 !important;
+}
+
+body.theme-dark .top-navbar {
+    background: #1e293b !important;
+    color: #f8fafc !important;
+}
+
+body.theme-dark .top-navbar .hamburger-btn,
+body.theme-dark .top-navbar .icon-btn,
+body.theme-dark .top-navbar .session-label,
+body.theme-dark .top-navbar .session-value {
+    color: #f8fafc !important;
+}
+
+/* Sidebar */
+body.theme-light .sidebar {
+    background: #ffffff !important;
+    color: #111827 !important;
+    border-right: 1px solid #e5e7eb;
+}
+
+body.theme-light .sidebar-top {
+    border-bottom-color: #e5e7eb !important;
+}
+
+body.theme-light .sidebar-session,
+body.theme-light .sidebar-session-label {
+    color: #6b7280 !important;
+}
+
+body.theme-light .sidebar-session-value,
+body.theme-light .sidebar-quick-links-title,
+body.theme-light .sidebar-quick-links-btn,
+body.theme-light .sidebar-session-edit-btn {
+    color: #111827 !important;
+}
+
+body.theme-light .menu-item {
+    color: #374151 !important;
+}
+
+body.theme-light .menu-item:hover {
+    background: #f3f4f6 !important;
+    color: #111827 !important;
+}
+
+body.theme-light .menu-item.active {
+    color: #111827 !important;
+}
+
+body.theme-light .submenu {
+    background: #f9fafb !important;
+}
+
+body.theme-light .submenu-item {
+    color: #4b5563 !important;
+}
+
+body.theme-light .submenu-item:hover {
+    background: #f3f4f6 !important;
+    color: #111827 !important;
+}
+
+body.theme-dark .sidebar {
+    background: #1e293b !important;
+    color: #f8fafc !important;
+}
+
+body.theme-dark .sidebar-session,
+body.theme-dark .sidebar-session-label {
+    color: #cbd5e1 !important;
+}
+
+body.theme-dark .sidebar-session-value,
+body.theme-dark .sidebar-quick-links-title,
+body.theme-dark .sidebar-quick-links-btn,
+body.theme-dark .sidebar-session-edit-btn,
+body.theme-dark .menu-item {
+    color: #e2e8f0 !important;
+}
+
+body.theme-dark .menu-item:hover,
+body.theme-dark .submenu-item:hover {
+    color: #ffffff !important;
+}
+
+body.theme-dark .submenu {
+    background: rgba(0, 0, 0, 0.2) !important;
+}
+
+body.theme-dark .submenu-item {
+    color: #cbd5e1 !important;
+}
+
+/* Settings pages */
+body.theme-light .schsettings-sidebar,
+body.theme-light .schsettings-panel,
+body.theme-light .logo-setting-card,
+body.theme-light .theme-option-btn {
+    background: #ffffff !important;
+    color: #111827 !important;
+    border-color: #e5e7eb !important;
+}
+
+body.theme-light .schsettings-nav-item {
+    color: #374151 !important;
+}
+
+body.theme-light .schsettings-nav-item:hover {
+    background: #f3f4f6 !important;
+    color: #111827 !important;
+}
+
+body.theme-light .schsettings-panel-title,
+body.theme-light .backend-theme-label,
+body.theme-light .logo-setting-card-title {
+    color: #111827 !important;
+    border-bottom-color: #e5e7eb !important;
+}
+
+body.theme-light .backend-theme-label span,
+body.theme-light .logo-setting-dimensions,
+body.theme-light .schsettings-field label {
+    color: #6b7280 !important;
+}
+
+body.theme-light .backend-theme-row {
+    border-bottom-color: #e5e7eb !important;
+}
+
+body.theme-light .logo-setting-preview,
+body.theme-light .logo-placeholder {
+    background: #f9fafb !important;
+    color: #6b7280 !important;
+    border-color: #d1d5db !important;
+}
+
+body.theme-dark .schsettings-sidebar,
+body.theme-dark .schsettings-panel,
+body.theme-dark .logo-setting-card,
+body.theme-dark .theme-option-btn {
+    background: #1e293b !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+}
+
+body.theme-dark .schsettings-nav-item {
+    color: #cbd5e1 !important;
+}
+
+body.theme-dark .schsettings-panel-title,
+body.theme-dark .backend-theme-label,
+body.theme-dark .logo-setting-card-title,
+body.theme-dark .schsettings-field label {
+    color: #f1f5f9 !important;
+}
+
+body.theme-dark .backend-theme-label span,
+body.theme-dark .logo-setting-dimensions {
+    color: #94a3b8 !important;
+}
+
+body.theme-dark .backend-theme-row {
+    border-bottom-color: #334155 !important;
+}
+
+body.theme-dark .logo-setting-preview,
+body.theme-dark .logo-placeholder {
+    background: #0f172a !important;
+    color: #94a3b8 !important;
+    border-color: #334155 !important;
+}
+
+/* Forms & tables */
+body.theme-light input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="file"]),
+body.theme-light select,
+body.theme-light textarea,
+body.theme-light .form-control,
+body.theme-light .search-input {
+    background: #ffffff !important;
+    color: #111827 !important;
+    border-color: #d1d5db !important;
+}
+
+body.theme-light input::placeholder,
+body.theme-light textarea::placeholder {
+    color: #9ca3af !important;
+}
+
+body.theme-dark input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="file"]),
+body.theme-dark select,
+body.theme-dark textarea,
+body.theme-dark .form-control,
+body.theme-dark .search-input {
+    background: #0f172a !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+}
+
+body.theme-dark input::placeholder,
+body.theme-dark textarea::placeholder {
+    color: #94a3b8 !important;
+}
+
+/* Common page panels/cards/tables */
+body.theme-light .stat-card,
+body.theme-light .dashboard-card,
+body.theme-light .mini-stat,
+body.theme-light .panel,
+body.theme-light .card,
+body.theme-light .content-panel,
+body.theme-light .table-container,
+body.theme-light .data-table-wrapper,
+body.theme-light table,
+body.theme-light thead,
+body.theme-light tbody,
+body.theme-light tr,
+body.theme-light th,
+body.theme-light td {
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    border-color: #e5e7eb !important;
+}
+
+body.theme-light h1,
+body.theme-light h2,
+body.theme-light h3,
+body.theme-light h4,
+body.theme-light h5,
+body.theme-light h6,
+body.theme-light p,
+body.theme-light label,
+body.theme-light span,
+body.theme-light li,
+body.theme-light a:not(.btn):not(.menu-item):not(.submenu-item):not(.schsettings-nav-item) {
+    color: inherit;
+}
+
+body.theme-dark .stat-card,
+body.theme-dark .dashboard-card,
+body.theme-dark .mini-stat,
+body.theme-dark .panel,
+body.theme-dark .card,
+body.theme-dark .content-panel,
+body.theme-dark .table-container,
+body.theme-dark .data-table-wrapper,
+body.theme-dark table,
+body.theme-dark thead,
+body.theme-dark tbody,
+body.theme-dark tr,
+body.theme-dark th,
+body.theme-dark td {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+}
+
+/* Page-specific wrappers commonly used across modules */
+body.theme-light [class$="-page"],
+body.theme-light [class*="-page "] {
+    background: #f5f6fa !important;
+    color: #111827 !important;
+}
+
+body.theme-dark [class$="-page"],
+body.theme-dark [class*="-page "] {
+    background: #1e293b !important;
+    color: #f8fafc !important;
+}
+
+/* Modals */
+body.theme-light .modal-content,
+body.theme-light .quick-links-modal .modal-content {
+    background: #ffffff !important;
+    color: #111827 !important;
+}
+
+body.theme-dark .modal-content,
+body.theme-dark .quick-links-modal .modal-content {
+    background: #1e293b !important;
+    color: #f8fafc !important;
+}
+
+body.theme-light .modal-header,
+body.theme-light .modal-body,
+body.theme-light .modal-title,
+body.theme-light .category-header,
+body.theme-light .category-links a {
+    color: #111827 !important;
+}
+
+body.theme-dark .modal-header,
+body.theme-dark .modal-body,
+body.theme-dark .modal-title,
+body.theme-dark .category-header,
+body.theme-dark .category-links a {
+    color: #f8fafc !important;
+}
+
+/* Login page */
+body.theme-light .login-left,
+body.theme-light .login-form-wrapper {
+    background: #ffffff !important;
+    color: #111827 !important;
+}
+
+body.theme-light .login-title,
+body.theme-light .logo-text,
+body.theme-light .demo-note,
+body.theme-light .footer-link {
+    color: #111827 !important;
+}
+
+body.theme-dark .login-left,
+body.theme-dark .login-form-wrapper {
+    background: #ffffff !important;
+    color: #111827 !important;
+}
+
+body.theme-light .theme-option-btn.active,
+body.theme-dark .theme-option-btn.active {
+    color: inherit !important;
+}
+
+/* Module pages — common dark panel/page patterns used across the app */
+body.theme-light [class$="-page"] {
+    background-color: #f5f6fa !important;
+    color: #111827 !important;
+}
+
+body.theme-light [class*="-panel"],
+body.theme-light [class*="-card"]:not(.stat-card-animate),
+body.theme-light [class*="header-bar"],
+body.theme-light [class*="-table-wrapper"],
+body.theme-light [class*="-list-panel"],
+body.theme-light [class*="-form-panel"],
+body.theme-light [class*="-left-panel"],
+body.theme-light [class*="-right-panel"] {
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    border-color: #e5e7eb !important;
+}
+
+body.theme-light [class*="title"],
+body.theme-light [class*="label"],
+body.theme-light [class*="text"],
+body.theme-light th,
+body.theme-light td,
+body.theme-light .panel-title,
+body.theme-light .page-title {
+    color: #111827 !important;
+}
+
+body.theme-light [class*="subtitle"],
+body.theme-light [class*="hint"],
+body.theme-light [class*="note"] {
+    color: #4b5563 !important;
+}
+
+body.theme-dark [class$="-page"] {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+}
+
+body.theme-dark [class*="-panel"],
+body.theme-dark [class*="-card"]:not(.stat-card-animate),
+body.theme-dark [class*="header-bar"],
+body.theme-dark [class*="-table-wrapper"],
+body.theme-dark [class*="-list-panel"],
+body.theme-dark [class*="-form-panel"],
+body.theme-dark [class*="-left-panel"],
+body.theme-dark [class*="-right-panel"] {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+}
+
+body.theme-dark [class*="title"],
+body.theme-dark [class*="label"],
+body.theme-dark [class*="text"],
+body.theme-dark th,
+body.theme-dark td,
+body.theme-dark .panel-title,
+body.theme-dark .page-title {
+    color: #f8fafc !important;
+}
+
+body.theme-dark [class*="subtitle"],
+body.theme-dark [class*="hint"],
+body.theme-dark [class*="note"] {
+    color: #cbd5e1 !important;
+}
+
+/* --------------------------------------------------------------------------
+   Module pages — sections, forms, tables (Front Office, Student Info, etc.)
+   -------------------------------------------------------------------------- */
+body.theme-light [class*="-section"],
+body.theme-light .criteria-section,
+body.theme-light .table-section,
+body.theme-light .filter-section,
+body.theme-light .search-section,
+body.theme-light .content-section,
+body.theme-light .form-section,
+body.theme-light .report-section,
+body.theme-light .overview-section,
+body.theme-light .results-section,
+body.theme-light .assign-section,
+body.theme-light .profile-section,
+body.theme-light .detail-section {
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    border-color: #e5e7eb !important;
+}
+
+body.theme-light .section-title,
+body.theme-light .table-header,
+body.theme-light .panel-heading,
+body.theme-light .card-header,
+body.theme-light .box-title,
+body.theme-light .page-header h1,
+body.theme-light .page-header h2 {
+    color: #111827 !important;
+}
+
+body.theme-light .form-group label,
+body.theme-light .form-label,
+body.theme-light .field-label,
+body.theme-light .control-label {
+    color: #374151 !important;
+}
+
+body.theme-light .form-select,
+body.theme-light .form-input,
+body.theme-light .entries-select,
+body.theme-light .table-search-input,
+body.theme-light .filter-input,
+body.theme-light .search-box input {
+    background: #ffffff !important;
+    color: #111827 !important;
+    border-color: #d1d5db !important;
+}
+
+body.theme-light .form-select option,
+body.theme-light .entries-select option {
+    background: #ffffff !important;
+    color: #111827 !important;
+}
+
+body.theme-light input[type="date"]::-webkit-calendar-picker-indicator,
+body.theme-light .form-input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: none !important;
+}
+
+body.theme-light .table-search-input::placeholder,
+body.theme-light .form-input::placeholder {
+    color: #9ca3af !important;
+}
+
+body.theme-light .data-table,
+body.theme-light .data-table-wrapper,
+body.theme-light .table-responsive {
+    background-color: #ffffff !important;
+    border-color: #e5e7eb !important;
+}
+
+body.theme-light .data-table thead,
+body.theme-light .data-table th {
+    background-color: #f9fafb !important;
+    color: #374151 !important;
+    border-color: #e5e7eb !important;
+}
+
+body.theme-light .data-table tbody tr,
+body.theme-light .data-table td {
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    border-color: #e5e7eb !important;
+}
+
+body.theme-light .data-table tbody tr:hover,
+body.theme-light .data-table tbody tr:nth-child(even) {
+    background-color: #f9fafb !important;
+}
+
+body.theme-light .entries-info,
+body.theme-light .table-info,
+body.theme-light .pagination-info,
+body.theme-light .record-count,
+body.theme-light .showing-entries {
+    color: #6b7280 !important;
+}
+
+body.theme-light .column-visibility-dropdown,
+body.theme-light .dropdown-menu,
+body.theme-light .action-menu,
+body.theme-light .action-dropdown,
+body.theme-light .select-dropdown,
+body.theme-light .table-dropdown {
+    background: #ffffff !important;
+    color: #111827 !important;
+    border-color: #e5e7eb !important;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12) !important;
+}
+
+body.theme-light .column-visibility-dropdown label,
+body.theme-light .dropdown-menu a,
+body.theme-light .dropdown-menu button,
+body.theme-light .action-menu a,
+body.theme-light .action-menu button {
+    color: #374151 !important;
+}
+
+body.theme-light .column-visibility-dropdown label:hover,
+body.theme-light .dropdown-menu a:hover,
+body.theme-light .dropdown-menu button:hover {
+    background: #f3f4f6 !important;
+    color: #111827 !important;
+}
+
+body.theme-light .pagination-btn,
+body.theme-light .page-link {
+    background: #ffffff !important;
+    color: #374151 !important;
+    border-color: #d1d5db !important;
+}
+
+body.theme-light .tab-btn,
+body.theme-light .nav-tab {
+    color: #6b7280 !important;
+    border-color: #e5e7eb !important;
+}
+
+body.theme-light .tab-btn.active,
+body.theme-light .nav-tab.active {
+    color: var(--theme-primary) !important;
+    border-color: var(--theme-primary) !important;
+    background: #ffffff !important;
+}
+
+body.theme-light .empty-state,
+body.theme-light .no-data,
+body.theme-light .no-records {
+    color: #6b7280 !important;
+}
+
+body.theme-light .modal-overlay {
+    background: rgba(15, 23, 42, 0.45) !important;
+}
+
+body.theme-light .badge,
+body.theme-light .status-badge,
+body.theme-light .tag {
+    border-color: #e5e7eb !important;
+}
+
+/* Dark theme — module pages */
+body.theme-dark [class*="-section"],
+body.theme-dark .criteria-section,
+body.theme-dark .table-section,
+body.theme-dark .filter-section,
+body.theme-dark .search-section,
+body.theme-dark .content-section,
+body.theme-dark .form-section,
+body.theme-dark .report-section,
+body.theme-dark .overview-section,
+body.theme-dark .results-section,
+body.theme-dark .assign-section,
+body.theme-dark .profile-section,
+body.theme-dark .detail-section {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+}
+
+body.theme-dark .section-title,
+body.theme-dark .table-header,
+body.theme-dark .panel-heading,
+body.theme-dark .card-header,
+body.theme-dark .box-title,
+body.theme-dark .page-header h1,
+body.theme-dark .page-header h2 {
+    color: #f8fafc !important;
+}
+
+body.theme-dark .form-group label,
+body.theme-dark .form-label,
+body.theme-dark .field-label,
+body.theme-dark .control-label {
+    color: #e2e8f0 !important;
+}
+
+body.theme-dark .form-select,
+body.theme-dark .form-input,
+body.theme-dark .entries-select,
+body.theme-dark .table-search-input,
+body.theme-dark .filter-input,
+body.theme-dark .search-box input {
+    background: #0f172a !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+}
+
+body.theme-dark .form-select option,
+body.theme-dark .entries-select option {
+    background: #0f172a !important;
+    color: #f8fafc !important;
+}
+
+body.theme-dark input[type="date"]::-webkit-calendar-picker-indicator,
+body.theme-dark .form-input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) !important;
+}
+
+body.theme-dark .table-search-input::placeholder,
+body.theme-dark .form-input::placeholder {
+    color: #94a3b8 !important;
+}
+
+body.theme-dark .data-table thead,
+body.theme-dark .data-table th {
+    background-color: #0f172a !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+}
+
+body.theme-dark .data-table tbody tr,
+body.theme-dark .data-table td {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+}
+
+body.theme-dark .data-table tbody tr:hover,
+body.theme-dark .data-table tbody tr:nth-child(even) {
+    background-color: #334155 !important;
+}
+
+body.theme-dark .entries-info,
+body.theme-dark .table-info,
+body.theme-dark .pagination-info,
+body.theme-dark .record-count,
+body.theme-dark .showing-entries {
+    color: #94a3b8 !important;
+}
+
+body.theme-dark .column-visibility-dropdown,
+body.theme-dark .dropdown-menu,
+body.theme-dark .action-menu,
+body.theme-dark .action-dropdown,
+body.theme-dark .select-dropdown,
+body.theme-dark .table-dropdown {
+    background: #0f172a !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35) !important;
+}
+
+body.theme-dark .column-visibility-dropdown label,
+body.theme-dark .dropdown-menu a,
+body.theme-dark .dropdown-menu button,
+body.theme-dark .action-menu a,
+body.theme-dark .action-menu button {
+    color: #e2e8f0 !important;
+}
+
+body.theme-dark .column-visibility-dropdown label:hover,
+body.theme-dark .dropdown-menu a:hover,
+body.theme-dark .dropdown-menu button:hover {
+    background: #334155 !important;
+    color: #ffffff !important;
+}
+
+body.theme-dark .pagination-btn,
+body.theme-dark .page-link {
+    background: #1e293b !important;
+    color: #e2e8f0 !important;
+    border-color: #334155 !important;
+}
+
+body.theme-dark .tab-btn,
+body.theme-dark .nav-tab {
+    color: #94a3b8 !important;
+    border-color: #334155 !important;
+}
+
+body.theme-dark .tab-btn.active,
+body.theme-dark .nav-tab.active {
+    color: var(--theme-primary) !important;
+    border-color: var(--theme-primary) !important;
+    background: #1e293b !important;
+}
+
+body.theme-dark .empty-state,
+body.theme-dark .no-data,
+body.theme-dark .no-records {
+    color: #94a3b8 !important;
+}
+
+body.theme-dark .modal-overlay {
+    background: rgba(0, 0, 0, 0.65) !important;
+}
+
+/* Dashboard cards in dark mode */
+body.theme-dark .mini-stat,
+body.theme-dark .stat-card,
+body.theme-dark .dashboard-card,
+body.theme-dark .calendar-section,
+body.theme-dark .user-stats-section {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+}
+
+body.theme-dark .mini-stat-title,
+body.theme-dark .stat-label {
+    color: #94a3b8 !important;
+}
+
+body.theme-dark .mini-stat-value,
+body.theme-dark .stat-value,
+body.theme-dark .stat-number {
+    color: #f8fafc !important;
+}
+
+body.theme-light .mini-stat,
+body.theme-light .stat-card,
+body.theme-light .dashboard-card,
+body.theme-light .calendar-section,
+body.theme-light .user-stats-section {
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    border-color: #e5e7eb !important;
+}
+
+body.theme-light .mini-stat-title,
+body.theme-light .stat-label {
+    color: #6b7280 !important;
+}
+
+body.theme-light .mini-stat-value,
+body.theme-light .stat-value,
+body.theme-light .stat-number {
+    color: #111827 !important;
+}
+
+/* Notification Setting page */
+body.theme-light .notification-setting-page {
+    background-color: #ecf0f5 !important;
+}
+
+body.theme-light .notification-setting-box,
+body.theme-light .notification-setting-box-header,
+body.theme-light .notification-setting-box-footer {
+    background-color: #ffffff !important;
+    border-color: #d2d6de !important;
+}
+
+body.theme-light .notification-setting-title {
+    color: #444 !important;
+}
+
+body.theme-dark .notification-setting-page {
+    background-color: #1a2035 !important;
+}
+
+body.theme-dark .notification-setting-box,
+body.theme-dark .notification-setting-box-header,
+body.theme-dark .notification-setting-box-footer {
+    background-color: #1e2433 !important;
+    border-color: #2d3748 !important;
+}
+
+/* --------------------------------------------------------------------------
+   Light theme — apply Backend Theme primary color to interactive controls
+   -------------------------------------------------------------------------- */
+body.theme-light input[type="checkbox"],
+body.theme-light input[type="radio"] {
+    accent-color: var(--theme-primary) !important;
+}
+
+/* Primary / save / add buttons */
+body.theme-light .btn-schsettings-save,
+body.theme-light .btn-logo-update,
+body.theme-light .btn-notification-save,
+body.theme-light .btn-save,
+body.theme-light .btn-save-primary,
+body.theme-light .btn-save-template,
+body.theme-light .btn-save-attendance,
+body.theme-light .btn-add-primary,
+body.theme-light .btn-add,
+body.theme-light .btn-add-more,
+body.theme-light .btn-submit,
+body.theme-light .btn-search-primary,
+body.theme-light .btn-search,
+body.theme-light .btn-action,
+body.theme-light .btn-update,
+body.theme-light .btn-apply,
+body.theme-light .btn-filter,
+body.theme-light .btn-print-primary,
+body.theme-light [class*="btn-save"]:not([class*="cancel"]),
+body.theme-light [class*="btn-primary"],
+body.theme-light [class*="btn-add"]:not(.btn-add-student):not([class*="cancel"]),
+body.theme-light button[type="submit"]:not(.btn-cancel):not(.btn-secondary):not(.btn-reset) {
+    background-color: var(--theme-primary) !important;
+    border-color: var(--theme-primary) !important;
+    color: #ffffff !important;
+}
+
+body.theme-light .btn-schsettings-save:hover,
+body.theme-light .btn-logo-update:hover,
+body.theme-light .btn-notification-save:hover,
+body.theme-light .btn-save:hover,
+body.theme-light .btn-save-primary:hover,
+body.theme-light .btn-save-template:hover,
+body.theme-light .btn-save-attendance:hover,
+body.theme-light .btn-add-primary:hover,
+body.theme-light .btn-add:hover,
+body.theme-light .btn-add-more:hover,
+body.theme-light .btn-submit:hover,
+body.theme-light .btn-search-primary:hover,
+body.theme-light .btn-search:hover,
+body.theme-light .btn-action:hover,
+body.theme-light .btn-update:hover,
+body.theme-light .btn-apply:hover,
+body.theme-light .btn-filter:hover,
+body.theme-light .btn-print-primary:hover,
+body.theme-light [class*="btn-save"]:not([class*="cancel"]):hover,
+body.theme-light [class*="btn-primary"]:hover,
+body.theme-light [class*="btn-add"]:not(.btn-add-student):not([class*="cancel"]):hover,
+body.theme-light button[type="submit"]:not(.btn-cancel):not(.btn-secondary):not(.btn-reset):hover {
+    background-color: var(--theme-primary-dark) !important;
+    border-color: var(--theme-primary-dark) !important;
+    color: #ffffff !important;
+}
+
+/* Table toolbar icons: copy, Excel, CSV, PDF, print, columns */
+body.theme-light .icon-action-btn,
+body.theme-light .staff-icon-action-btn,
+body.theme-light .notification-icon-btn,
+body.theme-light .table-actions .icon-action-btn,
+body.theme-light .table-actions button,
+body.theme-light [class*="-table-controls"] .icon-action-btn,
+body.theme-light [class*="-table-controls"] .staff-icon-action-btn,
+body.theme-light [class*="toolbar"] .icon-action-btn {
+    color: var(--theme-primary) !important;
+    border-color: var(--theme-primary-border) !important;
+    background-color: #ffffff !important;
+}
+
+body.theme-light .icon-action-btn svg,
+body.theme-light .staff-icon-action-btn svg,
+body.theme-light .notification-icon-btn svg,
+body.theme-light .table-actions .icon-action-btn svg,
+body.theme-light .table-actions button svg,
+body.theme-light [class*="-table-controls"] .icon-action-btn svg,
+body.theme-light [class*="-table-controls"] .staff-icon-action-btn svg,
+body.theme-light [class*="toolbar"] .icon-action-btn svg {
+    stroke: currentColor !important;
+    color: inherit !important;
+}
+
+body.theme-light .icon-action-btn:hover,
+body.theme-light .staff-icon-action-btn:hover,
+body.theme-light .notification-icon-btn:hover,
+body.theme-light .table-actions .icon-action-btn:hover,
+body.theme-light .table-actions button:hover,
+body.theme-light [class*="-table-controls"] .icon-action-btn:hover,
+body.theme-light [class*="-table-controls"] .staff-icon-action-btn:hover,
+body.theme-light [class*="toolbar"] .icon-action-btn:hover {
+    background-color: var(--theme-primary) !important;
+    border-color: var(--theme-primary) !important;
+    color: #ffffff !important;
+}
+
+body.theme-light .icon-action-btn:hover svg,
+body.theme-light .staff-icon-action-btn:hover svg,
+body.theme-light .notification-icon-btn:hover svg,
+body.theme-light .table-actions .icon-action-btn:hover svg,
+body.theme-light .table-actions button:hover svg,
+body.theme-light [class*="-table-controls"] .icon-action-btn:hover svg,
+body.theme-light [class*="-table-controls"] .staff-icon-action-btn:hover svg,
+body.theme-light [class*="toolbar"] .icon-action-btn:hover svg {
+    stroke: #ffffff !important;
+    color: #ffffff !important;
+}
+
+/* Pagination & active controls */
+body.theme-light .pagination-btn.active,
+body.theme-light .pagination-btn:hover:not(:disabled),
+body.theme-light .page-link.active,
+body.theme-light .page-item.active .page-link {
+    background-color: var(--theme-primary) !important;
+    border-color: var(--theme-primary) !important;
+    color: #ffffff !important;
+}
+
+/* Focus rings on form controls */
+body.theme-light input:not([type="checkbox"]):not([type="radio"]):focus,
+body.theme-light select:focus,
+body.theme-light textarea:focus,
+body.theme-light .form-control:focus,
+body.theme-light .table-search-input:focus {
+    border-color: var(--theme-primary) !important;
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--theme-primary) 20%, transparent) !important;
+}
+
+/* Keep cancel/secondary/reset buttons neutral in light theme */
+body.theme-light .btn-cancel,
+body.theme-light .btn-secondary,
+body.theme-light .btn-reset,
+body.theme-light .btn-secondary-action,
+body.theme-light [class*="btn-cancel"],
+body.theme-light [class*="btn-secondary"],
+body.theme-light [class*="btn-reset"] {
+    background-color: #f3f4f6 !important;
+    border-color: #d1d5db !important;
+    color: #374151 !important;
+}
+
+body.theme-light .btn-cancel:hover,
+body.theme-light .btn-secondary:hover,
+body.theme-light .btn-reset:hover,
+body.theme-light .btn-secondary-action:hover,
+body.theme-light [class*="btn-cancel"]:hover,
+body.theme-light [class*="btn-secondary"]:hover,
+body.theme-light [class*="btn-reset"]:hover {
+    background-color: #e5e7eb !important;
+    border-color: #cbd5e1 !important;
+    color: #111827 !important;
+}
+
+/* Dark theme — same primary color bindings for icons & primary buttons */
+body.theme-dark .icon-action-btn,
+body.theme-dark .staff-icon-action-btn,
+body.theme-dark .notification-icon-btn {
+    color: var(--theme-primary) !important;
+    border-color: color-mix(in srgb, var(--theme-primary) 45%, #334155) !important;
+}
+
+body.theme-dark .icon-action-btn:hover,
+body.theme-dark .staff-icon-action-btn:hover,
+body.theme-dark .notification-icon-btn:hover {
+    background-color: var(--theme-primary) !important;
+    border-color: var(--theme-primary) !important;
+    color: #ffffff !important;
+}
+
+body.theme-dark .icon-action-btn svg,
+body.theme-dark .staff-icon-action-btn svg,
+body.theme-dark .notification-icon-btn svg {
+    stroke: currentColor !important;
+}
+
+body.theme-dark .btn-action,
+body.theme-dark .btn-search,
+body.theme-dark .btn-add,
+body.theme-dark [class*="btn-save"]:not([class*="cancel"]),
+body.theme-dark [class*="btn-primary"] {
+    background-color: var(--theme-primary) !important;
+    border-color: var(--theme-primary) !important;
+}
+
+body.theme-dark .btn-action:hover,
+body.theme-dark .btn-search:hover,
+body.theme-dark .btn-add:hover,
+body.theme-dark [class*="btn-save"]:not([class*="cancel"]):hover,
+body.theme-dark [class*="btn-primary"]:hover {
+    background-color: var(--theme-primary-dark) !important;
+    border-color: var(--theme-primary-dark) !important;
+}
+
+/* --------------------------------------------------------------------------
+   App-wide consistent icon sizing
+   -------------------------------------------------------------------------- */
+
+/* Brand logo and large illustrations stay at their own sizes */
+.logo-icon svg,
+.logo-icon .navbar-logo-img,
+.logo-icon .login-logo-img {
+    width: 35px !important;
+    height: 35px !important;
+}
+
+svg[width="80"],
+svg[width="100"],
+svg[width="120"],
+svg[height="80"],
+svg[height="100"],
+svg[height="120"] {
+    width: auto !important;
+    height: auto !important;
+}
+
+/* Normalize inline SVGs that use common UI icon dimensions */
+svg[width="12"],
+svg[width="13"],
+svg[width="14"],
+svg[width="15"],
+svg[width="16"],
+svg[width="17"],
+svg[width="18"],
+svg[width="20"],
+svg[width="22"],
+svg[width="24"],
+svg[width="32"] {
+    width: var(--app-icon-size) !important;
+    height: var(--app-icon-size) !important;
+}
+
+/* Icon containers — sidebar, navbar, tables, buttons, settings */
+.top-navbar .icon-btn svg,
+.top-navbar .hamburger-btn svg,
+.top-navbar .search-btn svg,
+.sidebar .menu-item svg,
+.sidebar .submenu-item svg,
+.sidebar .menu-caret,
+.sidebar-session-edit-btn svg,
+.sidebar-quick-links-btn svg,
+.icon-btn svg,
+.hamburger-btn svg,
+.icon-action-btn svg,
+.staff-icon-action-btn svg,
+.notification-icon-btn svg,
+[class*="-icon-btn"] svg,
+[class*="icon-action"] svg,
+.table-actions svg,
+[class*="-table-controls"] svg,
+[class*="toolbar"] svg,
+[class*="table-actions"] svg,
+.profile-dropdown-item svg,
+.profile-footer-link svg,
+.search-btn svg,
+.schsettings-nav-item svg,
+.calendar-nav-btn svg,
+.category-header svg,
+.quick-links-modal .category-links svg,
+.modal-close svg,
+.modal-header button svg,
+.action-cell svg,
+.data-table button svg,
+.btn svg,
+button svg,
+a.btn svg,
+.stat-icon svg {
+    width: var(--app-icon-size) !important;
+    height: var(--app-icon-size) !important;
+    flex-shrink: 0;
+}

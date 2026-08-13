@@ -6,6 +6,7 @@
     <title>Exam Group - Smart School</title>
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
     <link rel="stylesheet" th:href="@{/css/examgroup.css}">
+    <link rel="stylesheet" th:href="@{/css/app-theme.css}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- SweetAlert2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -703,8 +704,8 @@
                     </a>
                     <div class="submenu" id="submenu-system-settings">
                         <a href="/schsettings" class="submenu-item">General Settings</a>
-                        <a href="#" class="submenu-item">Sessions</a>
-                        <a href="#" class="submenu-item">Notification Setting</a>
+                        <a href="/sessions" class="submenu-item">Sessions</a>
+                        <a href="/admin/notification/setting" class="submenu-item">Notification Setting</a>
                         <a href="#" class="submenu-item">SMS Setting</a>
                         <a href="#" class="submenu-item">Email Setting</a>
                         <a href="#" class="submenu-item">Front CMS Setting</a>
@@ -1020,8 +1021,8 @@
                         </div>
                         <ul class="category-links">
                             <li><a href="/schsettings">General Setting</a></li>
-                            <li><a href="#">Session Setting</a></li>
-                            <li><a href="#">Notification Setting</a></li>
+                            <li><a href="/sessions">Session Setting</a></li>
+                            <li><a href="/admin/notification/setting">Notification Setting</a></li>
                             <li><a href="#">SMS Setting</a></li>
                             <li><a href="#">Email Setting</a></li>
                             <li><a href="#">Payment Methods</a></li>

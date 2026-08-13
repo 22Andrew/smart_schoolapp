@@ -33,6 +33,7 @@ public class UploadStorage {
         Files.createDirectories(root.resolve("staff"));
         Files.createDirectories(root.resolve("staff-documents"));
         Files.createDirectories(root.resolve("logos"));
+        Files.createDirectories(root.resolve("login-backgrounds"));
     }
 
     public Path getRoot() {
@@ -77,5 +78,9 @@ public class UploadStorage {
 
     public Path getLogosDir() {
         return root.resolve("logos");
+    }
+
+    public Path getLoginBackgroundsDir() {
+        return root.resolve("login-backgrounds");
     }
 }

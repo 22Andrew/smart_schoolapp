@@ -1,4 +1,5 @@
 /* Reset and Base Styles */
+
 * {
     margin: 0;
     padding: 0;
@@ -1544,4 +1545,64 @@ body {
         width: 98%;
         max-height: 95vh;
     }
+}
+
+:root {
+    --theme-primary: #8b5cf6;
+    --theme-primary-dark: #7c3aed;
+}
+
+body.skin-bordered .sidebar,
+body.skin-bordered .top-navbar,
+body.skin-bordered .stat-card,
+body.skin-bordered .dashboard-card {
+    box-shadow: none !important;
+    border: 1px solid #334155;
+}
+
+body.skin-shadow .sidebar,
+body.skin-shadow .stat-card,
+body.skin-shadow .dashboard-card {
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.18);
+}
+
+body.box-compact .main-content {
+    padding: 12px;
+}
+
+body.box-compact .stat-card,
+body.box-compact .dashboard-card {
+    padding: 12px;
+}
+
+body.box-wide .main-content {
+    max-width: none;
+}
+
+body.side-menu-compact .sidebar {
+    width: 72px;
+}
+
+body.side-menu-compact .sidebar .menu-text,
+body.side-menu-compact .sidebar .sidebar-session-text,
+body.side-menu-compact .sidebar .sidebar-quick-links-title {
+    display: none;
+}
+
+.menu-item.active,
+.submenu-item.active,
+.schsettings-nav-item.active,
+.btn-schsettings-save,
+.btn-logo-update {
+    background-color: var(--theme-primary) !important;
+}
+
+.menu-item.active,
+.submenu-item.active {
+    border-color: var(--theme-primary) !important;
+}
+
+.btn-schsettings-save:hover,
+.btn-logo-update:hover {
+    background-color: var(--theme-primary-dark) !important;
 }

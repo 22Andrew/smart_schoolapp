@@ -45,6 +45,7 @@ public class StaffMemberService implements ApplicationRunner {
     private final UploadStorage uploadStorage;
     private final DepartmentService departmentService;
     private final DesignationService designationService;
+    private final SchoolIdAutoGenerationSettingService idAutoGenerationSettingService;
 
     @Override
     @Transactional
@@ -137,7 +138,12 @@ public class StaffMemberService implements ApplicationRunner {
     }
 
     private void applyPayload(StaffMember member, Map<String, Object> payload, Long currentId) {
-        String staffId = requiredText(payload.get("staffId"));
+        String staffId;
+        if (currentId == null && idAutoGenerationSettingService.isAutoStaffIdEnabled()) {
+            staffId = idAutoGenerationSettingService.generateNextStaffId();
+        } else {
+            staffId = requiredText(payload.get("staffId"));
+        }
         String email = requiredText(payload.get("email"));
         String role = requiredText(payload.get("role"));
         String firstName = requiredText(payload.get("firstName"));

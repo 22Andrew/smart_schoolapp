@@ -45,4 +45,10 @@ public interface StudentAdmissionRepository extends JpaRepository<StudentAdmissi
             @Param("disabled") Boolean disabled,
             @Param("onlineAdmission") Boolean onlineAdmission
     );
+
+    @Query("""
+            SELECT s.admissionNo FROM StudentAdmission s
+            WHERE :prefix = '' OR LOWER(s.admissionNo) LIKE LOWER(CONCAT(:prefix, '%'))
+            """)
+    List<String> findAdmissionNosByPrefix(@Param("prefix") String prefix);
 }

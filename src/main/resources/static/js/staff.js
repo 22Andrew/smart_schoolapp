@@ -32,6 +32,7 @@
     let currentView = 'card';
     let staffRecords = [];
     let formOptions = {};
+    let autoStaffIdEnabled = false;
     let activeProfileStaff = null;
     let listCurrentPage = 1;
     let listPageSize = 50;
@@ -2818,6 +2819,11 @@
     function populateStaffForm(staff) {
         setFieldValue('staffRecordId', staff.id || '');
         setFieldValue('staffId', staff.staffId || '');
+        const staffIdField = document.getElementById('staffId');
+        if (staffIdField) {
+            staffIdField.readOnly = false;
+            staffIdField.title = '';
+        }
         setFieldValue('role', staff.role || (Array.isArray(staff.roles) ? staff.roles[0] : '') || '');
         setFieldValue('designation', staff.designation || '');
         setFieldValue('department', staff.department || '');
@@ -2972,6 +2978,30 @@
         collapseMoreDetails();
         resetDocumentLabels();
         updateFormMode(false);
+        applyAutoStaffId();
+    }
+
+    async function applyAutoStaffId() {
+        const field = document.getElementById('staffId');
+        if (!field) return;
+
+        try {
+            const response = await fetch('/api/schsettings/id-auto-generation/next-staff-id');
+            if (!response.ok) return;
+            const data = await response.json();
+            autoStaffIdEnabled = !!data.autoEnabled;
+
+            if (autoStaffIdEnabled && data.nextId) {
+                field.value = data.nextId;
+                field.readOnly = true;
+                field.title = 'Staff ID is generated automatically';
+            } else {
+                field.readOnly = false;
+                field.title = '';
+            }
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     function showDirectoryViewLocal() {

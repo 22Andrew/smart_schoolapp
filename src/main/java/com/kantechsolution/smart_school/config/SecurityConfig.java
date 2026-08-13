@@ -23,6 +23,8 @@ public class SecurityConfig {
                 .requestMatchers("/", "/home", "/css/**", "/js/**", "/images/**", "/uploads/**",
                                "/about", "/features", "/contact", "/register").permitAll()
                 .requestMatchers("/api/schsettings/branding").permitAll()
+                .requestMatchers("/api/schsettings/login-background").permitAll()
+                .requestMatchers("/api/schsettings/backend-theme").permitAll()
                 .requestMatchers("/api/**").authenticated()
                 .anyRequest().authenticated()
             )

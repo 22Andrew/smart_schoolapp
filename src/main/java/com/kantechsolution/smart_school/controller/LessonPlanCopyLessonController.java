@@ -1,6 +1,5 @@
 package com.kantechsolution.smart_school.controller;
 
-import com.kantechsolution.smart_school.service.AcademicSessionService;
 import com.kantechsolution.smart_school.service.LessonPlanCopyLessonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,18 +15,11 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class LessonPlanCopyLessonController {
 
-    private final AcademicSessionService academicSessionService;
     private final LessonPlanCopyLessonService copyLessonService;
 
     @GetMapping("/lessonplan/copylesson")
     public String showCopyLessonPage() {
         return "lessonplan-copylesson";
-    }
-
-    @GetMapping("/api/sessions")
-    @ResponseBody
-    public ResponseEntity<List<Map<String, Object>>> getSessions() {
-        return ResponseEntity.ok(academicSessionService.getAllSessions());
     }
 
     @GetMapping("/api/lesson-plan/copy-lessons/search")

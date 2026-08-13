@@ -10,6 +10,8 @@ public interface AcademicSessionRepository extends JpaRepository<AcademicSession
 
     List<AcademicSession> findAllByOrderBySessionNameDesc();
 
+    List<AcademicSession> findAllByOrderBySessionNameAsc();
+
     Optional<AcademicSession> findByCurrentTrue();
 
     Optional<AcademicSession> findBySessionNameIgnoreCase(String sessionName);

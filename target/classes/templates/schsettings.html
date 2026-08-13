@@ -6,6 +6,7 @@
     <title>General Setting - Smart School</title>
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
     <link rel="stylesheet" th:href="@{/css/schsettings.css}">
+    <link rel="stylesheet" th:href="@{/css/app-theme.css}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- SweetAlert2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -703,8 +704,8 @@
                     </a>
                     <div class="submenu" id="submenu-system-settings">
                         <a href="/schsettings" class="submenu-item">General Settings</a>
-                        <a href="#" class="submenu-item">Sessions</a>
-                        <a href="#" class="submenu-item">Notification Setting</a>
+                        <a href="/sessions" class="submenu-item">Sessions</a>
+                        <a href="/admin/notification/setting" class="submenu-item">Notification Setting</a>
                         <a href="#" class="submenu-item">SMS Setting</a>
                         <a href="#" class="submenu-item">Email Setting</a>
                         <a href="#" class="submenu-item">Front CMS Setting</a>
@@ -725,18 +726,18 @@
                     <nav class="schsettings-nav">
                         <a href="/schsettings" class="schsettings-nav-item active">General Setting</a>
                         <a href="/schsettings/logo" class="schsettings-nav-item">Logo</a>
-                        <a href="#" class="schsettings-nav-item">Login Page Background</a>
-                        <a href="#" class="schsettings-nav-item">Backend Theme</a>
-                        <a href="#" class="schsettings-nav-item">Mobile App</a>
-                        <a href="#" class="schsettings-nav-item">Student / Guardian Panel</a>
-                        <a href="#" class="schsettings-nav-item">Fees</a>
-                        <a href="#" class="schsettings-nav-item">ID Auto Generation</a>
-                        <a href="#" class="schsettings-nav-item">Attendance Type</a>
-                        <a href="#" class="schsettings-nav-item">Google Drive Setting</a>
-                        <a href="#" class="schsettings-nav-item">Whatsapp Settings</a>
-                        <a href="#" class="schsettings-nav-item">Chat</a>
-                        <a href="#" class="schsettings-nav-item">Maintenance</a>
-                        <a href="#" class="schsettings-nav-item">Miscellaneous</a>
+                        <a href="/schsettings/logopagebackground" class="schsettings-nav-item">Login Page Background</a>
+                        <a href="/schsettings/backendtheme" class="schsettings-nav-item">Backend Theme</a>
+                        <a href="/schsettings/mobileapp" class="schsettings-nav-item">Mobile App</a>
+                        <a href="/schsettings/studentguardianpanel" class="schsettings-nav-item">Student / Guardian Panel</a>
+                        <a href="/schsettings/fees" class="schsettings-nav-item">Fees</a>
+                        <a href="/schsettings/idautogeneration" class="schsettings-nav-item">ID Auto Generation</a>
+                        <a href="/schsettings/attendancetype" class="schsettings-nav-item">Attendance Type</a>
+                        <a href="/schsettings/googledrivesetting" class="schsettings-nav-item">Google Drive Setting</a>
+                        <a href="/schsettings/whatsappsettings" class="schsettings-nav-item">Whatsapp Settings</a>
+                        <a href="/schsettings/chatsetting" class="schsettings-nav-item">Chat</a>
+                        <a href="/schsettings/maintenance" class="schsettings-nav-item">Maintenance</a>
+                        <a href="/schsettings/miscellaneous" class="schsettings-nav-item">Miscellaneous</a>
                     </nav>
                 </aside>
 
@@ -977,8 +978,8 @@
                         </div>
                         <ul class="category-links">
                             <li><a href="/schsettings">General Setting</a></li>
-                            <li><a href="#">Session Setting</a></li>
-                            <li><a href="#">Notification Setting</a></li>
+                            <li><a href="/sessions">Session Setting</a></li>
+                            <li><a href="/admin/notification/setting">Notification Setting</a></li>
                             <li><a href="#">SMS Setting</a></li>
                             <li><a href="#">Email Setting</a></li>
                             <li><a href="#">Payment Methods</a></li>

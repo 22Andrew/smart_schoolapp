@@ -125,6 +125,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const roomNoSelect = document.getElementById('roomNo');
     const houseSelect = document.getElementById('house');
     const admissionForm = document.getElementById('studentAdmissionForm');
+    let autoAdmissionNoEnabled = false;
     let classes = [];
     let masterSections = [];
     let hostels = [];
@@ -136,6 +137,32 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function roomLabel(item) {
         return item.roomNumber || 'Room';
+    }
+
+    async function loadAutoAdmissionNo() {
+        const field = document.getElementById('admissionNo');
+        if (!field) return;
+
+        try {
+            const response = await fetch('/api/schsettings/id-auto-generation/next-admission-no');
+            if (!response.ok) return;
+            const data = await response.json();
+            autoAdmissionNoEnabled = !!data.autoEnabled;
+
+            if (autoAdmissionNoEnabled && data.nextId) {
+                field.value = data.nextId;
+                field.readOnly = true;
+                field.title = 'Admission number is generated automatically';
+            } else {
+                field.readOnly = false;
+                field.title = '';
+                if (!field.value) {
+                    field.value = '';
+                }
+            }
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     function fillClassSelect() {
@@ -377,12 +404,14 @@ document.addEventListener('DOMContentLoaded', function () {
             e.preventDefault();
             const payload = collectAdmissionPayload();
 
-            if (!payload.admissionNo || !payload.classId || !payload.section
+            if ((!autoAdmissionNoEnabled && !payload.admissionNo) || !payload.classId || !payload.section
                 || !payload.firstName || !payload.gender || !payload.dateOfBirth) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Required',
-                    text: 'Please fill Admission No, Class, Section, First Name, Gender and Date Of Birth.',
+                    text: autoAdmissionNoEnabled
+                        ? 'Please fill Class, Section, First Name, Gender and Date Of Birth.'
+                        : 'Please fill Admission No, Class, Section, First Name, Gender and Date Of Birth.',
                     confirmButtonColor: '#8b5cf6'
                 });
                 return;
@@ -440,6 +469,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (document.getElementById('measurementDate')) {
                     document.getElementById('measurementDate').value = todayValue;
                 }
+                await loadAutoAdmissionNo();
             } catch (error) {
                 console.error(error);
                 Swal.fire({
@@ -458,7 +488,8 @@ document.addEventListener('DOMContentLoaded', function () {
         loadCategories(),
         loadHostels(),
         loadHostelRooms(),
-        loadHouses()
+        loadHouses(),
+        loadAutoAdmissionNo()
     ]).catch(function (error) {
         console.error(error);
         if (typeof Swal !== 'undefined') {

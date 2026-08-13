@@ -55,4 +55,10 @@ public interface StaffMemberRepository extends JpaRepository<StaffMember, Long> 
             ORDER BY s.firstName ASC, s.lastName ASC
             """)
     List<StaffMember> search(@Param("role") String role, @Param("keyword") String keyword);
+
+    @Query("""
+            SELECT s.staffId FROM StaffMember s
+            WHERE :prefix = '' OR LOWER(s.staffId) LIKE LOWER(CONCAT(:prefix, '%'))
+            """)
+    List<String> findStaffIdsByPrefix(@Param("prefix") String prefix);
 }

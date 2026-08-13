@@ -106,8 +106,77 @@ if (typeof window.applyAppBranding !== 'function') {
         }
     };
 
+    let cachedBackendTheme = null;
+
+    async function fetchBackendTheme(forceRefresh) {
+        if (forceRefresh) {
+            cachedBackendTheme = null;
+        }
+        if (cachedBackendTheme) {
+            return cachedBackendTheme;
+        }
+
+        try {
+            const response = await fetch('/api/schsettings/backend-theme');
+            if (!response.ok) {
+                return null;
+            }
+            cachedBackendTheme = await response.json();
+            return cachedBackendTheme;
+        } catch (error) {
+            console.warn('Failed to load backend theme', error);
+            return null;
+        }
+    }
+
+    function getDarkerColor(hex) {
+        if (!hex || !/^#[0-9A-Fa-f]{6}$/.test(hex)) {
+            return '#7c3aed';
+        }
+        const num = parseInt(hex.slice(1), 16);
+        const r = Math.max(0, (num >> 16) - 24);
+        const g = Math.max(0, ((num >> 8) & 0x00ff) - 24);
+        const b = Math.max(0, (num & 0x0000ff) - 24);
+        return '#' + (0x1000000 + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    }
+
+    window.applyBackendTheme = async function (forceRefresh, previewSettings) {
+        const theme = previewSettings || await fetchBackendTheme(forceRefresh);
+        if (!theme) {
+            document.body.classList.add('theme-dark');
+            return;
+        }
+
+        applyThemeToDocument(theme);
+    };
+
+    function applyThemeToDocument(theme) {
+        const body = document.body;
+        body.classList.remove('theme-light', 'theme-dark', 'skin-shadow', 'skin-bordered', 'side-menu-default', 'side-menu-compact', 'box-compact', 'box-wide');
+        body.classList.add('theme-' + (theme.themeMode || 'dark'));
+        body.classList.add('skin-' + (theme.skin || 'shadow'));
+        body.classList.add('side-menu-' + (theme.sideMenuStyle || 'default'));
+        body.classList.add('box-' + (theme.boxContent || 'wide'));
+
+        const primary = theme.primaryColor || '#8b5cf6';
+        document.documentElement.style.setProperty('--theme-primary', primary);
+        document.documentElement.style.setProperty('--theme-primary-dark', getDarkerColor(primary));
+        document.documentElement.style.setProperty('--theme-primary-soft', `color-mix(in srgb, ${primary} 12%, #ffffff)`);
+        document.documentElement.style.setProperty('--theme-primary-border', `color-mix(in srgb, ${primary} 40%, #d1d5db)`);
+
+        const sidebar = document.querySelector('.sidebar');
+        if (sidebar) {
+            if (theme.sideMenuStyle === 'compact') {
+                sidebar.classList.add('collapsed');
+            } else {
+                sidebar.classList.remove('collapsed');
+            }
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         window.applyAppBranding();
+        window.applyBackendTheme();
     });
 })();
 }
@@ -595,12 +664,40 @@ document.addEventListener('DOMContentLoaded', function() {
             currentPath = '/staff/rating';
         } else if (currentPath === '/department/') {
             currentPath = '/department';
+        } else if (currentPath === '/sessions/') {
+            currentPath = '/sessions';
+        } else if (currentPath === '/admin/notification/setting/') {
+            currentPath = '/admin/notification/setting';
         } else if (currentPath === '/designation/') {
             currentPath = '/designation';
         } else if (currentPath === '/schsettings/') {
             currentPath = '/schsettings';
         } else if (currentPath === '/schsettings/logo/') {
             currentPath = '/schsettings/logo';
+        } else if (currentPath === '/schsettings/logopagebackground/') {
+            currentPath = '/schsettings/logopagebackground';
+        } else if (currentPath === '/schsettings/backendtheme/') {
+            currentPath = '/schsettings/backendtheme';
+        } else if (currentPath === '/schsettings/mobileapp/') {
+            currentPath = '/schsettings/mobileapp';
+        } else if (currentPath === '/schsettings/studentguardianpanel/') {
+            currentPath = '/schsettings/studentguardianpanel';
+        } else if (currentPath === '/schsettings/fees/') {
+            currentPath = '/schsettings/fees';
+        } else if (currentPath === '/schsettings/idautogeneration/') {
+            currentPath = '/schsettings/idautogeneration';
+        } else if (currentPath === '/schsettings/attendancetype/') {
+            currentPath = '/schsettings/attendancetype';
+        } else if (currentPath === '/schsettings/googledrivesetting/') {
+            currentPath = '/schsettings/googledrivesetting';
+        } else if (currentPath === '/schsettings/whatsappsettings/') {
+            currentPath = '/schsettings/whatsappsettings';
+        } else if (currentPath === '/schsettings/chatsetting/') {
+            currentPath = '/schsettings/chatsetting';
+        } else if (currentPath === '/schsettings/maintenance/') {
+            currentPath = '/schsettings/maintenance';
+        } else if (currentPath === '/schsettings/miscellaneous/') {
+            currentPath = '/schsettings/miscellaneous';
         } else if (currentPath === '/staff/disablestafflist/') {
             currentPath = '/staff/disablestafflist';
         } else if (currentPath === '/staff/') {
@@ -873,6 +970,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 bestMatch = departmentItem;
                 bestLength = departmentItem.getAttribute('href').length;
             }
+        } else if (currentPath === '/sessions') {
+            const sessionsItem = document.querySelector('#submenu-system-settings a[href="/sessions"], #submenu-system-setting a[href="/sessions"]');
+            if (sessionsItem) {
+                bestMatch = sessionsItem;
+                bestLength = sessionsItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/admin/notification/setting') {
+            const notificationItem = document.querySelector('#submenu-system-settings a[href="/admin/notification/setting"], #submenu-system-setting a[href="/admin/notification/setting"]');
+            if (notificationItem) {
+                bestMatch = notificationItem;
+                bestLength = notificationItem.getAttribute('href').length;
+            }
         } else if (currentPath === '/designation') {
             const designationItem = document.querySelector('#submenu-human-resource a[href="/designation"]');
             if (designationItem) {
@@ -891,7 +1000,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 bestMatch = generalSettingItem;
                 bestLength = generalSettingItem.getAttribute('href').length;
             }
-        } else if (currentPath === '/schsettings/logo') {
+        } else if (currentPath === '/schsettings/logo' || currentPath === '/schsettings/logopagebackground' || currentPath === '/schsettings/backendtheme' || currentPath === '/schsettings/mobileapp' || currentPath === '/schsettings/studentguardianpanel' || currentPath === '/schsettings/fees' || currentPath === '/schsettings/idautogeneration' || currentPath === '/schsettings/attendancetype' || currentPath === '/schsettings/googledrivesetting' || currentPath === '/schsettings/whatsappsettings' || currentPath === '/schsettings/chatsetting' || currentPath === '/schsettings/maintenance' || currentPath === '/schsettings/miscellaneous') {
             const generalSettingItem = document.querySelector('#submenu-system-setting a[href="/schsettings"], #submenu-system-settings a[href="/schsettings"]');
             if (generalSettingItem) {
                 bestMatch = generalSettingItem;

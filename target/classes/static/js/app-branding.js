@@ -1,5 +1,6 @@
 (function () {
     let cachedBranding = null;
+    let cachedLoginBackground = null;
 
     async function fetchBranding(forceRefresh) {
         if (forceRefresh) {
@@ -105,7 +106,119 @@
         }
     };
 
+    async function fetchLoginBackground(forceRefresh) {
+        if (forceRefresh) {
+            cachedLoginBackground = null;
+        }
+        if (cachedLoginBackground) {
+            return cachedLoginBackground;
+        }
+
+        try {
+            const response = await fetch('/api/schsettings/login-background');
+            if (!response.ok) {
+                return null;
+            }
+            cachedLoginBackground = await response.json();
+            return cachedLoginBackground;
+        } catch (error) {
+            console.warn('Failed to load login background', error);
+            return null;
+        }
+    }
+
+    function applyBackgroundToPanel(selector, url) {
+        const panel = document.querySelector(selector);
+        if (!panel || !url) {
+            return;
+        }
+        panel.style.backgroundImage = 'url("' + url + '?t=' + Date.now() + '")';
+        panel.style.backgroundSize = 'cover';
+        panel.style.backgroundPosition = 'center';
+        panel.style.backgroundRepeat = 'no-repeat';
+    }
+
+    window.applyLoginBackground = async function (forceRefresh) {
+        const data = await fetchLoginBackground(forceRefresh);
+        if (!data) {
+            return;
+        }
+
+        applyBackgroundToPanel('.login-right', data.adminPanelBackground);
+        applyBackgroundToPanel('.user-login-right', data.userPanelBackground);
+    };
+
+    let cachedBackendTheme = null;
+
+    async function fetchBackendTheme(forceRefresh) {
+        if (forceRefresh) {
+            cachedBackendTheme = null;
+        }
+        if (cachedBackendTheme) {
+            return cachedBackendTheme;
+        }
+
+        try {
+            const response = await fetch('/api/schsettings/backend-theme');
+            if (!response.ok) {
+                return null;
+            }
+            cachedBackendTheme = await response.json();
+            return cachedBackendTheme;
+        } catch (error) {
+            console.warn('Failed to load backend theme', error);
+            return null;
+        }
+    }
+
+    function getDarkerColor(hex) {
+        if (!hex || !/^#[0-9A-Fa-f]{6}$/.test(hex)) {
+            return '#7c3aed';
+        }
+        const num = parseInt(hex.slice(1), 16);
+        const r = Math.max(0, (num >> 16) - 24);
+        const g = Math.max(0, ((num >> 8) & 0x00ff) - 24);
+        const b = Math.max(0, (num & 0x0000ff) - 24);
+        return '#' + (0x1000000 + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    }
+
+    window.applyBackendTheme = async function (forceRefresh, previewSettings) {
+        const theme = previewSettings || await fetchBackendTheme(forceRefresh);
+        if (!theme) {
+            document.body.classList.add('theme-dark');
+            return;
+        }
+
+        applyThemeToDocument(theme);
+    };
+
+    function applyThemeToDocument(theme) {
+        const body = document.body;
+        body.classList.remove('theme-light', 'theme-dark', 'skin-shadow', 'skin-bordered', 'side-menu-default', 'side-menu-compact', 'box-compact', 'box-wide');
+        body.classList.add('theme-' + (theme.themeMode || 'dark'));
+        body.classList.add('skin-' + (theme.skin || 'shadow'));
+        body.classList.add('side-menu-' + (theme.sideMenuStyle || 'default'));
+        body.classList.add('box-' + (theme.boxContent || 'wide'));
+
+        const primary = theme.primaryColor || '#8b5cf6';
+        document.documentElement.style.setProperty('--theme-primary', primary);
+        document.documentElement.style.setProperty('--theme-primary-dark', getDarkerColor(primary));
+        document.documentElement.style.setProperty('--theme-primary-soft', `color-mix(in srgb, ${primary} 12%, #ffffff)`);
+        document.documentElement.style.setProperty('--theme-primary-border', `color-mix(in srgb, ${primary} 40%, #d1d5db)`);
+
+        const sidebar = document.querySelector('.sidebar');
+        if (sidebar) {
+            if (theme.sideMenuStyle === 'compact') {
+                sidebar.classList.add('collapsed');
+            } else {
+                sidebar.classList.remove('collapsed');
+            }
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         window.applyAppBranding();
+        window.applyLoginBackground();
+        window.applyBackendTheme();
     });
 })();

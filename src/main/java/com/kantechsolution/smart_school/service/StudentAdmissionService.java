@@ -61,6 +61,9 @@ public class StudentAdmissionService {
     @Autowired
     private StudentClassAssignmentRepository studentClassAssignmentRepository;
 
+    @Autowired
+    private SchoolIdAutoGenerationSettingService idAutoGenerationSettingService;
+
     public List<Map<String, Object>> getAllAdmissions() {
         return searchAdmissions(null, null, null, null, null);
     }
@@ -266,7 +269,12 @@ public class StudentAdmissionService {
     }
 
     private void applyFields(StudentAdmission admission, Map<String, Object> payload, Long currentId) {
-        String admissionNo = requiredText(payload.get("admissionNo"), "Admission No");
+        String admissionNo;
+        if (currentId == null && idAutoGenerationSettingService.isAutoAdmissionNoEnabled()) {
+            admissionNo = idAutoGenerationSettingService.generateNextAdmissionNo();
+        } else {
+            admissionNo = requiredText(payload.get("admissionNo"), "Admission No");
+        }
         Optional<StudentAdmission> duplicate = studentAdmissionRepository.findByAdmissionNoIgnoreCase(admissionNo);
         if (duplicate.isPresent() && (currentId == null || !duplicate.get().getId().equals(currentId))) {
             throw new IllegalArgumentException("Admission No already exists");

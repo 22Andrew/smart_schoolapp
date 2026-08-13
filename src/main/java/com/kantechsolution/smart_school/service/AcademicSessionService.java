@@ -30,16 +30,82 @@ public class AcademicSessionService implements ApplicationRunner {
 
     @Transactional(readOnly = true)
     public List<Map<String, Object>> getAllSessions() {
-        return sessionRepository.findAllByOrderBySessionNameDesc().stream()
+        return sessionRepository.findAllByOrderBySessionNameAsc().stream()
                 .map(this::toMap)
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public Map<String, Object> getSessionById(Long id) {
+        return toMap(requireSession(id));
     }
 
     @Transactional(readOnly = true)
     public String getCurrentSessionName() {
         return sessionRepository.findByCurrentTrue()
                 .map(AcademicSession::getSessionName)
-                .orElse("2024-25");
+                .orElse("2026-27");
+    }
+
+    @Transactional
+    public Map<String, Object> createSession(Map<String, Object> payload) {
+        String sessionName = requiredSessionName(payload.get("sessionName"));
+        if (sessionRepository.findBySessionNameIgnoreCase(sessionName).isPresent()) {
+            throw new IllegalArgumentException("Session already exists");
+        }
+
+        AcademicSession session = AcademicSession.builder()
+                .sessionName(sessionName)
+                .current(false)
+                .build();
+        session.setIsActive(true);
+        return toMap(sessionRepository.save(session));
+    }
+
+    @Transactional
+    public Map<String, Object> updateSession(Long id, Map<String, Object> payload) {
+        AcademicSession session = requireSession(id);
+        String sessionName = requiredSessionName(payload.get("sessionName"));
+
+        sessionRepository.findBySessionNameIgnoreCase(sessionName).ifPresent(existing -> {
+            if (!existing.getId().equals(id)) {
+                throw new IllegalArgumentException("Session already exists");
+            }
+        });
+
+        session.setSessionName(sessionName);
+        return toMap(sessionRepository.save(session));
+    }
+
+    @Transactional
+    public void deleteSession(Long id) {
+        AcademicSession session = requireSession(id);
+        if (Boolean.TRUE.equals(session.getCurrent())) {
+            throw new IllegalArgumentException("Cannot delete the active session");
+        }
+        sessionRepository.delete(session);
+    }
+
+    @Transactional
+    public Map<String, Object> activateSession(Long id) {
+        requireSession(id);
+        List<AcademicSession> all = sessionRepository.findAll();
+        all.forEach(item -> item.setCurrent(item.getId().equals(id)));
+        sessionRepository.saveAll(all);
+        return toMap(requireSession(id));
+    }
+
+    private AcademicSession requireSession(Long id) {
+        return sessionRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Session not found"));
+    }
+
+    private String requiredSessionName(Object value) {
+        String sessionName = value == null ? "" : value.toString().trim();
+        if (sessionName.isBlank()) {
+            throw new IllegalArgumentException("Session is required");
+        }
+        return sessionName;
     }
 
     private Map<String, Object> toMap(AcademicSession session) {
@@ -51,9 +117,16 @@ public class AcademicSessionService implements ApplicationRunner {
     }
 
     private void seedSessions() {
-        sessionRepository.save(AcademicSession.builder().sessionName("2025-26").current(false).build());
-        sessionRepository.save(AcademicSession.builder().sessionName("2024-25").current(true).build());
-        sessionRepository.save(AcademicSession.builder().sessionName("2023-24").current(false).build());
-        sessionRepository.save(AcademicSession.builder().sessionName("2022-23").current(false).build());
+        for (int year = 2016; year <= 2029; year++) {
+            int nextYear = (year + 1) % 100;
+            String sessionName = String.format("%d-%02d", year, nextYear);
+            boolean isCurrent = "2026-27".equals(sessionName);
+            AcademicSession session = AcademicSession.builder()
+                    .sessionName(sessionName)
+                    .current(isCurrent)
+                    .build();
+            session.setIsActive(true);
+            sessionRepository.save(session);
+        }
     }
 }
