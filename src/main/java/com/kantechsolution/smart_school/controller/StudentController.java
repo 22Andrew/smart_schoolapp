@@ -58,11 +58,26 @@ public class StudentController {
     }
 
     /**
+     * Show student edit page (same form as admission)
+     */
+    @GetMapping("/student/edit/{id}")
+    public String showStudentEditPage(@PathVariable Long id, Model model) {
+        model.addAttribute("studentId", id);
+        model.addAttribute("editMode", true);
+        return "student-create";
+    }
+
+    /**
      * Show online admission / student list page
      */
     @GetMapping("/student/onlinestudent")
     public String showOnlineStudentPage(Model model) {
         return "student-online";
+    }
+
+    @GetMapping("/student/bulkmail")
+    public String showBulkMailPage(Model model) {
+        return "communicate-logincredential";
     }
 
     /**

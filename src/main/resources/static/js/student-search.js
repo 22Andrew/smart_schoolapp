@@ -67,22 +67,28 @@ document.addEventListener('DOMContentLoaded', function () {
             + '</svg></div>';
     }
 
-    function actionButtonsHtml(viewUrl) {
+    function actionButtonsHtml(viewUrl, studentId) {
         const href = viewUrl || '#';
+        const editUrl = studentId
+            ? '/student/edit/' + encodeURIComponent(String(studentId))
+            : '#';
+        const feesUrl = studentId
+            ? '/studentfee/addfee/' + encodeURIComponent(String(studentId))
+            : '#';
         return ''
             + '<a href="' + href + '" class="btn-action btn-menu" title="View">'
             + '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'
             + '<line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line>'
             + '</svg></a>'
-            + '<button type="button" class="btn-action btn-edit" title="Edit">'
+            + '<a href="' + editUrl + '" class="btn-action btn-edit" title="Edit">'
             + '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'
             + '<path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>'
-            + '</svg></button>'
-            + '<button type="button" class="btn-action btn-fees" title="Fees">'
+            + '</svg></a>'
+            + '<a href="' + feesUrl + '" class="btn-action btn-fees" title="Collect Fees">'
             + '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'
             + '<line x1="12" y1="1" x2="12" y2="23"></line>'
             + '<path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>'
-            + '</svg></button>'
+            + '</svg></a>'
             + '<button type="button" class="btn-action btn-print" title="Print">'
             + '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'
             + '<polyline points="6 9 6 2 18 2 18 9"></polyline>'
@@ -91,8 +97,8 @@ document.addEventListener('DOMContentLoaded', function () {
             + '</svg></button>';
     }
 
-    function detailsActionButtonsHtml(viewUrl) {
-        return '<div class="detail-actions">' + actionButtonsHtml(viewUrl) + '</div>';
+    function detailsActionButtonsHtml(viewUrl, studentId) {
+        return '<div class="detail-actions">' + actionButtonsHtml(viewUrl, studentId) + '</div>';
     }
 
     function emptyStateHtml(colspan) {
@@ -245,7 +251,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 + '<td>' + escapeHtml(row.gender || '') + '</td>'
                 + '<td>' + escapeHtml(row.categoryName || '') + '</td>'
                 + '<td>' + escapeHtml(row.mobileNumber || '') + '</td>'
-                + '<td class="action-cell">' + actionButtonsHtml(viewUrl) + '</td>'
+                + '<td class="action-cell">' + actionButtonsHtml(viewUrl, row.id) + '</td>'
                 + '</tr>';
         }).join('');
 
@@ -291,7 +297,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 + '</div>'
                 + '</div>'
                 + '</div>'
-                + detailsActionButtonsHtml(viewUrl)
+                + detailsActionButtonsHtml(viewUrl, row.id)
                 + '</div>';
         }).join('');
     }
@@ -583,17 +589,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (e.target.closest('.btn-print')) {
             e.preventDefault();
             window.print();
-            return;
-        }
-
-        if (e.target.closest('.btn-edit') || e.target.closest('.btn-fees')) {
-            e.preventDefault();
-            Swal.fire({
-                icon: 'info',
-                title: 'Coming Soon',
-                text: 'This action will be available in a later update.',
-                confirmButtonColor: '#8b5cf6'
-            });
         }
     });
 
@@ -602,16 +597,6 @@ document.addEventListener('DOMContentLoaded', function () {
             if (e.target.closest('.btn-print')) {
                 e.preventDefault();
                 window.print();
-                return;
-            }
-            if (e.target.closest('.btn-edit') || e.target.closest('.btn-fees')) {
-                e.preventDefault();
-                Swal.fire({
-                    icon: 'info',
-                    title: 'Coming Soon',
-                    text: 'This action will be available in a later update.',
-                    confirmButtonColor: '#8b5cf6'
-                });
             }
         });
     }

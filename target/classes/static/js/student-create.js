@@ -74,15 +74,301 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const addSiblingBtn = document.getElementById('addSiblingBtn');
+    const siblingModal = document.getElementById('siblingModal');
+    const siblingModalOverlay = document.getElementById('siblingModalOverlay');
+    const siblingModalClose = document.getElementById('siblingModalClose');
+    const siblingModalAddBtn = document.getElementById('siblingModalAddBtn');
+    const siblingClassSelect = document.getElementById('siblingClassSelect');
+    const siblingSectionSelect = document.getElementById('siblingSectionSelect');
+    const siblingStudentSelect = document.getElementById('siblingStudentSelect');
+    const siblingListWrap = document.getElementById('siblingListWrap');
+    const siblingList = document.getElementById('siblingList');
+    const SIBLING_DRAFT_KEY = 'student-admission-sibling-draft';
+    let siblingDraftToken = '';
+    let linkedSiblings = [];
+
+    function getThemePrimaryColor() {
+        const primary = getComputedStyle(document.documentElement).getPropertyValue('--theme-primary').trim();
+        return primary || '#8b5cf6';
+    }
+
+    function getCurrentStudentId() {
+        const form = document.getElementById('studentAdmissionForm');
+        if (!form) return null;
+        const raw = form.getAttribute('data-student-id');
+        if (!raw || !String(raw).trim()) return null;
+        const id = Number(raw);
+        return Number.isFinite(id) && id > 0 ? id : null;
+    }
+
+    function ensureSiblingDraftToken() {
+        let token = sessionStorage.getItem(SIBLING_DRAFT_KEY);
+        if (!token) {
+            token = 'draft-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10);
+            sessionStorage.setItem(SIBLING_DRAFT_KEY, token);
+        }
+        siblingDraftToken = token;
+        return token;
+    }
+
+    function resetSiblingDraftToken() {
+        sessionStorage.removeItem(SIBLING_DRAFT_KEY);
+        siblingDraftToken = ensureSiblingDraftToken();
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text == null ? '' : String(text);
+        return div.innerHTML;
+    }
+
+    function siblingQueryParams() {
+        const studentId = getCurrentStudentId();
+        if (studentId) {
+            return 'studentId=' + encodeURIComponent(String(studentId));
+        }
+        return 'draftToken=' + encodeURIComponent(ensureSiblingDraftToken());
+    }
+
+    function renderSiblingList() {
+        if (!siblingList || !siblingListWrap) return;
+        if (!linkedSiblings.length) {
+            siblingList.innerHTML = '';
+            siblingListWrap.hidden = true;
+            return;
+        }
+
+        siblingListWrap.hidden = false;
+        siblingList.innerHTML = linkedSiblings.map(function (row) {
+            return ''
+                + '<div class="sibling-list-item" data-sibling-id="' + escapeHtml(row.siblingId) + '">'
+                + '<span><strong>' + escapeHtml(row.studentName || 'Student') + '</strong> '
+                + escapeHtml(row.admissionNo || '') + ' - '
+                + escapeHtml(row.className || '') + (row.section ? ' (' + escapeHtml(row.section) + ')' : '')
+                + '</span>'
+                + '<button type="button" class="sibling-list-remove" title="Remove" aria-label="Remove sibling">&times;</button>'
+                + '</div>';
+        }).join('');
+    }
+
+    async function loadLinkedSiblings() {
+        try {
+            const response = await fetch('/api/student-admissions/siblings?' + siblingQueryParams());
+            if (!response.ok) {
+                throw new Error('Failed to load siblings');
+            }
+            linkedSiblings = await response.json();
+            renderSiblingList();
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    function fillSiblingClassSelect() {
+        if (!siblingClassSelect) return;
+        const current = siblingClassSelect.value;
+        siblingClassSelect.innerHTML = '<option value="">Select</option>';
+        classes.forEach(function (item) {
+            const option = document.createElement('option');
+            option.value = String(item.id);
+            option.textContent = item.name;
+            siblingClassSelect.appendChild(option);
+        });
+        if (current) siblingClassSelect.value = current;
+    }
+
+    function fillSiblingSectionSelect(preferred) {
+        if (!siblingSectionSelect) return;
+        siblingSectionSelect.innerHTML = '<option value="">Select</option>';
+
+        const selectedClass = classes.find(function (c) {
+            return String(c.id) === String(siblingClassSelect.value);
+        });
+        const classSections = selectedClass && selectedClass.sections ? selectedClass.sections : [];
+        const sections = classSections.length ? classSections : masterSections.map(function (s) {
+            return s.sectionName || s.name || s;
+        });
+
+        sections.forEach(function (section) {
+            const value = String(section);
+            if (!value) return;
+            const option = document.createElement('option');
+            option.value = value;
+            option.textContent = value;
+            siblingSectionSelect.appendChild(option);
+        });
+
+        if (preferred) siblingSectionSelect.value = preferred;
+    }
+
+    async function loadSiblingStudents() {
+        if (!siblingStudentSelect) return;
+        siblingStudentSelect.innerHTML = '<option value="">Select</option>';
+
+        const classId = siblingClassSelect ? siblingClassSelect.value : '';
+        const section = siblingSectionSelect ? siblingSectionSelect.value : '';
+        if (!classId || !section) {
+            return;
+        }
+
+        try {
+            const url = '/api/student-admissions?classId='
+                + encodeURIComponent(classId)
+                + '&section='
+                + encodeURIComponent(section);
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error('Failed to load students');
+            }
+            const rows = await response.json();
+            const currentStudentId = getCurrentStudentId();
+
+            rows.forEach(function (row) {
+                if (currentStudentId && String(row.id) === String(currentStudentId)) {
+                    return;
+                }
+                if (linkedSiblings.some(function (item) {
+                    return String(item.siblingId) === String(row.id);
+                })) {
+                    return;
+                }
+                const option = document.createElement('option');
+                option.value = String(row.id);
+                option.textContent = (row.studentName || row.firstName || 'Student')
+                    + ' (' + (row.admissionNo || '-') + ')';
+                siblingStudentSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    function openSiblingModal() {
+        if (!siblingModal) return;
+        fillSiblingClassSelect();
+        fillSiblingSectionSelect();
+        if (siblingStudentSelect) {
+            siblingStudentSelect.innerHTML = '<option value="">Select</option>';
+        }
+        siblingModal.classList.add('active');
+        siblingModal.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeSiblingModal() {
+        if (!siblingModal) return;
+        siblingModal.classList.remove('active');
+        siblingModal.setAttribute('aria-hidden', 'true');
+    }
+
+    async function saveSiblingFromModal() {
+        const siblingId = siblingStudentSelect ? siblingStudentSelect.value : '';
+        if (!siblingId) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Required',
+                text: 'Please select Class, Section and Student.',
+                confirmButtonColor: getThemePrimaryColor()
+            });
+            return;
+        }
+
+        const payload = { siblingId: Number(siblingId) };
+        const studentId = getCurrentStudentId();
+        if (studentId) {
+            payload.studentId = studentId;
+        } else {
+            payload.draftToken = ensureSiblingDraftToken();
+        }
+
+        try {
+            const response = await fetch('/api/student-admissions/siblings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            if (!response.ok) {
+                const err = await response.json().catch(function () { return {}; });
+                throw new Error(err.message || 'Failed to add sibling');
+            }
+
+            await loadLinkedSiblings();
+            closeSiblingModal();
+            Swal.fire({
+                icon: 'success',
+                title: 'Added',
+                text: 'Sibling linked successfully.',
+                confirmButtonColor: getThemePrimaryColor(),
+                timer: 1600,
+                showConfirmButton: false
+            });
+        } catch (error) {
+            console.error(error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.message || 'Failed to add sibling.',
+                confirmButtonColor: getThemePrimaryColor()
+            });
+        }
+    }
+
+    async function removeSibling(siblingId) {
+        const studentId = getCurrentStudentId();
+        let url = '/api/student-admissions/siblings/' + encodeURIComponent(String(siblingId));
+        if (studentId) {
+            url += '?studentId=' + encodeURIComponent(String(studentId));
+        } else {
+            url += '?draftToken=' + encodeURIComponent(ensureSiblingDraftToken());
+        }
+
+        try {
+            const response = await fetch(url, { method: 'DELETE' });
+            if (!response.ok && response.status !== 204) {
+                const err = await response.json().catch(function () { return {}; });
+                throw new Error(err.message || 'Failed to remove sibling');
+            }
+            await loadLinkedSiblings();
+        } catch (error) {
+            console.error(error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.message || 'Failed to remove sibling.',
+                confirmButtonColor: getThemePrimaryColor()
+            });
+        }
+    }
+
     if (addSiblingBtn) {
-        addSiblingBtn.addEventListener('click', function () {
-            if (typeof Swal !== 'undefined') {
-                Swal.fire({
-                    icon: 'info',
-                    title: 'Add Sibling',
-                    text: 'Sibling linking will be available soon.',
-                    confirmButtonColor: '#8b5cf6'
-                });
+        addSiblingBtn.addEventListener('click', openSiblingModal);
+    }
+    if (siblingModalOverlay) {
+        siblingModalOverlay.addEventListener('click', closeSiblingModal);
+    }
+    if (siblingModalClose) {
+        siblingModalClose.addEventListener('click', closeSiblingModal);
+    }
+    if (siblingModalAddBtn) {
+        siblingModalAddBtn.addEventListener('click', saveSiblingFromModal);
+    }
+    if (siblingClassSelect) {
+        siblingClassSelect.addEventListener('change', function () {
+            fillSiblingSectionSelect();
+            loadSiblingStudents();
+        });
+    }
+    if (siblingSectionSelect) {
+        siblingSectionSelect.addEventListener('change', loadSiblingStudents);
+    }
+    if (siblingList) {
+        siblingList.addEventListener('click', function (e) {
+            const btn = e.target.closest('.sibling-list-remove');
+            if (!btn) return;
+            const item = btn.closest('.sibling-list-item');
+            if (!item) return;
+            const siblingId = item.getAttribute('data-sibling-id');
+            if (siblingId) {
+                removeSibling(siblingId);
             }
         });
     }
@@ -139,9 +425,141 @@ document.addEventListener('DOMContentLoaded', function () {
         return item.roomNumber || 'Room';
     }
 
+    function setInputValue(id, value) {
+        const el = document.getElementById(id);
+        if (el) el.value = value == null ? '' : String(value);
+    }
+
+    function setSelectValue(id, value) {
+        const el = document.getElementById(id);
+        if (!el || value == null || String(value).trim() === '') return;
+        const text = String(value);
+        const exists = Array.from(el.options).some(function (opt) {
+            return opt.value === text;
+        });
+        if (!exists) {
+            const option = document.createElement('option');
+            option.value = text;
+            option.textContent = text;
+            el.appendChild(option);
+        }
+        el.value = text;
+    }
+
+    function setRadioValue(name, value) {
+        if (!value) return;
+        document.querySelectorAll('input[name="' + name + '"]').forEach(function (input) {
+            input.checked = input.value === String(value);
+        });
+    }
+
+    function setPhotoPreview(inputId, photoPath) {
+        if (!photoPath) return;
+        const input = document.getElementById(inputId);
+        const box = document.querySelector('.file-upload-box[data-file-input="' + inputId + '"]');
+        if (!input || !box) return;
+        box.classList.add('has-file');
+        const span = box.querySelector('span');
+        const fileName = String(photoPath).split('/').pop();
+        if (span) span.textContent = fileName || 'Current photo on file';
+    }
+
+    function populateFormFromStudent(row) {
+        if (!row) return;
+
+        setInputValue('admissionNo', row.admissionNo);
+        setInputValue('rollNumber', row.rollNumber);
+        if (classSelect && row.classId != null) {
+            classSelect.value = String(row.classId);
+            fillSectionSelect(row.section || '');
+        }
+        setInputValue('firstName', row.firstName);
+        setInputValue('lastName', row.lastName);
+        setInputValue('gender', row.gender);
+        setInputValue('dateOfBirth', row.dateOfBirth);
+        if (categorySelect && row.categoryId != null) {
+            categorySelect.value = String(row.categoryId);
+        }
+        setInputValue('religion', row.religion);
+        setInputValue('mobileNumber', row.mobileNumber);
+        setInputValue('email', row.email);
+        setInputValue('admissionDate', row.admissionDate);
+        setInputValue('bloodGroup', row.bloodGroup);
+        if (houseSelect && row.houseId != null) {
+            houseSelect.value = String(row.houseId);
+        }
+        setInputValue('height', row.height);
+        setInputValue('weight', row.weight);
+        setInputValue('measurementDate', row.measurementDate);
+        setInputValue('medicalHistory', row.medicalHistory);
+        setSelectValue('routeList', row.routeList);
+        setSelectValue('pickupPoint', row.pickupPoint);
+        setSelectValue('feesMonth', row.feesMonth);
+        if (hostelSelect && row.hostelId != null) {
+            hostelSelect.value = String(row.hostelId);
+            fillRoomNoSelect(row.roomId != null ? String(row.roomId) : '');
+        }
+        setInputValue('fatherName', row.fatherName);
+        setInputValue('fatherPhone', row.fatherPhone);
+        setInputValue('fatherOccupation', row.fatherOccupation);
+        setInputValue('motherName', row.motherName);
+        setInputValue('motherPhone', row.motherPhone);
+        setInputValue('motherOccupation', row.motherOccupation);
+        setRadioValue('guardianIs', row.guardianIs);
+        setInputValue('guardianName', row.guardianName);
+        setInputValue('guardianRelation', row.guardianRelation);
+        setInputValue('guardianEmail', row.guardianEmail);
+        setInputValue('guardianPhone', row.guardianPhone);
+        setInputValue('guardianOccupation', row.guardianOccupation);
+        setInputValue('guardianAddress', row.guardianAddress);
+        setInputValue('currentAddress', row.currentAddress);
+        setInputValue('permanentAddress', row.permanentAddress);
+        setInputValue('bankAccountNumber', row.bankAccountNumber);
+        setInputValue('bankName', row.bankName);
+        setInputValue('ifscCode', row.ifscCode);
+        setInputValue('nationalId', row.nationalId);
+        setInputValue('localId', row.localId);
+        setRadioValue('rte', row.rte || 'No');
+        setInputValue('previousSchoolDetails', row.previousSchoolDetails);
+        setInputValue('note', row.note);
+        setPhotoPreview('studentPhoto', row.photoPath || row.photoUrl);
+
+        const titleEl = document.getElementById('admissionPageTitle');
+        if (titleEl) titleEl.textContent = 'Edit Student';
+        const saveBtn = document.getElementById('saveAdmissionBtn');
+        if (saveBtn) saveBtn.textContent = 'Update';
+        document.title = (row.studentName || 'Student') + ' - Edit Student';
+    }
+
+    async function loadStudentForEdit() {
+        const studentId = getCurrentStudentId();
+        if (!studentId) return;
+
+        try {
+            const response = await fetch('/api/student-admissions/' + encodeURIComponent(String(studentId)));
+            if (response.status === 404) {
+                throw new Error('Student not found');
+            }
+            if (!response.ok) {
+                const err = await response.json().catch(function () { return {}; });
+                throw new Error(err.message || 'Failed to load student');
+            }
+            const row = await response.json();
+            populateFormFromStudent(row);
+        } catch (error) {
+            console.error(error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.message || 'Failed to load student for editing.',
+                confirmButtonColor: getThemePrimaryColor()
+            });
+        }
+    }
+
     async function loadAutoAdmissionNo() {
         const field = document.getElementById('admissionNo');
-        if (!field) return;
+        if (!field || getCurrentStudentId()) return;
 
         try {
             const response = await fetch('/api/schsettings/id-auto-generation/next-admission-no');
@@ -383,7 +801,8 @@ document.addEventListener('DOMContentLoaded', function () {
             localId: (document.getElementById('localId') || {}).value || '',
             rte: selectedRadioValue('rte') || 'No',
             previousSchoolDetails: (document.getElementById('previousSchoolDetails') || {}).value || '',
-            note: (document.getElementById('note') || {}).value || ''
+            note: (document.getElementById('note') || {}).value || '',
+            draftToken: getCurrentStudentId() ? '' : ensureSiblingDraftToken()
         };
     }
 
@@ -431,18 +850,40 @@ document.addEventListener('DOMContentLoaded', function () {
                     formData.append('studentPhoto', photoInput.files[0], photoInput.files[0].name);
                 }
 
-                const response = await fetch('/api/student-admissions', {
-                    method: 'POST',
+                const studentId = getCurrentStudentId();
+                const isEdit = !!studentId;
+                const url = isEdit
+                    ? '/api/student-admissions/' + encodeURIComponent(String(studentId))
+                    : '/api/student-admissions';
+                const method = isEdit ? 'PUT' : 'POST';
+
+                const response = await fetch(url, {
+                    method: method,
                     body: formData
                 });
                 if (!response.ok) {
                     const err = await response.json().catch(function () { return {}; });
-                    throw new Error(err.message || 'Failed to save student admission');
+                    throw new Error(err.message || (isEdit
+                        ? 'Failed to update student record'
+                        : 'Failed to save student admission'));
                 }
 
                 const saved = await response.json().catch(function () { return {}; });
                 if (hasPhoto && !saved.photoUrl && !saved.photoPath) {
                     throw new Error('Student was saved, but the photo was not stored. Please try uploading again.');
+                }
+
+                if (isEdit) {
+                    await Swal.fire({
+                        icon: 'success',
+                        title: 'Updated',
+                        text: hasPhoto
+                            ? 'Student record and photo updated successfully.'
+                            : 'Student record updated successfully.',
+                        confirmButtonColor: getThemePrimaryColor()
+                    });
+                    window.location.href = '/student/view/' + encodeURIComponent(String(studentId));
+                    return;
                 }
 
                 await Swal.fire({
@@ -451,7 +892,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     text: hasPhoto
                         ? 'Student admission and photo saved successfully.'
                         : 'Student admission saved successfully.',
-                    confirmButtonColor: '#8b5cf6'
+                    confirmButtonColor: getThemePrimaryColor()
                 });
                 admissionForm.reset();
                 document.querySelectorAll('.file-upload-box').forEach(function (box) {
@@ -469,6 +910,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (document.getElementById('measurementDate')) {
                     document.getElementById('measurementDate').value = todayValue;
                 }
+                resetSiblingDraftToken();
+                linkedSiblings = [];
+                renderSiblingList();
                 await loadAutoAdmissionNo();
             } catch (error) {
                 console.error(error);
@@ -490,7 +934,15 @@ document.addEventListener('DOMContentLoaded', function () {
         loadHostelRooms(),
         loadHouses(),
         loadAutoAdmissionNo()
-    ]).catch(function (error) {
+    ]).then(function () {
+        if (getCurrentStudentId()) {
+            return loadStudentForEdit().then(function () {
+                return loadLinkedSiblings();
+            });
+        }
+        ensureSiblingDraftToken();
+        return loadLinkedSiblings();
+    }).catch(function (error) {
         console.error(error);
         if (typeof Swal !== 'undefined') {
             Swal.fire({

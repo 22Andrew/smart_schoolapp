@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
+    <script th:src="@{/js/theme-init.js}"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phone Call Log - Smart School</title>
@@ -577,10 +578,34 @@
                             <polyline points="9 18 15 12 9 6"></polyline>
                         </svg>
                     </a>
-                    <div class="submenu" id="submenu-communicate">
-                        <a href="#" class="submenu-item">Send Email</a>
-                        <a href="#" class="submenu-item">Send SMS</a>
-                        <a href="#" class="submenu-item">Email/SMS Log</a>
+                                        <div class="submenu" id="submenu-communicate">
+                        <a href="/admin/notification" class="submenu-item">Notice Board</a>
+                        <a href="/admin/mailsms/compose" class="submenu-item">Send Email</a>
+                        <a href="/admin/mailsms/compose_sms" class="submenu-item">Send SMS</a>
+                        <a href="/admin/mailsms/index" class="submenu-item">Email / SMS Log</a>
+                        <a href="/admin/mailsms/schedule" class="submenu-item">Schedule Email SMS Log</a>
+                        <a href="/student/bulkmail" class="submenu-item">Login Credentials Send</a>
+                        <a href="/admin/mailsms/emailtemplate" class="submenu-item">Email Template</a>
+                        <a href="/admin/mailsms/smsemplate" class="submenu-item">SMS Template</a>
+                    </div>
+                </div>
+                                <div class="menu-item-wrapper">
+                    <a href="#" class="menu-item menu-item-expandable" data-submenu="download-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        <span>Download Center</span>
+                        <svg class="menu-caret" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </a>
+                                        <div class="submenu" id="submenu-download-center">
+                        <a href="/admin/content/upload" class="submenu-item">Upload/Share Content</a>
+                        <a href="/admin/content/sharelist" class="submenu-item">Content Share List</a>
+                        <a href="/admin/content/videotutorial" class="submenu-item">Video Tutorial</a>
+                        <a href="/admin/content/type" class="submenu-item">Content Type</a>
                     </div>
                 </div>
                 <div class="menu-item-wrapper">

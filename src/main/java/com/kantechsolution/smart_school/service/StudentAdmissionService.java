@@ -64,6 +64,9 @@ public class StudentAdmissionService {
     @Autowired
     private SchoolIdAutoGenerationSettingService idAutoGenerationSettingService;
 
+    @Autowired
+    private StudentSiblingService studentSiblingService;
+
     public List<Map<String, Object>> getAllAdmissions() {
         return searchAdmissions(null, null, null, null, null);
     }
@@ -110,7 +113,12 @@ public class StudentAdmissionService {
         if (studentPhoto != null && !studentPhoto.isEmpty()) {
             admission.setPhotoPath(storeStudentPhoto(studentPhoto));
         }
-        return toMap(studentAdmissionRepository.save(admission));
+        StudentAdmission saved = studentAdmissionRepository.save(admission);
+        String draftToken = optionalText(payload.get("draftToken"));
+        if (draftToken != null && !draftToken.isEmpty()) {
+            studentSiblingService.finalizeDraftSiblings(saved.getId(), draftToken);
+        }
+        return toMap(saved);
     }
 
     @Transactional

@@ -289,80 +289,80 @@
 }
 
 /* Dark backend theme — matches demo.smart-school.in dark admin */
-body.theme-dark .notification-setting-page {
+html.theme-dark .notification-setting-page {
     background-color: #1a2035;
 }
 
-body.theme-dark .notification-setting-box {
+html.theme-dark .notification-setting-box {
     background: #1e2433;
     border-color: #2d3748;
     box-shadow: none;
 }
 
-body.theme-dark .notification-setting-box-header,
-body.theme-dark .notification-setting-box-footer {
+html.theme-dark .notification-setting-box-header,
+html.theme-dark .notification-setting-box-footer {
     background: #252b3b;
     border-color: #2d3748;
 }
 
-body.theme-dark .notification-setting-title {
+html.theme-dark .notification-setting-title {
     color: #f1f5f9;
 }
 
-body.theme-dark .notification-settings-table thead th {
+html.theme-dark .notification-settings-table thead th {
     background: #252b3b;
     color: #cbd5e1;
     border-color: #2d3748;
 }
 
-body.theme-dark .notification-settings-table tbody td {
+html.theme-dark .notification-settings-table tbody td {
     background: #1a2035;
     color: #e2e8f0;
     border-color: #2d3748;
 }
 
-body.theme-dark .notification-settings-table tbody tr:nth-child(even) td {
+html.theme-dark .notification-settings-table tbody tr:nth-child(even) td {
     background: #1e2433;
 }
 
-body.theme-dark .notification-settings-table tbody tr:hover td {
+html.theme-dark .notification-settings-table tbody tr:hover td {
     background: #232b3f;
 }
 
-body.theme-dark .notification-event-name {
+html.theme-dark .notification-event-name {
     color: #f1f5f9;
 }
 
-body.theme-dark .notification-checkbox-item {
+html.theme-dark .notification-checkbox-item {
     color: #cbd5e1;
 }
 
-body.theme-dark .notification-template-input {
+html.theme-dark .notification-template-input {
     background: #111827;
     border-color: #374151;
     color: #f1f5f9;
 }
 
-body.theme-dark .notification-message-text {
+html.theme-dark .notification-message-text {
     color: #cbd5e1;
 }
 
-body.theme-dark .notification-loading-cell {
+html.theme-dark .notification-loading-cell {
     color: #94a3b8;
 }
 
-body.theme-dark .swal-notification-field label {
+html.theme-dark .swal-notification-field label {
     color: #e2e8f0;
 }
 
-body.theme-dark .swal-notification-input,
-body.theme-dark .swal-notification-textarea {
+html.theme-dark .swal-notification-input,
+html.theme-dark .swal-notification-textarea {
     background: #0f172a;
     color: #f1f5f9;
     border-color: #334155;
 }
 
-body.theme-dark .notification-variables-list code {
+html.theme-dark .notification-variables-list code {
     background: #111827;
     color: #e2e8f0;
 }

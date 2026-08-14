@@ -1,6 +1,7 @@
 package com.kantechsolution.smart_school.controller;
 
 import com.kantechsolution.smart_school.service.StudentAdmissionService;
+import com.kantechsolution.smart_school.service.StudentSiblingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,6 +23,61 @@ public class StudentAdmissionController {
 
     @Autowired
     private StudentAdmissionService studentAdmissionService;
+
+    @Autowired
+    private StudentSiblingService studentSiblingService;
+
+    @GetMapping("/api/student-admissions/siblings")
+    @ResponseBody
+    public ResponseEntity<?> listSiblings(
+            @RequestParam(required = false) Long studentId,
+            @RequestParam(required = false) String draftToken
+    ) {
+        try {
+            return ResponseEntity.ok(studentSiblingService.listSiblings(studentId, draftToken));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(errorBody(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorBody("Failed to load siblings"));
+        }
+    }
+
+    @PostMapping("/api/student-admissions/siblings")
+    @ResponseBody
+    public ResponseEntity<?> addSibling(@RequestBody Map<String, Object> payload) {
+        try {
+            Long studentId = parseLong(payload.get("studentId"));
+            Long siblingId = parseLong(payload.get("siblingId"));
+            String draftToken = payload.get("draftToken") == null
+                    ? null : String.valueOf(payload.get("draftToken")).trim();
+            Map<String, Object> saved = studentSiblingService.addSibling(studentId, siblingId, draftToken);
+            return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(errorBody(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorBody("Failed to add sibling"));
+        }
+    }
+
+    @DeleteMapping("/api/student-admissions/siblings/{siblingId}")
+    @ResponseBody
+    public ResponseEntity<?> removeSibling(
+            @PathVariable Long siblingId,
+            @RequestParam(required = false) Long studentId,
+            @RequestParam(required = false) String draftToken
+    ) {
+        try {
+            studentSiblingService.removeSibling(studentId, siblingId, draftToken);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(errorBody(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorBody("Failed to remove sibling"));
+        }
+    }
 
     @GetMapping("/api/student-admissions")
     @ResponseBody
@@ -239,6 +295,13 @@ public class StudentAdmissionController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(errorBody("Failed to save class assignments"));
         }
+    }
+
+    private Long parseLong(Object value) {
+        if (value == null) return null;
+        String text = String.valueOf(value).trim();
+        if (text.isEmpty()) return null;
+        return Long.valueOf(text);
     }
 
     private Map<String, String> errorBody(String message) {

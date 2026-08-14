@@ -1376,11 +1376,22 @@ document.addEventListener('DOMContentLoaded', function () {
     const feesBtn = document.getElementById('viewFeesBtn');
     if (feesBtn) {
         feesBtn.addEventListener('click', function () {
-            activateTab('fees');
+            if (studentId) {
+                window.location.href = '/studentfee/addfee/' + encodeURIComponent(String(studentId));
+            }
         });
     }
 
-    ['viewEditBtn', 'viewKeyBtn', 'viewDisableBtn', 'viewInfoBtn'].forEach(function (id) {
+    const viewEditBtn = document.getElementById('viewEditBtn');
+    if (viewEditBtn) {
+        viewEditBtn.addEventListener('click', function () {
+            if (studentId) {
+                window.location.href = '/student/edit/' + encodeURIComponent(String(studentId));
+            }
+        });
+    }
+
+    ['viewKeyBtn', 'viewDisableBtn', 'viewInfoBtn'].forEach(function (id) {
         const btn = document.getElementById(id);
         if (!btn) return;
         btn.addEventListener('click', function () {

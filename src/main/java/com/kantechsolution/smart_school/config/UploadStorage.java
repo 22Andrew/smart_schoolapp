@@ -34,6 +34,9 @@ public class UploadStorage {
         Files.createDirectories(root.resolve("staff-documents"));
         Files.createDirectories(root.resolve("logos"));
         Files.createDirectories(root.resolve("login-backgrounds"));
+        Files.createDirectories(root.resolve("notices"));
+        Files.createDirectories(root.resolve("emails"));
+        Files.createDirectories(root.resolve("contents"));
     }
 
     public Path getRoot() {
@@ -82,5 +85,17 @@ public class UploadStorage {
 
     public Path getLoginBackgroundsDir() {
         return root.resolve("login-backgrounds");
+    }
+
+    public Path getNoticesDir() {
+        return root.resolve("notices");
+    }
+
+    public Path getEmailsDir() {
+        return root.resolve("emails");
+    }
+
+    public Path getContentsDir() {
+        return root.resolve("contents");
     }
 }

@@ -66,7 +66,7 @@
 
 .summary-admission strong,
 .summary-roll strong {
-    color: #38bdf8;
+    color: var(--theme-primary, #8b5cf6);
     font-weight: 600;
 }
 
@@ -88,7 +88,7 @@
     height: 30px;
     border: none;
     border-radius: 3px;
-    background: #8b5cf6;
+    background: var(--theme-primary, #8b5cf6);
     color: #fff;
     display: inline-flex;
     align-items: center;
@@ -98,7 +98,7 @@
 }
 
 .summary-action-btn:hover {
-    background: #7c3aed;
+    background: var(--theme-primary-dark, #7c3aed);
 }
 
 .summary-action-btn svg {
@@ -134,7 +134,7 @@
 }
 
 .meta-row strong {
-    color: #38bdf8;
+    color: var(--theme-primary, #8b5cf6);
     font-weight: 600;
     text-align: right;
 }
@@ -231,7 +231,7 @@
 }
 
 .profile-tab.active {
-    color: #38bdf8;
+    color: var(--theme-primary, #8b5cf6);
 }
 
 .profile-tab.active::after {
@@ -241,7 +241,7 @@
     right: 0;
     bottom: -1px;
     height: 3px;
-    background: #38bdf8;
+    background: var(--theme-primary, #8b5cf6);
     border-radius: 3px 3px 0 0;
 }
 
@@ -812,7 +812,7 @@
 }
 
 .btn-upload {
-    background: #8b5cf6;
+    background: var(--theme-primary, #8b5cf6);
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -828,7 +828,7 @@
 }
 
 .btn-upload:hover {
-    background: #7c3aed;
+    background: var(--theme-primary-dark, #7c3aed);
 }
 
 .btn-upload svg {
@@ -884,7 +884,7 @@
     height: 30px;
     border: none;
     border-radius: 3px;
-    background: #8b5cf6;
+    background: var(--theme-primary, #8b5cf6);
     color: #fff;
     cursor: pointer;
     display: inline-flex;
@@ -894,7 +894,7 @@
 }
 
 .documents-actions .btn-action:hover {
-    background: #7c3aed;
+    background: var(--theme-primary-dark, #7c3aed);
 }
 
 .documents-actions .btn-action svg {
@@ -924,7 +924,7 @@
 }
 
 .btn-timeline-add {
-    background: #8b5cf6;
+    background: var(--theme-primary, #8b5cf6);
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -939,7 +939,7 @@
 }
 
 .btn-timeline-add:hover {
-    background: #7c3aed;
+    background: var(--theme-primary-dark, #7c3aed);
 }
 
 .timeline-track {
@@ -955,7 +955,7 @@
     top: 0.4rem;
     bottom: 0.4rem;
     width: 3px;
-    background: #8b5cf6;
+    background: var(--theme-primary, #8b5cf6);
     border-radius: 3px;
 }
 
@@ -966,7 +966,7 @@
 
 .timeline-date {
     display: inline-block;
-    background: #38bdf8;
+    background: var(--theme-primary, #8b5cf6);
     color: #fff;
     font-size: 0.78rem;
     font-weight: 600;
@@ -991,7 +991,7 @@
     width: 28px;
     height: 28px;
     border-radius: 50%;
-    background: #8b5cf6;
+    background: var(--theme-primary, #8b5cf6);
     color: #fff;
     display: inline-flex;
     align-items: center;
@@ -1001,11 +1001,11 @@
 }
 
 .timeline-node.calendar {
-    background: #38bdf8;
+    background: var(--theme-primary, #8b5cf6);
 }
 
 .timeline-node.clock {
-    background: #8b5cf6;
+    background: var(--theme-primary, #8b5cf6);
 }
 
 .timeline-card {
@@ -1027,7 +1027,7 @@
 
 .timeline-card-title {
     margin: 0;
-    color: #38bdf8;
+    color: var(--theme-primary, #8b5cf6);
     font-size: 0.92rem;
     font-weight: 600;
 }
@@ -1044,7 +1044,7 @@
     border: none;
     border-radius: 3px;
     background: transparent;
-    color: #38bdf8;
+    color: var(--theme-primary, #8b5cf6);
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -1053,7 +1053,7 @@
 }
 
 .timeline-card-actions .btn-action:hover {
-    background: rgba(56, 189, 248, 0.12);
+    background: color-mix(in srgb, var(--theme-primary, #8b5cf6) 12%, transparent);
 }
 
 .timeline-card-actions .btn-action svg {
@@ -1113,7 +1113,7 @@
     justify-content: space-between;
     gap: 1rem;
     padding: 0.9rem 1.15rem;
-    background: #8b5cf6;
+    background: var(--theme-primary, #8b5cf6);
 }
 
 .timeline-modal-title {
@@ -1185,8 +1185,8 @@
 .timeline-input:focus,
 .timeline-textarea:focus {
     outline: none;
-    border-color: #8b5cf6;
-    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+    border-color: var(--theme-primary, #8b5cf6);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--theme-primary, #8b5cf6) 15%, transparent);
 }
 
 .timeline-dropzone {
@@ -1209,8 +1209,8 @@
 
 .timeline-dropzone:hover,
 .timeline-dropzone.dragover {
-    border-color: #8b5cf6;
-    background: rgba(139, 92, 246, 0.08);
+    border-color: var(--theme-primary, #8b5cf6);
+    background: color-mix(in srgb, var(--theme-primary, #8b5cf6) 8%, transparent);
     color: #e2e8f0;
 }
 
@@ -1230,7 +1230,7 @@
 .timeline-visible-row input[type="checkbox"] {
     width: 18px;
     height: 18px;
-    accent-color: #8b5cf6;
+    accent-color: var(--theme-primary, #8b5cf6);
     cursor: pointer;
 }
 
@@ -1242,7 +1242,7 @@
 }
 
 .btn-timeline-save {
-    background: #8b5cf6;
+    background: var(--theme-primary, #8b5cf6);
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -1254,7 +1254,7 @@
 }
 
 .btn-timeline-save:hover {
-    background: #7c3aed;
+    background: var(--theme-primary-dark, #7c3aed);
 }
 
 /* Student Behaviour tab */
@@ -1354,7 +1354,7 @@
     height: 30px;
     border: none;
     border-radius: 3px;
-    background: #8b5cf6;
+    background: var(--theme-primary, #8b5cf6);
     color: #fff;
     cursor: pointer;
     display: inline-flex;
@@ -1364,7 +1364,7 @@
 }
 
 .behaviour-action-btn:hover {
-    background: #7c3aed;
+    background: var(--theme-primary-dark, #7c3aed);
 }
 
 .behaviour-action-btn svg {
@@ -1412,4 +1412,314 @@
     .guardian-photos {
         flex-wrap: wrap;
     }
+}
+
+/* --------------------------------------------------------------------------
+   Light theme — Student Profile View
+   -------------------------------------------------------------------------- */
+html.theme-light .student-view-page {
+    background: #f5f6fa;
+}
+
+html.theme-light .student-summary-panel,
+html.theme-light .student-detail-panel {
+    background: #ffffff;
+    border-color: #e5e7eb;
+}
+
+html.theme-light .summary-name {
+    color: #111827;
+}
+
+html.theme-light .summary-admission,
+html.theme-light .summary-roll {
+    color: #4b5563;
+}
+
+html.theme-light .summary-admission span {
+    color: #4b5563;
+}
+
+html.theme-light .summary-actions {
+    border-bottom-color: #e5e7eb;
+}
+
+html.theme-light .meta-row {
+    color: #111827;
+    border-bottom-color: #e5e7eb;
+}
+
+html.theme-light .meta-row:nth-child(odd) {
+    background: #f9fafb;
+}
+
+html.theme-light .meta-row span {
+    color: #374151;
+}
+
+html.theme-light .profile-tabs-bar {
+    background: #ffffff;
+    border-bottom-color: #e5e7eb;
+}
+
+html.theme-light .profile-tab {
+    color: #6b7280;
+}
+
+html.theme-light .profile-tab:hover {
+    color: #111827;
+}
+
+html.theme-light .profile-print-btn {
+    color: var(--theme-primary, #8b5cf6);
+}
+
+html.theme-light .profile-print-btn:hover {
+    color: var(--theme-primary-dark, #7c3aed);
+    background: color-mix(in srgb, var(--theme-primary, #8b5cf6) 10%, transparent);
+}
+
+html.theme-light .profile-section {
+    border-bottom-color: #e5e7eb;
+}
+
+html.theme-light .profile-section-title {
+    background: #ffffff;
+    color: #111827;
+    border-bottom-color: #e5e7eb;
+}
+
+html.theme-light .profile-row {
+    border-bottom-color: #e5e7eb;
+}
+
+html.theme-light .profile-row:nth-child(even) {
+    background: #f9fafb;
+}
+
+html.theme-light .profile-label {
+    color: #111827;
+}
+
+html.theme-light .profile-value {
+    color: #374151;
+}
+
+html.theme-light .guardian-photos {
+    border-left-color: #e5e7eb;
+}
+
+html.theme-light .no-image {
+    background: #f9fafb;
+    border-color: #d1d5db;
+    color: #6b7280;
+}
+
+html.theme-light .guardian-photo-card span {
+    color: #374151;
+}
+
+html.theme-light .tab-placeholder {
+    color: #6b7280;
+}
+
+html.theme-light .fees-table thead th,
+html.theme-light .exam-table thead th,
+html.theme-light .documents-table thead th,
+html.theme-light .behaviour-table thead th,
+html.theme-light .attendance-table thead th {
+    background: #f3f4f6;
+    color: #111827;
+    border-bottom-color: #e5e7eb;
+}
+
+html.theme-light .fees-table tbody td,
+html.theme-light .fees-table tfoot td,
+html.theme-light .exam-table tbody td,
+html.theme-light .exam-table tfoot td,
+html.theme-light .documents-table tbody td,
+html.theme-light .behaviour-table tbody td,
+html.theme-light .attendance-table tbody td {
+    color: #111827;
+    border-bottom-color: #e5e7eb;
+}
+
+html.theme-light .fees-table tbody tr:hover,
+html.theme-light .exam-table tbody tr:hover,
+html.theme-light .behaviour-table tbody tr:hover {
+    background: #f9fafb;
+}
+
+html.theme-light .fees-table .fee-name,
+html.theme-light .exam-subject {
+    color: #111827;
+}
+
+html.theme-light .fees-table .fee-slug,
+html.theme-light .exam-subject-code,
+html.theme-light .cbse-th-sub {
+    color: #6b7280;
+}
+
+html.theme-light .fees-table tfoot td {
+    background: #f3f4f6;
+    color: #111827;
+}
+
+html.theme-light .fees-payment-row td {
+    background: #f9fafb;
+    color: #374151;
+}
+
+html.theme-light .fees-payment-branch {
+    color: #6b7280;
+}
+
+html.theme-light .fees-payment-branch svg {
+    color: var(--theme-primary, #8b5cf6);
+}
+
+html.theme-light .exam-card {
+    background: #ffffff;
+    border-color: #e5e7eb;
+}
+
+html.theme-light .exam-card-title {
+    background: #f3f4f6;
+    color: #111827;
+}
+
+html.theme-light .exam-summary {
+    background: #f9fafb;
+    border-top-color: #e5e7eb;
+    color: #374151;
+}
+
+html.theme-light .exam-summary strong {
+    color: #111827;
+}
+
+html.theme-light .attendance-stat-card {
+    background: #ffffff;
+    border-color: #e5e7eb;
+}
+
+html.theme-light .attendance-stat-card h4 {
+    color: #374151;
+}
+
+html.theme-light .attendance-stat-card strong {
+    color: #111827;
+}
+
+html.theme-light .attendance-stat-icon {
+    border-color: var(--theme-primary, #8b5cf6);
+    color: var(--theme-primary, #8b5cf6);
+}
+
+html.theme-light .attendance-legend {
+    color: #374151;
+}
+
+html.theme-light .attendance-actions .icon-action-btn,
+html.theme-light .behaviour-toolbar .icon-action-btn {
+    color: var(--theme-primary, #8b5cf6);
+}
+
+html.theme-light .attendance-actions .icon-action-btn:hover,
+html.theme-light .behaviour-toolbar .icon-action-btn:hover {
+    background: color-mix(in srgb, var(--theme-primary, #8b5cf6) 12%, transparent);
+    color: var(--theme-primary-dark, #7c3aed);
+}
+
+html.theme-light .attendance-table-wrap,
+html.theme-light .documents-table-wrap,
+html.theme-light .behaviour-table-wrap {
+    border-color: #e5e7eb;
+}
+
+html.theme-light .attendance-table thead th:first-child,
+html.theme-light .attendance-table tbody td:first-child {
+    background: #ffffff;
+    color: #111827;
+}
+
+html.theme-light .attendance-table thead th:first-child {
+    background: #f3f4f6;
+}
+
+html.theme-light .attendance-table tbody tr:hover td {
+    background: #f9fafb;
+}
+
+html.theme-light .attendance-table tbody tr:hover td:first-child {
+    background: #f3f4f6;
+}
+
+html.theme-light .att-code.holiday {
+    color: #374151;
+}
+
+html.theme-light .timeline-card {
+    background: #ffffff;
+    border-color: #e5e7eb;
+}
+
+html.theme-light .timeline-card-header {
+    background: #f3f4f6;
+    border-bottom-color: #e5e7eb;
+}
+
+html.theme-light .timeline-card-body {
+    color: #374151;
+}
+
+html.theme-light .timeline-node {
+    box-shadow: 0 0 0 4px #ffffff;
+}
+
+html.theme-light .timeline-empty {
+    color: #6b7280;
+}
+
+html.theme-light .timeline-modal-content {
+    background: #ffffff;
+}
+
+html.theme-light .timeline-field label,
+html.theme-light .timeline-visible-row {
+    color: #111827;
+}
+
+html.theme-light .timeline-input,
+html.theme-light .timeline-textarea,
+html.theme-light .timeline-dropzone {
+    background: #ffffff;
+    border-color: #d1d5db;
+    color: #111827;
+}
+
+html.theme-light .timeline-dropzone {
+    color: #6b7280;
+}
+
+html.theme-light .timeline-dropzone:hover,
+html.theme-light .timeline-dropzone.dragover {
+    color: #111827;
+}
+
+html.theme-light .timeline-dropzone svg {
+    stroke: var(--theme-primary, #8b5cf6);
+}
+
+html.theme-light .timeline-modal-footer {
+    border-top-color: #e5e7eb;
+}
+
+html.theme-light .behaviour-desc {
+    color: #374151;
+}
+
+html.theme-light .guardian-photos {
+    border-top-color: #e5e7eb;
 }

@@ -106,77 +106,11 @@ if (typeof window.applyAppBranding !== 'function') {
         }
     };
 
-    let cachedBackendTheme = null;
-
-    async function fetchBackendTheme(forceRefresh) {
-        if (forceRefresh) {
-            cachedBackendTheme = null;
-        }
-        if (cachedBackendTheme) {
-            return cachedBackendTheme;
-        }
-
-        try {
-            const response = await fetch('/api/schsettings/backend-theme');
-            if (!response.ok) {
-                return null;
-            }
-            cachedBackendTheme = await response.json();
-            return cachedBackendTheme;
-        } catch (error) {
-            console.warn('Failed to load backend theme', error);
-            return null;
-        }
-    }
-
-    function getDarkerColor(hex) {
-        if (!hex || !/^#[0-9A-Fa-f]{6}$/.test(hex)) {
-            return '#7c3aed';
-        }
-        const num = parseInt(hex.slice(1), 16);
-        const r = Math.max(0, (num >> 16) - 24);
-        const g = Math.max(0, ((num >> 8) & 0x00ff) - 24);
-        const b = Math.max(0, (num & 0x0000ff) - 24);
-        return '#' + (0x1000000 + (r << 16) + (g << 8) + b).toString(16).slice(1);
-    }
-
-    window.applyBackendTheme = async function (forceRefresh, previewSettings) {
-        const theme = previewSettings || await fetchBackendTheme(forceRefresh);
-        if (!theme) {
-            document.body.classList.add('theme-dark');
-            return;
-        }
-
-        applyThemeToDocument(theme);
-    };
-
-    function applyThemeToDocument(theme) {
-        const body = document.body;
-        body.classList.remove('theme-light', 'theme-dark', 'skin-shadow', 'skin-bordered', 'side-menu-default', 'side-menu-compact', 'box-compact', 'box-wide');
-        body.classList.add('theme-' + (theme.themeMode || 'dark'));
-        body.classList.add('skin-' + (theme.skin || 'shadow'));
-        body.classList.add('side-menu-' + (theme.sideMenuStyle || 'default'));
-        body.classList.add('box-' + (theme.boxContent || 'wide'));
-
-        const primary = theme.primaryColor || '#8b5cf6';
-        document.documentElement.style.setProperty('--theme-primary', primary);
-        document.documentElement.style.setProperty('--theme-primary-dark', getDarkerColor(primary));
-        document.documentElement.style.setProperty('--theme-primary-soft', `color-mix(in srgb, ${primary} 12%, #ffffff)`);
-        document.documentElement.style.setProperty('--theme-primary-border', `color-mix(in srgb, ${primary} 40%, #d1d5db)`);
-
-        const sidebar = document.querySelector('.sidebar');
-        if (sidebar) {
-            if (theme.sideMenuStyle === 'compact') {
-                sidebar.classList.add('collapsed');
-            } else {
-                sidebar.classList.remove('collapsed');
-            }
-        }
-    }
-
     document.addEventListener('DOMContentLoaded', function () {
         window.applyAppBranding();
-        window.applyBackendTheme();
+        if (typeof window.applyBackendTheme === 'function') {
+            window.applyBackendTheme();
+        }
     });
 })();
 }
@@ -367,11 +301,35 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    function activateSidebarParents(element) {
+        document.querySelectorAll('.menu-item-expandable').forEach(function (item) {
+            item.classList.remove('active');
+        });
+        document.querySelectorAll('.submenu-item-expandable').forEach(function (item) {
+            item.classList.remove('active');
+        });
+
+        var submenu = element.closest('.submenu');
+        while (submenu) {
+            submenu.classList.add('open');
+            var submenuId = submenu.id.replace('submenu-', '');
+            var parentExpandable = document.querySelector(
+                '.menu-item-expandable[data-submenu="' + submenuId + '"], .submenu-item-expandable[data-submenu="' + submenuId + '"]'
+            );
+            if (parentExpandable) {
+                parentExpandable.classList.add('expanded', 'active');
+            }
+            var parentGroup = submenu.parentElement;
+            submenu = parentGroup ? parentGroup.closest('.submenu') : null;
+        }
+    }
+
     // Sidebar menu active state
     const menuItems = document.querySelectorAll('.menu-item:not(.menu-item-expandable)');
     menuItems.forEach(item => {
         item.addEventListener('click', function(e) {
             menuItems.forEach(mi => mi.classList.remove('active'));
+            document.querySelectorAll('.menu-item-expandable').forEach(mi => mi.classList.remove('active'));
             this.classList.add('active');
         });
     });
@@ -427,17 +385,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Mark this item as active
             submenuItems.forEach(si => si.classList.remove('active'));
             this.classList.add('active');
-            
-            // Keep the parent menu expanded
-            const parentSubmenu = this.closest('.submenu');
-            if (parentSubmenu) {
-                parentSubmenu.classList.add('open');
-                const parentMenuId = parentSubmenu.id.replace('submenu-', '');
-                const parentMenuItem = document.querySelector(`.menu-item-expandable[data-submenu="${parentMenuId}"]`);
-                if (parentMenuItem) {
-                    parentMenuItem.classList.add('expanded');
-                }
-            }
+            activateSidebarParents(this);
         });
     });
 
@@ -489,6 +437,7 @@ document.addEventListener('DOMContentLoaded', function() {
         item.addEventListener('click', function(e) {
             subSubmenuItems.forEach(ssi => ssi.classList.remove('active'));
             this.classList.add('active');
+            activateSidebarParents(this);
         });
     });
 
@@ -1011,17 +960,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!bestMatch) return;
 
         bestMatch.classList.add('active');
-
-        const parentSubmenu = bestMatch.closest('.submenu');
-        if (parentSubmenu) {
-            parentSubmenu.classList.add('open');
-
-            const parentMenuId = parentSubmenu.id.replace('submenu-', '');
-            const parentMenuItem = document.querySelector(`.menu-item-expandable[data-submenu="${parentMenuId}"]`);
-            if (parentMenuItem) {
-                parentMenuItem.classList.add('expanded');
-            }
-        }
+        activateSidebarParents(bestMatch);
     }
     
     // Call on page load

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
+    <script th:src="@{/js/theme-init.js}"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Admission - Smart School</title>
+    <title th:text="${editMode} ? 'Edit Student - Smart School' : 'Student Admission - Smart School'">Student Admission - Smart School</title>
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
     <link rel="stylesheet" th:href="@{/css/student-create.css}">
     <link rel="stylesheet" th:href="@{/css/app-theme.css}">
@@ -576,10 +577,34 @@
                             <polyline points="9 18 15 12 9 6"></polyline>
                         </svg>
                     </a>
-                    <div class="submenu" id="submenu-communicate">
-                        <a href="#" class="submenu-item">Send Email</a>
-                        <a href="#" class="submenu-item">Send SMS</a>
-                        <a href="#" class="submenu-item">Email/SMS Log</a>
+                                        <div class="submenu" id="submenu-communicate">
+                        <a href="/admin/notification" class="submenu-item">Notice Board</a>
+                        <a href="/admin/mailsms/compose" class="submenu-item">Send Email</a>
+                        <a href="/admin/mailsms/compose_sms" class="submenu-item">Send SMS</a>
+                        <a href="/admin/mailsms/index" class="submenu-item">Email / SMS Log</a>
+                        <a href="/admin/mailsms/schedule" class="submenu-item">Schedule Email SMS Log</a>
+                        <a href="/student/bulkmail" class="submenu-item">Login Credentials Send</a>
+                        <a href="/admin/mailsms/emailtemplate" class="submenu-item">Email Template</a>
+                        <a href="/admin/mailsms/smsemplate" class="submenu-item">SMS Template</a>
+                    </div>
+                </div>
+                                <div class="menu-item-wrapper">
+                    <a href="#" class="menu-item menu-item-expandable" data-submenu="download-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        <span>Download Center</span>
+                        <svg class="menu-caret" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </a>
+                                        <div class="submenu" id="submenu-download-center">
+                        <a href="/admin/content/upload" class="submenu-item">Upload/Share Content</a>
+                        <a href="/admin/content/sharelist" class="submenu-item">Content Share List</a>
+                        <a href="/admin/content/videotutorial" class="submenu-item">Video Tutorial</a>
+                        <a href="/admin/content/type" class="submenu-item">Content Type</a>
                     </div>
                 </div>
                 <div class="menu-item-wrapper">
@@ -722,7 +747,7 @@
         <main class="main-content student-create-page">
             <div class="admission-card">
                 <div class="admission-header">
-                    <h2 class="admission-title">Student Admission</h2>
+                    <h2 class="admission-title" id="admissionPageTitle" th:text="${editMode} ? 'Edit Student' : 'Student Admission'">Student Admission</h2>
                     <button type="button" class="btn-import" id="importStudentBtn">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -733,7 +758,7 @@
                     </button>
                 </div>
 
-                <form id="studentAdmissionForm" class="admission-form">
+                <form id="studentAdmissionForm" class="admission-form" th:attr="data-student-id=${studentId}">
                     <div class="form-grid cols-4">
                         <div class="form-group">
                             <label for="admissionNo">Admission No <span class="required">*</span></label>
@@ -862,6 +887,11 @@
                                 Add Sibling
                             </button>
                         </div>
+                    </div>
+
+                    <div class="sibling-list-wrap" id="siblingListWrap" hidden>
+                        <div class="sibling-list-title">Linked Siblings</div>
+                        <div class="sibling-list" id="siblingList"></div>
                     </div>
 
                     <div class="form-grid cols-1">
@@ -1329,7 +1359,7 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="submit" class="btn-save" id="saveAdmissionBtn">Save</button>
+                        <button type="submit" class="btn-save" id="saveAdmissionBtn" th:text="${editMode} ? 'Update' : 'Save'">Save</button>
                     </div>
                 </form>
             </div>
@@ -1506,6 +1536,45 @@
                     </ul>
                 </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sibling-modal" id="siblingModal" aria-hidden="true">
+        <div class="sibling-modal-overlay" id="siblingModalOverlay"></div>
+        <div class="sibling-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="siblingModalTitle">
+            <div class="sibling-modal-header">
+                <h3 class="sibling-modal-title" id="siblingModalTitle">Add Sibling</h3>
+                <button type="button" class="sibling-modal-close" id="siblingModalClose" aria-label="Close">&times;</button>
+            </div>
+            <div class="sibling-modal-body">
+                <div class="sibling-modal-field">
+                    <label for="siblingClassSelect">Class</label>
+                    <select id="siblingClassSelect" class="form-control">
+                        <option value="">Select</option>
+                    </select>
+                </div>
+                <div class="sibling-modal-field">
+                    <label for="siblingSectionSelect">Section</label>
+                    <select id="siblingSectionSelect" class="form-control">
+                        <option value="">Select</option>
+                    </select>
+                </div>
+                <div class="sibling-modal-field">
+                    <label for="siblingStudentSelect">Student</label>
+                    <select id="siblingStudentSelect" class="form-control">
+                        <option value="">Select</option>
+                    </select>
+                </div>
+            </div>
+            <div class="sibling-modal-footer">
+                <button type="button" class="btn-sibling-add" id="siblingModalAddBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    Add
+                </button>
             </div>
         </div>
     </div>

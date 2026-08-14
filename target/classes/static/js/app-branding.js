@@ -185,6 +185,7 @@
     window.applyBackendTheme = async function (forceRefresh, previewSettings) {
         const theme = previewSettings || await fetchBackendTheme(forceRefresh);
         if (!theme) {
+            document.documentElement.classList.add('theme-dark');
             document.body.classList.add('theme-dark');
             return;
         }
@@ -193,18 +194,44 @@
     };
 
     function applyThemeToDocument(theme) {
+        try {
+            sessionStorage.setItem('app-backend-theme', JSON.stringify(theme));
+        } catch (error) {
+            /* ignore storage errors */
+        }
+
+        const root = document.documentElement;
         const body = document.body;
-        body.classList.remove('theme-light', 'theme-dark', 'skin-shadow', 'skin-bordered', 'side-menu-default', 'side-menu-compact', 'box-compact', 'box-wide');
+        const classNames = [
+            'theme-light', 'theme-dark',
+            'skin-shadow', 'skin-bordered',
+            'side-menu-default', 'side-menu-compact',
+            'box-compact', 'box-wide'
+        ];
+
+        classNames.forEach(name => {
+            root.classList.remove(name);
+            body.classList.remove(name);
+        });
+
+        root.classList.add('theme-' + (theme.themeMode || 'dark'));
+        root.classList.add('skin-' + (theme.skin || 'shadow'));
+        root.classList.add('side-menu-' + (theme.sideMenuStyle || 'default'));
+        root.classList.add('box-' + (theme.boxContent || 'wide'));
+
         body.classList.add('theme-' + (theme.themeMode || 'dark'));
         body.classList.add('skin-' + (theme.skin || 'shadow'));
         body.classList.add('side-menu-' + (theme.sideMenuStyle || 'default'));
         body.classList.add('box-' + (theme.boxContent || 'wide'));
 
         const primary = theme.primaryColor || '#8b5cf6';
-        document.documentElement.style.setProperty('--theme-primary', primary);
-        document.documentElement.style.setProperty('--theme-primary-dark', getDarkerColor(primary));
-        document.documentElement.style.setProperty('--theme-primary-soft', `color-mix(in srgb, ${primary} 12%, #ffffff)`);
-        document.documentElement.style.setProperty('--theme-primary-border', `color-mix(in srgb, ${primary} 40%, #d1d5db)`);
+        const mode = theme.themeMode || 'dark';
+        root.style.setProperty('--theme-primary', primary);
+        root.style.setProperty('--theme-primary-dark', getDarkerColor(primary));
+        root.style.setProperty('--theme-primary-soft', `color-mix(in srgb, ${primary} 12%, #ffffff)`);
+        root.style.setProperty('--theme-primary-border', `color-mix(in srgb, ${primary} 40%, #d1d5db)`);
+        root.style.backgroundColor = mode === 'light' ? '#ffffff' : '#0f172a';
+        root.style.color = mode === 'light' ? '#111827' : '#f8fafc';
 
         const sidebar = document.querySelector('.sidebar');
         if (sidebar) {

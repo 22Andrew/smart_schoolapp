@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
+    <script th:src="@{/js/theme-init.js}"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mount Carmel School - Admin Dashboard</title>
@@ -589,15 +590,15 @@
                             <polyline points="9 18 15 12 9 6"></polyline>
                         </svg>
                     </a>
-                    <div class="submenu" id="submenu-communicate">
-                        <a href="#" class="submenu-item">Notice Board</a>
-                        <a href="#" class="submenu-item">Send Email</a>
-                        <a href="#" class="submenu-item">Send SMS</a>
-                        <a href="#" class="submenu-item">Email / SMS Log</a>
-                        <a href="#" class="submenu-item">Schedule Email SMS Log</a>
-                        <a href="#" class="submenu-item">Login Credentials Send</a>
-                        <a href="#" class="submenu-item">Email Template</a>
-                        <a href="#" class="submenu-item">SMS Template</a>
+                                        <div class="submenu" id="submenu-communicate">
+                        <a href="/admin/notification" class="submenu-item">Notice Board</a>
+                        <a href="/admin/mailsms/compose" class="submenu-item">Send Email</a>
+                        <a href="/admin/mailsms/compose_sms" class="submenu-item">Send SMS</a>
+                        <a href="/admin/mailsms/index" class="submenu-item">Email / SMS Log</a>
+                        <a href="/admin/mailsms/schedule" class="submenu-item">Schedule Email SMS Log</a>
+                        <a href="/student/bulkmail" class="submenu-item">Login Credentials Send</a>
+                        <a href="/admin/mailsms/emailtemplate" class="submenu-item">Email Template</a>
+                        <a href="/admin/mailsms/smsemplate" class="submenu-item">SMS Template</a>
                     </div>
                 </div>
                 <div class="menu-item-wrapper">
@@ -612,11 +613,11 @@
                             <polyline points="9 18 15 12 9 6"></polyline>
                         </svg>
                     </a>
-                    <div class="submenu" id="submenu-download-center">
-                        <a href="#" class="submenu-item">Upload/Share Content</a>
-                        <a href="#" class="submenu-item">Content Share List</a>
-                        <a href="#" class="submenu-item">Video Tutorial</a>
-                        <a href="#" class="submenu-item">Content Type</a>
+                                        <div class="submenu" id="submenu-download-center">
+                        <a href="/admin/content/upload" class="submenu-item">Upload/Share Content</a>
+                        <a href="/admin/content/sharelist" class="submenu-item">Content Share List</a>
+                        <a href="/admin/content/videotutorial" class="submenu-item">Video Tutorial</a>
+                        <a href="/admin/content/type" class="submenu-item">Content Type</a>
                     </div>
                 </div>
                 <div class="menu-item-wrapper">
@@ -1594,10 +1595,10 @@
                             <h3>Download Center</h3>
                         </div>
                         <ul class="category-links">
-                            <li><a href="#">Upload/Share Content</a></li>
-                            <li><a href="#">Content Share List</a></li>
-                            <li><a href="#">Video Tutorial</a></li>
-                            <li><a href="#">Content Type</a></li>
+                            <li><a href="/admin/content/upload">Upload/Share Content</a></li>
+                            <li><a href="/admin/content/sharelist">Content Share List</a></li>
+                            <li><a href="/admin/content/videotutorial">Video Tutorial</a></li>
+                            <li><a href="/admin/content/type">Content Type</a></li>
                         </ul>
                     </div>
 

@@ -363,9 +363,10 @@ body {
 
 /* Sidebar */
 .sidebar {
-    width: 220px;
+    width: 260px;
     background: #1e293b;
     padding: 1rem 0;
+    overflow-x: hidden;
     overflow-y: auto;
     position: sticky;
     top: 56px;
@@ -458,16 +459,19 @@ body {
 .sidebar-menu {
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
+    max-width: 100%;
 }
 
 .menu-item {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    padding: 0.75rem 1.5rem;
+    padding: 0.75rem 1.25rem;
     color: #cbd5e0;
     text-decoration: none;
-    font-size: 0.85rem;
+    font-size: 0.875rem;
+    font-weight: 700;
     transition: all 0.3s;
     min-width: 0;
 }
@@ -477,11 +481,12 @@ body {
     color: white;
 }
 
-.menu-item.active {
-    background: rgba(246, 197, 68, 0.15);
-    color: #fff;
-    border-left: 3px solid #f6c544;
-    padding-left: calc(1.5rem - 3px);
+.menu-item.active,
+.menu-item-expandable.active {
+    background: var(--theme-primary-sidebar-bg, var(--theme-primary-soft, rgba(139, 92, 246, 0.15)));
+    color: var(--theme-primary-sidebar-text, var(--theme-primary, #8b5cf6));
+    border-left: 3px solid var(--theme-primary-sidebar-border, var(--theme-primary, #8b5cf6));
+    padding-left: calc(1.25rem - 3px);
 }
 
 .menu-item svg {
@@ -491,9 +496,11 @@ body {
 .menu-item span {
     flex: 1;
     min-width: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    line-height: 1.35;
+    word-break: break-word;
 }
 
 .menu-caret {
@@ -510,6 +517,8 @@ body {
 
 .menu-item-wrapper {
     position: relative;
+    overflow-x: hidden;
+    max-width: 100%;
 }
 
 .menu-item-expandable.expanded .menu-caret {
@@ -520,6 +529,7 @@ body {
 .submenu {
     max-height: 0;
     overflow: hidden;
+    overflow-x: hidden;
     transition: max-height 0.3s ease-out;
     background: rgba(0, 0, 0, 0.2);
 }
@@ -547,9 +557,9 @@ body {
 }
 
 .submenu-item.active {
-    background: rgba(246, 197, 68, 0.1);
-    color: #f6c544;
-    border-left: 3px solid #f6c544;
+    background: var(--theme-primary-sidebar-bg, var(--theme-primary-soft, rgba(139, 92, 246, 0.12)));
+    color: var(--theme-primary-sidebar-text, var(--theme-primary, #8b5cf6));
+    border-left: 3px solid var(--theme-primary-sidebar-border, var(--theme-primary, #8b5cf6));
     padding-left: calc(3.5rem - 3px);
 }
 
@@ -612,9 +622,9 @@ body {
 }
 
 .sub-submenu-item.active {
-    background: rgba(246, 197, 68, 0.1);
-    color: #f6c544;
-    border-left: 3px solid #f6c544;
+    background: var(--theme-primary-sidebar-bg, var(--theme-primary-soft, rgba(139, 92, 246, 0.12)));
+    color: var(--theme-primary-sidebar-text, var(--theme-primary, #8b5cf6));
+    border-left: 3px solid var(--theme-primary-sidebar-border, var(--theme-primary, #8b5cf6));
 }
 
 /* Quick Links Modal */
@@ -1467,7 +1477,7 @@ body {
     }
 
     .sidebar {
-        width: 220px;
+        width: 260px;
         max-height: none;
     }
 
@@ -1589,20 +1599,42 @@ body.side-menu-compact .sidebar .sidebar-quick-links-title {
     display: none;
 }
 
-.menu-item.active,
-.submenu-item.active,
-.schsettings-nav-item.active,
-.btn-schsettings-save,
-.btn-logo-update {
-    background-color: var(--theme-primary) !important;
+.menu-item.active svg,
+.menu-item-expandable.active svg,
+.submenu-item.active svg,
+.submenu-item-expandable.active svg,
+.sub-submenu-item.active svg {
+    color: inherit;
+    stroke: currentColor;
 }
 
 .menu-item.active,
+.menu-item-expandable.active,
+.submenu-item.active,
+.submenu-item-expandable.active,
+.sub-submenu-item.active,
+.schsettings-nav-item.active {
+    background: var(--theme-primary-sidebar-bg, var(--theme-primary-soft)) !important;
+    color: var(--theme-primary-sidebar-text, var(--theme-primary)) !important;
+    border-left-color: var(--theme-primary-sidebar-border, var(--theme-primary)) !important;
+}
+
+.menu-item.active,
+.menu-item-expandable.active,
 .submenu-item.active {
+    border-left-width: 3px;
+    border-left-style: solid;
+}
+
+.btn-schsettings-save,
+.btn-logo-update {
+    background-color: var(--theme-primary) !important;
     border-color: var(--theme-primary) !important;
+    color: #ffffff !important;
 }
 
 .btn-schsettings-save:hover,
 .btn-logo-update:hover {
     background-color: var(--theme-primary-dark) !important;
+    border-color: var(--theme-primary-dark) !important;
 }

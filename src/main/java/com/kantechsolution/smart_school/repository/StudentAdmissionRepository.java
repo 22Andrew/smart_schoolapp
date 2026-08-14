@@ -51,4 +51,14 @@ public interface StudentAdmissionRepository extends JpaRepository<StudentAdmissi
             WHERE :prefix = '' OR LOWER(s.admissionNo) LIKE LOWER(CONCAT(:prefix, '%'))
             """)
     List<String> findAdmissionNosByPrefix(@Param("prefix") String prefix);
+
+    @Query("""
+            SELECT s FROM StudentAdmission s
+            WHERE s.disabled = false
+              AND s.dateOfBirth IS NOT NULL
+              AND MONTH(s.dateOfBirth) = :month
+              AND DAY(s.dateOfBirth) = :day
+            ORDER BY s.firstName ASC, s.lastName ASC
+            """)
+    List<StudentAdmission> findActiveByBirthday(@Param("month") int month, @Param("day") int day);
 }
