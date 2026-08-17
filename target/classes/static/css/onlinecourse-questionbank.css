@@ -54,7 +54,7 @@
     gap: 0.4rem;
     height: 38px;
     padding: 0 1rem;
-    background: #8b5cf6;
+    background: var(--theme-primary, #8b5cf6);
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -67,7 +67,7 @@
 
 .btn-purple:hover,
 .btn-search:hover {
-    background: #7c3aed;
+    background: var(--theme-primary-dark, #7c3aed);
 }
 
 .filter-row {

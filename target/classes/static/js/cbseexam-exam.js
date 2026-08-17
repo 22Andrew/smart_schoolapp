@@ -298,27 +298,107 @@ document.addEventListener('DOMContentLoaded', function () {
         openModal('editExamModal');
     }
 
-    async function openAssignModal(id) {
-        currentExamId = id;
-        const response = await fetch('/api/cbse-exams/' + id + '/students');
+    async function loadAssignStudents() {
+        const classSelect = document.getElementById('assignClassSelect');
+        const sectionSelect = document.getElementById('assignSectionSelect');
+        const classId = classSelect ? classSelect.value : '';
+        const section = sectionSelect ? sectionSelect.value : '';
+        if (!currentExamId || !classId || !section) {
+            Swal.fire({ icon: 'warning', title: 'Required', text: 'Please select class and section.', confirmButtonColor: '#8b5cf6' });
+            return;
+        }
+
+        const response = await fetch('/api/cbse-exams/' + currentExamId + '/students?classId=' + encodeURIComponent(classId) + '&section=' + encodeURIComponent(section));
         if (!response.ok) throw new Error('Failed to load students');
         const rows = await response.json();
-        const tbody = document.getElementById('assignStudentTableBody');
-        if (!rows.length) {
-            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:24px;color:#94a3b8;">No students found</td></tr>';
-        } else {
-            tbody.innerHTML = rows.map(function (row) {
-                return '<tr><td><input type="checkbox" class="student-assign-check" data-id="' + row.id + '"' + (row.assigned ? ' checked' : '') + '></td>'
-                    + '<td>' + escapeHtml(row.studentName) + '</td>'
-                    + '<td>' + escapeHtml(row.admissionNo) + '</td>'
-                    + '<td>' + escapeHtml(row.classSection) + '</td>'
-                    + '<td>' + escapeHtml(row.fatherName || '') + '</td>'
-                    + '<td>' + escapeHtml(row.category || '') + '</td>'
-                    + '<td>' + escapeHtml(row.gender || '') + '</td></tr>';
-            }).join('');
-        }
-        openModal('assignStudentModal');
+        renderAssignStudentTable(rows);
     }
+
+    function renderAssignStudentTable(rows) {
+        const tbody = document.getElementById('assignStudentTableBody');
+        const assignAll = document.getElementById('assignAllStudents');
+        if (assignAll) assignAll.checked = false;
+
+        if (!tbody) return;
+        if (!rows.length) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:#64748b;">No students found</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = rows.map(function (row) {
+            return '<tr><td><input type="checkbox" class="student-assign-check" data-id="' + row.id + '"' + (row.assigned ? ' checked' : '') + '></td>'
+                + '<td>' + escapeHtml(row.admissionNo) + '</td>'
+                + '<td>' + escapeHtml(row.studentName) + '</td>'
+                + '<td>' + escapeHtml(row.fatherName || '') + '</td>'
+                + '<td>' + escapeHtml(row.category || '') + '</td>'
+                + '<td>' + escapeHtml(row.gender || '') + '</td></tr>';
+        }).join('');
+    }
+
+    function fillAssignClassSelect(selectedClassId) {
+        const classSelect = document.getElementById('assignClassSelect');
+        if (!classSelect) return;
+        classSelect.innerHTML = '<option value="">Select</option>';
+        schoolClasses.forEach(function (item) {
+            const option = document.createElement('option');
+            option.value = String(item.id);
+            option.textContent = item.name;
+            if (selectedClassId && String(item.id) === String(selectedClassId)) {
+                option.selected = true;
+            }
+            classSelect.appendChild(option);
+        });
+    }
+
+    function fillAssignSectionSelect(selectedSection) {
+        const classSelect = document.getElementById('assignClassSelect');
+        const sectionSelect = document.getElementById('assignSectionSelect');
+        if (!classSelect || !sectionSelect) return;
+
+        const selectedClass = schoolClasses.find(function (item) {
+            return String(item.id) === String(classSelect.value);
+        });
+        const sections = selectedClass && selectedClass.sections ? selectedClass.sections : [];
+
+        sectionSelect.innerHTML = '<option value="">Select</option>';
+        sections.forEach(function (section) {
+            const value = String(section);
+            if (!value) return;
+            const option = document.createElement('option');
+            option.value = value;
+            option.textContent = value;
+            if (selectedSection && value.toLowerCase() === String(selectedSection).toLowerCase()) {
+                option.selected = true;
+            }
+            sectionSelect.appendChild(option);
+        });
+    }
+
+    async function openAssignModal(id) {
+        currentExamId = id;
+        const examResponse = await fetch('/api/cbse-exams/' + id);
+        if (!examResponse.ok) throw new Error('Failed to load exam details');
+        const exam = await examResponse.json();
+
+        fillAssignClassSelect(resolveClassId(exam));
+        const firstSection = exam.sections ? String(exam.sections).split(',')[0].trim() : '';
+        fillAssignSectionSelect(firstSection);
+
+        openModal('assignStudentModal');
+        await loadAssignStudents();
+    }
+
+    document.getElementById('assignClassSelect')?.addEventListener('change', function () {
+        fillAssignSectionSelect('');
+    });
+
+    document.getElementById('searchAssignStudentsBtn')?.addEventListener('click', async function () {
+        try {
+            await loadAssignStudents();
+        } catch (error) {
+            showError(error);
+        }
+    });
 
     document.getElementById('assignAllStudents')?.addEventListener('change', function () {
         const checked = this.checked;

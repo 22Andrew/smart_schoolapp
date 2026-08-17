@@ -680,22 +680,23 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1.5rem 2rem;
-    border-bottom: 2px solid #e2e8f0;
-    background: #f7fafc;
+    padding: 0.85rem 1.25rem;
+    border-bottom: none;
+    background: var(--theme-primary, #8b5cf6);
+    flex-shrink: 0;
 }
 
 .modal-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #2d3748;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #ffffff;
     margin: 0;
 }
 
 .modal-close-btn {
     background: transparent;
     border: none;
-    color: #718096;
+    color: #ffffff;
     cursor: pointer;
     padding: 0.5rem;
     border-radius: 4px;
@@ -706,8 +707,8 @@ body {
 }
 
 .modal-close-btn:hover {
-    background: #e2e8f0;
-    color: #2d3748;
+    background: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
 }
 
 .modal-body {

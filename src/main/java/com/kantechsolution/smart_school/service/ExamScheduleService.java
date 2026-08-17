@@ -101,6 +101,7 @@ public class ExamScheduleService implements ApplicationRunner {
                         .dateFrom(examDate)
                         .startTime(startTime)
                         .durationMinutes(60)
+                        .creditHours(new BigDecimal("1.00"))
                         .roomNo("100")
                         .marksMax(new BigDecimal("100.00"))
                         .marksMin(new BigDecimal("33.00"))

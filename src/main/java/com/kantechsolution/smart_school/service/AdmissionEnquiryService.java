@@ -1,6 +1,8 @@
 package com.kantechsolution.smart_school.service;
 
 import com.kantechsolution.smart_school.model.AdmissionEnquiry;
+import com.kantechsolution.smart_school.model.AdmissionEnquiryFollowUp;
+import com.kantechsolution.smart_school.repository.AdmissionEnquiryFollowUpRepository;
 import com.kantechsolution.smart_school.repository.AdmissionEnquiryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import java.util.Optional;
 public class AdmissionEnquiryService {
     
     private final AdmissionEnquiryRepository repository;
+    private final AdmissionEnquiryFollowUpRepository followUpRepository;
     
     /**
      * Save a new admission enquiry
@@ -31,6 +34,9 @@ public class AdmissionEnquiryService {
         // Set default isActive if not provided
         if (enquiry.getIsActive() == null) {
             enquiry.setIsActive(true);
+        }
+        if (enquiry.getCreatedBy() == null || enquiry.getCreatedBy().isBlank()) {
+            enquiry.setCreatedBy("Joe Black (9000)");
         }
         return repository.save(enquiry);
     }
@@ -65,6 +71,7 @@ public class AdmissionEnquiryService {
         enquiry.setNote(enquiryDetails.getNote());
         enquiry.setDate(enquiryDetails.getDate());
         enquiry.setFollowUpDate(enquiryDetails.getFollowUpDate());
+        enquiry.setLastFollowUpDate(enquiryDetails.getLastFollowUpDate());
         enquiry.setAssigned(enquiryDetails.getAssigned());
         enquiry.setReference(enquiryDetails.getReference());
         enquiry.setSource(enquiryDetails.getSource());
@@ -116,5 +123,42 @@ public class AdmissionEnquiryService {
      */
     public List<AdmissionEnquiry> getActiveEnquiries() {
         return repository.findByIsActiveTrue();
+    }
+
+    public List<AdmissionEnquiryFollowUp> getFollowUps(Long enquiryId) {
+        return followUpRepository.findByEnquiryIdOrderByFollowUpDateDescCreatedAtDesc(enquiryId);
+    }
+
+    @Transactional
+    public AdmissionEnquiryFollowUp saveFollowUp(Long enquiryId, AdmissionEnquiryFollowUp followUp, String status) {
+        AdmissionEnquiry enquiry = repository.findById(enquiryId)
+                .orElseThrow(() -> new RuntimeException("Enquiry not found with id: " + enquiryId));
+
+        followUp.setEnquiryId(enquiryId);
+        if (followUp.getIsActive() == null) {
+            followUp.setIsActive(true);
+        }
+        if (followUp.getCreatedBy() == null || followUp.getCreatedBy().isBlank()) {
+            followUp.setCreatedBy(enquiry.getCreatedBy() != null ? enquiry.getCreatedBy() : "Joe Black (9000)");
+        }
+
+        AdmissionEnquiryFollowUp saved = followUpRepository.save(followUp);
+
+        enquiry.setLastFollowUpDate(followUp.getFollowUpDate());
+        enquiry.setFollowUpDate(followUp.getNextFollowUpDate());
+        if (status != null && !status.isBlank()) {
+            enquiry.setStatus(AdmissionEnquiry.EnquiryStatus.valueOf(status.toUpperCase()));
+        }
+        repository.save(enquiry);
+
+        return saved;
+    }
+
+    @Transactional
+    public AdmissionEnquiry updateEnquiryStatus(Long id, String status) {
+        AdmissionEnquiry enquiry = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Enquiry not found with id: " + id));
+        enquiry.setStatus(AdmissionEnquiry.EnquiryStatus.valueOf(status.toUpperCase()));
+        return repository.save(enquiry);
     }
 }

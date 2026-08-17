@@ -10,4 +10,6 @@ public interface ExamScheduleEntryRepository extends JpaRepository<ExamScheduleE
     List<ExamScheduleEntry> findByExamGroupExamIdOrderByIdAsc(Long examGroupExamId);
 
     long countByExamGroupExamId(Long examGroupExamId);
+
+    void deleteByExamGroupExamId(Long examGroupExamId);
 }

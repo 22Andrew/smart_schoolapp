@@ -37,6 +37,7 @@ public class UploadStorage {
         Files.createDirectories(root.resolve("notices"));
         Files.createDirectories(root.resolve("emails"));
         Files.createDirectories(root.resolve("contents"));
+        Files.createDirectories(root.resolve("homework"));
     }
 
     public Path getRoot() {
@@ -97,5 +98,9 @@ public class UploadStorage {
 
     public Path getContentsDir() {
         return root.resolve("contents");
+    }
+
+    public Path getHomeworkDir() {
+        return root.resolve("homework");
     }
 }

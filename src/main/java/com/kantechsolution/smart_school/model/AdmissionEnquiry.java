@@ -40,7 +40,10 @@ public class AdmissionEnquiry extends BaseEntity {
     
     @Column(name = "follow_up_date", nullable = false)
     private LocalDate followUpDate;
-    
+
+    @Column(name = "last_follow_up_date")
+    private LocalDate lastFollowUpDate;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status", columnDefinition = "VARCHAR(20) NOT NULL", nullable = false)
     @Builder.Default
@@ -60,7 +63,10 @@ public class AdmissionEnquiry extends BaseEntity {
     
     @Column(name = "child_count")
     private Integer childCount;
-    
+
+    @Column(name = "created_by", length = 100)
+    private String createdBy;
+
     public enum EnquiryStatus {
         ACTIVE,
         INACTIVE

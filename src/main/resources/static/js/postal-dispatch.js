@@ -63,6 +63,9 @@ function setupEventListeners() {
     
     // Column visibility functionality
     setupColumnVisibility();
+
+    // Details modal
+    setupPostalDetailsModal();
     
     // File upload
     const fileUploadArea = document.getElementById('fileUploadArea');
@@ -263,12 +266,6 @@ function renderTable(records = filteredRecords) {
                                 <line x1="12" y1="17" x2="12" y2="21"></line>
                             </svg>
                         </button>
-                        <button class="btn-action btn-user" onclick="viewUser(${record.id})" title="User">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="12" cy="7" r="4"></circle>
-                            </svg>
-                        </button>
                         <button class="btn-action btn-edit" onclick="editDispatch(${record.id})" title="Edit">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
@@ -294,44 +291,75 @@ function renderTable(records = filteredRecords) {
 }
 
 /**
+ * Setup postal details modal close handlers
+ */
+function setupPostalDetailsModal() {
+    const modal = document.getElementById('postalDetailsModal');
+    const overlay = document.getElementById('postalDetailsOverlay');
+    const closeBtn = document.getElementById('postalDetailsCloseBtn');
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closePostalDetailsModal);
+    }
+    if (overlay) {
+        overlay.addEventListener('click', closePostalDetailsModal);
+    }
+    if (modal) {
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && !modal.hidden) {
+                closePostalDetailsModal();
+            }
+        });
+    }
+}
+
+function openPostalDetailsModal() {
+    const modal = document.getElementById('postalDetailsModal');
+    if (modal) {
+        modal.hidden = false;
+    }
+}
+
+function closePostalDetailsModal() {
+    const modal = document.getElementById('postalDetailsModal');
+    if (modal) {
+        modal.hidden = true;
+    }
+}
+
+function displayValue(value) {
+    if (value === null || value === undefined || value === '') {
+        return '-';
+    }
+    return value;
+}
+
+/**
  * View dispatch details
  */
 async function viewDispatch(id) {
     try {
         const response = await fetch(`/api/postal-dispatch/${id}`);
         const dispatch = await response.json();
-        
-        Swal.fire({
-            title: 'Postal Dispatch Details',
-            html: `
-                <div style="text-align: left;">
-                    <p><strong>To Title:</strong> ${escapeHtml(dispatch.toTitle)}</p>
-                    <p><strong>Reference No:</strong> ${escapeHtml(dispatch.referenceNo || '-')}</p>
-                    <p><strong>From Title:</strong> ${escapeHtml(dispatch.fromTitle)}</p>
-                    <p><strong>Date:</strong> ${formatDate(dispatch.date)}</p>
-                    <p><strong>Address:</strong> ${escapeHtml(dispatch.address || '-')}</p>
-                    <p><strong>Note:</strong> ${escapeHtml(dispatch.note || '-')}</p>
-                </div>
-            `,
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#10b981'
-        });
+
+        document.getElementById('detailToTitle').textContent = displayValue(dispatch.toTitle);
+        document.getElementById('detailReferenceNo').textContent = displayValue(dispatch.referenceNo);
+        document.getElementById('detailFromTitle').textContent = displayValue(dispatch.fromTitle);
+        document.getElementById('detailDate').textContent = formatDate(dispatch.date);
+        document.getElementById('detailAddress').textContent = displayValue(dispatch.address);
+        document.getElementById('detailNote').textContent = displayValue(dispatch.note);
+
+        openPostalDetailsModal();
     } catch (error) {
         console.error('Error viewing dispatch:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Failed to load dispatch details',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#ef4444'
+        });
     }
-}
-
-/**
- * View user details (placeholder)
- */
-function viewUser(id) {
-    Swal.fire({
-        title: 'User Information',
-        text: 'User details functionality coming soon',
-        icon: 'info',
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#10b981'
-    });
 }
 
 /**

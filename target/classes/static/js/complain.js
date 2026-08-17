@@ -44,6 +44,54 @@ fileUploadArea.addEventListener('drop', (e) => {
     }
 });
 
+setupComplainDetailsModal();
+
+function setupComplainDetailsModal() {
+    const modal = document.getElementById('complainDetailsModal');
+    const overlay = document.getElementById('complainDetailsOverlay');
+    const closeBtn = document.getElementById('complainDetailsCloseBtn');
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeComplainDetailsModal);
+    }
+    if (overlay) {
+        overlay.addEventListener('click', closeComplainDetailsModal);
+    }
+    if (modal) {
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && !modal.hidden) {
+                closeComplainDetailsModal();
+            }
+        });
+    }
+}
+
+function openComplainDetailsModal() {
+    const modal = document.getElementById('complainDetailsModal');
+    if (modal) {
+        modal.hidden = false;
+    }
+}
+
+function closeComplainDetailsModal() {
+    const modal = document.getElementById('complainDetailsModal');
+    if (modal) {
+        modal.hidden = true;
+    }
+}
+
+function displayValue(value) {
+    if (value === null || value === undefined || value === '') {
+        return '-';
+    }
+    return value;
+}
+
+function getComplainDisplayNumber(id) {
+    const index = complainRecords.findIndex(c => c.id === id);
+    return index >= 0 ? index + 1 + 300 : id + 300;
+}
+
 // Form Submission
 complainForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -150,8 +198,9 @@ function renderTable(records = complainRecords) {
                 <div class="action-buttons">
                     <button class="btn-action btn-view" onclick="viewComplain(${complain.id})" title="View">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
-                            <circle cx="12" cy="12" r="3"></circle>
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            <line x1="8" y1="21" x2="16" y2="21"></line>
+                            <line x1="12" y1="17" x2="12" y2="21"></line>
                         </svg>
                     </button>
                     <button class="btn-action btn-edit" onclick="editComplain(${complain.id})" title="Edit">
@@ -179,29 +228,22 @@ function renderTable(records = complainRecords) {
 // View Complain
 window.viewComplain = function(id) {
     const complain = complainRecords.find(c => c.id === id);
-    if (complain) {
-        Swal.fire({
-            title: 'Complain Details',
-            html: `
-                <div style="text-align: left; padding: 10px;">
-                    <p><strong>Complain #:</strong> ${id + 300}</p>
-                    <p><strong>Type:</strong> ${complain.complainType}</p>
-                    <p><strong>Source:</strong> ${complain.source}</p>
-                    <p><strong>Complain By:</strong> ${complain.complainBy}</p>
-                    <p><strong>Phone:</strong> ${complain.phone}</p>
-                    <p><strong>Date:</strong> ${formatDate(complain.date)}</p>
-                    ${complain.description ? `<p><strong>Description:</strong> ${complain.description}</p>` : ''}
-                    ${complain.actionTaken ? `<p><strong>Action Taken:</strong> ${complain.actionTaken}</p>` : ''}
-                    ${complain.assigned ? `<p><strong>Assigned:</strong> ${complain.assigned}</p>` : ''}
-                    ${complain.note ? `<p><strong>Note:</strong> ${complain.note}</p>` : ''}
-                </div>
-            `,
-            width: 600,
-            showConfirmButton: true,
-            confirmButtonColor: '#3498db',
-            confirmButtonText: 'OK'
-        });
+    if (!complain) {
+        return;
     }
+
+    document.getElementById('detailComplainNo').textContent = getComplainDisplayNumber(id);
+    document.getElementById('detailComplaintType').textContent = displayValue(complain.complainType);
+    document.getElementById('detailSource').textContent = displayValue(complain.source);
+    document.getElementById('detailName').textContent = displayValue(complain.complainBy);
+    document.getElementById('detailPhone').textContent = displayValue(complain.phone);
+    document.getElementById('detailDate').textContent = formatDate(complain.date);
+    document.getElementById('detailAssigned').textContent = displayValue(complain.assigned);
+    document.getElementById('detailActionTaken').textContent = displayValue(complain.actionTaken);
+    document.getElementById('detailDescription').textContent = displayValue(complain.description);
+    document.getElementById('detailNote').textContent = displayValue(complain.note);
+
+    openComplainDetailsModal();
 };
 
 // Edit Complain

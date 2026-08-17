@@ -577,7 +577,7 @@
                             <polyline points="9 18 15 12 9 6"></polyline>
                         </svg>
                     </a>
-                                        <div class="submenu" id="submenu-communicate">
+                    <div class="submenu" id="submenu-communicate">
                         <a href="/admin/notification" class="submenu-item">Notice Board</a>
                         <a href="/admin/mailsms/compose" class="submenu-item">Send Email</a>
                         <a href="/admin/mailsms/compose_sms" class="submenu-item">Send SMS</a>
@@ -619,8 +619,8 @@
                         </svg>
                     </a>
                     <div class="submenu" id="submenu-homework">
-                        <a href="#" class="submenu-item">Add Homework</a>
-                        <a href="#" class="submenu-item">Daily Assignment</a>
+                        <a href="/homework" class="submenu-item">Add Homework</a>
+                        <a href="/dailyassignment" class="submenu-item">Daily Assignment</a>
                     </div>
                 </div>
                 <div class="menu-item-wrapper">
@@ -749,7 +749,7 @@
                 <div class="criteria-header">
                     <h2 class="section-title">Select Criteria</h2>
                     <button type="button" class="btn-delete-forward" id="deleteCarryForwardBtn">Delete Carry Forward</button>
-                </div>
+                        </div>
                 <form class="criteria-form" id="criteriaForm">
                     <div class="criteria-row">
                         <div class="form-group class-group">
@@ -763,13 +763,13 @@
                             <select id="sectionSelect" class="form-select" required>
                                 <option value="">Select</option>
                             </select>
-                        </div>
+                            </div>
                         <div class="form-group form-submit">
                             <button type="button" class="btn-search" id="searchBtn">Search</button>
                         </div>
-                    </div>
+                        </div>
                 </form>
-            </div>
+                        </div>
 
             <div class="table-section">
                 <div class="table-section-header">
@@ -778,67 +778,67 @@
                         <label for="dueDateInput">Due Date:</label>
                         <input type="date" id="dueDateInput" class="due-date-input">
                         <span class="due-date-display" id="dueDateDisplay"></span>
-                    </div>
+                        </div>
                 </div>
 
-                <div class="table-controls">
-                    <div class="table-search">
-                        <input type="text" id="searchInput" class="table-search-input" placeholder="Search">
-                    </div>
-                    <div class="table-actions">
-                        <select class="entries-select" id="entriesSelect">
-                            <option value="50" selected>50</option>
-                            <option value="100">100</option>
-                            <option value="250">250</option>
-                            <option value="500">500</option>
-                        </select>
-                        <button type="button" class="icon-action-btn" id="copyBtn" title="Copy">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                            </svg>
-                        </button>
-                        <button type="button" class="icon-action-btn" id="excelBtn" title="Excel">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                <polyline points="14 2 14 8 20 8"></polyline>
-                            </svg>
-                        </button>
-                        <button type="button" class="icon-action-btn" id="csvBtn" title="CSV">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                <polyline points="14 2 14 8 20 8"></polyline>
-                                <line x1="16" y1="13" x2="8" y2="13"></line>
-                                <line x1="16" y1="17" x2="8" y2="17"></line>
-                            </svg>
-                        </button>
-                        <button type="button" class="icon-action-btn" id="pdfBtn" title="PDF">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                <polyline points="14 2 14 8 20 8"></polyline>
-                            </svg>
-                        </button>
-                        <button type="button" class="icon-action-btn" id="printBtn" title="Print">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="6 9 6 2 18 2 18 9"></polyline>
-                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-                                <rect x="6" y="14" width="12" height="8"></rect>
-                            </svg>
-                        </button>
-                        <button type="button" class="icon-action-btn" id="columnVisibilityBtn" title="Column Visibility">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="3" width="7" height="7"></rect>
-                                <rect x="14" y="3" width="7" height="7"></rect>
-                                <rect x="14" y="14" width="7" height="7"></rect>
-                                <rect x="3" y="14" width="7" height="7"></rect>
-                            </svg>
-                        </button>
+                    <div class="table-controls">
+                        <div class="table-search">
+                            <input type="text" id="searchInput" class="table-search-input" placeholder="Search">
+                        </div>
+                        <div class="table-actions">
+                            <select class="entries-select" id="entriesSelect">
+                                <option value="50" selected>50</option>
+                                <option value="100">100</option>
+                                <option value="250">250</option>
+                                <option value="500">500</option>
+                            </select>
+                            <button type="button" class="icon-action-btn" id="copyBtn" title="Copy">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                </svg>
+                            </button>
+                            <button type="button" class="icon-action-btn" id="excelBtn" title="Excel">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                </svg>
+                            </button>
+                            <button type="button" class="icon-action-btn" id="csvBtn" title="CSV">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                </svg>
+                            </button>
+                            <button type="button" class="icon-action-btn" id="pdfBtn" title="PDF">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                </svg>
+                            </button>
+                            <button type="button" class="icon-action-btn" id="printBtn" title="Print">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                                    <rect x="6" y="14" width="12" height="8"></rect>
+                                </svg>
+                            </button>
+                            <button type="button" class="icon-action-btn" id="columnVisibilityBtn" title="Column Visibility">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="7" height="7"></rect>
+                                    <rect x="14" y="3" width="7" height="7"></rect>
+                                    <rect x="14" y="14" width="7" height="7"></rect>
+                                    <rect x="3" y="14" width="7" height="7"></rect>
+                                </svg>
+                            </button>
 
-                        <div class="column-visibility-dropdown" id="columnVisibilityDropdown">
-                            <div class="dropdown-header">
-                                <span>Toggle Columns</span>
-                            </div>
-                            <div class="dropdown-content">
+                            <div class="column-visibility-dropdown" id="columnVisibilityDropdown">
+                                <div class="dropdown-header">
+                                    <span>Toggle Columns</span>
+                                </div>
+                                <div class="dropdown-content">
                                 <label class="column-toggle-item"><input type="checkbox" class="column-toggle" data-column="0" checked><span>Student Name</span></label>
                                 <label class="column-toggle-item"><input type="checkbox" class="column-toggle" data-column="1" checked><span>Admission No</span></label>
                                 <label class="column-toggle-item"><input type="checkbox" class="column-toggle" data-column="2" checked><span>Admission Date</span></label>
@@ -846,15 +846,15 @@
                                 <label class="column-toggle-item"><input type="checkbox" class="column-toggle" data-column="4" checked><span>Father Name</span></label>
                                 <label class="column-toggle-item"><input type="checkbox" class="column-toggle" data-column="5" checked><span>Balance ($)</span></label>
                                 <label class="column-toggle-item"><input type="checkbox" class="column-toggle" data-column="6" checked><span>Status</span></label>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="table-responsive">
+                    <div class="table-responsive">
                     <table class="data-table" id="feesForwardTable">
-                        <thead>
-                            <tr>
+                            <thead>
+                                <tr>
                                 <th>Student Name</th>
                                 <th>Admission No</th>
                                 <th>Admission Date</th>
@@ -862,24 +862,24 @@
                                 <th>Father Name</th>
                                 <th>Balance ($)</th>
                                 <th>Status</th>
-                            </tr>
-                        </thead>
+                                </tr>
+                            </thead>
                         <tbody id="feesForwardTableBody">
                             <tr class="no-data-row">
                                 <td colspan="7" style="text-align:center;color:#94a3b8;">Select class and section, then click Search</td>
                             </tr>
                         </tbody>
-                    </table>
-                </div>
-
-                <div class="table-footer">
-                    <div class="showing-info">Showing 0 to 0 of 0 entries</div>
-                    <div class="pagination">
-                        <button type="button" class="pagination-btn" disabled>&lt;</button>
-                        <button type="button" class="pagination-btn active">1</button>
-                        <button type="button" class="pagination-btn" disabled>&gt;</button>
+                        </table>
                     </div>
-                </div>
+
+                    <div class="table-footer">
+                        <div class="showing-info">Showing 0 to 0 of 0 entries</div>
+                        <div class="pagination">
+                            <button type="button" class="pagination-btn" disabled>&lt;</button>
+                            <button type="button" class="pagination-btn active">1</button>
+                            <button type="button" class="pagination-btn" disabled>&gt;</button>
+                        </div>
+                    </div>
 
                 <div class="save-row">
                     <button type="button" class="btn-save" id="saveBtn">Save</button>

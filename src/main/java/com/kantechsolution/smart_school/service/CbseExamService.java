@@ -135,13 +135,15 @@ public class CbseExamService implements ApplicationRunner {
     }
 
     @Transactional(readOnly = true)
-    public List<Map<String, Object>> getAssignableStudents(Long examId) {
+    public List<Map<String, Object>> getAssignableStudents(Long examId, Long classId, String section) {
         CbseExam exam = requireExam(examId);
-        String firstSection = exam.getSections().split(",")[0].trim();
-        Long classId = resolveClassId(exam.getClassName());
+        Long resolvedClassId = classId != null ? classId : resolveClassId(exam.getClassName());
+        String resolvedSection = section != null && !section.isBlank()
+                ? section.trim()
+                : exam.getSections().split(",")[0].trim();
 
         List<StudentAdmission> students = studentAdmissionRepository.search(
-                classId, firstSection, null, false, null);
+                resolvedClassId, resolvedSection, null, false, null);
 
         Set<Long> assignedIds = cbseExamStudentRepository.findByCbseExamIdOrderByIdAsc(examId).stream()
                 .map(CbseExamStudent::getStudentAdmissionId)

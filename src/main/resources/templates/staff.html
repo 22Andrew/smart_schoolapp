@@ -577,7 +577,7 @@
                             <polyline points="9 18 15 12 9 6"></polyline>
                         </svg>
                     </a>
-                                        <div class="submenu" id="submenu-communicate">
+                    <div class="submenu" id="submenu-communicate">
                         <a href="/admin/notification" class="submenu-item">Notice Board</a>
                         <a href="/admin/mailsms/compose" class="submenu-item">Send Email</a>
                         <a href="/admin/mailsms/compose_sms" class="submenu-item">Send SMS</a>
@@ -619,8 +619,8 @@
                         </svg>
                     </a>
                     <div class="submenu" id="submenu-homework">
-                        <a href="#" class="submenu-item">Add Homework</a>
-                        <a href="#" class="submenu-item">Daily Assignment</a>
+                        <a href="/homework" class="submenu-item">Add Homework</a>
+                        <a href="/dailyassignment" class="submenu-item">Daily Assignment</a>
                     </div>
                 </div>
                 <div class="menu-item-wrapper">
@@ -757,7 +757,7 @@
                             </svg>
                             Add Staff
                         </button>
-                    </div>
+                </div>
                     <div class="staff-search-row">
                         <div class="staff-search-block">
                             <label for="roleFilter">Role <span class="required">*</span></label>
@@ -920,32 +920,32 @@
                         <input type="hidden" id="staffRecordId">
 
                         <div class="form-grid cols-4">
-                            <div class="form-group">
+                        <div class="form-group">
                                 <label for="staffId">Staff ID <span class="required">*</span></label>
                                 <input type="text" id="staffId" class="form-control" required>
                             </div>
                             <div class="form-group">
                                 <label for="role">Role <span class="required">*</span></label>
                                 <select id="role" class="form-control" required>
-                                    <option value="">Select</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
+                                <option value="">Select</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
                                 <label for="designation">Designation</label>
                                 <select id="designation" class="form-control">
                                     <option value="">Select</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
+                            </select>
+                        </div>
+                        <div class="form-group">
                                 <label for="department">Department</label>
                                 <select id="department" class="form-control">
                                     <option value="">Select</option>
-                                </select>
-                            </div>
+                            </select>
+                        </div>
                         </div>
 
                         <div class="form-grid cols-4">
-                            <div class="form-group">
+                        <div class="form-group">
                                 <label for="firstName">First Name <span class="required">*</span></label>
                                 <input type="text" id="firstName" class="form-control" required>
                             </div>
@@ -972,12 +972,12 @@
                                 <label for="gender">Gender <span class="required">*</span></label>
                                 <select id="gender" class="form-control" required>
                                     <option value="">Select</option>
-                                </select>
-                            </div>
+                            </select>
+                        </div>
                             <div class="form-group">
                                 <label for="dateOfBirth">Date Of Birth</label>
                                 <input type="date" id="dateOfBirth" class="form-control">
-                            </div>
+                    </div>
                             <div class="form-group">
                                 <label for="dateOfJoining">Date Of Joining</label>
                                 <input type="date" id="dateOfJoining" class="form-control">
@@ -1006,7 +1006,7 @@
                                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                                         <polyline points="17 8 12 3 7 8"></polyline>
                                         <line x1="12" y1="3" x2="12" y2="15"></line>
-                                    </svg>
+                            </svg>
                                     <span id="staffPhotoLabel">Drag and drop a file here or click</span>
                                     <input type="file" id="staffPhoto" accept="image/*" hidden>
                                 </label>
@@ -1065,7 +1065,7 @@
                                     <div class="form-group">
                                         <label for="epfNo">EPF No.</label>
                                         <input type="text" id="epfNo" class="form-control">
-                                    </div>
+                    </div>
                                     <div class="form-group">
                                         <label for="basicSalary">Basic Salary</label>
                                         <input type="text" id="basicSalary" class="form-control">
@@ -1087,7 +1087,7 @@
                                         <input type="text" id="workLocation" class="form-control">
                                     </div>
                                 </div>
-                            </div>
+            </div>
 
                             <div class="staff-detail-section">
                                 <div class="staff-detail-section-title">Leaves</div>
@@ -1095,7 +1095,7 @@
                                     <div class="form-group">
                                         <label for="medicalLeave">Medical Leave</label>
                                         <input type="number" id="medicalLeave" class="form-control" min="0" placeholder="Number Of Leaves">
-                                    </div>
+                </div>
                                     <div class="form-group">
                                         <label for="casualLeave">Casual Leave</label>
                                         <input type="number" id="casualLeave" class="form-control" min="0" placeholder="Number Of Leaves">

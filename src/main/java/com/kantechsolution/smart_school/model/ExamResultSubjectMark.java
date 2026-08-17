@@ -30,4 +30,10 @@ public class ExamResultSubjectMark extends BaseEntity {
 
     @Column(name = "marks_max", precision = 8, scale = 2)
     private BigDecimal marksMax;
+
+    @Column(name = "is_absent")
+    private Boolean absent;
+
+    @Column(length = 500)
+    private String note;
 }

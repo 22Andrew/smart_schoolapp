@@ -58,12 +58,33 @@
     <!-- Assign / View Student Modal -->
     <div class="cbse-modal" id="assignStudentModal" hidden>
         <div class="cbse-modal-overlay" data-close-modal></div>
-        <div class="cbse-modal-dialog cbse-modal-xl" role="dialog" aria-modal="true">
-            <div class="cbse-modal-header"><h3>Assign / View Student</h3><button type="button" class="cbse-modal-close" data-close-modal>&times;</button></div>
-            <div class="cbse-modal-body">
+        <div class="cbse-modal-dialog cbse-modal-xl assign-student-modal-dialog" role="dialog" aria-modal="true">
+            <div class="cbse-modal-header"><h3>Exam Students</h3><button type="button" class="cbse-modal-close" data-close-modal>&times;</button></div>
+            <div class="cbse-modal-body assign-student-body">
+                <div class="assign-student-filters">
+                    <div class="assign-filter-grid">
+                        <div class="form-group">
+                            <label for="assignClassSelect">Class <span class="required">*</span></label>
+                            <select id="assignClassSelect" class="form-input" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="assignSectionSelect">Section <span class="required">*</span></label>
+                            <select id="assignSectionSelect" class="form-input" required></select>
+                        </div>
+                    </div>
+                    <div class="assign-search-row">
+                        <button type="button" class="btn-search-students" id="searchAssignStudentsBtn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            Search
+                        </button>
+                    </div>
+                </div>
                 <div class="table-responsive">
-                    <table class="assigned-table" id="assignStudentTable">
-                        <thead><tr><th><input type="checkbox" id="assignAllStudents"> All</th><th>Student Name</th><th>Admission No</th><th>Class (Section)</th><th>Father Name</th><th>Category</th><th>Gender</th></tr></thead>
+                    <table class="assigned-table assign-student-table" id="assignStudentTable">
+                        <thead><tr><th><input type="checkbox" id="assignAllStudents"> All</th><th>Admission No</th><th>Student Name</th><th>Father Name</th><th>Category</th><th>Gender</th></tr></thead>
                         <tbody id="assignStudentTableBody"></tbody>
                     </table>
                 </div>

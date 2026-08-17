@@ -8,6 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
     <link rel="stylesheet" th:href="@{/css/multibranch-branch.css}">
     <link rel="stylesheet" th:href="@{/css/app-theme.css}">
+    <link rel="stylesheet" th:href="@{/css/multibranch-modals-light.css}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- SweetAlert2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -576,7 +577,7 @@
                             <polyline points="9 18 15 12 9 6"></polyline>
                         </svg>
                     </a>
-                                        <div class="submenu" id="submenu-communicate">
+                    <div class="submenu" id="submenu-communicate">
                         <a href="/admin/notification" class="submenu-item">Notice Board</a>
                         <a href="/admin/mailsms/compose" class="submenu-item">Send Email</a>
                         <a href="/admin/mailsms/compose_sms" class="submenu-item">Send SMS</a>
@@ -618,8 +619,8 @@
                         </svg>
                     </a>
                     <div class="submenu" id="submenu-homework">
-                        <a href="#" class="submenu-item">Add Homework</a>
-                        <a href="#" class="submenu-item">Daily Assignment</a>
+                        <a href="/homework" class="submenu-item">Add Homework</a>
+                        <a href="/dailyassignment" class="submenu-item">Daily Assignment</a>
                     </div>
                 </div>
                 <div class="menu-item-wrapper">
@@ -1036,12 +1037,12 @@
                         <div class="form-group">
                             <label for="branchDbUsername">Username <span class="required">*</span></label>
                             <input type="text" id="branchDbUsername" class="form-input" required maxlength="200">
-                        </div>
-                        <div class="form-group">
+                    </div>
+                    <div class="form-group">
                             <label for="branchDbPassword">Password <span class="required">*</span></label>
                             <input type="password" id="branchDbPassword" class="form-input" maxlength="500" autocomplete="new-password">
-                        </div>
                     </div>
+                </div>
                 </div>
                 <div class="branch-modal-footer">
                     <button type="submit" class="btn-save" id="saveBranchBtn">Verify &amp; Save</button>

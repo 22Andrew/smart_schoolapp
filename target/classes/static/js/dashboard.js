@@ -683,7 +683,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         let bestMatch = null;
         let bestLength = -1;
-
+        
         allSubmenuItems.forEach(item => {
             const itemHref = item.getAttribute('href');
             if (!itemHref || itemHref === '#') return;

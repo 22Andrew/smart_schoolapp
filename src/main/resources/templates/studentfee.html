@@ -7,6 +7,8 @@
     <title>Collect Fees - Smart School</title>
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
     <link rel="stylesheet" th:href="@{/css/studentfee.css}">
+    <link rel="stylesheet" th:href="@{/css/studentfee-collect-modal.css}">
+    <link rel="stylesheet" th:href="@{/css/studentfee-addfee.css}">
     <link rel="stylesheet" th:href="@{/css/app-theme.css}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- SweetAlert2 -->
@@ -517,8 +519,8 @@
                         </svg>
                     </a>
                     <div class="submenu" id="submenu-homework">
-                        <a href="#" class="submenu-item">Add Homework</a>
-                        <a href="#" class="submenu-item">Daily Assignment</a>
+                        <a href="/homework" class="submenu-item">Add Homework</a>
+                        <a href="/dailyassignment" class="submenu-item">Daily Assignment</a>
                     </div>
                 </div>
                 <div class="menu-item-wrapper">
@@ -793,6 +795,245 @@
             </div>
         </main>
     </div>
+    <input type="hidden" id="studentId" value="">
+    <input type="hidden" id="sessionYear" value="2026-27">
+
+    <!-- Student Fees Collect Modal -->
+    <div class="sf-collect-modal" id="sfCollectModal" aria-hidden="true">
+        <div class="sf-collect-overlay" id="sfCollectOverlay"></div>
+        <div class="sf-collect-dialog" role="dialog" aria-modal="true" aria-labelledby="sfCollectTitle">
+            <div class="sf-collect-header">
+                <h2 class="sf-collect-title" id="sfCollectTitle">Student Fees</h2>
+                <button type="button" class="sf-collect-back" id="sfCollectBackBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                    Back
+                </button>
+            </div>
+            <div class="sf-collect-body">
+                <div class="sf-student-info-card">
+                    <div class="sf-student-photo">
+                        <img id="sfStudentPhoto" src="" alt="Student" style="display:none;">
+                        <div class="sf-photo-placeholder" id="sfPhotoPlaceholder">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="sf-student-details-grid">
+                        <div class="sf-detail-col">
+                            <div class="sf-detail-row"><span class="label">Name</span><span class="value" id="sfStudentName">-</span></div>
+                            <div class="sf-detail-row"><span class="label">Father Name</span><span class="value" id="sfFatherName">-</span></div>
+                            <div class="sf-detail-row"><span class="label">Mobile Number</span><span class="value" id="sfMobileNumber">-</span></div>
+                            <div class="sf-detail-row"><span class="label">Category</span><span class="value" id="sfCategoryName">-</span></div>
+                        </div>
+                        <div class="sf-detail-col">
+                            <div class="sf-detail-row"><span class="label">Class (Section)</span><span class="value" id="sfClassSection">-</span></div>
+                            <div class="sf-detail-row"><span class="label">Admission No</span><span class="value" id="sfAdmissionNo">-</span></div>
+                            <div class="sf-detail-row"><span class="label">Roll Number</span><span class="value" id="sfRollNumber">-</span></div>
+                            <div class="sf-detail-row"><span class="label">RTE</span><span class="value sf-rte-value" id="sfRteValue">-</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sf-action-meta-bar">
+                    <div class="sf-action-buttons">
+                        <button type="button" class="sf-btn-print-selected" id="sfPrintSelectedBtn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                                <rect x="6" y="14" width="12" height="8"></rect>
+                            </svg>
+                            Print Selected
+                        </button>
+                        <button type="button" class="sf-btn-collect-selected" id="sfCollectSelectedBtn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+                                <circle cx="12" cy="12" r="2"></circle>
+                            </svg>
+                            Collect Selected
+                        </button>
+                    </div>
+                    <div class="sf-date-text">Date: <span id="sfDateLabel"></span></div>
+                </div>
+                <div class="sf-session-footer">Session : <span id="sfSessionLabel">2026-27</span></div>
+
+                <div class="sf-fees-table-card">
+                    <div class="sf-table-toolbar">
+                        <div class="sf-table-actions">
+                            <button type="button" class="sf-icon-action-btn" id="sfCopyBtn" title="Copy">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            </button>
+                            <button type="button" class="sf-icon-action-btn" id="sfExcelBtn" title="Excel">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                            </button>
+                            <button type="button" class="sf-icon-action-btn" id="sfCsvBtn" title="CSV">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                            </button>
+                            <button type="button" class="sf-icon-action-btn" id="sfPdfBtn" title="PDF">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                            </button>
+                            <button type="button" class="sf-icon-action-btn" id="sfPrintBtn" title="Print">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="sf-table-responsive">
+                        <table class="sf-fees-table" id="sfStudentFeesTable">
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="sfSelectAllFees"></th>
+                                    <th>Fees</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                    <th>Amount ($)</th>
+                                    <th>Payment ID</th>
+                                    <th>Mode</th>
+                                    <th>Date</th>
+                                    <th>Discount ($)</th>
+                                    <th>Fine ($)</th>
+                                    <th>Paid ($)</th>
+                                    <th>Balance ($)</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sfStudentFeesTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Fee Modal -->
+    <div class="add-fee-modal" id="addFeeModal" aria-hidden="true">
+        <div class="add-fee-overlay" id="addFeeOverlay"></div>
+        <div class="add-fee-dialog" role="dialog" aria-modal="true">
+            <div class="add-fee-header">
+                <h3 class="add-fee-title" id="addFeeModalTitle">Add Fee</h3>
+                <button type="button" class="add-fee-close" id="addFeeCloseBtn" aria-label="Close">&times;</button>
+            </div>
+            <form id="addFeeForm" class="add-fee-body">
+                <input type="hidden" id="modalFeeMasterId" value="">
+                <div class="add-fee-row">
+                    <label>Fees ($)</label>
+                    <div class="readonly-value" id="modalFeesAmount">0.00</div>
+                </div>
+                <div class="add-fee-row">
+                    <label for="modalPaymentDate">Date <span class="required">*</span></label>
+                    <input type="text" id="modalPaymentDate" class="add-fee-input" required placeholder="MM/DD/YYYY">
+                </div>
+                <div class="add-fee-row">
+                    <label for="modalPayingAmount">Paying Amount ($) <span class="required">*</span></label>
+                    <input type="number" id="modalPayingAmount" class="add-fee-input" min="0" step="0.01" required>
+                </div>
+                <div class="add-fee-row">
+                    <label>Discount Group</label>
+                    <div class="discount-msg" id="modalDiscountGroup">No Discount Available</div>
+                </div>
+                <div class="add-fee-row twin">
+                    <div class="twin-field">
+                        <label for="modalDiscountAmount">Discount ($) <span class="required">*</span></label>
+                        <input type="number" id="modalDiscountAmount" class="add-fee-input" min="0" step="0.01" value="0">
+                    </div>
+                    <div class="twin-field">
+                        <label for="modalFineAmount">Fine ($) <span class="required">*</span></label>
+                        <input type="number" id="modalFineAmount" class="add-fee-input" min="0" step="0.01" value="0">
+                    </div>
+                </div>
+                <div class="add-fee-row">
+                    <label>Payment Mode</label>
+                    <div class="payment-modes">
+                        <label class="mode-option"><input type="radio" name="paymentMode" value="Cash" checked><span>Cash</span></label>
+                        <label class="mode-option"><input type="radio" name="paymentMode" value="Cheque"><span>Cheque</span></label>
+                        <label class="mode-option"><input type="radio" name="paymentMode" value="DD"><span>DD</span></label>
+                        <label class="mode-option"><input type="radio" name="paymentMode" value="Bank Transfer"><span>Bank Transfer</span></label>
+                        <label class="mode-option"><input type="radio" name="paymentMode" value="UPI"><span>UPI</span></label>
+                        <label class="mode-option"><input type="radio" name="paymentMode" value="Card"><span>Card</span></label>
+                    </div>
+                </div>
+                <div class="add-fee-row">
+                    <label for="modalNote">Note</label>
+                    <textarea id="modalNote" class="add-fee-textarea" rows="4"></textarea>
+                </div>
+            </form>
+            <div class="add-fee-footer">
+                <button type="button" class="btn-modal-cancel" id="addFeeCancelBtn">Cancel</button>
+                <div class="footer-actions">
+                    <button type="button" class="btn-modal-collect" id="collectFeesBtn">$ Collect Fees</button>
+                    <button type="button" class="btn-modal-collect" id="collectPrintBtn">$ Collect &amp; Print</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Collect Selected Modal -->
+    <div class="collect-selected-modal" id="collectSelectedModal" aria-hidden="true">
+        <div class="collect-selected-overlay" id="collectSelectedOverlay"></div>
+        <div class="collect-selected-dialog" role="dialog" aria-modal="true">
+            <div class="collect-selected-header">
+                <h3 class="collect-selected-title">Collect Fees</h3>
+                <button type="button" class="collect-selected-close" id="collectSelectedCloseBtn" aria-label="Close">&times;</button>
+            </div>
+            <div class="collect-selected-body">
+                <div class="collect-form-row">
+                    <label for="bulkPaymentDate">Date <span class="required">*</span></label>
+                    <input type="text" id="bulkPaymentDate" class="collect-input" placeholder="MM/DD/YYYY">
+                </div>
+                <div class="collect-form-row">
+                    <label>Payment Mode</label>
+                    <div class="payment-modes bulk-modes">
+                        <label class="mode-option"><input type="radio" name="bulkPaymentMode" value="Cash" checked><span>Cash</span></label>
+                        <label class="mode-option"><input type="radio" name="bulkPaymentMode" value="Cheque"><span>Cheque</span></label>
+                        <label class="mode-option"><input type="radio" name="bulkPaymentMode" value="DD"><span>DD</span></label>
+                        <label class="mode-option"><input type="radio" name="bulkPaymentMode" value="Bank Transfer"><span>Bank Transfer</span></label>
+                        <label class="mode-option"><input type="radio" name="bulkPaymentMode" value="UPI"><span>UPI</span></label>
+                        <label class="mode-option"><input type="radio" name="bulkPaymentMode" value="Card"><span>Card</span></label>
+                    </div>
+                </div>
+                <div class="collect-form-row">
+                    <label for="bulkNote">Note</label>
+                    <textarea id="bulkNote" class="collect-textarea" rows="3"></textarea>
+                </div>
+                <div class="collect-fees-table-wrap">
+                    <table class="collect-fees-table">
+                        <thead>
+                            <tr>
+                                <th>Fees</th>
+                                <th>Fine Amount</th>
+                                <th>Fees Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="collectSelectedFeesBody"></tbody>
+                        <tfoot>
+                            <tr class="collect-total-row">
+                                <td>Total</td>
+                                <td id="collectTotalFine">$0.00</td>
+                                <td id="collectTotalFees">$0.00</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="collect-paying-row">
+                    <label for="bulkPayingAmount">Paying Amount ($) <span class="required">*</span></label>
+                    <input type="number" id="bulkPayingAmount" class="collect-paying-input" min="0" step="0.01">
+                </div>
+            </div>
+            <div class="collect-selected-footer">
+                <button type="button" class="btn-collect-pay" id="bulkPayBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+                        <circle cx="12" cy="12" r="2"></circle>
+                    </svg>
+                    Pay
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Quick Links Modal -->
     <div class="quick-links-modal" id="quickLinksModal">
         <div class="modal-overlay" id="modalOverlay"></div>
@@ -968,6 +1209,7 @@
     </div>
 
     <script th:src="@{/js/dashboard.js}"></script>
+    <script th:src="@{/js/studentfee-collect-modal.js}"></script>
     <script th:src="@{/js/studentfee.js}"></script>
 </body>
 </html>

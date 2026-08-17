@@ -8,6 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
     <link rel="stylesheet" th:href="@{/css/gmeet-meeting.css}">
     <link rel="stylesheet" th:href="@{/css/app-theme.css}">
+    <link rel="stylesheet" th:href="@{/css/live-classes-theme.css}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- SweetAlert2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -576,7 +577,7 @@
                             <polyline points="9 18 15 12 9 6"></polyline>
                         </svg>
                     </a>
-                                        <div class="submenu" id="submenu-communicate">
+                    <div class="submenu" id="submenu-communicate">
                         <a href="/admin/notification" class="submenu-item">Notice Board</a>
                         <a href="/admin/mailsms/compose" class="submenu-item">Send Email</a>
                         <a href="/admin/mailsms/compose_sms" class="submenu-item">Send SMS</a>
@@ -618,8 +619,8 @@
                         </svg>
                     </a>
                     <div class="submenu" id="submenu-homework">
-                        <a href="#" class="submenu-item">Add Homework</a>
-                        <a href="#" class="submenu-item">Daily Assignment</a>
+                        <a href="/homework" class="submenu-item">Add Homework</a>
+                        <a href="/dailyassignment" class="submenu-item">Daily Assignment</a>
                     </div>
                 </div>
                 <div class="menu-item-wrapper">
@@ -1025,36 +1026,36 @@
                             <div class="form-group">
                                 <label for="meetingTitle">Meeting Title <span class="required">*</span></label>
                                 <input type="text" id="meetingTitle" class="form-input" required maxlength="300">
-                            </div>
+                    </div>
 
-                            <div class="form-group">
+                        <div class="form-group">
                                 <label for="meetingDateTime">Meeting Date Time <span class="required">*</span></label>
-                                <div class="date-input-wrap">
+                            <div class="date-input-wrap">
                                     <input type="datetime-local" id="meetingDateTime" class="form-input" required>
-                                    <svg class="date-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                        <line x1="16" y1="2" x2="16" y2="6"></line>
-                                        <line x1="8" y1="2" x2="8" y2="6"></line>
-                                        <line x1="3" y1="10" x2="21" y2="10"></line>
-                                    </svg>
-                                </div>
+                                <svg class="date-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
                             </div>
+                        </div>
 
-                            <div class="form-group">
+                        <div class="form-group">
                                 <label for="durationMinutes">Meeting Duration (Minutes) <span class="required">*</span></label>
-                                <input type="number" id="durationMinutes" class="form-input" required min="1" max="600">
-                            </div>
+                            <input type="number" id="durationMinutes" class="form-input" required min="1" max="600">
+                    </div>
 
                             <div class="form-group">
                                 <label for="gmeetUrl">Gmeet URL <span class="help-link">(How To Get Gmeet URL? )</span> <span class="required">*</span></label>
                                 <input type="url" id="gmeetUrl" class="form-input" required maxlength="500" placeholder="https://meet.google.com/...">
-                            </div>
+                    </div>
 
                             <div class="form-group">
                                 <label for="description">Description</label>
                                 <textarea id="description" class="form-textarea" maxlength="2000"></textarea>
                             </div>
-                        </div>
+                    </div>
 
                         <div class="meeting-staff-column">
                             <div class="form-group">
@@ -1069,7 +1070,7 @@
                 </div>
             </form>
         </div>
-    </div>
+                    </div>
 
     <div class="gmeet-modal" id="staffViewModal" hidden>
         <div class="gmeet-modal-overlay" data-close-staff-modal></div>
@@ -1185,7 +1186,7 @@
                         <div class="pagination" id="invitedStaffPagination"></div>
                     </div>
                 </div>
-            </div>
+                </div>
         </div>
     </div>
 

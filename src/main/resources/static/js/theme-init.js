@@ -267,7 +267,31 @@
 
         window.applyBackendTheme();
 
+        ensureThemeOverridesStylesheet();
+
     });
+
+
+
+    function ensureThemeOverridesStylesheet() {
+
+        if (document.getElementById('app-theme-overrides')) {
+
+            return;
+
+        }
+
+        var link = document.createElement('link');
+
+        link.id = 'app-theme-overrides';
+
+        link.rel = 'stylesheet';
+
+        link.href = '/css/app-theme-overrides.css';
+
+        document.head.appendChild(link);
+
+    }
 
 
 

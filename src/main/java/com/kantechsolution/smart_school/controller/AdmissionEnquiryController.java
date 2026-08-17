@@ -1,6 +1,7 @@
 package com.kantechsolution.smart_school.controller;
 
 import com.kantechsolution.smart_school.model.AdmissionEnquiry;
+import com.kantechsolution.smart_school.model.AdmissionEnquiryFollowUp;
 import com.kantechsolution.smart_school.service.AdmissionEnquiryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -141,5 +142,48 @@ public class AdmissionEnquiryController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         List<AdmissionEnquiry> enquiries = service.getEnquiriesByDateRange(startDate, endDate);
         return ResponseEntity.ok(enquiries);
+    }
+
+    /**
+     * Get follow-ups for an enquiry (REST API)
+     */
+    @GetMapping("/api/admission-enquiry/{id}/follow-ups")
+    @ResponseBody
+    public ResponseEntity<List<AdmissionEnquiryFollowUp>> getFollowUps(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getFollowUps(id));
+    }
+
+    /**
+     * Save a follow-up for an enquiry (REST API)
+     */
+    @PostMapping("/api/admission-enquiry/{id}/follow-ups")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> saveFollowUp(
+            @PathVariable Long id,
+            @RequestBody Map<String, Object> body) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            AdmissionEnquiryFollowUp followUp = AdmissionEnquiryFollowUp.builder()
+                    .followUpDate(LocalDate.parse(String.valueOf(body.get("followUpDate"))))
+                    .nextFollowUpDate(LocalDate.parse(String.valueOf(body.get("nextFollowUpDate"))))
+                    .response(String.valueOf(body.get("response")))
+                    .note(body.get("note") != null ? String.valueOf(body.get("note")) : null)
+                    .createdBy(body.get("createdBy") != null ? String.valueOf(body.get("createdBy")) : null)
+                    .build();
+
+            String status = body.get("status") != null ? String.valueOf(body.get("status")) : null;
+            AdmissionEnquiryFollowUp saved = service.saveFollowUp(id, followUp, status);
+            AdmissionEnquiry updatedEnquiry = service.getEnquiryById(id).orElse(null);
+
+            response.put("success", true);
+            response.put("message", "Follow up saved successfully!");
+            response.put("data", saved);
+            response.put("enquiry", updatedEnquiry);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Failed to save follow up: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
     }
 }

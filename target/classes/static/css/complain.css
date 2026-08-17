@@ -73,7 +73,7 @@
 
 .form-control:focus {
     outline: none;
-    border-color: #3b82f6;
+    border-color: var(--theme-primary, #8b5cf6);
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
@@ -108,7 +108,7 @@ textarea.form-control {
 }
 
 .file-upload-area:hover {
-    border-color: #3b82f6;
+    border-color: var(--theme-primary, #8b5cf6);
     background-color: rgba(59, 130, 246, 0.05);
 }
 
@@ -119,7 +119,7 @@ textarea.form-control {
 }
 
 .file-upload-area:hover svg {
-    stroke: #3b82f6;
+    stroke: var(--theme-primary, #8b5cf6);
 }
 
 .file-upload-area p {
@@ -136,7 +136,7 @@ textarea.form-control {
 .btn-save-primary {
     width: 100%;
     padding: 12px 24px;
-    background: #3b82f6;
+    background: var(--theme-primary, #8b5cf6);
     color: #ffffff;
     border: none;
     border-radius: 6px;
@@ -148,7 +148,7 @@ textarea.form-control {
 }
 
 .btn-save-primary:hover {
-    background: #2563eb;
+    background: var(--theme-primary-dark, #7c3aed);
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
 }
@@ -181,7 +181,7 @@ textarea.form-control {
 
 .table-search-input:focus {
     outline: none;
-    border-color: #3b82f6;
+    border-color: var(--theme-primary, #8b5cf6);
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
@@ -222,8 +222,8 @@ textarea.form-control {
 }
 
 .icon-action-btn:hover {
-    background-color: #3b82f6;
-    border-color: #3b82f6;
+    background-color: var(--theme-primary, #8b5cf6);
+    border-color: var(--theme-primary, #8b5cf6);
 }
 
 .icon-action-btn:hover svg {
@@ -297,12 +297,13 @@ textarea.form-control {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #3b82f6;
+    background-color: var(--theme-primary, #8b5cf6);
 }
 
 .btn-action:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    background-color: var(--theme-primary-dark, #7c3aed);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--theme-primary, #8b5cf6) 40%, transparent);
 }
 
 .btn-action svg {
@@ -311,78 +312,37 @@ textarea.form-control {
     stroke: #ffffff;
 }
 
-.btn-view {
-    background-color: #3b82f6;
-}
-
-.btn-view:hover {
-    background-color: #2563eb;
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
-}
-
-.btn-edit {
-    background-color: #3b82f6;
-}
-
-.btn-edit:hover {
-    background-color: #2563eb;
-}
-
+.btn-view,
+.btn-edit,
 .btn-delete {
-    background-color: #3b82f6;
+    background-color: var(--theme-primary, #8b5cf6);
 }
 
+.btn-view:hover,
+.btn-edit:hover,
 .btn-delete:hover {
-    background-color: #2563eb;
+    background-color: var(--theme-primary-dark, #7c3aed);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--theme-primary, #8b5cf6) 40%, transparent);
 }
 
 /* Badge for Complain Type */
-.badge {
+.badge,
+.badge-transport,
+.badge-sports,
+.badge-teacher,
+.badge-study,
+.badge-fees,
+.badge-facilities,
+.badge-food,
+.badge-other {
     padding: 4px 12px;
     border-radius: 12px;
     font-size: 12px;
     font-weight: 500;
     display: inline-block;
-}
-
-.badge-transport {
-    background-color: rgba(59, 130, 246, 0.2);
-    color: #3b82f6;
-}
-
-.badge-sports {
-    background-color: rgba(34, 197, 94, 0.2);
-    color: #22c55e;
-}
-
-.badge-teacher {
-    background-color: rgba(168, 85, 247, 0.2);
-    color: #a855f7;
-}
-
-.badge-study {
-    background-color: rgba(251, 191, 36, 0.2);
-    color: #fbbf24;
-}
-
-.badge-fees {
-    background-color: rgba(239, 68, 68, 0.2);
-    color: #ef4444;
-}
-
-.badge-facilities {
-    background-color: rgba(14, 165, 233, 0.2);
-    color: #0ea5e9;
-}
-
-.badge-food {
-    background-color: rgba(249, 115, 22, 0.2);
-    color: #f97316;
-}
-
-.badge-other {
-    background-color: rgba(148, 163, 184, 0.2);
-    color: #94a3b8;
+    background-color: color-mix(in srgb, var(--theme-primary, #8b5cf6) 18%, transparent);
+    color: var(--theme-primary, #8b5cf6);
+    border: 1px solid color-mix(in srgb, var(--theme-primary, #8b5cf6) 35%, transparent);
 }
 
 /* Table Footer */
@@ -415,16 +375,11 @@ textarea.form-control {
     transition: all 0.3s ease;
 }
 
-.pagination-btn:hover:not(:disabled) {
-    background-color: #3b82f6;
-    color: #ffffff;
-    border-color: #3b82f6;
-}
-
+.pagination-btn:hover:not(:disabled),
 .pagination-btn.active {
-    background-color: #3b82f6;
+    background-color: var(--theme-primary, #8b5cf6);
     color: #ffffff;
-    border-color: #3b82f6;
+    border-color: var(--theme-primary, #8b5cf6);
 }
 
 .pagination-btn:disabled {
@@ -484,7 +439,7 @@ textarea.form-control {
     cursor: pointer;
     width: 16px;
     height: 16px;
-    accent-color: #3b82f6;
+    accent-color: var(--theme-primary, #8b5cf6);
 }
 
 .table-actions {

@@ -8,11 +8,12 @@
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
     <link rel="stylesheet" th:href="@{/css/onlinecourse-report.css}">
     <link rel="stylesheet" th:href="@{/css/app-theme.css}">
+    <link rel="stylesheet" th:href="@{/css/onlinecourse-modals-light.css}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- SweetAlert2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
+    </head>
 <body>
     <!-- Top Navigation Bar -->
     <nav class="top-navbar">
@@ -289,7 +290,7 @@
                 </div>
                 <div class="menu-item-wrapper">
                     <a href="#" class="menu-item menu-item-expandable" data-submenu="multi-branch">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M17 8a3 3 0 1 0-2.83-4"></path>
                             <path d="M7 8a3 3 0 1 1 2.83-4"></path>
                             <path d="M12 20v-6"></path>
@@ -573,7 +574,7 @@
                             <polyline points="9 18 15 12 9 6"></polyline>
                         </svg>
                     </a>
-                                        <div class="submenu" id="submenu-communicate">
+                    <div class="submenu" id="submenu-communicate">
                         <a href="/admin/notification" class="submenu-item">Notice Board</a>
                         <a href="/admin/mailsms/compose" class="submenu-item">Send Email</a>
                         <a href="/admin/mailsms/compose_sms" class="submenu-item">Send SMS</a>
@@ -615,8 +616,8 @@
                         </svg>
                     </a>
                     <div class="submenu" id="submenu-homework">
-                        <a href="#" class="submenu-item">Add Homework</a>
-                        <a href="#" class="submenu-item">Daily Assignment</a>
+                        <a href="/homework" class="submenu-item">Add Homework</a>
+                        <a href="/dailyassignment" class="submenu-item">Daily Assignment</a>
                     </div>
                 </div>
                 <div class="menu-item-wrapper">

@@ -7,6 +7,7 @@
     <title>Postal Receive - Smart School</title>
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
     <link rel="stylesheet" th:href="@{/css/postal-receive.css}">
+    <link rel="stylesheet" th:href="@{/css/postal-details.css}">
     <link rel="stylesheet" th:href="@{/css/app-theme.css}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- SweetAlert2 -->
@@ -620,8 +621,8 @@
                         </svg>
                     </a>
                     <div class="submenu" id="submenu-homework">
-                        <a href="#" class="submenu-item">Add Homework</a>
-                        <a href="#" class="submenu-item">Daily Assignment</a>
+                        <a href="/homework" class="submenu-item">Add Homework</a>
+                        <a href="/dailyassignment" class="submenu-item">Daily Assignment</a>
                     </div>
                 </div>
                 <div class="menu-item-wrapper">
@@ -920,6 +921,58 @@
                 </div>
             </div>
         </main>
+    </div>
+
+    <!-- Postal Details Modal -->
+    <div class="postal-details-modal" id="postalDetailsModal" hidden>
+        <div class="postal-details-overlay" id="postalDetailsOverlay"></div>
+        <div class="postal-details-dialog" role="dialog" aria-modal="true" aria-labelledby="postalDetailsTitle">
+            <div class="postal-details-header">
+                <h3 id="postalDetailsTitle">Details</h3>
+                <button type="button" class="postal-details-close" id="postalDetailsCloseBtn" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="postal-details-body">
+                <div class="postal-details-grid">
+                    <div class="postal-details-row">
+                        <div class="postal-details-item">
+                            <span class="postal-detail-label">To Title</span>
+                            <span class="postal-detail-value" id="detailToTitle">-</span>
+                        </div>
+                        <div class="postal-details-item">
+                            <span class="postal-detail-label">Reference No</span>
+                            <span class="postal-detail-value" id="detailReferenceNo">-</span>
+                        </div>
+                    </div>
+                    <div class="postal-details-row">
+                        <div class="postal-details-item">
+                            <span class="postal-detail-label">From Title</span>
+                            <span class="postal-detail-value" id="detailFromTitle">-</span>
+                        </div>
+                        <div class="postal-details-item">
+                            <span class="postal-detail-label">Date</span>
+                            <span class="postal-detail-value" id="detailDate">-</span>
+                        </div>
+                    </div>
+                    <div class="postal-details-row postal-details-row-full">
+                        <div class="postal-details-item postal-details-item-full">
+                            <span class="postal-detail-label">Address</span>
+                            <span class="postal-detail-value" id="detailAddress">-</span>
+                        </div>
+                    </div>
+                    <div class="postal-details-row postal-details-row-full">
+                        <div class="postal-details-item postal-details-item-full">
+                            <span class="postal-detail-label">Note</span>
+                            <span class="postal-detail-value" id="detailNote">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Quick Links Modal -->

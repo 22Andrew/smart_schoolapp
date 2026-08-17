@@ -124,8 +124,11 @@ public class CbseExamController {
 
     @GetMapping("/api/cbse-exams/{id}/students")
     @ResponseBody
-    public ResponseEntity<List<Map<String, Object>>> getCbseExamStudents(@PathVariable Long id) {
-        return ResponseEntity.ok(cbseExamService.getAssignableStudents(id));
+    public ResponseEntity<List<Map<String, Object>>> getCbseExamStudents(
+            @PathVariable Long id,
+            @RequestParam(required = false) Long classId,
+            @RequestParam(required = false) String section) {
+        return ResponseEntity.ok(cbseExamService.getAssignableStudents(id, classId, section));
     }
 
     @PutMapping("/api/cbse-exams/{id}/students")

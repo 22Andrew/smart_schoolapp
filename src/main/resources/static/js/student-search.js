@@ -560,9 +560,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     timer: 1200,
                     showConfirmButton: false
                 });
-            } catch (error) {
-                Swal.fire({
-                    icon: 'error',
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
                     title: 'Error',
                     text: 'Unable to copy to clipboard.',
                     confirmButtonColor: '#8b5cf6'

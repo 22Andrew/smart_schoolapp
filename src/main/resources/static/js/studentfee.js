@@ -251,7 +251,11 @@ document.addEventListener('DOMContentLoaded', function () {
             const row = btn.closest('tr');
             const studentId = row && row.getAttribute('data-student-id');
             if (!studentId) return;
-            window.location.href = '/studentfee/addfee/' + encodeURIComponent(studentId);
+            if (window.StudentFeeCollectModal && typeof window.StudentFeeCollectModal.open === 'function') {
+                window.StudentFeeCollectModal.open(studentId);
+            } else {
+                window.location.href = '/studentfee/addfee/' + encodeURIComponent(studentId);
+            }
         });
     }
 

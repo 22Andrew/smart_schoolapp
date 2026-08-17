@@ -95,8 +95,8 @@
 .form-select:focus,
 .form-input:focus {
     outline: none;
-    border-color: #8b5cf6;
-    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+    border-color: var(--theme-primary, #8b5cf6);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--theme-primary, #8b5cf6) 20%, transparent);
 }
 
 .form-submit {
@@ -106,7 +106,7 @@
 }
 
 .btn-search {
-    background: #8b5cf6;
+    background: var(--theme-primary, #8b5cf6);
     color: #ffffff;
     border: none;
     padding: 0 1.35rem;
@@ -124,7 +124,7 @@
 }
 
 .btn-search:hover {
-    background: #7c3aed;
+    background: var(--theme-primary-dark, #7c3aed);
 }
 
 /* Table / Results Section */
@@ -142,16 +142,17 @@
 }
 
 .view-tab {
-    background: none;
+    background: transparent;
     border: none;
     color: #95a5a6;
     font-size: 0.95rem;
     font-weight: 500;
     font-family: inherit;
-    padding: 0.75rem 0;
+    padding: 0.55rem 1rem;
+    border-radius: 6px 6px 0 0;
     cursor: pointer;
     position: relative;
-    transition: color 0.2s;
+    transition: background 0.2s ease, color 0.2s ease;
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
@@ -162,22 +163,27 @@
 }
 
 .view-tab:hover {
-    color: #ecf0f1;
+    color: var(--theme-primary, #8b5cf6);
+    background: color-mix(in srgb, var(--theme-primary, #8b5cf6) 10%, transparent);
 }
 
 .view-tab.active {
-    color: #a78bfa;
+    background: var(--theme-primary, #8b5cf6);
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.view-tab.active:hover {
+    background: var(--theme-primary-dark, #7c3aed);
+    color: #ffffff;
 }
 
 .view-tab.active::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -1px;
-    height: 3px;
-    background: #a78bfa;
-    border-radius: 3px 3px 0 0;
+    display: none;
+}
+
+.view-tab.active svg {
+    stroke: #ffffff;
 }
 
 .view-panel {
@@ -231,8 +237,8 @@
 
 .table-search-input:focus {
     outline: none;
-    border-color: #8b5cf6;
-    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+    border-color: var(--theme-primary, #8b5cf6);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--theme-primary, #8b5cf6) 20%, transparent);
 }
 
 .table-actions {
@@ -410,7 +416,7 @@
 
 .detail-name {
     margin: 0 0 0.65rem 0;
-    color: #a78bfa;
+    color: var(--theme-primary, #8b5cf6);
     font-size: 1.15rem;
     font-weight: 600;
     line-height: 1.2;
@@ -471,7 +477,7 @@
     height: 30px;
     border: none;
     border-radius: 3px;
-    background: #8b5cf6;
+    background: var(--theme-primary, #8b5cf6);
     color: #fff;
     cursor: pointer;
     display: inline-flex;
@@ -482,7 +488,7 @@
 }
 
 .btn-action:hover {
-    background: #7c3aed;
+    background: var(--theme-primary-dark, #7c3aed);
 }
 
 .btn-action svg {
@@ -567,9 +573,10 @@
     font-family: inherit;
 }
 
+.pagination-btn:hover:not(:disabled),
 .pagination-btn.active {
-    background: #8b5cf6;
-    border-color: #8b5cf6;
+    background: var(--theme-primary, #8b5cf6);
+    border-color: var(--theme-primary, #8b5cf6);
     color: #fff;
 }
 

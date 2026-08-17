@@ -41,4 +41,7 @@ public class ExamScheduleEntry extends BaseEntity {
 
     @Column(name = "marks_min", precision = 8, scale = 2)
     private BigDecimal marksMin;
+
+    @Column(name = "credit_hours", precision = 6, scale = 2)
+    private BigDecimal creditHours;
 }

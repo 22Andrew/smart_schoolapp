@@ -395,17 +395,13 @@ html.theme-dark .quick-links-modal .modal-content {
     color: #f8fafc !important;
 }
 
-html.theme-light .modal-header,
 html.theme-light .modal-body,
-html.theme-light .modal-title,
 html.theme-light .category-header,
 html.theme-light .category-links a {
     color: #111827 !important;
 }
 
-html.theme-dark .modal-header,
 html.theme-dark .modal-body,
-html.theme-dark .modal-title,
 html.theme-dark .category-header,
 html.theme-dark .category-links a {
     color: #f8fafc !important;
@@ -645,10 +641,74 @@ html.theme-light .nav-tab {
 }
 
 html.theme-light .tab-btn.active,
-html.theme-light .nav-tab.active {
+html.theme-light .nav-tab.active,
+html.theme-light .tab-item.active,
+html.theme-dark .tab-btn.active,
+html.theme-dark .nav-tab.active,
+html.theme-dark .tab-item.active {
+    background: var(--theme-primary) !important;
+    color: #ffffff !important;
+    border-color: var(--theme-primary-dark) !important;
+}
+
+html.theme-light .tab-item.active {
+    border-left-color: var(--theme-primary-dark) !important;
+}
+
+html.theme-dark .tab-item.active {
+    border-left-color: var(--theme-primary-dark) !important;
+}
+
+html.theme-light .tab-item.active:hover,
+html.theme-dark .tab-item.active:hover {
+    background: var(--theme-primary-dark) !important;
+    color: #ffffff !important;
+}
+
+/* Student Details — List View / Details View tabs */
+html.theme-light .view-tab.active,
+html.theme-dark .view-tab.active {
+    background: var(--theme-primary) !important;
+    color: #ffffff !important;
+}
+
+html.theme-light .view-tab.active:hover,
+html.theme-dark .view-tab.active:hover {
+    background: var(--theme-primary-dark) !important;
+    color: #ffffff !important;
+}
+
+html.theme-light .view-tab.active svg,
+html.theme-dark .view-tab.active svg {
+    stroke: #ffffff !important;
+}
+
+html.theme-light .view-tab:hover:not(.active),
+html.theme-dark .view-tab:hover:not(.active) {
     color: var(--theme-primary) !important;
+    background: color-mix(in srgb, var(--theme-primary) 10%, transparent) !important;
+}
+
+html.theme-light .student-search-page .detail-name,
+html.theme-dark .student-search-page .detail-name {
+    color: var(--theme-primary) !important;
+}
+
+html.theme-light .visitorspurpose-page .action-btn.btn-edit,
+html.theme-light .visitorspurpose-page .action-btn.btn-delete,
+html.theme-dark .visitorspurpose-page .action-btn.btn-edit,
+html.theme-dark .visitorspurpose-page .action-btn.btn-delete {
+    background-color: var(--theme-primary) !important;
     border-color: var(--theme-primary) !important;
-    background: #ffffff !important;
+    color: #ffffff !important;
+}
+
+html.theme-light .visitorspurpose-page .action-btn.btn-edit:hover,
+html.theme-light .visitorspurpose-page .action-btn.btn-delete:hover,
+html.theme-dark .visitorspurpose-page .action-btn.btn-edit:hover,
+html.theme-dark .visitorspurpose-page .action-btn.btn-delete:hover {
+    background-color: var(--theme-primary-dark) !important;
+    border-color: var(--theme-primary-dark) !important;
 }
 
 html.theme-light .empty-state,
@@ -947,7 +1007,7 @@ html.theme-light button[type="submit"]:not(.btn-cancel):not(.btn-secondary):not(
     color: #ffffff !important;
 }
 
-/* Table toolbar icons: copy, Excel, CSV, PDF, print, columns */
+/* Table toolbar icons: filled with selected theme color */
 html.theme-light .icon-action-btn,
 html.theme-light .staff-icon-action-btn,
 html.theme-light .notification-icon-btn,
@@ -956,9 +1016,9 @@ html.theme-light .table-actions button,
 html.theme-light [class*="-table-controls"] .icon-action-btn,
 html.theme-light [class*="-table-controls"] .staff-icon-action-btn,
 html.theme-light [class*="toolbar"] .icon-action-btn {
-    color: var(--theme-primary) !important;
-    border-color: var(--theme-primary-border) !important;
-    background-color: #ffffff !important;
+    color: #ffffff !important;
+    border-color: var(--theme-primary) !important;
+    background-color: var(--theme-primary) !important;
 }
 
 html.theme-light .icon-action-btn svg,
@@ -969,8 +1029,8 @@ html.theme-light .table-actions button svg,
 html.theme-light [class*="-table-controls"] .icon-action-btn svg,
 html.theme-light [class*="-table-controls"] .staff-icon-action-btn svg,
 html.theme-light [class*="toolbar"] .icon-action-btn svg {
-    stroke: currentColor !important;
-    color: inherit !important;
+    stroke: #ffffff !important;
+    color: #ffffff !important;
 }
 
 html.theme-light .icon-action-btn:hover,
@@ -981,20 +1041,8 @@ html.theme-light .table-actions button:hover,
 html.theme-light [class*="-table-controls"] .icon-action-btn:hover,
 html.theme-light [class*="-table-controls"] .staff-icon-action-btn:hover,
 html.theme-light [class*="toolbar"] .icon-action-btn:hover {
-    background-color: var(--theme-primary) !important;
-    border-color: var(--theme-primary) !important;
-    color: #ffffff !important;
-}
-
-html.theme-light .icon-action-btn:hover svg,
-html.theme-light .staff-icon-action-btn:hover svg,
-html.theme-light .notification-icon-btn:hover svg,
-html.theme-light .table-actions .icon-action-btn:hover svg,
-html.theme-light .table-actions button:hover svg,
-html.theme-light [class*="-table-controls"] .icon-action-btn:hover svg,
-html.theme-light [class*="-table-controls"] .staff-icon-action-btn:hover svg,
-html.theme-light [class*="toolbar"] .icon-action-btn:hover svg {
-    stroke: #ffffff !important;
+    background-color: var(--theme-primary-dark) !important;
+    border-color: var(--theme-primary-dark) !important;
     color: #ffffff !important;
 }
 
@@ -1046,23 +1094,40 @@ html.theme-light [class*="btn-reset"]:hover {
 /* Dark theme — same primary color bindings for icons & primary buttons */
 html.theme-dark .icon-action-btn,
 html.theme-dark .staff-icon-action-btn,
-html.theme-dark .notification-icon-btn {
-    color: var(--theme-primary) !important;
-    border-color: color-mix(in srgb, var(--theme-primary) 45%, #334155) !important;
+html.theme-dark .notification-icon-btn,
+html.theme-dark .table-actions .icon-action-btn,
+html.theme-dark .table-actions button,
+html.theme-dark [class*="-table-controls"] .icon-action-btn,
+html.theme-dark [class*="-table-controls"] .staff-icon-action-btn,
+html.theme-dark [class*="toolbar"] .icon-action-btn {
+    color: #ffffff !important;
+    border-color: var(--theme-primary) !important;
+    background-color: var(--theme-primary) !important;
 }
 
 html.theme-dark .icon-action-btn:hover,
 html.theme-dark .staff-icon-action-btn:hover,
-html.theme-dark .notification-icon-btn:hover {
-    background-color: var(--theme-primary) !important;
-    border-color: var(--theme-primary) !important;
+html.theme-dark .notification-icon-btn:hover,
+html.theme-dark .table-actions .icon-action-btn:hover,
+html.theme-dark .table-actions button:hover,
+html.theme-dark [class*="-table-controls"] .icon-action-btn:hover,
+html.theme-dark [class*="-table-controls"] .staff-icon-action-btn:hover,
+html.theme-dark [class*="toolbar"] .icon-action-btn:hover {
+    background-color: var(--theme-primary-dark) !important;
+    border-color: var(--theme-primary-dark) !important;
     color: #ffffff !important;
 }
 
 html.theme-dark .icon-action-btn svg,
 html.theme-dark .staff-icon-action-btn svg,
-html.theme-dark .notification-icon-btn svg {
-    stroke: currentColor !important;
+html.theme-dark .notification-icon-btn svg,
+html.theme-dark .table-actions .icon-action-btn svg,
+html.theme-dark .table-actions button svg,
+html.theme-dark [class*="-table-controls"] .icon-action-btn svg,
+html.theme-dark [class*="-table-controls"] .staff-icon-action-btn svg,
+html.theme-dark [class*="toolbar"] .icon-action-btn svg {
+    stroke: #ffffff !important;
+    color: #ffffff !important;
 }
 
 html.theme-dark .btn-action,
@@ -1081,6 +1146,65 @@ html.theme-dark [class*="btn-save"]:not([class*="cancel"]):hover,
 html.theme-dark [class*="btn-primary"]:hover {
     background-color: var(--theme-primary-dark) !important;
     border-color: var(--theme-primary-dark) !important;
+}
+
+/* Table row action icons — view, edit, delete */
+html.theme-light .btn-view,
+html.theme-light .btn-edit,
+html.theme-light .btn-delete,
+html.theme-light .btn-info,
+html.theme-dark .btn-view,
+html.theme-dark .btn-edit,
+html.theme-dark .btn-delete,
+html.theme-dark .btn-info {
+    background-color: var(--theme-primary) !important;
+    border-color: var(--theme-primary) !important;
+    color: #ffffff !important;
+}
+
+html.theme-light .btn-view:hover,
+html.theme-light .btn-edit:hover,
+html.theme-light .btn-delete:hover,
+html.theme-light .btn-info:hover,
+html.theme-dark .btn-view:hover,
+html.theme-dark .btn-edit:hover,
+html.theme-dark .btn-delete:hover,
+html.theme-dark .btn-info:hover {
+    background-color: var(--theme-primary-dark) !important;
+    border-color: var(--theme-primary-dark) !important;
+}
+
+html.theme-light .btn-action svg,
+html.theme-light .btn-view svg,
+html.theme-light .btn-edit svg,
+html.theme-light .btn-delete svg,
+html.theme-light .btn-info svg,
+html.theme-dark .btn-action svg,
+html.theme-dark .btn-view svg,
+html.theme-dark .btn-edit svg,
+html.theme-dark .btn-delete svg,
+html.theme-dark .btn-info svg {
+    stroke: #ffffff !important;
+}
+
+/* Pagination tab buttons — active & hover (dark theme) */
+html.theme-dark .pagination-btn.active,
+html.theme-dark .pagination-btn:hover:not(:disabled),
+html.theme-dark .page-link.active,
+html.theme-dark .page-item.active .page-link {
+    background-color: var(--theme-primary) !important;
+    border-color: var(--theme-primary) !important;
+    color: #ffffff !important;
+}
+
+/* Table badge / tag chips (e.g. Complaint Type) */
+html.theme-light .data-table .badge,
+html.theme-light .data-table [class*="badge-"],
+html.theme-dark .data-table .badge,
+html.theme-dark .data-table [class*="badge-"] {
+    background-color: color-mix(in srgb, var(--theme-primary) 18%, transparent) !important;
+    color: var(--theme-primary) !important;
+    border: 1px solid color-mix(in srgb, var(--theme-primary) 35%, transparent) !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -1505,3 +1629,254 @@ a.btn svg,
     height: var(--app-icon-size) !important;
     flex-shrink: 0;
 }
+
+/* ===== Global themed modal headers (all modals app-wide) ===== */
+.modal-header,
+[class*="-modal"] > .modal-header,
+[class*="-modal"] .modal-header:first-child,
+[class*="-modal-header"],
+[class*="-modal"] [class*="-modal-header"] {
+    background: var(--theme-primary, #8b5cf6) !important;
+    border-bottom: none !important;
+    color: #ffffff !important;
+}
+
+.modal-header .modal-title,
+.modal-header h1,
+.modal-header h2,
+.modal-header h3,
+[class*="-modal-header"] h1,
+[class*="-modal-header"] h2,
+[class*="-modal-header"] h3,
+[class*="-modal-header"] .modal-title {
+    color: #ffffff !important;
+}
+
+.modal-header .modal-close-btn,
+.modal-header .close-btn,
+[class*="-modal-header"] .modal-close-btn,
+[class*="-modal-header"] .close {
+    color: #ffffff !important;
+    background: transparent !important;
+    border: none !important;
+}
+
+.modal-header .modal-close-btn:hover,
+[class*="-modal-header"] .modal-close-btn:hover,
+[class*="-modal-header"] .close:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
+}
+
+.modal-footer .btn-submit,
+.modal-footer .btn-save-modal,
+.modal-footer .btn-primary,
+[class*="-modal-footer"] .btn-submit,
+[class*="-modal-footer"] .btn-save-modal,
+[class*="-modal-footer"] .btn-primary,
+[class*="-modal"] .btn-submit,
+[class*="-modal"] .btn-save-modal {
+    background: var(--theme-primary, #8b5cf6) !important;
+    border-color: var(--theme-primary, #8b5cf6) !important;
+    color: #ffffff !important;
+}
+
+.modal-footer .btn-submit:hover,
+.modal-footer .btn-save-modal:hover,
+.modal-footer .btn-primary:hover,
+[class*="-modal-footer"] .btn-submit:hover,
+[class*="-modal-footer"] .btn-save-modal:hover,
+[class*="-modal-footer"] .btn-primary:hover,
+[class*="-modal"] .btn-submit:hover,
+[class*="-modal"] .btn-save-modal:hover {
+    background: var(--theme-primary-dark, #7c3aed) !important;
+    border-color: var(--theme-primary-dark, #7c3aed) !important;
+    color: #ffffff !important;
+}
+
+/* Student fee collect / add fee modals */
+.add-fee-header,
+.collect-selected-header {
+    background: var(--theme-primary, #8b5cf6) !important;
+}
+
+.btn-modal-cancel,
+.btn-modal-collect,
+.btn-collect-pay {
+    background: var(--theme-primary, #8b5cf6) !important;
+}
+
+.btn-modal-cancel:hover,
+.btn-modal-collect:hover,
+.btn-collect-pay:hover {
+    background: var(--theme-primary-dark, #7c3aed) !important;
+}
+
+.sf-collect-back,
+.sf-btn-print-selected {
+    background: var(--theme-primary, #8b5cf6) !important;
+}
+
+.sf-collect-back:hover,
+.sf-btn-print-selected:hover {
+    background: var(--theme-primary-dark, #7c3aed) !important;
+}
+
+/* ===== App-wide themed icon / action buttons (tables, modals, sub-pages) ===== */
+.btn-action,
+.btn-action-icon,
+.action-buttons .btn-action,
+.action-buttons button[class*="btn-"],
+.action-cell .btn-action,
+.action-cell button,
+.data-table .btn-action,
+.data-table button.btn-action,
+[class*="-modal"] .btn-action,
+[class*="-modal"] .btn-action-icon,
+.cbse-modal .btn-action,
+.exam-list-table .btn-action,
+.assigned-table .btn-action,
+.tag-list-panel .btn-action,
+.template-action-grid .btn-action,
+.btn-view,
+.btn-edit,
+.btn-delete,
+.btn-info,
+.btn-assign,
+.btn-download,
+.btn-print,
+.btn-remove-row,
+.btn-marks-entry,
+html.theme-light .icon-action-btn,
+html.theme-light .staff-icon-action-btn,
+html.theme-light .notification-icon-btn,
+html.theme-dark .icon-action-btn,
+html.theme-dark .staff-icon-action-btn,
+html.theme-dark .notification-icon-btn,
+html.theme-light .table-actions .icon-action-btn,
+html.theme-dark .table-actions .icon-action-btn,
+html.theme-light [class*="-table-controls"] .icon-action-btn,
+html.theme-dark [class*="-table-controls"] .icon-action-btn,
+html.theme-light [class*="toolbar"] .icon-action-btn,
+html.theme-dark [class*="toolbar"] .icon-action-btn {
+    background-color: var(--theme-primary) !important;
+    background: var(--theme-primary) !important;
+    border-color: var(--theme-primary) !important;
+    color: #ffffff !important;
+}
+
+.btn-action:hover,
+.btn-action-icon:hover,
+.action-buttons .btn-action:hover,
+.action-buttons button[class*="btn-"]:hover,
+.action-cell .btn-action:hover,
+.action-cell button:hover,
+.data-table .btn-action:hover,
+.data-table button.btn-action:hover,
+[class*="-modal"] .btn-action:hover,
+[class*="-modal"] .btn-action-icon:hover,
+.cbse-modal .btn-action:hover,
+.exam-list-table .btn-action:hover,
+.assigned-table .btn-action:hover,
+.tag-list-panel .btn-action:hover,
+.template-action-grid .btn-action:hover,
+.btn-view:hover,
+.btn-edit:hover,
+.btn-delete:hover,
+.btn-info:hover,
+.btn-assign:hover,
+.btn-download:hover,
+.btn-print:hover,
+.btn-remove-row:hover,
+.btn-marks-entry:hover,
+html.theme-light .icon-action-btn:hover,
+html.theme-light .staff-icon-action-btn:hover,
+html.theme-light .notification-icon-btn:hover,
+html.theme-dark .icon-action-btn:hover,
+html.theme-dark .staff-icon-action-btn:hover,
+html.theme-dark .notification-icon-btn:hover,
+html.theme-light .table-actions .icon-action-btn:hover,
+html.theme-dark .table-actions .icon-action-btn:hover,
+html.theme-light [class*="-table-controls"] .icon-action-btn:hover,
+html.theme-dark [class*="-table-controls"] .icon-action-btn:hover,
+html.theme-light [class*="toolbar"] .icon-action-btn:hover,
+html.theme-dark [class*="toolbar"] .icon-action-btn:hover {
+    background-color: var(--theme-primary-dark) !important;
+    background: var(--theme-primary-dark) !important;
+    border-color: var(--theme-primary-dark) !important;
+    color: #ffffff !important;
+}
+
+.btn-action svg,
+.btn-action-icon svg,
+.action-buttons .btn-action svg,
+.action-cell .btn-action svg,
+.action-cell button svg,
+.data-table .btn-action svg,
+[class*="-modal"] .btn-action svg,
+[class*="-modal"] .btn-action-icon svg,
+.cbse-modal .btn-action svg,
+.exam-list-table .btn-action svg,
+.assigned-table .btn-action svg,
+.tag-list-panel .btn-action svg,
+.template-action-grid .btn-action svg,
+.btn-view svg,
+.btn-edit svg,
+.btn-delete svg,
+.btn-info svg,
+.btn-assign svg,
+.btn-download svg,
+.btn-print svg,
+.btn-remove-row svg,
+.btn-marks-entry svg,
+html.theme-light .icon-action-btn svg,
+html.theme-light .staff-icon-action-btn svg,
+html.theme-light .notification-icon-btn svg,
+html.theme-dark .icon-action-btn svg,
+html.theme-dark .staff-icon-action-btn svg,
+html.theme-dark .notification-icon-btn svg,
+html.theme-light .table-actions .icon-action-btn svg,
+html.theme-dark .table-actions .icon-action-btn svg,
+html.theme-light [class*="-table-controls"] .icon-action-btn svg,
+html.theme-dark [class*="-table-controls"] .icon-action-btn svg,
+html.theme-light [class*="toolbar"] .icon-action-btn svg,
+html.theme-dark [class*="toolbar"] .icon-action-btn svg {
+    stroke: #ffffff !important;
+    color: #ffffff !important;
+}
+
+/* Modals / sub-pages loaded after app-theme.css */
+.assign-modal .icon-action-btn,
+.assign-modal .assigned-table .btn-action,
+.sf-icon-action-btn,
+.tag-list-panel .icon-action-btn,
+.tag-list-panel .btn-action,
+.onlineexam-page .btn-action-icon {
+    background-color: var(--theme-primary) !important;
+    background: var(--theme-primary) !important;
+    border-color: var(--theme-primary) !important;
+    color: #ffffff !important;
+}
+
+.assign-modal .icon-action-btn:hover,
+.assign-modal .assigned-table .btn-action:hover,
+.sf-icon-action-btn:hover,
+.tag-list-panel .icon-action-btn:hover,
+.tag-list-panel .btn-action:hover,
+.onlineexam-page .btn-action-icon:hover {
+    background-color: var(--theme-primary-dark) !important;
+    background: var(--theme-primary-dark) !important;
+    border-color: var(--theme-primary-dark) !important;
+    color: #ffffff !important;
+}
+
+.assign-modal .icon-action-btn svg,
+.assign-modal .assigned-table .btn-action svg,
+.sf-icon-action-btn svg,
+.tag-list-panel .icon-action-btn svg,
+.tag-list-panel .btn-action svg,
+.onlineexam-page .btn-action-icon svg {
+    stroke: #ffffff !important;
+    color: #ffffff !important;
+}
+

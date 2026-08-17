@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ExamResultRecordRepository extends JpaRepository<ExamResultRecord, Long> {
 
@@ -26,4 +27,15 @@ public interface ExamResultRecordRepository extends JpaRepository<ExamResultReco
             @Param("section") String section);
 
     long countByExamGroupExamId(Long examGroupExamId);
+
+    @Query("""
+            SELECT r FROM ExamResultRecord r
+            JOIN FETCH r.studentAdmission s
+            LEFT JOIN FETCH s.schoolClass
+            WHERE r.examGroupExam.id = :examId
+            ORDER BY r.studentRank ASC, s.admissionNo ASC
+            """)
+    List<ExamResultRecord> findByExamGroupExamIdOrderByStudentRankAsc(@Param("examId") Long examGroupExamId);
+
+    Optional<ExamResultRecord> findByExamGroupExamIdAndStudentAdmissionId(Long examGroupExamId, Long studentAdmissionId);
 }
