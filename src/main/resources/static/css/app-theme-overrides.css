@@ -184,3 +184,96 @@
     color: #ffffff !important;
     fill: none;
 }
+
+/* ===== App-wide: every action button uses the selected backend theme color ===== */
+html.theme-light button[class*="btn-"]:not(.btn-link):not(.btn-close):not(.hamburger-btn):not(.icon-btn):not(.search-btn):not(.theme-option-btn):not(.notice-board-item-link),
+html.theme-dark button[class*="btn-"]:not(.btn-link):not(.btn-close):not(.hamburger-btn):not(.icon-btn):not(.search-btn):not(.theme-option-btn):not(.notice-board-item-link),
+html.theme-light a[class*="btn-"]:not(.btn-link):not(.btn-close):not(.menu-item):not(.submenu-item),
+html.theme-dark a[class*="btn-"]:not(.btn-link):not(.btn-close):not(.menu-item):not(.submenu-item),
+html.theme-light .btn:not(.btn-link):not(.btn-close),
+html.theme-dark .btn:not(.btn-link):not(.btn-close),
+html.theme-light .action-btn,
+html.theme-dark .action-btn,
+html.theme-light .summary-action-btn,
+html.theme-dark .summary-action-btn,
+html.theme-light .notice-board-action-btn,
+html.theme-dark .notice-board-action-btn,
+html.theme-light input[type="submit"],
+html.theme-dark input[type="submit"],
+html.theme-light input[type="button"]:not(.theme-option-btn),
+html.theme-dark input[type="button"]:not(.theme-option-btn),
+html.theme-light .swal2-confirm,
+html.theme-dark .swal2-confirm,
+html.theme-light .swal2-deny,
+html.theme-dark .swal2-deny {
+    background-color: var(--theme-primary) !important;
+    background: var(--theme-primary) !important;
+    border-color: var(--theme-primary) !important;
+    color: #ffffff !important;
+}
+
+html.theme-light button[class*="btn-"]:not(.btn-link):not(.btn-close):not(.hamburger-btn):not(.icon-btn):not(.search-btn):not(.theme-option-btn):not(.notice-board-item-link):hover,
+html.theme-dark button[class*="btn-"]:not(.btn-link):not(.btn-close):not(.hamburger-btn):not(.icon-btn):not(.search-btn):not(.theme-option-btn):not(.notice-board-item-link):hover,
+html.theme-light a[class*="btn-"]:not(.btn-link):not(.btn-close):not(.menu-item):not(.submenu-item):hover,
+html.theme-dark a[class*="btn-"]:not(.btn-link):not(.btn-close):not(.menu-item):not(.submenu-item):hover,
+html.theme-light .btn:not(.btn-link):not(.btn-close):hover,
+html.theme-dark .btn:not(.btn-link):not(.btn-close):hover,
+html.theme-light .action-btn:hover,
+html.theme-dark .action-btn:hover,
+html.theme-light .summary-action-btn:hover,
+html.theme-dark .summary-action-btn:hover,
+html.theme-light .notice-board-action-btn:hover,
+html.theme-dark .notice-board-action-btn:hover,
+html.theme-light input[type="submit"]:hover,
+html.theme-dark input[type="submit"]:hover,
+html.theme-light input[type="button"]:not(.theme-option-btn):hover,
+html.theme-dark input[type="button"]:not(.theme-option-btn):hover,
+html.theme-light .swal2-confirm:hover,
+html.theme-dark .swal2-confirm:hover,
+html.theme-light .swal2-deny:hover,
+html.theme-dark .swal2-deny:hover {
+    background-color: var(--theme-primary-dark) !important;
+    background: var(--theme-primary-dark) !important;
+    border-color: var(--theme-primary-dark) !important;
+    color: #ffffff !important;
+}
+
+html.theme-light button[class*="btn-"]:not(.btn-link):not(.btn-close) svg,
+html.theme-dark button[class*="btn-"]:not(.btn-link):not(.btn-close) svg,
+html.theme-light .action-btn svg,
+html.theme-dark .action-btn svg,
+html.theme-light .summary-action-btn svg,
+html.theme-dark .summary-action-btn svg,
+html.theme-light .notice-board-action-btn svg,
+html.theme-dark .notice-board-action-btn svg,
+html.theme-light .swal2-confirm svg,
+html.theme-dark .swal2-confirm svg {
+    stroke: #ffffff !important;
+    color: #ffffff !important;
+}
+
+/* Keep chrome / navigation controls unfilled */
+html.theme-light .hamburger-btn,
+html.theme-dark .hamburger-btn,
+html.theme-light .top-navbar .icon-btn,
+html.theme-dark .top-navbar .icon-btn,
+html.theme-light .top-navbar .search-btn,
+html.theme-dark .top-navbar .search-btn,
+html.theme-light .sidebar-session-edit-btn,
+html.theme-dark .sidebar-session-edit-btn,
+html.theme-light .sidebar-quick-links-btn,
+html.theme-dark .sidebar-quick-links-btn,
+html.theme-light .modal-close-btn,
+html.theme-dark .modal-close-btn,
+html.theme-light [class*="-modal-close"],
+html.theme-dark [class*="-modal-close"],
+html.theme-light .notice-board-item-link,
+html.theme-dark .notice-board-item-link {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+html.theme-light .notice-board-item-link,
+html.theme-dark .notice-board-item-link {
+    color: #38bdf8 !important;
+}

@@ -8,7 +8,7 @@
     --theme-primary-sidebar-bg: color-mix(in srgb, var(--theme-primary) 14%, #ffffff);
     --theme-primary-sidebar-text: var(--theme-primary);
     --theme-primary-sidebar-border: var(--theme-primary);
-    --app-icon-size: 18px;
+    --app-icon-size: 14px;
 }
 
 html.theme-light {

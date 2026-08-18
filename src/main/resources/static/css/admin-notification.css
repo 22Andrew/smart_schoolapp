@@ -50,13 +50,13 @@
     font-weight: 500;
     cursor: pointer;
     color: #ffffff;
-    background: #8b5cf6;
+    background: var(--theme-primary, #8b5cf6);
     transition: background 0.2s ease;
 }
 
 .btn-post-message:hover,
 .btn-delete-board:hover {
-    background: #7c3aed;
+    background: var(--theme-primary-dark, #7c3aed);
 }
 
 .notice-board-list {
@@ -447,7 +447,7 @@
 .compose-checkbox-item input[type="checkbox"] {
     width: 16px;
     height: 16px;
-    accent-color: #8b5cf6;
+    accent-color: var(--theme-primary, #8b5cf6);
     cursor: pointer;
     flex-shrink: 0;
 }
@@ -468,8 +468,8 @@
 
 .attachment-dropzone:hover,
 .attachment-dropzone.dragover {
-    border-color: #8b5cf6;
-    background: rgba(139, 92, 246, 0.06);
+    border-color: var(--theme-primary, #8b5cf6);
+    background: color-mix(in srgb, var(--theme-primary, #8b5cf6) 6%, transparent);
 }
 
 .attachment-dropzone-inner {
@@ -552,7 +552,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    background: #8b5cf6;
+    background: var(--theme-primary, #8b5cf6);
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -563,7 +563,7 @@
 }
 
 .btn-compose-send:hover {
-    background: #7c3aed;
+    background: var(--theme-primary-dark, #7c3aed);
 }
 
 .compose-main .form-group,
@@ -595,8 +595,8 @@
 .compose-main .form-control:focus,
 .notice-modal-body .form-control:focus {
     outline: none;
-    border-color: #8b5cf6;
-    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+    border-color: var(--theme-primary, #8b5cf6);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--theme-primary, #8b5cf6) 20%, transparent);
 }
 
 .notice-modal-footer {
@@ -607,7 +607,7 @@
 }
 
 .btn-notice-save {
-    background: #8b5cf6;
+    background: var(--theme-primary, #8b5cf6);
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -617,7 +617,7 @@
 }
 
 .btn-notice-save:hover {
-    background: #7c3aed;
+    background: var(--theme-primary-dark, #7c3aed);
 }
 
 .btn-notice-cancel {

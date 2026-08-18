@@ -656,7 +656,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    let currentStudent = null;
+
     function fillStudent(row) {
+        currentStudent = row;
         const name = fullName(row) || 'Student';
         const sessionLabel = document.querySelector('.session-value');
         const session = sessionLabel ? sessionLabel.textContent.trim() : '';
@@ -724,6 +727,76 @@ document.addEventListener('DOMContentLoaded', function () {
         ]);
 
         renderCodes(row.admissionNo || String(row.id || ''));
+        loadSiblings(row.id);
+    }
+
+    function siblingPlaceholderPhoto() {
+        return ''
+            + '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="72" height="72" aria-hidden="true">'
+            + '<circle cx="40" cy="28" r="14" fill="#9aa5b1"/>'
+            + '<path d="M16 72c4-18 14-26 24-26s20 8 24 26" fill="#9aa5b1"/>'
+            + '</svg>';
+    }
+
+    function siblingClassLabel(row) {
+        const className = display(row.className);
+        const section = display(row.section);
+        if (className && section) return className + ' (' + section + ')';
+        return className || section || '';
+    }
+
+    function renderSiblingCards(siblings) {
+        const section = document.getElementById('siblingSection');
+        const container = document.getElementById('siblingCards');
+        if (!section || !container) return;
+
+        if (!siblings || !siblings.length) {
+            container.innerHTML = '';
+            section.hidden = true;
+            return;
+        }
+
+        container.innerHTML = siblings.map(function (row) {
+            const name = display(row.studentName) || 'Student';
+            const photoUrl = row.photoUrl || row.photoPath || '';
+            const photo = (photoUrl
+                ? '<img src="' + escapeHtml(photoUrl) + '" alt="' + escapeHtml(name) + '" onerror="this.remove()">'
+                : '')
+                + siblingPlaceholderPhoto();
+            const classLabel = siblingClassLabel(row);
+            return ''
+                + '<a class="sibling-card" href="/student/view/' + encodeURIComponent(String(row.siblingId)) + '">'
+                + '<div class="sibling-card-photo">' + photo + '</div>'
+                + '<div class="sibling-card-body">'
+                + '<span class="sibling-card-name">' + escapeHtml(name) + '</span>'
+                + (row.admissionNo
+                    ? '<p class="sibling-card-meta"><strong>Admission No</strong> ' + escapeHtml(row.admissionNo) + '</p>'
+                    : '')
+                + (classLabel
+                    ? '<p class="sibling-card-meta"><strong>Class</strong> ' + escapeHtml(classLabel) + '</p>'
+                    : '')
+                + '</div></a>';
+        }).join('');
+        section.hidden = false;
+    }
+
+    async function loadSiblings(studentIdValue) {
+        const id = studentIdValue || studentId;
+        if (!id) {
+            renderSiblingCards([]);
+            return;
+        }
+        try {
+            const response = await fetch('/api/student-admissions/siblings?studentId=' + encodeURIComponent(String(id)));
+            if (!response.ok) {
+                throw new Error('Failed to load siblings');
+            }
+            const siblings = await response.json();
+            renderSiblingCards(Array.isArray(siblings) ? siblings : []);
+        } catch (error) {
+            console.error(error);
+            renderSiblingCards([]);
+        }
     }
 
     async function loadStudent() {
@@ -1391,7 +1464,61 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    ['viewKeyBtn', 'viewDisableBtn', 'viewInfoBtn'].forEach(function (id) {
+    const loginDetailsModal = document.getElementById('loginDetailsModal');
+
+    function openLoginDetailsModal() {
+        if (!loginDetailsModal) return;
+        const row = currentStudent || {};
+        const summaryNameEl = document.getElementById('summaryName');
+        const name = fullName(row) || (summaryNameEl ? summaryNameEl.textContent : '') || 'Student';
+        const id = row.id != null ? String(row.id) : (studentId || '');
+        const loginUrl = window.location.origin + '/user-login';
+
+        const nameEl = document.getElementById('loginDetailsName');
+        if (nameEl) nameEl.textContent = name;
+
+        const parentUser = document.getElementById('loginDetailsParentUser');
+        const studentUser = document.getElementById('loginDetailsStudentUser');
+        const parentPass = document.getElementById('loginDetailsParentPass');
+        const studentPass = document.getElementById('loginDetailsStudentPass');
+        if (parentUser) parentUser.textContent = 'parent' + id;
+        if (studentUser) studentUser.textContent = 'std' + id;
+        if (parentPass) parentPass.textContent = 'password';
+        if (studentPass) studentPass.textContent = 'password';
+
+        const urlEl = document.getElementById('loginDetailsUrl');
+        if (urlEl) {
+            urlEl.textContent = loginUrl;
+            urlEl.setAttribute('href', loginUrl);
+        }
+
+        loginDetailsModal.classList.add('active');
+        loginDetailsModal.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeLoginDetailsModal() {
+        if (!loginDetailsModal) return;
+        loginDetailsModal.classList.remove('active');
+        loginDetailsModal.setAttribute('aria-hidden', 'true');
+    }
+
+    const viewKeyBtn = document.getElementById('viewKeyBtn');
+    if (viewKeyBtn) {
+        viewKeyBtn.addEventListener('click', openLoginDetailsModal);
+    }
+
+    ['loginDetailsClose', 'loginDetailsCancel', 'loginDetailsOverlay'].forEach(function (id) {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('click', closeLoginDetailsModal);
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && loginDetailsModal && loginDetailsModal.classList.contains('active')) {
+            closeLoginDetailsModal();
+        }
+    });
+
+    ['viewDisableBtn', 'viewInfoBtn'].forEach(function (id) {
         const btn = document.getElementById(id);
         if (!btn) return;
         btn.addEventListener('click', function () {

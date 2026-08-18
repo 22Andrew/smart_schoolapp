@@ -38,6 +38,8 @@ public class UploadStorage {
         Files.createDirectories(root.resolve("emails"));
         Files.createDirectories(root.resolve("contents"));
         Files.createDirectories(root.resolve("homework"));
+        Files.createDirectories(root.resolve("inventory"));
+        Files.createDirectories(root.resolve("vehicles"));
     }
 
     public Path getRoot() {
@@ -102,5 +104,13 @@ public class UploadStorage {
 
     public Path getHomeworkDir() {
         return root.resolve("homework");
+    }
+
+    public Path getInventoryDir() {
+        return root.resolve("inventory");
+    }
+
+    public Path getVehiclesDir() {
+        return root.resolve("vehicles");
     }
 }

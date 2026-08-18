@@ -493,7 +493,7 @@ document.addEventListener('DOMContentLoaded', function () {
         setInputValue('measurementDate', row.measurementDate);
         setInputValue('medicalHistory', row.medicalHistory);
         setSelectValue('routeList', row.routeList);
-        setSelectValue('pickupPoint', row.pickupPoint);
+        fillPickupPoints(row.pickupPoint);
         setSelectValue('feesMonth', row.feesMonth);
         if (hostelSelect && row.hostelId != null) {
             hostelSelect.value = String(row.hostelId);
@@ -692,6 +692,68 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         if (current) roomNoSelect.value = current;
+    }
+
+    const routeListSelect = document.getElementById('routeList');
+    const pickupPointSelect = document.getElementById('pickupPoint');
+    let transportRoutes = [];
+    let transportPickups = [];
+    let transportStops = [];
+
+    function fillNamedSelect(select, items, valueKey, labelKey, selected) {
+        if (!select) return;
+        const current = selected != null && String(selected).trim() !== '' ? String(selected) : '';
+        select.innerHTML = '<option value="">Select</option>';
+        (items || []).forEach(function (item) {
+            const option = document.createElement('option');
+            option.value = String(item[valueKey] == null ? '' : item[valueKey]);
+            option.textContent = item[labelKey];
+            select.appendChild(option);
+        });
+        if (current) setSelectValue(select.id, current);
+    }
+
+    function fillPickupPoints(selected) {
+        if (!pickupPointSelect) return;
+        const routeTitle = routeListSelect && routeListSelect.value;
+        let pickups = transportPickups;
+        if (routeTitle) {
+            const assigned = transportStops.filter(function (stop) {
+                return String(stop.routeTitle) === routeTitle;
+            }).map(function (stop) {
+                return stop.pickupPoint;
+            });
+            if (assigned.length) {
+                pickups = transportPickups.filter(function (point) {
+                    return assigned.indexOf(point.name) >= 0;
+                });
+            }
+        }
+        fillNamedSelect(pickupPointSelect, pickups, 'name', 'name', selected);
+    }
+
+    async function loadTransport() {
+        const [optionsResponse, stopsResponse] = await Promise.all([
+            fetch('/api/transport/options'),
+            fetch('/api/transport/route-stops')
+        ]);
+        if (optionsResponse.ok) {
+            const options = await optionsResponse.json();
+            transportRoutes = options.routes || [];
+            transportPickups = options.pickupPoints || [];
+        }
+        if (stopsResponse.ok) {
+            const stops = await stopsResponse.json();
+            transportStops = Array.isArray(stops) ? stops : [];
+        }
+        fillNamedSelect(routeListSelect, transportRoutes, 'title', 'title');
+        fillPickupPoints();
+    }
+
+    if (routeListSelect) {
+        routeListSelect.addEventListener('change', function () {
+            fillPickupPoints();
+        });
     }
 
     async function loadClasses() {
@@ -933,6 +995,7 @@ document.addEventListener('DOMContentLoaded', function () {
         loadHostels(),
         loadHostelRooms(),
         loadHouses(),
+        loadTransport(),
         loadAutoAdmissionNo()
     ]).then(function () {
         if (getCurrentStudentId()) {

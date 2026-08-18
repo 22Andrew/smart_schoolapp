@@ -437,7 +437,7 @@ public class StudentAdmissionService {
         }
     }
 
-    private Map<String, Object> toMap(StudentAdmission row) {
+    public Map<String, Object> toMap(StudentAdmission row) {
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("id", row.getId());
         map.put("admissionNo", row.getAdmissionNo());

@@ -3,6 +3,9 @@ package com.kantechsolution.smart_school.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
 /**
  * Library entity for managing library books
  */
@@ -17,15 +20,21 @@ public class Library extends BaseEntity {
     
     @Column(nullable = false, length = 200)
     private String title;
+
+    @Column(name = "book_number", length = 50)
+    private String bookNumber;
     
     @Column(length = 100)
     private String author;
     
-    @Column(name = "isbn", unique = true, length = 20)
+    @Column(name = "isbn", length = 50)
     private String isbn;
     
     @Column(length = 100)
     private String publisher;
+
+    @Column(length = 100)
+    private String subject;
     
     @Column(name = "publication_year")
     private Integer publicationYear;
@@ -39,10 +48,16 @@ public class Library extends BaseEntity {
     @Column(name = "available_copies")
     private Integer availableCopies;
     
-    @Column(name = "rack_number", length = 20)
+    @Column(name = "rack_number", length = 50)
     private String rackNumber;
+
+    @Column(name = "book_price", precision = 12, scale = 2)
+    private BigDecimal bookPrice;
+
+    @Column(name = "post_date")
+    private LocalDate postDate;
     
-    @Column(length = 1000)
+    @Column(length = 2000)
     private String description;
     
     @Column(length = 50)

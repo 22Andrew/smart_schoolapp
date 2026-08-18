@@ -8,10 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 public class StudentSiblingService {
@@ -23,22 +27,46 @@ public class StudentSiblingService {
     private StudentAdmissionRepository studentAdmissionRepository;
 
     public List<Map<String, Object>> listSiblings(Long studentId, String draftToken) {
-        List<StudentSibling> rows;
+        List<Map<String, Object>> result = new ArrayList<>();
+
         if (studentId != null) {
-            rows = studentSiblingRepository.findByStudentAdmissionIdOrderByIdAsc(studentId);
-        } else if (draftToken != null && !draftToken.isBlank()) {
-            rows = studentSiblingRepository.findByDraftTokenOrderByIdAsc(draftToken.trim());
-        } else {
+            Set<Long> siblingIds = collectSiblingGroup(studentId);
+            siblingIds.remove(studentId);
+            for (Long siblingId : siblingIds) {
+                studentAdmissionRepository.findById(siblingId).ifPresent(sibling -> {
+                    result.add(toSiblingMap(null, sibling));
+                });
+            }
+            return result;
+        }
+
+        if (draftToken == null || draftToken.isBlank()) {
             return List.of();
         }
 
-        List<Map<String, Object>> result = new ArrayList<>();
-        for (StudentSibling row : rows) {
+        for (StudentSibling row : studentSiblingRepository.findByDraftTokenOrderByIdAsc(draftToken.trim())) {
             studentAdmissionRepository.findById(row.getSiblingAdmissionId()).ifPresent(sibling -> {
                 result.add(toSiblingMap(row, sibling));
             });
         }
         return result;
+    }
+
+    private Set<Long> collectSiblingGroup(Long studentId) {
+        Set<Long> visited = new LinkedHashSet<>();
+        Deque<Long> queue = new ArrayDeque<>();
+        queue.add(studentId);
+        visited.add(studentId);
+        while (!queue.isEmpty()) {
+            Long current = queue.removeFirst();
+            for (StudentSibling row : studentSiblingRepository.findByStudentAdmissionIdOrderByIdAsc(current)) {
+                Long next = row.getSiblingAdmissionId();
+                if (next != null && visited.add(next)) {
+                    queue.add(next);
+                }
+            }
+        }
+        return visited;
     }
 
     @Transactional
@@ -143,8 +171,13 @@ public class StudentSiblingService {
         map.put("siblingId", sibling.getId());
         map.put("admissionNo", sibling.getAdmissionNo());
         map.put("studentName", fullName(sibling));
+        map.put("rollNumber", sibling.getRollNumber());
+        map.put("gender", sibling.getGender());
+        map.put("dateOfBirth", sibling.getDateOfBirth() != null ? sibling.getDateOfBirth().toString() : null);
         map.put("className", sibling.getSchoolClass() != null ? sibling.getSchoolClass().getName() : "");
         map.put("section", sibling.getSection());
+        map.put("photoPath", sibling.getPhotoPath());
+        map.put("photoUrl", sibling.getPhotoPath());
         return map;
     }
 

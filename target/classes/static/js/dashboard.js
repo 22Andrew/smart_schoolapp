@@ -659,6 +659,9 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (currentPath === '/multibranch/branch/') {
             currentPath = '/multibranch/branch';
         }
+        if (/^\/admin\/resume\/fill\/\d+\/?$/.test(currentPath)) {
+            currentPath = '/admin/resume/index';
+        }
         if (currentPath.startsWith('/multibranch/finance/')) {
             if (currentPath.includes('payrollreport')) {
                 currentPath = '/multibranch/finance/payrollreport';
