@@ -517,7 +517,7 @@ body {
 
 .menu-item-wrapper {
     position: relative;
-    overflow-x: hidden;
+    overflow: visible;
     max-width: 100%;
 }
 
@@ -527,15 +527,14 @@ body {
 }
 
 .submenu {
-    max-height: 0;
-    overflow: hidden;
-    overflow-x: hidden;
-    transition: max-height 0.3s ease-out;
+    display: none;
+    overflow: visible;
     background: rgba(0, 0, 0, 0.2);
 }
 
 .submenu.open {
-    max-height: 1200px;
+    display: block;
+    max-height: none;
 }
 
 .submenu-item {
@@ -593,14 +592,14 @@ body {
 }
 
 .sub-submenu {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease-out;
+    display: none;
+    overflow: visible;
     background: rgba(0, 0, 0, 0.3);
 }
 
 .sub-submenu.open {
-    max-height: 600px;
+    display: block;
+    max-height: none;
 }
 
 .sub-submenu-item {

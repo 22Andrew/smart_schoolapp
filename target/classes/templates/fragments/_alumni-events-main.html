@@ -1,0 +1,149 @@
+        <main class="main-content alumni-events-page">
+            <div class="alumni-events-layout">
+                <section class="alumni-cal-card">
+                    <div class="alumni-cal-header">
+                        <div class="alumni-cal-nav">
+                            <button type="button" id="calPrev" aria-label="Previous month">&lt;</button>
+                            <button type="button" id="calNext" aria-label="Next month">&gt;</button>
+                        </div>
+                        <h2 class="alumni-cal-title" id="calTitle">August 2026</h2>
+                    </div>
+                    <table class="alumni-calendar" id="alumniCalendar">
+                        <thead>
+                            <tr>
+                                <th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th>
+                            </tr>
+                        </thead>
+                        <tbody id="calBody"></tbody>
+                    </table>
+                </section>
+                <section class="alumni-list-card">
+                    <div class="alumni-list-header">
+                        <h2 class="alumni-list-title">Event List</h2>
+                        <button type="button" class="alumni-add-btn" id="addEventBtn">+ Add Event</button>
+                    </div>
+                    <div class="table-controls">
+                        <div class="table-search">
+                            <svg class="table-search-icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                            <input type="text" id="tableSearchInput" class="table-search-input" placeholder="Search">
+                        </div>
+                        <div class="table-actions">
+                            <select class="entries-select" id="entriesSelect">
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="50" selected>50</option>
+                                <option value="100">100</option>
+                            </select>
+                            <button type="button" class="icon-action-btn" id="copyBtn" title="Copy"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
+                            <button type="button" class="icon-action-btn" id="excelBtn" title="Excel"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg></button>
+                            <button type="button" class="icon-action-btn" id="csvBtn" title="CSV"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg></button>
+                            <button type="button" class="icon-action-btn" id="pdfBtn" title="PDF"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg></button>
+                            <button type="button" class="icon-action-btn" id="printBtn" title="Print"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg></button>
+                            <div class="column-visibility-wrap">
+                                <button type="button" class="icon-action-btn" id="columnsBtn" title="Columns"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table" id="eventTable">
+                            <thead>
+                                <tr>
+                                    <th data-sort="title">Event Title</th>
+                                    <th data-sort="classSection">Class Section</th>
+                                    <th data-sort="sessionName">Pass Out Session</th>
+                                    <th data-sort="fromDate">From</th>
+                                    <th data-sort="toDate">To</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="eventTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="table-footer">
+                        <div class="showing-info" id="showingInfo">Showing 0 to 0 of 0 entries</div>
+                        <div class="pagination" id="pagination"></div>
+                    </div>
+                </section>
+            </div>
+        </main>
+        <div class="alumni-modal" id="eventModal">
+            <div class="alumni-modal-overlay" id="eventModalOverlay"></div>
+            <div class="alumni-modal-content alumni-event-modal">
+                <div class="alumni-modal-header">
+                    <h2 class="alumni-modal-title" id="eventModalTitle">Add Event</h2>
+                    <button type="button" class="alumni-modal-close" id="eventModalClose" aria-label="Close">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                </div>
+                <form id="eventForm">
+                    <input type="hidden" id="eventId">
+                    <div class="alumni-modal-body">
+                        <div class="alumni-field">
+                            <label>Event For <span class="required">*</span></label>
+                            <div class="alumni-radio-row">
+                                <label class="alumni-radio"><input type="radio" name="eventFor" value="ALL" checked> All Alumni</label>
+                                <label class="alumni-radio"><input type="radio" name="eventFor" value="CLASS"> Class</label>
+                            </div>
+                        </div>
+                        <div class="alumni-class-fields" id="classFields">
+                            <div class="alumni-form-grid">
+                                <div class="alumni-field">
+                                    <label for="eventSession">Pass Out Session</label>
+                                    <select id="eventSession"></select>
+                                </div>
+                                <div class="alumni-field">
+                                    <label for="eventClass">Class</label>
+                                    <select id="eventClass"></select>
+                                </div>
+                                <div class="alumni-field">
+                                    <label for="eventSection">Section</label>
+                                    <select id="eventSection"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="alumni-field">
+                            <label for="eventTitle">Event Title <span class="required">*</span></label>
+                            <input type="text" id="eventTitle" required>
+                        </div>
+                        <div class="alumni-event-media-row">
+                            <div class="alumni-field">
+                                <label for="eventFrom">Event From Date <span class="required">*</span></label>
+                                <input type="date" id="eventFrom" required>
+                            </div>
+                            <div class="alumni-field">
+                                <label for="eventTo">Event To Date <span class="required">*</span></label>
+                                <input type="date" id="eventTo" required>
+                            </div>
+                            <div class="alumni-field">
+                                <label>Photo (100px X 100px)</label>
+                                <div class="alumni-dropzone alumni-event-photo" id="eventDropzone">
+                                    <input type="file" id="eventPhoto" accept="image/*">
+                                    <img id="eventPhotoPreview" alt="">
+                                    <svg id="eventPhotoIcon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 16.5A3.5 3.5 0 0 0 16.5 13H16a5 5 0 1 0-9.9 1"></path><polyline points="16 16 12 12 8 16"></polyline><line x1="12" y1="12" x2="12" y2="21"></line></svg>
+                                    <p id="eventPhotoLabel">Drag and drop a file here or click</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="alumni-field">
+                            <label for="eventNote">Note</label>
+                            <input type="text" id="eventNote">
+                        </div>
+                        <div class="alumni-field">
+                            <label for="eventMessage">Event Notification Message</label>
+                            <input type="text" id="eventMessage">
+                        </div>
+                        <div class="alumni-check-row">
+                            <label class="alumni-check"><input type="checkbox" id="notifyEmail"> Email</label>
+                            <label class="alumni-check"><input type="checkbox" id="notifySms"> SMS</label>
+                        </div>
+                        <div class="alumni-field">
+                            <label for="smsTemplateId">SMS Template ID (This field is required Only For Indian SMS Gateway)</label>
+                            <input type="text" id="smsTemplateId">
+                        </div>
+                    </div>
+                    <div class="alumni-modal-footer">
+                        <button type="submit" class="alumni-save-btn">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>

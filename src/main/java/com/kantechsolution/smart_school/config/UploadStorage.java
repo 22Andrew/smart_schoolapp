@@ -40,6 +40,9 @@ public class UploadStorage {
         Files.createDirectories(root.resolve("homework"));
         Files.createDirectories(root.resolve("inventory"));
         Files.createDirectories(root.resolve("vehicles"));
+        Files.createDirectories(root.resolve("events"));
+        Files.createDirectories(root.resolve("media"));
+        Files.createDirectories(root.resolve("alumni"));
     }
 
     public Path getRoot() {
@@ -112,5 +115,17 @@ public class UploadStorage {
 
     public Path getVehiclesDir() {
         return root.resolve("vehicles");
+    }
+
+    public Path getEventsDir() {
+        return root.resolve("events");
+    }
+
+    public Path getMediaDir() {
+        return root.resolve("media");
+    }
+
+    public Path getAlumniDir() {
+        return root.resolve("alumni");
     }
 }

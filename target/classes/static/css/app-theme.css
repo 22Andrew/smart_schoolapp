@@ -9,6 +9,8 @@
     --theme-primary-sidebar-text: var(--theme-primary);
     --theme-primary-sidebar-border: var(--theme-primary);
     --app-icon-size: 14px;
+    --app-action-btn-size: 22px;
+    --app-action-icon-size: 11px;
 }
 
 html.theme-light {

@@ -301,65 +301,73 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    function findSubmenu(expandable) {
+        const wrapper = expandable.closest('.menu-item-wrapper, .submenu-group');
+        if (wrapper) {
+            for (let i = 0; i < wrapper.children.length; i++) {
+                const el = wrapper.children[i];
+                if (el.classList && (el.classList.contains('submenu') || el.classList.contains('sub-submenu'))) {
+                    return el;
+                }
+            }
+        }
+        const submenuId = expandable.getAttribute('data-submenu');
+        return submenuId ? document.getElementById('submenu-' + submenuId) : null;
+    }
+
     function activateSidebarParents(element) {
-        document.querySelectorAll('.menu-item-expandable').forEach(function (item) {
+        document.querySelectorAll('.sidebar .menu-item-expandable').forEach(function (item) {
             item.classList.remove('active');
         });
-        document.querySelectorAll('.submenu-item-expandable').forEach(function (item) {
+        document.querySelectorAll('.sidebar .submenu-item-expandable').forEach(function (item) {
             item.classList.remove('active');
         });
 
-        var submenu = element.closest('.submenu');
+        var submenu = element.closest('.submenu, .sub-submenu');
         while (submenu) {
             submenu.classList.add('open');
-            var submenuId = submenu.id.replace('submenu-', '');
-            var parentExpandable = document.querySelector(
-                '.menu-item-expandable[data-submenu="' + submenuId + '"], .submenu-item-expandable[data-submenu="' + submenuId + '"]'
-            );
+            var parentExpandable = submenu.parentElement
+                ? submenu.parentElement.querySelector(':scope > .menu-item-expandable, :scope > .submenu-item-expandable')
+                : null;
             if (parentExpandable) {
                 parentExpandable.classList.add('expanded', 'active');
             }
             var parentGroup = submenu.parentElement;
-            submenu = parentGroup ? parentGroup.closest('.submenu') : null;
+            submenu = parentGroup ? parentGroup.closest('.submenu, .sub-submenu') : null;
         }
     }
 
     // Sidebar menu active state
-    const menuItems = document.querySelectorAll('.menu-item:not(.menu-item-expandable)');
+    const menuItems = document.querySelectorAll('.sidebar .menu-item:not(.menu-item-expandable)');
     menuItems.forEach(item => {
         item.addEventListener('click', function(e) {
             menuItems.forEach(mi => mi.classList.remove('active'));
-            document.querySelectorAll('.menu-item-expandable').forEach(mi => mi.classList.remove('active'));
+            document.querySelectorAll('.sidebar .menu-item-expandable').forEach(mi => mi.classList.remove('active'));
             this.classList.add('active');
         });
     });
 
     // Expandable menu items (with submenus)
-    const expandableItems = document.querySelectorAll('.menu-item-expandable');
+    const expandableItems = document.querySelectorAll('.sidebar .menu-item-expandable');
     
     expandableItems.forEach(item => {
         item.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
             
-            // Get the current state before any changes
             const isCurrentlyExpanded = this.classList.contains('expanded');
-            const submenuId = 'submenu-' + this.getAttribute('data-submenu');
-            const currentSubmenu = document.getElementById(submenuId);
+            const currentSubmenu = findSubmenu(this);
             
-            // Close all other expanded items first
             expandableItems.forEach(otherItem => {
                 if (otherItem !== this) {
                     otherItem.classList.remove('expanded');
-                    const otherSubmenuId = 'submenu-' + otherItem.getAttribute('data-submenu');
-                    const otherSubmenu = document.getElementById(otherSubmenuId);
+                    const otherSubmenu = findSubmenu(otherItem);
                     if (otherSubmenu) {
                         otherSubmenu.classList.remove('open');
                     }
                 }
             });
             
-            // Toggle current item and its submenu
             if (isCurrentlyExpanded) {
                 this.classList.remove('expanded');
                 if (currentSubmenu) {
@@ -375,7 +383,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Submenu item active state and navigation
-    const submenuItems = document.querySelectorAll('.submenu-item:not(.submenu-item-expandable)');
+    const submenuItems = document.querySelectorAll('.sidebar .submenu-item:not(.submenu-item-expandable)');
     submenuItems.forEach(item => {
         item.addEventListener('click', function(e) {
             // Stop event from bubbling to parent menu item
@@ -390,24 +398,22 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Nested expandable submenu items (within submenus)
-    const nestedExpandableItems = document.querySelectorAll('.submenu-item-expandable');
+    const nestedExpandableItems = document.querySelectorAll('.sidebar .submenu-item-expandable');
     nestedExpandableItems.forEach(item => {
         item.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
             
-            // Toggle expanded state
             const isExpanded = this.classList.contains('expanded');
+            const currentSubmenu = findSubmenu(this);
             
-            // Close all other nested expanded items in the same parent submenu
             const parentSubmenu = this.closest('.submenu');
             if (parentSubmenu) {
                 const otherNestedItems = parentSubmenu.querySelectorAll('.submenu-item-expandable');
                 otherNestedItems.forEach(otherItem => {
                     if (otherItem !== this) {
                         otherItem.classList.remove('expanded');
-                        const otherSubmenuId = 'submenu-' + otherItem.getAttribute('data-submenu');
-                        const otherSubSubmenu = document.getElementById(otherSubmenuId);
+                        const otherSubSubmenu = findSubmenu(otherItem);
                         if (otherSubSubmenu) {
                             otherSubSubmenu.classList.remove('open');
                         }
@@ -415,18 +421,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
             
-            // Toggle current item
             if (isExpanded) {
                 this.classList.remove('expanded');
+                if (currentSubmenu) {
+                    currentSubmenu.classList.remove('open');
+                }
             } else {
                 this.classList.add('expanded');
-            }
-            
-            // Toggle sub-submenu
-            const submenuId = 'submenu-' + this.getAttribute('data-submenu');
-            const subSubmenu = document.getElementById(submenuId);
-            if (subSubmenu) {
-                subSubmenu.classList.toggle('open');
+                if (currentSubmenu) {
+                    currentSubmenu.classList.add('open');
+                }
             }
         });
     });
@@ -639,6 +643,12 @@ document.addEventListener('DOMContentLoaded', function() {
             currentPath = '/schsettings/attendancetype';
         } else if (currentPath === '/schsettings/googledrivesetting/') {
             currentPath = '/schsettings/googledrivesetting';
+        } else if (currentPath === '/smsconfig/') {
+            currentPath = '/smsconfig';
+        } else if (currentPath === '/emailconfig/') {
+            currentPath = '/emailconfig';
+        } else if (currentPath === '/whatsappconfig' || currentPath === '/whatsappconfig/') {
+            currentPath = '/whatsappconfig/index';
         } else if (currentPath === '/schsettings/whatsappsettings/') {
             currentPath = '/schsettings/whatsappsettings';
         } else if (currentPath === '/schsettings/chatsetting/') {
@@ -676,12 +686,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        const expandableItems = document.querySelectorAll('.menu-item-expandable');
-        const allSubmenuItems = document.querySelectorAll('.submenu-item');
+        const expandableItems = document.querySelectorAll('.sidebar .menu-item-expandable');
+        const allSubmenuItems = document.querySelectorAll('.sidebar .submenu-item');
 
         // Reset sidebar state so JS controls expand/active consistently
         expandableItems.forEach(item => item.classList.remove('expanded', 'active'));
-        document.querySelectorAll('.submenu').forEach(submenu => submenu.classList.remove('open', 'active'));
+        document.querySelectorAll('.sidebar .submenu, .sidebar .sub-submenu').forEach(submenu => submenu.classList.remove('open', 'active'));
         allSubmenuItems.forEach(item => item.classList.remove('active'));
 
         let bestMatch = null;

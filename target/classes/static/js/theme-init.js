@@ -263,11 +263,17 @@
 
 
 
+    ensureTableToolbarScript();
+
+
+
     document.addEventListener('DOMContentLoaded', function () {
 
         window.applyBackendTheme();
 
         ensureThemeOverridesStylesheet();
+
+        ensureTableToolbarScript();
 
     });
 
@@ -290,6 +296,28 @@
         link.href = '/css/app-theme-overrides.css';
 
         document.head.appendChild(link);
+
+    }
+
+
+
+    function ensureTableToolbarScript() {
+
+        if (document.getElementById('app-table-toolbar')) {
+
+            return;
+
+        }
+
+        var script = document.createElement('script');
+
+        script.id = 'app-table-toolbar';
+
+        script.src = '/js/table-toolbar.js';
+
+        script.async = false;
+
+        (document.head || document.documentElement).appendChild(script);
 
     }
 

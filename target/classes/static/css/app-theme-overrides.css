@@ -185,6 +185,126 @@
     fill: none;
 }
 
+/* Match Exam List modal: 22×22 action buttons and 11×11 icons */
+.btn-action,
+.btn-action-icon,
+.action-buttons .btn-action,
+.action-cell .btn-action,
+.action-cell button.btn-action,
+.data-table .btn-action,
+.data-table button.btn-action,
+[class*="-modal"] .btn-action,
+[class*="-modal"] .btn-action-icon,
+[class*="-modal"] .icon-action-btn,
+.cbse-modal .btn-action,
+.exam-list-table .btn-action,
+.assigned-table .btn-action,
+.tag-list-panel .btn-action,
+.tag-list-panel .icon-action-btn,
+.template-action-grid .btn-action,
+.btn-view,
+.btn-edit,
+.btn-delete,
+.btn-info,
+.btn-assign,
+.btn-marks-entry,
+.icon-action-btn,
+.staff-icon-action-btn,
+.sf-icon-action-btn,
+.table-actions .icon-action-btn,
+[class*="-table-controls"] .icon-action-btn,
+[class*="toolbar"] .icon-action-btn,
+[class*="-page"] .btn-action,
+[class*="-page"] .icon-action-btn,
+[class*="-page"] .btn-action-icon,
+[class*="-panel"] .btn-action,
+[class*="-panel"] .icon-action-btn,
+.gmeet-panel .icon-action-btn,
+.conference-panel .icon-action-btn,
+.invited-staff-panel .icon-action-btn,
+.assign-modal .icon-action-btn,
+.assign-modal .assigned-table .btn-action,
+.onlineexam-page .btn-action-icon,
+.staff-timeline-card-actions .btn-action,
+.homework-page .btn-action,
+.lessonplan-topic-page .btn-action,
+a.btn-action {
+    width: var(--app-action-btn-size, 22px) !important;
+    height: var(--app-action-btn-size, 22px) !important;
+    min-width: var(--app-action-btn-size, 22px) !important;
+    min-height: var(--app-action-btn-size, 22px) !important;
+    max-width: var(--app-action-btn-size, 22px) !important;
+    max-height: var(--app-action-btn-size, 22px) !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 3px !important;
+    flex: 0 0 var(--app-action-btn-size, 22px) !important;
+    line-height: 0 !important;
+    overflow: hidden !important;
+}
+
+td .action-buttons,
+.action-cell,
+.data-table .action-buttons,
+.exam-list-table .action-buttons {
+    display: inline-flex !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+    gap: 2px !important;
+}
+
+.btn-action svg,
+.btn-action-icon svg,
+.action-buttons .btn-action svg,
+.action-cell .btn-action svg,
+.action-cell button.btn-action svg,
+.data-table .btn-action svg,
+[class*="-modal"] .btn-action svg,
+[class*="-modal"] .btn-action-icon svg,
+[class*="-modal"] .icon-action-btn svg,
+.cbse-modal .btn-action svg,
+.exam-list-table .btn-action svg,
+.assigned-table .btn-action svg,
+.tag-list-panel .btn-action svg,
+.tag-list-panel .icon-action-btn svg,
+.template-action-grid .btn-action svg,
+.btn-view svg,
+.btn-edit svg,
+.btn-delete svg,
+.btn-info svg,
+.btn-assign svg,
+.btn-marks-entry svg,
+.icon-action-btn svg,
+.staff-icon-action-btn svg,
+.sf-icon-action-btn svg,
+.table-actions .icon-action-btn svg,
+[class*="-table-controls"] .icon-action-btn svg,
+[class*="toolbar"] .icon-action-btn svg,
+[class*="-page"] .btn-action svg,
+[class*="-page"] .icon-action-btn svg,
+[class*="-page"] .btn-action-icon svg,
+[class*="-panel"] .btn-action svg,
+[class*="-panel"] .icon-action-btn svg,
+.gmeet-panel .icon-action-btn svg,
+.conference-panel .icon-action-btn svg,
+.invited-staff-panel .icon-action-btn svg,
+.assign-modal .icon-action-btn svg,
+.assign-modal .assigned-table .btn-action svg,
+.onlineexam-page .btn-action-icon svg,
+.staff-timeline-card-actions .btn-action svg,
+.homework-page .btn-action svg,
+.lessonplan-topic-page .btn-action svg,
+a.btn-action svg {
+    width: var(--app-action-icon-size, 11px) !important;
+    height: var(--app-action-icon-size, 11px) !important;
+    min-width: var(--app-action-icon-size, 11px) !important;
+    min-height: var(--app-action-icon-size, 11px) !important;
+    flex-shrink: 0 !important;
+}
+
 /* ===== App-wide: every action button uses the selected backend theme color ===== */
 html.theme-light button[class*="btn-"]:not(.btn-link):not(.btn-close):not(.hamburger-btn):not(.icon-btn):not(.search-btn):not(.theme-option-btn):not(.notice-board-item-link),
 html.theme-dark button[class*="btn-"]:not(.btn-link):not(.btn-close):not(.hamburger-btn):not(.icon-btn):not(.search-btn):not(.theme-option-btn):not(.notice-board-item-link),
@@ -276,4 +396,115 @@ html.theme-dark .notice-board-item-link {
 html.theme-light .notice-board-item-link,
 html.theme-dark .notice-board-item-link {
     color: #38bdf8 !important;
+}
+
+/* List toolbar: keep page-size + export/column icons visible */
+.table-controls,
+[class*="table-controls"] {
+    overflow: visible !important;
+    flex-wrap: wrap !important;
+}
+
+.table-actions,
+.table-controls .table-actions,
+[class*="table-controls"] .table-actions,
+.payroll-table-controls .table-actions {
+    position: relative !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    justify-content: flex-end;
+    gap: 0.35rem !important;
+    overflow: visible !important;
+    flex: 1 1 auto;
+}
+
+.table-actions .entries-select,
+.table-actions .staff-entries-select,
+.table-actions .page-size-select,
+.table-controls .entries-select,
+.table-controls .staff-entries-select,
+.table-controls .page-size-select {
+    flex: 0 0 auto;
+}
+
+.column-visibility-wrap,
+.app-colvis-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+}
+
+.column-visibility-dropdown,
+.app-colvis-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    z-index: 1200;
+    min-width: 200px;
+    max-height: min(320px, 70vh) !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    display: none;
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 6px;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.28);
+}
+
+.column-visibility-dropdown.active,
+.column-visibility-dropdown.show,
+.app-colvis-dropdown.active {
+    display: block !important;
+}
+
+.column-visibility-dropdown .dropdown-header,
+.app-colvis-dropdown .dropdown-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    padding: 0.7rem 0.9rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #f8fafc;
+    background: #0f172a;
+    border-bottom: 1px solid #334155;
+}
+
+.column-visibility-dropdown .dropdown-content,
+.app-colvis-dropdown .dropdown-content {
+    max-height: none;
+    overflow: visible;
+    padding: 0.35rem 0;
+}
+
+.column-visibility-dropdown .column-toggle-item,
+.app-colvis-dropdown .column-toggle-item {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.45rem 0.9rem;
+    color: #e2e8f0;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+html.theme-light .column-visibility-dropdown,
+html.theme-light .app-colvis-dropdown {
+    background: #ffffff;
+    border-color: #e5e7eb;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+}
+
+html.theme-light .column-visibility-dropdown .dropdown-header,
+html.theme-light .app-colvis-dropdown .dropdown-header {
+    background: #f8fafc;
+    color: #111827;
+    border-bottom-color: #e5e7eb;
+}
+
+html.theme-light .column-visibility-dropdown .column-toggle-item,
+html.theme-light .app-colvis-dropdown .column-toggle-item {
+    color: #111827;
 }
