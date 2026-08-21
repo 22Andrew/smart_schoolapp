@@ -184,43 +184,43 @@
                                     <select id="issueBookSelect" class="issue-input" required>
                                         <option value="">Select</option>
                                     </select>
-                                </div>
+                </div>
                                 <div class="issue-field">
                                     <label for="dueReturnDate">Due Return Date <span class="required">*</span></label>
                                     <input type="text" id="dueReturnDate" class="issue-input" placeholder="MM/DD/YYYY" required>
-                                </div>
-                            </div>
+                    </div>
+                </div>
                             <div class="issue-form-footer">
                                 <button type="submit" class="btn-issue-save" id="issueSaveBtn">Save</button>
-                            </div>
+                    </div>
                         </form>
                     </section>
 
                     <section class="issue-card">
                         <h2 class="issue-card-title">Book Issued</h2>
-                        <div class="table-controls">
-                            <div class="table-search">
+                <div class="table-controls">
+                    <div class="table-search">
                                 <input type="text" class="table-search-input" id="issuedSearchInput" placeholder="Search">
-                            </div>
-                            <div class="table-actions">
+                    </div>
+                    <div class="table-actions">
                                 <select class="entries-select" id="issuedEntriesSelect">
-                                    <option value="50" selected>50</option>
-                                    <option value="100">100</option>
-                                    <option value="250">250</option>
-                                    <option value="500">500</option>
-                                </select>
+                            <option value="50" selected>50</option>
+                            <option value="100">100</option>
+                            <option value="250">250</option>
+                            <option value="500">500</option>
+                        </select>
                                 <button type="button" class="icon-action-btn" id="issuedCopyBtn" title="Copy">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                                    </svg>
-                                </button>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                        </button>
                                 <button type="button" class="icon-action-btn" id="issuedExcelBtn" title="Excel">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                        <polyline points="14 2 14 8 20 8"></polyline>
-                                    </svg>
-                                </button>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                            </svg>
+                        </button>
                                 <button type="button" class="icon-action-btn" id="issuedCsvBtn" title="CSV">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -230,26 +230,26 @@
                                     </svg>
                                 </button>
                                 <button type="button" class="icon-action-btn" id="issuedPdfBtn" title="PDF">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                        <polyline points="14 2 14 8 20 8"></polyline>
-                                    </svg>
-                                </button>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                            </svg>
+                        </button>
                                 <button type="button" class="icon-action-btn" id="issuedPrintBtn" title="Print">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <polyline points="6 9 6 2 18 2 18 9"></polyline>
-                                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-                                        <rect x="6" y="14" width="12" height="8"></rect>
-                                    </svg>
-                                </button>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                                <rect x="6" y="14" width="12" height="8"></rect>
+                            </svg>
+                        </button>
                                 <button type="button" class="icon-action-btn" id="issuedColumnVisibilityBtn" title="Column Visibility">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <rect x="3" y="3" width="7" height="7"></rect>
-                                        <rect x="14" y="3" width="7" height="7"></rect>
-                                        <rect x="14" y="14" width="7" height="7"></rect>
-                                        <rect x="3" y="14" width="7" height="7"></rect>
-                                    </svg>
-                                </button>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
+                            </svg>
+                        </button>
                                 <div class="column-visibility-dropdown" id="issuedColumnVisibilityDropdown">
                                     <div class="dropdown-header"><span>Toggle Columns</span></div>
                                     <div class="dropdown-content">
@@ -260,24 +260,24 @@
                                         <label class="column-toggle-item"><input type="checkbox" class="issued-column-toggle" data-column="4" checked><span>Return Date</span></label>
                                         <label class="column-toggle-item"><input type="checkbox" class="issued-column-toggle" data-column="5" checked><span>Action</span></label>
                                     </div>
-                                </div>
+                            </div>
                             </div>
                         </div>
-                        <div class="table-responsive">
+                <div class="table-responsive">
                             <table class="data-table" id="issuedTable">
-                                <thead>
-                                    <tr>
-                                        <th>Book Title</th>
-                                        <th>Book Number</th>
+                        <thead>
+                            <tr>
+                                <th>Book Title</th>
+                                <th>Book Number</th>
                                         <th>Issue Date</th>
                                         <th>Due Return Date</th>
                                         <th>Return Date</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
                                 <tbody id="issuedTableBody"></tbody>
-                            </table>
-                        </div>
+                    </table>
+                </div>
                     </section>
                 </div>
             </div>

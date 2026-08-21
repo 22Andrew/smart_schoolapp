@@ -47,6 +47,7 @@ public class UploadStorage {
         Files.createDirectories(root.resolve("front-cms"));
         Files.createDirectories(root.resolve("backups"));
         Files.createDirectories(root.resolve("addons"));
+        Files.createDirectories(root.resolve("online-admission"));
     }
 
     public Path getRoot() {
@@ -147,5 +148,9 @@ public class UploadStorage {
 
     public Path getAddonsDir() {
         return root.resolve("addons");
+    }
+
+    public Path getOnlineAdmissionDir() {
+        return root.resolve("online-admission");
     }
 }

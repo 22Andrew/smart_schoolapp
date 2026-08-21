@@ -671,6 +671,18 @@ document.addEventListener('DOMContentLoaded', function() {
             currentPath = '/admin/users';
         } else if (currentPath === '/admin/module/' || currentPath === '/admin/module/index') {
             currentPath = '/admin/module';
+        } else if (currentPath === '/admin/customfield/' || currentPath === '/admin/customfield/index') {
+            currentPath = '/admin/customfield';
+        } else if (currentPath === '/admin/captcha/' || currentPath === '/admin/captcha/index') {
+            currentPath = '/admin/captcha';
+        } else if (currentPath === '/admin/systemfield/' || currentPath === '/admin/systemfield/index') {
+            currentPath = '/admin/systemfield';
+        } else if (currentPath === '/admin/profilesetting/' || currentPath === '/admin/profilesetting/index'
+                || currentPath === '/student/profilesetting/' || currentPath === '/student/profilesetting/index') {
+            currentPath = '/admin/profilesetting';
+        } else if (currentPath === '/admin/onlineadmission/admissionsetting/'
+                || currentPath === '/admin/onlineadmission/admissionsetting/index') {
+            currentPath = '/admin/onlineadmission/admissionsetting';
         } else if (currentPath === '/whatsappconfig' || currentPath === '/whatsappconfig/') {
             currentPath = '/whatsappconfig/index';
         } else if (currentPath === '/schsettings/whatsappsettings/') {
