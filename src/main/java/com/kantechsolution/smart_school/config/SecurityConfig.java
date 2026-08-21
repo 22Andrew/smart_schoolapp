@@ -25,6 +25,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/schsettings/branding").permitAll()
                 .requestMatchers("/api/schsettings/login-background").permitAll()
                 .requestMatchers("/api/schsettings/backend-theme").permitAll()
+                .requestMatchers("/api/currencies/active").permitAll()
                 .requestMatchers("/api/**").authenticated()
                 .anyRequest().authenticated()
             )

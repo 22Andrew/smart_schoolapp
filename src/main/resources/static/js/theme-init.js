@@ -9,8 +9,10 @@
 (function () {
 
     var STORAGE_KEY = 'app-backend-theme';
+    var FRONT_CMS_THEME_KEY = 'app-front-cms-theme';
 
     var cachedBackendTheme = null;
+    var applySeq = 0;
 
 
 
@@ -60,7 +62,11 @@
 
             'side-menu-default', 'side-menu-compact',
 
-            'box-compact', 'box-wide'
+            'box-compact', 'box-wide',
+
+            'front-cms-theme-default', 'front-cms-theme-yellow', 'front-cms-theme-darkgray',
+
+            'front-cms-theme-bold_blue', 'front-cms-theme-shadow_white', 'front-cms-theme-material_pink'
 
         ];
 
@@ -88,6 +94,23 @@
 
         root.classList.add('box-' + (theme.boxContent || 'wide'));
 
+        var frontCmsTheme = theme.frontCmsTheme;
+        if (!frontCmsTheme) {
+            try {
+                frontCmsTheme = sessionStorage.getItem(FRONT_CMS_THEME_KEY) || localStorage.getItem(FRONT_CMS_THEME_KEY);
+            } catch (error) {
+                frontCmsTheme = '';
+            }
+        }
+        if (frontCmsTheme) {
+            root.classList.add('front-cms-theme-' + frontCmsTheme);
+            try {
+                sessionStorage.setItem(FRONT_CMS_THEME_KEY, frontCmsTheme);
+            } catch (error) {
+                /* ignore */
+            }
+        }
+
 
 
         if (body) {
@@ -99,6 +122,9 @@
             body.classList.add('side-menu-' + (theme.sideMenuStyle || 'default'));
 
             body.classList.add('box-' + (theme.boxContent || 'wide'));
+            if (frontCmsTheme) {
+                body.classList.add('front-cms-theme-' + frontCmsTheme);
+            }
 
         }
 
@@ -123,6 +149,21 @@
         root.style.backgroundColor = mode === 'light' ? '#ffffff' : '#0f172a';
         root.style.color = mode === 'light' ? '#111827' : '#f8fafc';
 
+        if (frontCmsTheme) {
+            root.style.setProperty('--theme-header-bg', primary);
+            root.style.setProperty('--theme-sidebar-bg', primary);
+            root.style.setProperty('--theme-chrome-text', '#ffffff');
+            root.style.setProperty('--theme-primary-sidebar-bg', 'rgba(0, 0, 0, 0.22)');
+            root.style.setProperty('--theme-primary-sidebar-text', '#ffffff');
+            root.style.setProperty('--theme-primary-sidebar-border', '#ffffff');
+            if (frontCmsTheme === 'darkgray') {
+                root.style.backgroundColor = '#4b5563';
+                root.style.color = '#ffffff';
+            }
+        }
+
+        paintChrome(primary, frontCmsTheme);
+
 
 
         var sidebar = document.querySelector('.sidebar');
@@ -144,13 +185,14 @@
 
 
         try {
-
             sessionStorage.setItem(STORAGE_KEY, JSON.stringify(theme));
-
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(theme));
+            if (frontCmsTheme) {
+                sessionStorage.setItem(FRONT_CMS_THEME_KEY, frontCmsTheme);
+                localStorage.setItem(FRONT_CMS_THEME_KEY, frontCmsTheme);
+            }
         } catch (error) {
-
             /* ignore storage errors */
-
         }
 
 
@@ -168,6 +210,34 @@
     }
 
 
+
+    function paintChrome(primary, frontCmsTheme) {
+        var navbar = document.querySelector('.top-navbar');
+        var sidebar = document.querySelector('.sidebar');
+        if (frontCmsTheme && primary) {
+            if (navbar) {
+                navbar.style.setProperty('background', primary, 'important');
+                navbar.style.setProperty('background-color', primary, 'important');
+                navbar.style.setProperty('color', '#ffffff', 'important');
+            }
+            if (sidebar) {
+                sidebar.style.setProperty('background', primary, 'important');
+                sidebar.style.setProperty('background-color', primary, 'important');
+                sidebar.style.setProperty('color', '#ffffff', 'important');
+            }
+        } else {
+            if (navbar) {
+                navbar.style.removeProperty('background');
+                navbar.style.removeProperty('background-color');
+                navbar.style.removeProperty('color');
+            }
+            if (sidebar) {
+                sidebar.style.removeProperty('background');
+                sidebar.style.removeProperty('background-color');
+                sidebar.style.removeProperty('color');
+            }
+        }
+    }
 
     async function fetchBackendTheme(forceRefresh) {
 
@@ -195,8 +265,15 @@
 
             }
 
-            cachedBackendTheme = await response.json();
-
+            var fetched = await response.json();
+            if (cachedBackendTheme && cachedBackendTheme.frontCmsTheme && !forceRefresh) {
+                fetched = Object.assign({}, fetched, {
+                    frontCmsTheme: cachedBackendTheme.frontCmsTheme,
+                    primaryColor: cachedBackendTheme.primaryColor || fetched.primaryColor,
+                    themeMode: cachedBackendTheme.themeMode || fetched.themeMode
+                });
+            }
+            cachedBackendTheme = fetched;
             return cachedBackendTheme;
 
         } catch (error) {
@@ -211,92 +288,65 @@
 
     window.applyThemeToDocument = applyThemeToDocument;
 
-
-
     window.applyBackendTheme = async function (forceRefresh, previewSettings) {
-
-        var theme = previewSettings || await fetchBackendTheme(forceRefresh);
-
-        if (!theme) {
-
-            applyThemeToDocument({
-
-                themeMode: 'dark',
-
-                skin: 'shadow',
-
-                sideMenuStyle: 'default',
-
-                primaryColor: '#8b5cf6',
-
-                boxContent: 'wide'
-
-            });
-
-            return;
-
+        var seq = ++applySeq;
+        if (previewSettings) {
+            cachedBackendTheme = Object.assign({}, cachedBackendTheme || {}, previewSettings);
+            applyThemeToDocument(cachedBackendTheme);
+            return cachedBackendTheme;
         }
 
+        var theme = await fetchBackendTheme(forceRefresh);
+        if (seq !== applySeq) {
+            return cachedBackendTheme;
+        }
+        if (!theme) {
+            applyThemeToDocument({
+                themeMode: 'dark',
+                skin: 'shadow',
+                sideMenuStyle: 'default',
+                primaryColor: '#8b5cf6',
+                boxContent: 'wide'
+            });
+            return;
+        }
         applyThemeToDocument(theme);
-
+        return theme;
     };
 
 
 
     /* Apply cached theme immediately (before first paint) */
-
     try {
-
-        var raw = sessionStorage.getItem(STORAGE_KEY);
-
+        var raw = sessionStorage.getItem(STORAGE_KEY) || localStorage.getItem(STORAGE_KEY);
         if (raw) {
-
             applyThemeToDocument(JSON.parse(raw));
-
         }
-
     } catch (error) {
-
         /* ignore invalid cache */
-
     }
 
-
-
     ensureTableToolbarScript();
-
-
+    ensureCurrencyScript();
 
     document.addEventListener('DOMContentLoaded', function () {
-
-        window.applyBackendTheme();
-
         ensureThemeOverridesStylesheet();
-
+        window.applyBackendTheme();
         ensureTableToolbarScript();
-
+        ensureCurrencyScript();
     });
 
 
 
     function ensureThemeOverridesStylesheet() {
-
-        if (document.getElementById('app-theme-overrides')) {
-
-            return;
-
+        var link = document.getElementById('app-theme-overrides');
+        if (!link) {
+            link = document.createElement('link');
+            link.id = 'app-theme-overrides';
+            link.rel = 'stylesheet';
+            link.href = '/css/app-theme-overrides.css';
         }
-
-        var link = document.createElement('link');
-
-        link.id = 'app-theme-overrides';
-
-        link.rel = 'stylesheet';
-
-        link.href = '/css/app-theme-overrides.css';
-
         document.head.appendChild(link);
-
     }
 
 
@@ -314,6 +364,26 @@
         script.id = 'app-table-toolbar';
 
         script.src = '/js/table-toolbar.js';
+
+        script.async = false;
+
+        (document.head || document.documentElement).appendChild(script);
+
+    }
+
+    function ensureCurrencyScript() {
+
+        if (document.getElementById('app-currency-init')) {
+
+            return;
+
+        }
+
+        var script = document.createElement('script');
+
+        script.id = 'app-currency-init';
+
+        script.src = '/js/currency-init.js';
 
         script.async = false;
 

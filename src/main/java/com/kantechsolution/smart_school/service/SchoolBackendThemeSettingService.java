@@ -1,6 +1,7 @@
 package com.kantechsolution.smart_school.service;
 
 import com.kantechsolution.smart_school.model.SchoolBackendThemeSetting;
+import com.kantechsolution.smart_school.repository.FrontCmsSettingRepository;
 import com.kantechsolution.smart_school.repository.SchoolBackendThemeSettingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
@@ -26,6 +27,7 @@ public class SchoolBackendThemeSettingService implements ApplicationRunner {
     );
 
     private final SchoolBackendThemeSettingRepository repository;
+    private final FrontCmsSettingRepository frontCmsSettingRepository;
 
     @Override
     @Transactional
@@ -49,6 +51,21 @@ public class SchoolBackendThemeSettingService implements ApplicationRunner {
         settings.setSideMenuStyle(requiredOption(payload.get("sideMenuStyle"), SIDE_MENU_STYLES, "Side menu style"));
         settings.setPrimaryColor(requiredColor(payload.get("primaryColor")));
         settings.setBoxContent(requiredOption(payload.get("boxContent"), BOX_CONTENTS, "Box content"));
+        return toMap(repository.save(settings));
+    }
+
+    @Transactional
+    public Map<String, Object> applyFrontCmsTheme(Map<String, String> palette) {
+        if (palette == null || palette.isEmpty()) {
+            return getSettings();
+        }
+        SchoolBackendThemeSetting settings = requireSettings();
+        settings.setPrimaryColor(requiredColor(palette.get("primaryColor")));
+        settings.setThemeMode(requiredOption(palette.get("themeMode"), THEME_MODES, "Theme mode"));
+        String skin = text(palette.get("skin"));
+        if (SKINS.contains(skin)) {
+            settings.setSkin(skin);
+        }
         return toMap(repository.save(settings));
     }
 
@@ -80,6 +97,10 @@ public class SchoolBackendThemeSettingService implements ApplicationRunner {
         map.put("primaryColor", settings.getPrimaryColor());
         map.put("boxContent", settings.getBoxContent());
         map.put("presetColors", PRESET_COLORS);
+        frontCmsSettingRepository.findAll().stream().findFirst()
+                .map(row -> row.getCurrentTheme())
+                .filter(name -> name != null && !name.isBlank())
+                .ifPresent(name -> map.put("frontCmsTheme", name));
         return map;
     }
 

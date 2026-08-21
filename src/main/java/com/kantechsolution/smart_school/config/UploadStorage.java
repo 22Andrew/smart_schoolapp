@@ -43,6 +43,10 @@ public class UploadStorage {
         Files.createDirectories(root.resolve("events"));
         Files.createDirectories(root.resolve("media"));
         Files.createDirectories(root.resolve("alumni"));
+        Files.createDirectories(root.resolve("print-headers"));
+        Files.createDirectories(root.resolve("front-cms"));
+        Files.createDirectories(root.resolve("backups"));
+        Files.createDirectories(root.resolve("addons"));
     }
 
     public Path getRoot() {
@@ -127,5 +131,21 @@ public class UploadStorage {
 
     public Path getAlumniDir() {
         return root.resolve("alumni");
+    }
+
+    public Path getPrintHeadersDir() {
+        return root.resolve("print-headers");
+    }
+
+    public Path getFrontCmsDir() {
+        return root.resolve("front-cms");
+    }
+
+    public Path getBackupsDir() {
+        return root.resolve("backups");
+    }
+
+    public Path getAddonsDir() {
+        return root.resolve("addons");
     }
 }

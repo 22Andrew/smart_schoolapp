@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function formatMoney(value) {
+        if (window.AppCurrency) return window.AppCurrency.formatCurrency(value);
         return '$' + Number(value || 0).toLocaleString('en-US', {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2

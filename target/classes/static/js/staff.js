@@ -2016,11 +2016,13 @@
     }
 
     function formatCurrency(amount) {
+        if (window.AppCurrency) return window.AppCurrency.formatCurrency(amount);
         const value = Number(amount) || 0;
         return '$' + value.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
     function formatSalaryAmount(amount) {
+        if (window.AppCurrency) return window.AppCurrency.formatMoney(amount);
         const value = Number(amount) || 0;
         return value.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }

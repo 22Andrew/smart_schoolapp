@@ -169,6 +169,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         },
                         ticks: {
                             callback: function(value) {
+                                if (window.AppCurrency) return window.AppCurrency.formatCurrency(value);
                                 return '$' + value;
                             }
                         }
@@ -287,6 +288,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         },
                         ticks: {
                             callback: function(value) {
+                                if (window.AppCurrency) return window.AppCurrency.formatCurrency(value);
                                 return '$' + value;
                             }
                         }
@@ -647,6 +649,28 @@ document.addEventListener('DOMContentLoaded', function() {
             currentPath = '/smsconfig';
         } else if (currentPath === '/emailconfig/') {
             currentPath = '/emailconfig';
+        } else if (currentPath === '/admin/paymentsettings/' || currentPath === '/admin/paymentsettings/index') {
+            currentPath = '/admin/paymentsettings';
+        } else if (currentPath === '/admin/printheaderfooter/' || currentPath === '/admin/printheaderfooter/index') {
+            currentPath = '/admin/printheaderfooter';
+        } else if (currentPath === '/admin/thermalprint' || currentPath === '/admin/thermalprint/' || currentPath === '/admin/thermalprint/index') {
+            currentPath = '/admin/thermalprint/index';
+        } else if (currentPath === '/admin/frontcms/' || currentPath === '/admin/frontcms/index') {
+            currentPath = '/admin/frontcms';
+        } else if (currentPath === '/admin/roles/' || currentPath === '/admin/roles/index') {
+            currentPath = '/admin/roles';
+        } else if (currentPath === '/admin/backup/' || currentPath === '/admin/backup/index') {
+            currentPath = '/admin/backup';
+        } else if (currentPath === '/admin/language/' || currentPath === '/admin/language/index') {
+            currentPath = '/admin/language';
+        } else if (currentPath === '/admin/currency/' || currentPath === '/admin/currency/index') {
+            currentPath = '/admin/currency';
+        } else if (currentPath === '/admin/addons/' || currentPath === '/admin/addons/index') {
+            currentPath = '/admin/addons';
+        } else if (currentPath === '/admin/users/' || currentPath === '/admin/users/index') {
+            currentPath = '/admin/users';
+        } else if (currentPath === '/admin/module/' || currentPath === '/admin/module/index') {
+            currentPath = '/admin/module';
         } else if (currentPath === '/whatsappconfig' || currentPath === '/whatsappconfig/') {
             currentPath = '/whatsappconfig/index';
         } else if (currentPath === '/schsettings/whatsappsettings/') {

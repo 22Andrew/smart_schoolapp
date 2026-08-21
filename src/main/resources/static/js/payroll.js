@@ -91,6 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function formatAmount(value) {
+        if (window.AppCurrency) return window.AppCurrency.formatCurrency(value);
         const num = Number(value) || 0;
         return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }

@@ -34,6 +34,7 @@
     }
 
     function formatMoney(value) {
+        if (window.AppCurrency) return window.AppCurrency.formatMoney(value);
         const num = Number(value);
         if (Number.isNaN(num)) return '0.00';
         return num.toFixed(2);
@@ -323,6 +324,7 @@
     }
 
     function moneyWithDollar(value) {
+        if (window.AppCurrency) return window.AppCurrency.formatCurrency(value);
         return '$' + formatMoney(value);
     }
 

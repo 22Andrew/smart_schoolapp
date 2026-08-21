@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function formatMoney(value) {
+        if (window.AppCurrency) return window.AppCurrency.formatCurrency(value);
         if (value == null || value === '') return '';
         const num = Number(value);
         if (Number.isNaN(num)) return String(value);

@@ -508,3 +508,184 @@ html.theme-light .column-visibility-dropdown .column-toggle-item,
 html.theme-light .app-colvis-dropdown .column-toggle-item {
     color: #111827;
 }
+
+/* Login What's New: keep every word white on the transparent overlay */
+html.theme-light .news-overlay,
+html.theme-light .news-overlay h2,
+html.theme-light .news-overlay h3,
+html.theme-light .news-overlay p,
+html.theme-light .news-overlay a,
+html.theme-light .news-overlay .news-title,
+html.theme-light .news-overlay .news-item-title,
+html.theme-light .news-overlay .news-item-text,
+html.theme-light .news-overlay .news-read-more,
+html.theme-dark .news-overlay,
+html.theme-dark .news-overlay h2,
+html.theme-dark .news-overlay h3,
+html.theme-dark .news-overlay p,
+html.theme-dark .news-overlay a,
+html.theme-dark .news-overlay .news-title,
+html.theme-dark .news-overlay .news-item-title,
+html.theme-dark .news-overlay .news-item-text,
+html.theme-dark .news-overlay .news-read-more {
+    color: #ffffff !important;
+}
+
+/* Front CMS themes: color the header and sidebar with the selected theme */
+html.theme-light[class*="front-cms-theme-"] .top-navbar,
+html.theme-dark[class*="front-cms-theme-"] .top-navbar {
+    background: var(--theme-header-bg, var(--theme-primary)) !important;
+    color: var(--theme-chrome-text, #ffffff) !important;
+    border-bottom: none !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+}
+
+html.theme-light[class*="front-cms-theme-"] .top-navbar .hamburger-btn,
+html.theme-dark[class*="front-cms-theme-"] .top-navbar .hamburger-btn,
+html.theme-light[class*="front-cms-theme-"] .top-navbar .icon-btn,
+html.theme-dark[class*="front-cms-theme-"] .top-navbar .icon-btn,
+html.theme-light[class*="front-cms-theme-"] .top-navbar .session-label,
+html.theme-dark[class*="front-cms-theme-"] .top-navbar .session-label,
+html.theme-light[class*="front-cms-theme-"] .top-navbar .session-value,
+html.theme-dark[class*="front-cms-theme-"] .top-navbar .session-value,
+html.theme-light[class*="front-cms-theme-"] .top-navbar .school-name,
+html.theme-dark[class*="front-cms-theme-"] .top-navbar .school-name,
+html.theme-light[class*="front-cms-theme-"] .top-navbar .user-btn,
+html.theme-dark[class*="front-cms-theme-"] .top-navbar .user-btn {
+    color: #ffffff !important;
+}
+
+html.theme-light[class*="front-cms-theme-"] .top-navbar .hamburger-btn svg,
+html.theme-dark[class*="front-cms-theme-"] .top-navbar .hamburger-btn svg,
+html.theme-light[class*="front-cms-theme-"] .top-navbar .icon-btn svg,
+html.theme-dark[class*="front-cms-theme-"] .top-navbar .icon-btn svg {
+    stroke: #ffffff !important;
+    color: #ffffff !important;
+}
+
+html.theme-light[class*="front-cms-theme-"] .sidebar,
+html.theme-dark[class*="front-cms-theme-"] .sidebar {
+    background: var(--theme-sidebar-bg, var(--theme-primary)) !important;
+    color: #ffffff !important;
+    border-right: none !important;
+}
+
+html.theme-light[class*="front-cms-theme-"] .sidebar-top,
+html.theme-dark[class*="front-cms-theme-"] .sidebar-top {
+    border-bottom-color: rgba(255, 255, 255, 0.18) !important;
+}
+
+html.theme-light[class*="front-cms-theme-"] .sidebar-session,
+html.theme-dark[class*="front-cms-theme-"] .sidebar-session,
+html.theme-light[class*="front-cms-theme-"] .sidebar-session-label,
+html.theme-dark[class*="front-cms-theme-"] .sidebar-session-label,
+html.theme-light[class*="front-cms-theme-"] .sidebar-session-value,
+html.theme-dark[class*="front-cms-theme-"] .sidebar-session-value,
+html.theme-light[class*="front-cms-theme-"] .sidebar-quick-links-title,
+html.theme-dark[class*="front-cms-theme-"] .sidebar-quick-links-title,
+html.theme-light[class*="front-cms-theme-"] .sidebar-quick-links-btn,
+html.theme-dark[class*="front-cms-theme-"] .sidebar-quick-links-btn,
+html.theme-light[class*="front-cms-theme-"] .sidebar-session-edit-btn,
+html.theme-dark[class*="front-cms-theme-"] .sidebar-session-edit-btn,
+html.theme-light[class*="front-cms-theme-"] .menu-item,
+html.theme-dark[class*="front-cms-theme-"] .menu-item,
+html.theme-light[class*="front-cms-theme-"] .submenu-item,
+html.theme-dark[class*="front-cms-theme-"] .submenu-item,
+html.theme-light[class*="front-cms-theme-"] .menu-caret,
+html.theme-dark[class*="front-cms-theme-"] .menu-caret {
+    color: #ffffff !important;
+}
+
+html.theme-light[class*="front-cms-theme-"] .sidebar svg,
+html.theme-dark[class*="front-cms-theme-"] .sidebar svg {
+    stroke: #ffffff !important;
+    color: #ffffff !important;
+}
+
+html.theme-light[class*="front-cms-theme-"] .submenu,
+html.theme-dark[class*="front-cms-theme-"] .submenu {
+    background: rgba(0, 0, 0, 0.16) !important;
+}
+
+html.theme-light[class*="front-cms-theme-"] .menu-item:hover,
+html.theme-dark[class*="front-cms-theme-"] .menu-item:hover,
+html.theme-light[class*="front-cms-theme-"] .submenu-item:hover,
+html.theme-dark[class*="front-cms-theme-"] .submenu-item:hover {
+    background: rgba(255, 255, 255, 0.12) !important;
+    color: #ffffff !important;
+}
+
+html.theme-light[class*="front-cms-theme-"] .menu-item.active,
+html.theme-dark[class*="front-cms-theme-"] .menu-item.active,
+html.theme-light[class*="front-cms-theme-"] .menu-item-expandable.active,
+html.theme-dark[class*="front-cms-theme-"] .menu-item-expandable.active,
+html.theme-light[class*="front-cms-theme-"] .submenu-item.active,
+html.theme-dark[class*="front-cms-theme-"] .submenu-item.active,
+html.theme-light[class*="front-cms-theme-"] .submenu-item-expandable.active,
+html.theme-dark[class*="front-cms-theme-"] .submenu-item-expandable.active {
+    background: rgba(0, 0, 0, 0.22) !important;
+    color: #ffffff !important;
+    border-left-color: #ffffff !important;
+}
+
+/* Dark gray theme: dark page background with white text everywhere */
+html.front-cms-theme-darkgray,
+html.front-cms-theme-darkgray body {
+    background: #4b5563 !important;
+    color: #ffffff !important;
+}
+
+html.front-cms-theme-darkgray .main-container,
+html.front-cms-theme-darkgray .main-content,
+html.front-cms-theme-darkgray main,
+html.front-cms-theme-darkgray main.main-content {
+    background: #4b5563 !important;
+    color: #ffffff !important;
+}
+
+html.front-cms-theme-darkgray h1,
+html.front-cms-theme-darkgray h2,
+html.front-cms-theme-darkgray h3,
+html.front-cms-theme-darkgray h4,
+html.front-cms-theme-darkgray h5,
+html.front-cms-theme-darkgray h6,
+html.front-cms-theme-darkgray p,
+html.front-cms-theme-darkgray label,
+html.front-cms-theme-darkgray span,
+html.front-cms-theme-darkgray a,
+html.front-cms-theme-darkgray li,
+html.front-cms-theme-darkgray td,
+html.front-cms-theme-darkgray th,
+html.front-cms-theme-darkgray div,
+html.front-cms-theme-darkgray strong,
+html.front-cms-theme-darkgray small,
+html.front-cms-theme-darkgray button,
+html.front-cms-theme-darkgray legend {
+    color: #ffffff !important;
+}
+
+html.front-cms-theme-darkgray [class*="-card"],
+html.front-cms-theme-darkgray [class*="-panel"],
+html.front-cms-theme-darkgray [class*="-wrap"],
+html.front-cms-theme-darkgray .data-table,
+html.front-cms-theme-darkgray table,
+html.front-cms-theme-darkgray .modal-content,
+html.front-cms-theme-darkgray .profile-dropdown {
+    background: #374151 !important;
+    color: #ffffff !important;
+    border-color: #6b7280 !important;
+}
+
+html.front-cms-theme-darkgray input,
+html.front-cms-theme-darkgray select,
+html.front-cms-theme-darkgray textarea {
+    background: #374151 !important;
+    color: #ffffff !important;
+    border-color: #9ca3af !important;
+}
+
+html.front-cms-theme-darkgray input::placeholder,
+html.front-cms-theme-darkgray textarea::placeholder {
+    color: #e5e7eb !important;
+}
+

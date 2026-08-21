@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function formatMoney(value) {
+        if (window.AppCurrency) return window.AppCurrency.formatCurrency(value);
         const num = Number(value);
         if (isNaN(num)) return value == null ? '' : String(value);
         return num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });

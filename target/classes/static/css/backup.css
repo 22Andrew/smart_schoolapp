@@ -1,0 +1,219 @@
+/* Backup Restore page */
+.backup-page {
+    padding: 20px;
+    background-color: #ecf0f5;
+    min-height: calc(100vh - 80px);
+}
+
+.backup-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+    gap: 20px;
+    max-width: 1600px;
+    margin: 0 auto;
+    align-items: start;
+}
+
+.backup-history-panel,
+.backup-upload-panel,
+.backup-cron-panel {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px 22px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.backup-side {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.backup-page .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.backup-page .panel-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0;
+}
+
+.backup-upload-panel .panel-title {
+    margin-bottom: 16px;
+}
+
+.backup-page .btn-create-backup,
+.backup-page .btn-upload,
+.backup-page .btn-regenerate {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background: var(--theme-primary, #8b5cf6);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.backup-page .btn-create-backup:hover,
+.backup-page .btn-upload:hover,
+.backup-page .btn-regenerate:hover {
+    filter: brightness(0.92);
+}
+
+.backup-page .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.backup-page .data-table th,
+.backup-page .data-table td {
+    padding: 14px 8px;
+    border-bottom: 1px solid #e5e7eb;
+    color: #374151;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.backup-page .data-table thead th {
+    font-weight: 600;
+    color: #111827;
+}
+
+.backup-page .action-col {
+    width: 160px;
+    text-align: right;
+}
+
+.backup-page .backup-link {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.backup-page .backup-link:hover {
+    text-decoration: underline;
+}
+
+.backup-page .action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.backup-page .btn-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+}
+
+.backup-page .btn-download {
+    background: #22c55e;
+}
+
+.backup-page .btn-restore {
+    background: #f59e0b;
+}
+
+.backup-page .btn-delete {
+    background: #ef4444;
+}
+
+.backup-page .btn-action:hover {
+    filter: brightness(0.92);
+}
+
+.backup-page .upload-dropzone {
+    border: 1px dashed #d1d5db;
+    border-radius: 8px;
+    min-height: 160px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 24px 16px;
+    text-align: center;
+    background: #fafafa;
+}
+
+.backup-page .upload-dropzone:hover,
+.backup-page .upload-dropzone.dragover {
+    border-color: var(--theme-primary, #8b5cf6);
+    color: var(--theme-primary, #8b5cf6);
+    background: color-mix(in srgb, var(--theme-primary, #8b5cf6) 6%, #fff);
+}
+
+.backup-page .upload-dropzone p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.backup-page .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+}
+
+.backup-page .cron-key-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.backup-page .cron-key-input {
+    flex: 1;
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    color: #111827;
+    letter-spacing: 0.02em;
+    padding: 6px 0;
+}
+
+.backup-page .cron-key-input:focus {
+    outline: none;
+}
+
+.backup-page .btn-eye {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: none;
+    background: transparent;
+    color: #6b7280;
+    cursor: pointer;
+}
+
+.backup-page .btn-eye:hover {
+    color: var(--theme-primary, #8b5cf6);
+}
+
+@media (max-width: 992px) {
+    .backup-layout {
+        grid-template-columns: 1fr;
+    }
+}

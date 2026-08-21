@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function formatMoney(value) {
+        if (window.AppCurrency) return window.AppCurrency.formatCurrency(value);
         if (value == null || value === '') return '$0.00';
         return '$' + Number(value).toLocaleString('en-US', {
             minimumFractionDigits: 2,

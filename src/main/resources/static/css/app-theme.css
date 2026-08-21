@@ -423,6 +423,27 @@ html.theme-light .footer-link {
     color: #111827 !important;
 }
 
+html.theme-light .news-overlay,
+html.theme-light .news-overlay h2,
+html.theme-light .news-overlay h3,
+html.theme-light .news-overlay p,
+html.theme-light .news-overlay a,
+html.theme-light .news-overlay .news-title,
+html.theme-light .news-overlay .news-item-title,
+html.theme-light .news-overlay .news-item-text,
+html.theme-light .news-overlay .news-read-more,
+html.theme-dark .news-overlay,
+html.theme-dark .news-overlay h2,
+html.theme-dark .news-overlay h3,
+html.theme-dark .news-overlay p,
+html.theme-dark .news-overlay a,
+html.theme-dark .news-overlay .news-title,
+html.theme-dark .news-overlay .news-item-title,
+html.theme-dark .news-overlay .news-item-text,
+html.theme-dark .news-overlay .news-read-more {
+    color: #ffffff !important;
+}
+
 html.theme-dark .login-left,
 html.theme-dark .login-form-wrapper {
     background: #ffffff !important;
@@ -453,9 +474,9 @@ html.theme-light [class*="-right-panel"] {
     border-color: #e5e7eb !important;
 }
 
-html.theme-light [class*="title"],
+html.theme-light [class*="title"]:not(.news-title):not(.news-item-title),
 html.theme-light [class*="label"],
-html.theme-light [class*="text"],
+html.theme-light [class*="text"]:not(.news-item-text),
 html.theme-light th,
 html.theme-light td,
 html.theme-light .panel-title,

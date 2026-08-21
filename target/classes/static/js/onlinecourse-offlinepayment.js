@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function money(value) {
+        if (window.AppCurrency) return window.AppCurrency.formatCurrency(value);
         const num = Number(value);
         if (Number.isNaN(num)) return '0.00';
         return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -279,7 +280,7 @@ document.addEventListener('DOMContentLoaded', function () {
         feesCourseName.textContent = item.course || '—';
         feesPaymentDate.value = todayInputValue();
         feesNote.value = '';
-        feesTotalPay.textContent = '$' + money(item.currentPrice);
+        feesTotalPay.textContent = money(item.currentPrice);
         const cashRadio = feesPayForm.querySelector('input[name="paymentMode"][value="Cash"]');
         if (cashRadio) cashRadio.checked = true;
         feesModal.classList.add('open');
