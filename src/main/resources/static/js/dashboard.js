@@ -494,6 +494,22 @@ document.addEventListener('DOMContentLoaded', function() {
         if (currentPath.startsWith('/behaviour/report/')) {
             currentPath = '/behaviour/report/studentincidentreport';
         }
+        if (currentPath.startsWith('/report/') && currentPath.endsWith('/')) {
+            currentPath = currentPath.slice(0, -1);
+        }
+        if (currentPath === '/attendencereports/attendance/') {
+            currentPath = '/attendencereports/attendance';
+        } else if (currentPath === '/admin/financereports/finance/') {
+            currentPath = '/admin/financereports/finance';
+        } else if (currentPath.startsWith('/financereports/')) {
+            if (currentPath.endsWith('/') && currentPath.length > 1) {
+                currentPath = currentPath.slice(0, -1);
+            }
+        } else if (currentPath === '/admin/examresult/examinations/') {
+            currentPath = '/admin/examresult/examinations';
+        } else if (currentPath === '/admin/onlineexam/report/') {
+            currentPath = '/admin/onlineexam/report';
+        }
         if (currentPath === '/behaviour/studentincidents/') {
             currentPath = '/behaviour/studentincidents';
         }
@@ -683,6 +699,11 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (currentPath === '/admin/onlineadmission/admissionsetting/'
                 || currentPath === '/admin/onlineadmission/admissionsetting/index') {
             currentPath = '/admin/onlineadmission/admissionsetting';
+        } else if (currentPath === '/admin/filetype/' || currentPath === '/admin/filetype/index'
+                || currentPath === '/admin/admin/filetype/' || currentPath === '/admin/admin/filetype/index') {
+            currentPath = '/admin/filetype';
+        } else if (currentPath === '/admin/sidemenu/' || currentPath === '/admin/sidemenu/index') {
+            currentPath = '/admin/sidemenu';
         } else if (currentPath === '/whatsappconfig' || currentPath === '/whatsappconfig/') {
             currentPath = '/whatsappconfig/index';
         } else if (currentPath === '/schsettings/whatsappsettings/') {
@@ -1003,6 +1024,12 @@ document.addEventListener('DOMContentLoaded', function() {
             if (generalSettingItem) {
                 bestMatch = generalSettingItem;
                 bestLength = generalSettingItem.getAttribute('href').length;
+            }
+        } else if (currentPath.startsWith('/financereports/')) {
+            const financeReportItem = document.querySelector('#submenu-reports a[href="/admin/financereports/finance"]');
+            if (financeReportItem) {
+                bestMatch = financeReportItem;
+                bestLength = financeReportItem.getAttribute('href').length;
             }
         }
 
@@ -1378,4 +1405,111 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    function normalizeMenuPath(path) {
+        if (!path || path === '#') {
+            return '';
+        }
+        let value = String(path).split('?')[0].split('#')[0];
+        if (!value.startsWith('/')) {
+            value = '/' + value;
+        }
+        if (value.length > 1 && value.endsWith('/')) {
+            value = value.slice(0, -1);
+        }
+        return value.toLowerCase();
+    }
+
+    async function fetchSidebarMenuSettings() {
+        try {
+            const response = await fetch('/api/sidebar-menu-settings');
+            if (!response.ok) {
+                return null;
+            }
+            return await response.json();
+        } catch (error) {
+            console.warn('Failed to load sidebar menu settings', error);
+            return null;
+        }
+    }
+
+    function applySidebarMenuSettings(settings) {
+        const sidebarMenu = document.querySelector('.sidebar .sidebar-menu');
+        if (!sidebarMenu || !settings) {
+            return;
+        }
+
+        const selectedMenus = settings.selectedMenus || [];
+        const selectedSlugs = new Set(selectedMenus.map(function (menu) { return menu.slug; }));
+        const submenusByParent = settings.submenus || {};
+
+        selectedMenus.forEach(function (menu) {
+            const expandable = sidebarMenu.querySelector('.menu-item-expandable[data-submenu="' + menu.slug + '"]');
+            const wrapper = expandable ? expandable.closest('.menu-item-wrapper') : null;
+            if (wrapper) {
+                wrapper.style.display = '';
+                sidebarMenu.appendChild(wrapper);
+                applySidebarSubMenus(menu.slug, submenusByParent[menu.slug], wrapper);
+            }
+        });
+
+        sidebarMenu.querySelectorAll('.menu-item-wrapper').forEach(function (wrapper) {
+            const expandable = wrapper.querySelector('.menu-item-expandable[data-submenu]');
+            if (!expandable) {
+                return;
+            }
+            const slug = expandable.getAttribute('data-submenu');
+            if (slug && !selectedSlugs.has(slug)) {
+                wrapper.style.display = 'none';
+            }
+        });
+    }
+
+    function applySidebarSubMenus(parentSlug, submenuItems, wrapper) {
+        const submenuEl = wrapper ? wrapper.querySelector('#submenu-' + parentSlug) : document.getElementById('submenu-' + parentSlug);
+        if (!submenuEl || !Array.isArray(submenuItems) || !submenuItems.length) {
+            return;
+        }
+
+        const links = Array.from(submenuEl.querySelectorAll('.submenu-item'));
+        const linkByHref = new Map();
+        links.forEach(function (link) {
+            linkByHref.set(normalizeMenuPath(link.getAttribute('href')), link);
+        });
+
+        submenuItems.forEach(function (item) {
+            const hrefKey = normalizeMenuPath(item.href);
+            const link = linkByHref.get(hrefKey);
+            if (link) {
+                link.setAttribute('data-submenu-slug', item.slug);
+            }
+        });
+
+        submenuItems.forEach(function (item) {
+            const link = submenuEl.querySelector('[data-submenu-slug="' + item.slug + '"]');
+            if (!link) {
+                return;
+            }
+            link.style.display = item.selected === false ? 'none' : '';
+        });
+
+        const visibleItems = submenuItems
+            .filter(function (item) { return item.selected !== false; })
+            .sort(function (a, b) { return (a.sortOrder || 0) - (b.sortOrder || 0); });
+
+        visibleItems.forEach(function (item) {
+            const link = submenuEl.querySelector('[data-submenu-slug="' + item.slug + '"]');
+            if (link) {
+                submenuEl.appendChild(link);
+            }
+        });
+    }
+
+    window.applySidebarMenuSettings = applySidebarMenuSettings;
+
+    fetchSidebarMenuSettings().then(function (settings) {
+        if (settings) {
+            applySidebarMenuSettings(settings);
+        }
+    });
 });

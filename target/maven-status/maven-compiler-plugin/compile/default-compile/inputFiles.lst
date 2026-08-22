@@ -11,10 +11,12 @@ c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\controller\AppCaptchaSettingController.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\controller\AppCurrencyController.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\controller\AppCustomFieldController.java
+c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\controller\AppFileTypeSettingController.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\controller\AppLanguageController.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\controller\AppModuleController.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\controller\AppRoleController.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\controller\ApproveLeaveController.java
+c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\controller\AppSidebarMenuSettingController.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\controller\AppStudentProfileSettingController.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\controller\AppSystemFieldController.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\controller\AppUserAccountController.java
@@ -83,6 +85,7 @@ c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\controller\MultiBranchController.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\controller\NotificationSettingController.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\controller\OfflineBankPaymentController.java
+c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\controller\OnlineAdmissionSettingController.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\controller\OnlineCourseController.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\controller\OnlineExamController.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\controller\PaymentSettingsController.java
@@ -94,6 +97,7 @@ c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\controller\PrintMarksheetController.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\controller\PromoteTransferController.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\controller\QrAttendanceController.java
+c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\controller\ReportModuleController.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\controller\RoomTypeController.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\controller\SchoolAttendanceTypeSettingController.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\controller\SchoolBackendThemeSettingController.java
@@ -143,9 +147,14 @@ c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\model\AppCaptchaSetting.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\model\AppCurrency.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\model\AppCustomField.java
+c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\model\AppFileTypeSetting.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\model\AppLanguage.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\model\AppModule.java
+c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\model\AppOnlineAdmissionField.java
+c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\model\AppOnlineAdmissionSetting.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\model\AppRole.java
+c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\model\AppSidebarMenuItem.java
+c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\model\AppSidebarSubMenuItem.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\model\AppStudentDashboardWidget.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\model\AppStudentProfileEditField.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\model\AppStudentProfileSetting.java
@@ -349,6 +358,9 @@ c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\model\Visitor.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\model\VisitorPurpose.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\model\WhatsappConfig.java
+c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\report\ReportCategoryDefinition.java
+c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\report\ReportDefinition.java
+c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\report\ReportModuleCatalog.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\repository\AcademicSessionRepository.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\repository\AdmissionEnquiryFollowUpRepository.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\repository\AdmissionEnquiryRepository.java
@@ -360,9 +372,14 @@ c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\repository\AppCaptchaSettingRepository.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\repository\AppCurrencyRepository.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\repository\AppCustomFieldRepository.java
+c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\repository\AppFileTypeSettingRepository.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\repository\AppLanguageRepository.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\repository\AppModuleRepository.java
+c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\repository\AppOnlineAdmissionFieldRepository.java
+c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\repository\AppOnlineAdmissionSettingRepository.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\repository\AppRoleRepository.java
+c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\repository\AppSidebarMenuItemRepository.java
+c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\repository\AppSidebarSubMenuItemRepository.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\repository\AppStudentDashboardWidgetRepository.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\repository\AppStudentProfileEditFieldRepository.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\repository\AppStudentProfileSettingRepository.java
@@ -555,10 +572,13 @@ c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\AppCaptchaSettingService.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\AppCurrencyService.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\AppCustomFieldService.java
+c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\AppFileTypeSettingService.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\AppLanguageService.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\AppModuleService.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\AppRoleService.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\ApproveLeaveService.java
+c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\AppSidebarMenuSettingService.java
+c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\AppStudentDashboardWidgetSchemaMigration.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\AppStudentProfileSettingService.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\AppSystemFieldService.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\AppUserAccountService.java
@@ -637,6 +657,7 @@ c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\MultiBranchReportService.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\NotificationSettingService.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\OfflineBankPaymentService.java
+c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\OnlineAdmissionSettingService.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\OnlineCourseCategoryService.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\OnlineCourseCertificateTemplateService.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\OnlineCourseManageService.java
@@ -655,6 +676,7 @@ c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\PrintHeaderFooterService.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\PrintMarksheetService.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\QrAttendanceSettingService.java
+c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\ReportModuleService.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\RoomTypeService.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\SchoolAttendanceTypeSettingService.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\SchoolBackendThemeSettingService.java
@@ -673,6 +695,7 @@ c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\SchoolSectionService.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\SchoolStudentGuardianPanelSettingService.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\SchoolWhatsappSettingService.java
+c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\SidebarMenuCatalogLoader.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\SmsConfigService.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\StaffAttendanceService.java
 c:\Users\alhaj\OneDrive\Desktop\School Application\smart_schoolapp\src\main\java\com\kantechsolution\smart_school\service\StaffLeaveRequestService.java

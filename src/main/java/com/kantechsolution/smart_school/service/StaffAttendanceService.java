@@ -38,6 +38,10 @@ public class StaffAttendanceService {
         );
     }
 
+    public List<String> getSources() {
+        return List.of("Manual", "Biometric", "QR Code", "Barcode", "N/A");
+    }
+
     @Transactional(readOnly = true)
     public List<Map<String, Object>> searchStaff(String role, String attendanceDate) {
         LocalDate date = parseDate(attendanceDate);

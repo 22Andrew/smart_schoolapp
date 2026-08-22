@@ -90,6 +90,19 @@ public class OnlineExamService {
     }
 
     @Transactional(readOnly = true)
+    public List<Map<String, Object>> listExamOptions() {
+        return onlineExamRepository.findAll().stream()
+                .sorted(Comparator.comparing(OnlineExam::getTitle, String.CASE_INSENSITIVE_ORDER))
+                .map(exam -> {
+                    Map<String, Object> row = new LinkedHashMap<>();
+                    row.put("id", exam.getId());
+                    row.put("title", exam.getTitle());
+                    return row;
+                })
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
     public Map<String, Object> getExam(Long id) {
         return toExamRow(requireExam(id));
     }

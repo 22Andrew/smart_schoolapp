@@ -35,6 +35,12 @@ public class OnlineExamController {
         return ResponseEntity.ok(onlineExamService.listExams(status));
     }
 
+    @GetMapping("/api/online-exams/options")
+    @ResponseBody
+    public ResponseEntity<List<Map<String, Object>>> listExamOptions() {
+        return ResponseEntity.ok(onlineExamService.listExamOptions());
+    }
+
     @GetMapping("/api/online-exams/{id}")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getExam(@PathVariable Long id) {

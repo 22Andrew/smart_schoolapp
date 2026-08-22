@@ -34,6 +34,12 @@ public class StaffAttendanceController {
         return ResponseEntity.ok(staffAttendanceService.getRoles());
     }
 
+    @GetMapping("/api/staff-attendance/sources")
+    @ResponseBody
+    public ResponseEntity<List<String>> getSources() {
+        return ResponseEntity.ok(staffAttendanceService.getSources());
+    }
+
     @GetMapping("/api/staff-attendance/staff")
     @ResponseBody
     public ResponseEntity<List<Map<String, Object>>> searchStaff(
