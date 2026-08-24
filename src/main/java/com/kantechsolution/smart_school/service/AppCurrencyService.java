@@ -228,6 +228,20 @@ public class AppCurrencyService implements ApplicationRunner {
         return map;
     }
 
+    @Transactional(readOnly = true)
+    public String getActiveSymbol() {
+        Object symbol = getActiveConfig().get("symbol");
+        return symbol == null ? "$" : symbol.toString();
+    }
+
+    @Transactional(readOnly = true)
+    public String formatCurrency(BigDecimal amount) {
+        if (amount == null) {
+            return "";
+        }
+        return getActiveSymbol() + amount.setScale(2, java.math.RoundingMode.HALF_UP).toPlainString();
+    }
+
     @Transactional
     public Map<String, Object> update(Long id, Map<String, Object> payload) {
         AppCurrency currency = requireCurrency(id);

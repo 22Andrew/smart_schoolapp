@@ -78,10 +78,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function formatMoney(value) {
-        if (window.AppCurrency) return window.AppCurrency.formatCurrency(value);
-        if (value == null || String(value).trim() === '') return '';
-        const number = Number(value);
-        return Number.isNaN(number) ? String(value) : number.toFixed(2);
+        return window.formatCurrency(value);
     }
 
     function formatDistance(value) {

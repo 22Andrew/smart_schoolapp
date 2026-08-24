@@ -400,6 +400,7 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
+    cursor: pointer;
 }
 
 .sidebar-session-edit-btn {
@@ -438,6 +439,12 @@ body {
     font-size: 0.95rem;
     font-weight: 600;
     color: #ffffff;
+    cursor: pointer;
+    user-select: none;
+}
+
+.sidebar-quick-links-title:hover {
+    color: var(--theme-primary-soft-text, #e9d5ff);
 }
 
 .sidebar-quick-links-btn {
@@ -675,6 +682,99 @@ body {
     transform: scale(1);
 }
 
+#currentSessionModal .modal-content.session-picker-modal {
+    width: 420px;
+    min-width: 320px;
+    max-width: min(420px, calc(100vw - 2rem));
+    max-height: none;
+    border-radius: 4px;
+}
+
+#currentSessionModal .modal-header {
+    padding: 0.7rem 1rem;
+}
+
+#currentSessionModal .modal-title {
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+#currentSessionModal .modal-close-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+#currentSessionModal .modal-body.session-picker-body {
+    padding: 0.9rem 1rem 1rem;
+    flex: 0 0 auto;
+    overflow: visible;
+}
+
+#currentSessionModal .session-picker-row {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    flex-wrap: nowrap;
+}
+
+#currentSessionModal .session-picker-row label {
+    flex: 0 0 auto;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: #2d3748;
+    margin: 0;
+    white-space: nowrap;
+}
+
+#currentSessionModal .form-select {
+    flex: 1 1 auto;
+    min-width: 0;
+    width: auto;
+    height: 40px;
+    box-sizing: border-box;
+    padding: 0.55rem 2rem 0.55rem 0.75rem;
+    background: #fff;
+    border: 1px solid #cbd5e0;
+    border-radius: 4px;
+    color: #2d3748;
+    font-size: 0.88rem;
+    font-family: inherit;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23718096' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+}
+
+#currentSessionModal .form-select:focus {
+    outline: none;
+    border-color: var(--theme-primary, #8b5cf6);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+}
+
+#currentSessionModal .session-picker-save-btn {
+    flex: 0 0 auto;
+    height: 40px;
+    padding: 0 1rem;
+    background: var(--theme-primary, #8b5cf6);
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    white-space: nowrap;
+}
+
+#currentSessionModal .session-picker-save-btn:hover {
+    background: var(--theme-primary-dark, #7c3aed);
+}
+
+#currentSessionModal .session-picker-save-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 .modal-header {
     display: flex;
     align-items: center;
@@ -714,6 +814,153 @@ body {
     flex: 1;
     overflow-y: auto;
     padding: 2rem;
+}
+
+#quickLinksModal .modal-overlay {
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: none;
+}
+
+#quickLinksModal .modal-content.quick-links-modal-content {
+    position: relative;
+    z-index: 1;
+    width: 92%;
+    max-width: 1180px;
+    max-height: 88vh;
+    border: none;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.28);
+}
+
+#quickLinksModal .modal-header {
+    padding: 0.65rem 1rem;
+    background: var(--theme-primary, #424242);
+    border-bottom: none;
+}
+
+#quickLinksModal .modal-title {
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+
+#quickLinksModal .modal-close-btn {
+    padding: 0.35rem;
+    line-height: 1;
+}
+
+#quickLinksModal .modal-close-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+#quickLinksModal .modal-body {
+    padding: 0.85rem;
+    background: #f4f6f9;
+}
+
+#quickLinksModal .quick-links-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.75rem;
+}
+
+#quickLinksModal .quick-link-category {
+    background: #ffffff;
+    border: 1px solid #dfe3e8;
+    border-radius: 3px;
+    padding: 0.75rem 0.85rem 0.65rem;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+#quickLinksModal .quick-link-category:hover {
+    border-color: #cfd6de;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+}
+
+#quickLinksModal .category-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.55rem;
+    padding-bottom: 0.45rem;
+    border-bottom: 1px solid #e5e9ef;
+}
+
+#quickLinksModal .category-header svg {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    color: var(--theme-primary, #424242);
+}
+
+#quickLinksModal .category-header h3 {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #2f3640;
+    margin: 0;
+    line-height: 1.2;
+}
+
+#quickLinksModal .category-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#quickLinksModal .category-links li {
+    margin-bottom: 0;
+}
+
+#quickLinksModal .category-links a {
+    display: block;
+    color: #4a5568;
+    text-decoration: none;
+    font-size: 0.78rem;
+    line-height: 1.35;
+    padding: 0.28rem 0;
+    border-radius: 0;
+    transition: color 0.15s ease;
+}
+
+#quickLinksModal .category-links a::before {
+    content: "»";
+    margin-right: 0.35rem;
+    color: var(--theme-primary, #424242);
+    font-weight: 700;
+}
+
+#quickLinksModal .category-links a:hover {
+    color: var(--theme-primary, #424242);
+    background: transparent;
+    padding-left: 0;
+    box-shadow: none;
+}
+
+@media (max-width: 1200px) {
+    #quickLinksModal .quick-links-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+html.theme-dark #quickLinksModal .modal-body {
+    background: #1e293b;
+}
+
+html.theme-dark #quickLinksModal .quick-link-category {
+    background: #0f172a;
+    border-color: #334155;
+}
+
+html.theme-dark #quickLinksModal .category-header {
+    border-bottom-color: #334155;
+}
+
+html.theme-dark #quickLinksModal .category-header h3,
+html.theme-dark #quickLinksModal .category-links a {
+    color: #e2e8f0;
 }
 
 .quick-links-grid {
@@ -1538,6 +1785,11 @@ body {
         width: 60px;
     }
 
+    #quickLinksModal .quick-links-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.65rem;
+    }
+
     .quick-links-grid {
         grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
         gap: 1rem;
@@ -1554,6 +1806,11 @@ body {
     .modal-content {
         width: 98%;
         max-height: 95vh;
+    }
+
+    #currentSessionModal .modal-content.session-picker-modal {
+        width: min(420px, calc(100vw - 1rem));
+        max-width: calc(100vw - 1rem);
     }
 }
 

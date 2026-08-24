@@ -31,7 +31,6 @@ public class AppSidebarMenuSettingService implements ApplicationRunner {
             {"student-information", "Student Information"},
             {"fees-collection", "Fees Collection"},
             {"online-course", "Online Course"},
-            {"tfa", "TFA"},
             {"behaviour-records", "Behaviour Records"},
             {"multi-branch", "Multi Branch"},
             {"gmeet-live-classes", "Gmeet Live Classes"},
@@ -66,7 +65,7 @@ public class AppSidebarMenuSettingService implements ApplicationRunner {
     };
 
     private static final String[] DEFAULT_SELECTED_ORDER = {
-            "front-office", "student-information", "fees-collection", "online-course", "tfa",
+            "front-office", "student-information", "fees-collection", "online-course",
             "behaviour-records", "multi-branch", "gmeet-live-classes", "zoom-live-classes", "income",
             "expenses", "qr-code-attendance", "cbse-examination", "examinations", "attendance",
             "online-examinations", "academics", "annual-calendar", "lesson-plan", "human-resource",
@@ -311,9 +310,7 @@ public class AppSidebarMenuSettingService implements ApplicationRunner {
                     if (item.getSelectedInSidebar() == null) {
                         item.setSelectedInSidebar(true);
                     }
-                    if (item.getSortOrder() == null || item.getSortOrder() == 0) {
-                        item.setSortOrder(i + 1);
-                    }
+                    item.setSortOrder(i + 1);
                     subMenuRepository.save(item);
                 }
             }

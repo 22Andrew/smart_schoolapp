@@ -22,6 +22,38 @@ public class AcademicSessionController {
         return "sessions";
     }
 
+    @GetMapping("/api/sessions/current")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getCurrentSession() {
+        return ResponseEntity.ok(academicSessionService.getCurrentSession());
+    }
+
+    @PutMapping("/api/sessions/current")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> setCurrentSession(@RequestBody Map<String, Object> payload) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            Object idValue = payload.get("id");
+            if (idValue == null || String.valueOf(idValue).isBlank()) {
+                throw new IllegalArgumentException("Session is required");
+            }
+            Long id = Long.parseLong(String.valueOf(idValue).trim());
+            Map<String, Object> saved = academicSessionService.setCurrentSession(id);
+            response.put("success", true);
+            response.put("message", "Session updated successfully!");
+            response.put("data", saved);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Failed to update session: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
     @GetMapping("/api/sessions")
     @ResponseBody
     public ResponseEntity<List<Map<String, Object>>> getSessions() {

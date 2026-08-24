@@ -30,4 +30,7 @@ public class AppUserAccount extends BaseEntity {
     @Column(name = "login_enabled", nullable = false)
     @Builder.Default
     private Boolean loginEnabled = true;
+
+    @Column(name = "password_hash", length = 255)
+    private String passwordHash;
 }

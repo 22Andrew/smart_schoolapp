@@ -19,12 +19,15 @@ import java.util.Map;
 public class AcademicSessionService implements ApplicationRunner {
 
     private final AcademicSessionRepository sessionRepository;
+    private final SchoolGeneralSettingService generalSettingService;
 
     @Override
     @Transactional
     public void run(ApplicationArguments args) {
         if (sessionRepository.count() == 0) {
             seedSessions();
+        } else {
+            ensureSessionsThroughYear(2039);
         }
     }
 
@@ -38,6 +41,26 @@ public class AcademicSessionService implements ApplicationRunner {
     @Transactional(readOnly = true)
     public Map<String, Object> getSessionById(Long id) {
         return toMap(requireSession(id));
+    }
+
+    @Transactional(readOnly = true)
+    public Map<String, Object> getCurrentSession() {
+        return sessionRepository.findByCurrentTrue()
+                .map(this::toMap)
+                .orElseGet(() -> {
+                    Map<String, Object> fallback = new LinkedHashMap<>();
+                    fallback.put("id", null);
+                    fallback.put("sessionName", getCurrentSessionName());
+                    fallback.put("current", true);
+                    return fallback;
+                });
+    }
+
+    @Transactional
+    public Map<String, Object> setCurrentSession(Long id) {
+        Map<String, Object> activated = activateSession(id);
+        generalSettingService.updateSession(String.valueOf(activated.get("sessionName")));
+        return activated;
     }
 
     @Transactional(readOnly = true)
@@ -117,13 +140,24 @@ public class AcademicSessionService implements ApplicationRunner {
     }
 
     private void seedSessions() {
-        for (int year = 2016; year <= 2029; year++) {
+        ensureSessionsThroughYear(2039);
+        sessionRepository.findBySessionNameIgnoreCase("2026-27").ifPresent(session -> {
+            List<AcademicSession> all = sessionRepository.findAll();
+            all.forEach(item -> item.setCurrent(item.getId().equals(session.getId())));
+            sessionRepository.saveAll(all);
+        });
+    }
+
+    private void ensureSessionsThroughYear(int lastStartYear) {
+        for (int year = 2016; year <= lastStartYear; year++) {
             int nextYear = (year + 1) % 100;
             String sessionName = String.format("%d-%02d", year, nextYear);
-            boolean isCurrent = "2026-27".equals(sessionName);
+            if (sessionRepository.findBySessionNameIgnoreCase(sessionName).isPresent()) {
+                continue;
+            }
             AcademicSession session = AcademicSession.builder()
                     .sessionName(sessionName)
-                    .current(isCurrent)
+                    .current(false)
                     .build();
             session.setIsActive(true);
             sessionRepository.save(session);

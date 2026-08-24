@@ -1,0 +1,286 @@
+/* Student Transport Report */
+.tr-report-page {
+    background: #eef1f5;
+    padding: 20px;
+    min-height: calc(100vh - 80px);
+}
+
+.tr-criteria-panel,
+.tr-results-panel {
+    background: #fff;
+    border: 1px solid #d9dee7;
+    border-radius: 4px;
+    max-width: 1600px;
+    margin: 0 auto 1rem;
+    padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.criteria-heading,
+.results-heading {
+    margin: 0 0 1rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.tr-criteria-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.tr-criteria-grid--four {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.tr-criteria-bottom {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1rem;
+    align-items: end;
+    margin-top: 1rem;
+}
+
+.tr-criteria-bottom .form-group {
+    max-width: 360px;
+}
+
+.tr-criteria-form .form-group label {
+    display: block;
+    color: #4a5568;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 0.45rem;
+}
+
+.tr-criteria-form .form-select {
+    width: 100%;
+    height: 40px;
+    box-sizing: border-box;
+    padding: 0.55rem 0.75rem;
+    background: #fff;
+    border: 1px solid #cbd5e0;
+    border-radius: 4px;
+    color: #2d3748;
+    font-size: 0.88rem;
+    font-family: inherit;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23718096' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    padding-right: 2rem;
+}
+
+.tr-criteria-form .form-select:focus {
+    outline: none;
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+}
+
+.tr-criteria-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.tr-criteria-form .btn-search {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: #8b5cf6;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    height: 40px;
+    padding: 0 1.1rem;
+    font-size: 0.88rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.tr-criteria-form .btn-search:hover {
+    background: #7c3aed;
+}
+
+.tr-report-page .table-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.tr-report-page .table-search {
+    flex: 1;
+    min-width: 180px;
+    max-width: 260px;
+}
+
+.tr-report-page .table-search-input {
+    width: 100%;
+    height: 36px;
+    padding: 0.55rem 0.75rem;
+    border: 1px solid #cbd5e0;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-family: inherit;
+    color: #2d3748;
+}
+
+.tr-report-page .table-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.tr-report-page .entries-select {
+    height: 36px;
+    padding: 0.45rem 0.6rem;
+    border: 1px solid #cbd5e0;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-family: inherit;
+    color: #2d3748;
+    background: #fff;
+}
+
+.tr-report-page .icon-action-btn {
+    background: transparent;
+    border: none;
+    color: #4a5568;
+    padding: 0.35rem;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tr-report-page .icon-action-btn:hover {
+    background: #edf2f7;
+    color: #2d3748;
+}
+
+.tr-report-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1100px;
+}
+
+.tr-report-table th,
+.tr-report-table td {
+    border: 1px solid #e2e8f0;
+    padding: 0.7rem 0.75rem;
+    text-align: left;
+    color: #2d3748;
+    font-size: 0.85rem;
+    vertical-align: middle;
+}
+
+.tr-report-table thead th {
+    background: #f8fafc;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.tr-report-table thead th .sort-icon {
+    color: #a0aec0;
+    font-size: 0.7rem;
+    margin-left: 0.25rem;
+}
+
+.tr-report-table tbody tr:nth-child(even) {
+    background: #fcfdfe;
+}
+
+.tr-report-table tbody tr:hover {
+    background: #f7fafc;
+}
+
+.tr-report-page .empty-state {
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+.tr-report-page .empty-message {
+    margin: 0 0 0.75rem;
+    color: #e53e3e;
+    font-weight: 500;
+}
+
+.tr-report-page .empty-illustration {
+    color: #cbd5e0;
+    margin-bottom: 0.75rem;
+}
+
+.tr-report-page .empty-hint {
+    margin: 0;
+    color: #38a169;
+    font-size: 0.88rem;
+}
+
+.tr-report-page .table-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.tr-report-page .showing-info {
+    color: #718096;
+    font-size: 0.85rem;
+}
+
+.tr-report-page .pagination {
+    display: flex;
+    gap: 0.35rem;
+}
+
+.tr-report-page .pagination-btn {
+    min-width: 32px;
+    height: 32px;
+    border: 1px solid #cbd5e0;
+    background: #fff;
+    color: #4a5568;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.tr-report-page .pagination-btn.active,
+.tr-report-page .pagination-btn:hover:not(:disabled) {
+    background: #8b5cf6;
+    border-color: #8b5cf6;
+    color: #fff;
+}
+
+.tr-report-page .pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@media (max-width: 992px) {
+    .tr-criteria-grid--four {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .tr-criteria-bottom {
+        grid-template-columns: 1fr;
+    }
+
+    .tr-criteria-bottom .form-group {
+        max-width: none;
+    }
+}
+
+@media (max-width: 640px) {
+    .tr-report-page {
+        padding: 12px;
+    }
+
+    .tr-criteria-grid--four {
+        grid-template-columns: 1fr;
+    }
+}

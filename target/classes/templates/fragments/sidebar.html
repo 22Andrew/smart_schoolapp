@@ -4,11 +4,11 @@
 <aside class="sidebar" th:fragment="sidebar">
             <div class="sidebar-top">
                 <div class="sidebar-session">
-                    <div class="sidebar-session-text">
+                    <div class="sidebar-session-text" id="sidebarSessionTrigger" role="button" tabindex="0">
                         <span class="sidebar-session-label">Current Session:</span>
-                        <span class="sidebar-session-value">2023-24</span>
+                        <span class="sidebar-session-value">2026-27</span>
                     </div>
-                    <button class="sidebar-session-edit-btn" type="button" aria-label="Edit current session">
+                    <button class="sidebar-session-edit-btn" type="button" id="sidebarSessionEditBtn" aria-label="Edit current session">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M12 20h9"></path>
                             <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
@@ -17,7 +17,7 @@
                 </div>
 
                 <div class="sidebar-quick-links-header">
-                    <span class="sidebar-quick-links-title">Quick Links</span>
+                    <span class="sidebar-quick-links-title" id="sidebarQuickLinksTitle" role="button" tabindex="0">Quick Links</span>
                     <button class="sidebar-quick-links-btn" id="quickLinksBtn" type="button" aria-label="Quick Links">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <rect x="3" y="3" width="7" height="7"></rect>
@@ -204,22 +204,6 @@
                         <a href="/conference/classreport" class="submenu-item">Live Classes Report</a>
                         <a href="/conference/meetingreport" class="submenu-item">Live Meeting Report</a>
                         <a href="/conference" class="submenu-item">Setting</a>
-                    </div>
-                </div>
-                <div class="menu-item-wrapper">
-                    <a href="#" class="menu-item menu-item-expandable" data-submenu="tfa">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
-                            <line x1="12" y1="18" x2="12.01" y2="18"></line>
-                        </svg>
-                        <span>TFA</span>
-                        <svg class="menu-caret" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                    </a>
-                    <div class="submenu" id="submenu-tfa">
-                        <a href="#" class="submenu-item">Setup 2FA</a>
-                        <a href="#" class="submenu-item">Setting</a>
                     </div>
                 </div>
                 <div class="menu-item-wrapper">
@@ -669,15 +653,15 @@
                         <a href="/admin/examresult/examinations" class="submenu-item">Examinations</a>
                         <a href="/admin/onlineexam/report" class="submenu-item">Online Examinations</a>
                         <a href="/report/lessonplan" class="submenu-item">Lesson Plan</a>
-                        <a href="/report/humanresource" class="submenu-item">Human Resource</a>
-                        <a href="/report/homework" class="submenu-item">Homework</a>
-                        <a href="/report/library" class="submenu-item">Library</a>
-                        <a href="/report/inventory" class="submenu-item">Inventory</a>
-                        <a href="/report/transport" class="submenu-item">Transport</a>
+                        <a href="/report/staffreport" class="submenu-item">Human Resource</a>
+                        <a href="/homework/homeworkreport" class="submenu-item">Homework</a>
+                        <a href="/report/studentbookissuereport" class="submenu-item">Library</a>
+                        <a href="/admin/report/inventorystock" class="submenu-item">Inventory</a>
+                        <a href="/admin/route/studenttransportdetails" class="submenu-item">Transport</a>
                         <a href="/report/hostel" class="submenu-item">Hostel</a>
-                        <a href="/report/alumni" class="submenu-item">Alumni</a>
-                        <a href="/report/userlog" class="submenu-item">User Log</a>
-                        <a href="/report/audittrail" class="submenu-item">Audit Trail Report</a>
+                        <a href="/report/alumnireport" class="submenu-item">Alumni</a>
+                        <a href="/admin/userlog" class="submenu-item">User Log</a>
+                        <a href="/admin/audit" class="submenu-item">Audit Trail Report</a>
                     </div>
                 </div>
                 <div class="menu-item-wrapper">

@@ -105,6 +105,119 @@
         return String(config.symbol || '$') + formatNumber(value);
     }
 
+    function getSymbol() {
+        return String(config.symbol || '$');
+    }
+
+    function currencySuffix() {
+        return ' (' + getSymbol() + ')';
+    }
+
+    function withCurrency(text) {
+        if (text == null) {
+            return '';
+        }
+        var symbol = getSymbol();
+        return String(text)
+            .replace(/\(\$\)/g, '(' + symbol + ')')
+            .replace(/\(\s*\$\s*\)/g, '(' + symbol + ')');
+    }
+
+    var LABEL_SELECTOR = 'label, th, td, span, p, h1, h2, h3, h4, h5, h6, option, button, a, legend, dt, dd';
+
+    function shouldSkipCurrencyNode(node) {
+        if (!node || !node.parentElement) {
+            return true;
+        }
+        var parent = node.parentElement;
+        if (parent.closest('script, style, noscript, textarea, code, pre')) {
+            return true;
+        }
+        if (parent.classList && (parent.classList.contains('icon-btn') || parent.classList.contains('sidebar-menu'))) {
+            return false;
+        }
+        return false;
+    }
+
+    function replaceCurrencyMarkers(text) {
+        if (!text || text.indexOf('$') === -1) {
+            return text;
+        }
+        return withCurrency(text);
+    }
+
+    function applyCurrencyLabels(root) {
+        var scope = root || document;
+        if (!scope || !scope.querySelectorAll) {
+            return;
+        }
+
+        scope.querySelectorAll(LABEL_SELECTOR).forEach(function (element) {
+            if (element.childElementCount === 0) {
+                var text = element.textContent;
+                var next = replaceCurrencyMarkers(text);
+                if (next !== text) {
+                    element.textContent = next;
+                }
+                return;
+            }
+
+            element.childNodes.forEach(function (node) {
+                if (node.nodeType === Node.TEXT_NODE && !shouldSkipCurrencyNode(node)) {
+                    var original = node.textContent;
+                    var updated = replaceCurrencyMarkers(original);
+                    if (updated !== original) {
+                        node.textContent = updated;
+                    }
+                }
+            });
+        });
+
+        scope.querySelectorAll('[data-currency-label]').forEach(function (element) {
+            var base = element.getAttribute('data-currency-label');
+            if (base) {
+                element.textContent = withCurrency(base);
+            }
+        });
+
+        scope.querySelectorAll('[placeholder*="($)"]').forEach(function (element) {
+            element.placeholder = withCurrency(element.placeholder);
+        });
+
+        scope.querySelectorAll('[title*="($)"]').forEach(function (element) {
+            element.title = withCurrency(element.title);
+        });
+    }
+
+    function scheduleLabelRefresh() {
+        applyCurrencyLabels(document);
+        setTimeout(function () {
+            applyCurrencyLabels(document);
+        }, 0);
+        setTimeout(function () {
+            applyCurrencyLabels(document);
+        }, 150);
+    }
+
+    var labelObserverTimer = null;
+
+    function observeDynamicLabels() {
+        if (!document.body || !window.MutationObserver) {
+            return;
+        }
+        var observer = new MutationObserver(function () {
+            clearTimeout(labelObserverTimer);
+            labelObserverTimer = setTimeout(function () {
+                applyCurrencyLabels(document);
+            }, 60);
+        });
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+            characterData: true
+        });
+    }
+
     function paintNavbar() {
         document.querySelectorAll('.icon-btn[title="Currency"], .icon-btn[title^="Currency:"]').forEach(function (btn) {
             btn.title = 'Currency: ' + (config.shortCode || 'USD') + ' (' + (config.symbol || '$') + ')';
@@ -114,10 +227,14 @@
     function publishGlobals() {
         window.AppCurrency = {
             getConfig: function () { return Object.assign({}, config); },
+            getSymbol: getSymbol,
+            currencySuffix: currencySuffix,
+            withCurrency: withCurrency,
             convertFromBase: convertFromBase,
             formatNumber: formatNumber,
             formatCurrency: formatCurrency,
             formatMoney: formatNumber,
+            applyCurrencyLabels: applyCurrencyLabels,
             refresh: refreshActiveCurrency,
             isReady: function () { return ready; }
         };
@@ -125,6 +242,7 @@
         window.formatMoney = formatNumber;
         window.formatAmount = formatCurrency;
         window.money = formatCurrency;
+        window.withCurrencyLabel = withCurrency;
     }
 
     function applyConfig(next) {
@@ -132,6 +250,7 @@
         saveCachedConfig();
         publishGlobals();
         paintNavbar();
+        scheduleLabelRefresh();
         ready = true;
         document.dispatchEvent(new CustomEvent('app-currency-changed', { detail: config }));
     }
@@ -170,10 +289,14 @@
 
     document.addEventListener('DOMContentLoaded', function () {
         paintNavbar();
+        scheduleLabelRefresh();
+        observeDynamicLabels();
         if (!ready) {
             refreshActiveCurrency(false);
         }
     });
+
+    document.addEventListener('app-currency-changed', scheduleLabelRefresh);
 
     window.addEventListener('storage', function (event) {
         if (event.key === STORAGE_KEY && event.newValue) {

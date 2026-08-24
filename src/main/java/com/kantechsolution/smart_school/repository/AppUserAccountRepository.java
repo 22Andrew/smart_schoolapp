@@ -10,5 +10,7 @@ public interface AppUserAccountRepository extends JpaRepository<AppUserAccount, 
 
     Optional<AppUserAccount> findByUserTypeAndSourceId(String userType, Long sourceId);
 
+    Optional<AppUserAccount> findByUsernameIgnoreCase(String username);
+
     List<AppUserAccount> findByUserTypeOrderByIdAsc(String userType);
 }

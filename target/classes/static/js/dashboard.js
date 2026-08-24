@@ -169,8 +169,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         },
                         ticks: {
                             callback: function(value) {
-                                if (window.AppCurrency) return window.AppCurrency.formatCurrency(value);
-                                return '$' + value;
+                                return window.formatCurrency(value);
                             }
                         }
                     },
@@ -288,8 +287,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         },
                         ticks: {
                             callback: function(value) {
-                                if (window.AppCurrency) return window.AppCurrency.formatCurrency(value);
-                                return '$' + value;
+                                return window.formatCurrency(value);
                             }
                         }
                     },
@@ -1031,6 +1029,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 bestMatch = financeReportItem;
                 bestLength = financeReportItem.getAttribute('href').length;
             }
+        } else if (currentPath === '/report/alumnireport' || currentPath === '/report/alumni') {
+            const alumniReportItem = document.querySelector('#submenu-reports a[href="/report/alumnireport"]');
+            if (alumniReportItem) {
+                bestMatch = alumniReportItem;
+                bestLength = alumniReportItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/admin/userlog' || currentPath === '/report/userlog') {
+            const userLogItem = document.querySelector('#submenu-reports a[href="/admin/userlog"]');
+            if (userLogItem) {
+                bestMatch = userLogItem;
+                bestLength = userLogItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/admin/audit' || currentPath === '/report/audittrail') {
+            const auditTrailItem = document.querySelector('#submenu-reports a[href="/admin/audit"]');
+            if (auditTrailItem) {
+                bestMatch = auditTrailItem;
+                bestLength = auditTrailItem.getAttribute('href').length;
+            }
+        } else if (currentPath === '/admin/calendar/events') {
+            const calendarItem = document.querySelector('#submenu-annual-calendar a[href="/holiday/index"]');
+            if (calendarItem) {
+                bestMatch = calendarItem;
+                bestLength = calendarItem.getAttribute('href').length;
+            }
         }
 
         if (!bestMatch) return;
@@ -1342,44 +1364,6 @@ document.addEventListener('DOMContentLoaded', function() {
         renderWeekView();
     } // End of calendar functionality check
 
-    // Quick Links Modal Functionality
-    const quickLinksBtn = document.getElementById('quickLinksBtn');
-    const quickLinksModal = document.getElementById('quickLinksModal');
-    const modalOverlay = document.getElementById('modalOverlay');
-    const modalCloseBtn = document.getElementById('modalCloseBtn');
-
-    // Open modal
-    function openQuickLinksModal() {
-        quickLinksModal.classList.add('active');
-        document.body.style.overflow = 'hidden'; // Prevent background scrolling
-    }
-
-    // Close modal
-    function closeQuickLinksModal() {
-        quickLinksModal.classList.remove('active');
-        document.body.style.overflow = ''; // Restore scrolling
-    }
-
-    // Event listeners for modal
-    if (quickLinksBtn) {
-        quickLinksBtn.addEventListener('click', openQuickLinksModal);
-    }
-
-    if (modalCloseBtn) {
-        modalCloseBtn.addEventListener('click', closeQuickLinksModal);
-    }
-
-    if (modalOverlay) {
-        modalOverlay.addEventListener('click', closeQuickLinksModal);
-    }
-
-    // Close modal on Escape key
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && quickLinksModal.classList.contains('active')) {
-            closeQuickLinksModal();
-        }
-    });
-
     // Profile Dropdown Functionality
     const profileBtn = document.getElementById('profileBtn');
     const profileDropdown = document.getElementById('profileDropdown');
@@ -1512,4 +1496,293 @@ document.addEventListener('DOMContentLoaded', function() {
             applySidebarMenuSettings(settings);
         }
     });
+
+    document.querySelectorAll('.nav-icons .icon-btn[title="Messages"], .nav-icons a.icon-btn[title="Messages"]').forEach(function (button) {
+        if (button.dataset.chatBound === 'true') return;
+        button.dataset.chatBound = 'true';
+        button.addEventListener('click', function (event) {
+            if (button.tagName.toLowerCase() === 'a') return;
+            event.preventDefault();
+            window.location.href = '/admin/chat';
+        });
+    });
+
+    document.querySelectorAll('.nav-icons .icon-btn[title="Calendar"], .nav-icons a.icon-btn[title="Calendar"]').forEach(function (button) {
+        if (button.dataset.calendarBound === 'true') return;
+        button.dataset.calendarBound = 'true';
+        button.addEventListener('click', function (event) {
+            if (button.tagName.toLowerCase() === 'a') return;
+            event.preventDefault();
+            window.location.href = '/admin/calendar/events';
+        });
+    });
+
+    initCurrentSessionModal();
+    initQuickLinksModal();
 });
+
+function initQuickLinksModal() {
+    let modal = document.getElementById('quickLinksModal');
+    let modalPromise = null;
+
+    function bindModalEvents(targetModal) {
+        const overlay = targetModal.querySelector('#modalOverlay');
+        const closeBtn = targetModal.querySelector('#modalCloseBtn');
+
+        if (overlay && overlay.dataset.quickLinksBound !== 'true') {
+            overlay.dataset.quickLinksBound = 'true';
+            overlay.addEventListener('click', closeQuickLinksModal);
+        }
+
+        if (closeBtn && closeBtn.dataset.quickLinksBound !== 'true') {
+            closeBtn.dataset.quickLinksBound = 'true';
+            closeBtn.addEventListener('click', closeQuickLinksModal);
+        }
+    }
+
+    function ensureModalOnBody() {
+        if (!modal) {
+            return null;
+        }
+        if (modal.parentElement !== document.body) {
+            document.body.appendChild(modal);
+        }
+        const modalContent = modal.querySelector('.modal-content');
+        if (modalContent) {
+            modalContent.classList.add('quick-links-modal-content');
+        }
+        bindModalEvents(modal);
+        return modal;
+    }
+
+    function loadQuickLinksModal() {
+        if (modal) {
+            return Promise.resolve(ensureModalOnBody());
+        }
+        if (modalPromise) {
+            return modalPromise;
+        }
+
+        modalPromise = fetch('/partials/quick-links-modal', {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+            .then(function (response) {
+                if (!response.ok) {
+                    throw new Error('Unable to load quick links modal');
+                }
+                return response.text();
+            })
+            .then(function (html) {
+                if (!document.getElementById('quickLinksModal')) {
+                    document.body.insertAdjacentHTML('beforeend', html.trim());
+                }
+                modal = document.getElementById('quickLinksModal');
+                return ensureModalOnBody();
+            })
+            .catch(function (error) {
+                console.warn(error);
+                return null;
+            });
+
+        return modalPromise;
+    }
+
+    function openQuickLinksModal() {
+        loadQuickLinksModal().then(function (targetModal) {
+            if (!targetModal) {
+                return;
+            }
+            targetModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+    }
+
+    function closeQuickLinksModal() {
+        if (!modal) {
+            return;
+        }
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    ensureModalOnBody();
+
+    function bindTrigger(element) {
+        if (!element || element.dataset.quickLinksBound === 'true') {
+            return;
+        }
+        element.dataset.quickLinksBound = 'true';
+        element.addEventListener('click', function (event) {
+            event.preventDefault();
+            openQuickLinksModal();
+        });
+        if (element.tabIndex >= 0 || element.getAttribute('role') === 'button') {
+            element.addEventListener('keydown', function (event) {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    openQuickLinksModal();
+                }
+            });
+        }
+    }
+
+    bindTrigger(document.getElementById('quickLinksBtn'));
+    bindTrigger(document.getElementById('topQuickLinksBtn'));
+    bindTrigger(document.getElementById('sidebarQuickLinksTitle'));
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && modal && modal.classList.contains('active')) {
+            closeQuickLinksModal();
+        }
+    });
+
+    window.openQuickLinksModal = openQuickLinksModal;
+    window.closeQuickLinksModal = closeQuickLinksModal;
+}
+
+function initCurrentSessionModal() {
+    let modal = document.getElementById('currentSessionModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.className = 'quick-links-modal';
+        modal.id = 'currentSessionModal';
+        document.body.appendChild(modal);
+    } else if (modal.parentElement !== document.body) {
+        document.body.appendChild(modal);
+    }
+
+    modal.innerHTML = ''
+        + '<div class="modal-overlay" id="currentSessionModalOverlay"></div>'
+        + '<div class="modal-content session-picker-modal" role="dialog" aria-modal="true" aria-labelledby="currentSessionModalTitle">'
+        + '<div class="modal-header">'
+        + '<h2 class="modal-title" id="currentSessionModalTitle">Current Session</h2>'
+        + '<button type="button" class="modal-close-btn" id="closeCurrentSessionModal" aria-label="Close">'
+        + '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'
+        + '<line x1="18" y1="6" x2="6" y2="18"></line>'
+        + '<line x1="6" y1="6" x2="18" y2="18"></line>'
+        + '</svg>'
+        + '</button>'
+        + '</div>'
+        + '<form id="currentSessionForm">'
+        + '<div class="modal-body session-picker-body">'
+        + '<div class="session-picker-row">'
+        + '<label for="currentSessionSelect">Session</label>'
+        + '<select id="currentSessionSelect" name="sessionId" class="form-select" required></select>'
+        + '<button type="submit" class="session-picker-save-btn" id="saveCurrentSessionBtn">Save</button>'
+        + '</div>'
+        + '</div>'
+        + '</form>'
+        + '</div>';
+
+    const form = document.getElementById('currentSessionForm');
+    const select = document.getElementById('currentSessionSelect');
+    const saveBtn = document.getElementById('saveCurrentSessionBtn');
+    const closeBtn = document.getElementById('closeCurrentSessionModal');
+    const overlay = document.getElementById('currentSessionModalOverlay');
+
+    if (!form || !select) {
+        return;
+    }
+
+    function updateSessionLabels(sessionName) {
+        if (!sessionName) return;
+        document.querySelectorAll('.session-value, .sidebar-session-value').forEach(function (el) {
+            el.textContent = sessionName;
+        });
+    }
+
+    async function loadCurrentSession() {
+        const response = await fetch('/api/sessions/current');
+        if (!response.ok) {
+            throw new Error('Failed to load current session');
+        }
+        const payload = await response.json();
+        updateSessionLabels(payload.sessionName);
+        return payload;
+    }
+
+    async function loadSessions() {
+        const response = await fetch('/api/sessions');
+        if (!response.ok) {
+            throw new Error('Failed to load sessions');
+        }
+        const sessions = await response.json();
+        const current = await loadCurrentSession().catch(function () { return null; });
+        select.innerHTML = sessions.map(function (session) {
+            const selected = current && String(current.id) === String(session.id) ? ' selected' : '';
+            return '<option value="' + session.id + '"' + selected + '>' + session.sessionName + '</option>';
+        }).join('');
+    }
+
+    function openModal() {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        loadSessions().catch(function (error) {
+            window.alert(error.message || 'Unable to load sessions.');
+        });
+    }
+
+    function closeModal() {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    async function saveSession(event) {
+        event.preventDefault();
+        const sessionId = select.value;
+        if (!sessionId) {
+            window.alert('Please select a session.');
+            return;
+        }
+        if (saveBtn) saveBtn.disabled = true;
+        try {
+            const response = await fetch('/api/sessions/current', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: sessionId })
+            });
+            const payload = await response.json().catch(function () { return {}; });
+            if (!response.ok || !payload.success) {
+                throw new Error(payload.message || 'Failed to save session');
+            }
+            updateSessionLabels(payload.data && payload.data.sessionName ? payload.data.sessionName : select.options[select.selectedIndex].text);
+            closeModal();
+        } catch (error) {
+            window.alert(error.message || 'Failed to save session.');
+        } finally {
+            if (saveBtn) saveBtn.disabled = false;
+        }
+    }
+
+    document.querySelectorAll('.sidebar-session-text, .sidebar-session-edit-btn').forEach(function (trigger) {
+        if (trigger.dataset.sessionModalBound === 'true') return;
+        trigger.dataset.sessionModalBound = 'true';
+        trigger.addEventListener('click', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            openModal();
+        });
+        if (trigger.classList.contains('sidebar-session-text')) {
+            trigger.addEventListener('keydown', function (event) {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    openModal();
+                }
+            });
+        }
+    });
+
+    closeBtn?.addEventListener('click', closeModal);
+    overlay?.addEventListener('click', closeModal);
+    form.addEventListener('submit', saveSession);
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    loadCurrentSession().catch(function () {
+        // Branding may still populate the label.
+    });
+}

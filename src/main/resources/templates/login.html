@@ -4,7 +4,7 @@
     <script th:src="@{/js/theme-init.js}"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${appName} + ' - Admin Login'">Smart School - Admin Login</title>
+    <title th:text="${schoolName} + ' - Admin Login'">Smart School - Admin Login</title>
     <link rel="stylesheet" th:href="@{/css/login.css}">
     <link rel="stylesheet" th:href="@{/css/app-theme.css}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -142,7 +142,7 @@
                         </svg>
                         Front Site
                     </a>
-                    <a href="/user-login" class="footer-link">
+                    <a href="/site/login" class="footer-link">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                             <circle cx="12" cy="7" r="4"></circle>
@@ -156,41 +156,17 @@
         <!-- Right Side - News Section -->
         <div class="login-right">
             <div class="news-overlay">
-                <h2 class="news-title">What's New In Mount Carmel School</h2>
+                <h2 class="news-title" th:text="|What's New In ${schoolName}|">What's New In Mount Carmel School</h2>
                 <div class="news-items">
-                        <div class="news-item">
-                            <h3 class="news-item-title">The Junior Red Cross</h3>
-                            <p class="news-item-text">"Happiness doesn't result from what we get, but from what we give." The Junior Red Cross continues its service activities this term...</p>
-                            <a href="#" class="news-read-more">Read More</a>
-                        </div>
-
-                        <div class="news-item">
-                            <h3 class="news-item-title">Parents and Guardians Teacher's Meeting</h3>
-                            <p class="news-item-text">Dear parents and guardians, There will be a meeting to discuss academic progress and upcoming assessments...</p>
-                            <a href="#" class="news-read-more">Read More</a>
-                        </div>
-
-                        <div class="news-item">
-                            <h3 class="news-item-title">Winter Term-end Exams Start</h3>
-                            <p class="news-item-text">This is to inform all students that the term-end examinations will commence as per the published timetable...</p>
-                            <a href="#" class="news-read-more">Read More</a>
-                        </div>
-
-                        <div class="news-item">
-                            <h3 class="news-item-title">National Level Workshop for Science Teachers Teaching in Class X to XII (Online)</h3>
-                            <p class="news-item-text">A two-day capacity building programme was organised for science teachers to strengthen classroom practices...</p>
-                            <a href="#" class="news-read-more">Read More</a>
-                        </div>
-
-                        <div class="news-item">
-                            <h3 class="news-item-title">Annual Sports Day Announcement</h3>
-                            <p class="news-item-text">Students are invited to participate in the Annual Sports Day. House captains will share event lists and practice schedules...</p>
-                            <a href="#" class="news-read-more">Read More</a>
-                        </div>
+                    <div class="news-item" th:each="item : ${newsItems}">
+                        <h3 class="news-item-title" th:text="${item.title}">News title</h3>
+                        <p class="news-item-text" th:text="${item.description}">News description</p>
+                        <a href="#" class="news-read-more">Read More</a>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
     <script th:src="@{/js/app-branding.js}"></script>
     <script th:src="@{/js/login.js}"></script>

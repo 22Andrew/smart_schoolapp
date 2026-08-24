@@ -152,8 +152,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function labelForKey(key) {
-        if (LABELS[key]) return LABELS[key];
-        return key.replace(/([A-Z])/g, ' $1').replace(/^./, function (c) { return c.toUpperCase(); });
+        var label = LABELS[key]
+            ? LABELS[key]
+            : key.replace(/([A-Z])/g, ' $1').replace(/^./, function (c) { return c.toUpperCase(); });
+        return window.withCurrencyLabel ? window.withCurrencyLabel(label) : label;
     }
 
     function buildColumnsFromRows(dataRows) {

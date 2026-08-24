@@ -324,8 +324,7 @@
     }
 
     function moneyWithDollar(value) {
-        if (window.AppCurrency) return window.AppCurrency.formatCurrency(value);
-        return '$' + formatMoney(value);
+        return window.formatCurrency(value);
     }
 
     function selectedBulkPaymentMode() {

@@ -61,6 +61,13 @@ public class SchoolGeneralSettingService implements ApplicationRunner {
     }
 
     @Transactional
+    public void updateSession(String sessionName) {
+        SchoolGeneralSetting settings = requireSettings();
+        settings.setSession(requiredText(sessionName, "Session"));
+        repository.save(settings);
+    }
+
+    @Transactional
     public Map<String, Object> saveSettings(Map<String, Object> payload) {
         SchoolGeneralSetting settings = requireSettings();
         settings.setSchoolName(requiredText(payload.get("schoolName"), "School name"));

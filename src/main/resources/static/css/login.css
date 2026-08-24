@@ -466,3 +466,103 @@ body {
         padding: 0.6rem 0.4rem;
     }
 }
+
+/* User Login page */
+.user-login-page .user-login-logo {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+}
+
+.user-login-page .user-login-logo .logo-text {
+    color: #ffffff;
+}
+
+.user-role-selection {
+    margin-bottom: 0.5rem;
+}
+
+.role-btn-student {
+    background: #0c7abf;
+}
+
+.role-btn-student.active {
+    background: #0c7abf;
+    box-shadow: 0 2px 6px rgba(12, 122, 191, 0.4);
+}
+
+.role-btn-parent {
+    background: #db2777;
+}
+
+.role-btn-parent.active {
+    background: #db2777;
+    box-shadow: 0 2px 6px rgba(219, 39, 119, 0.4);
+}
+
+.login-alert {
+    margin-bottom: 1rem;
+    padding: 0.75rem 0.9rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+}
+
+.login-alert-error {
+    background: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+}
+
+.login-alert-success {
+    background: #f0fdf4;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+}
+
+.user-dashboard-shell {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f4f6f9;
+    padding: 2rem;
+}
+
+.user-dashboard-card {
+    width: min(560px, 100%);
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    text-align: center;
+}
+
+.user-dashboard-card h1 {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+    color: #1f2937;
+}
+
+.user-dashboard-card p {
+    color: #6b7280;
+    margin-bottom: 1.5rem;
+}
+
+.user-dashboard-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.user-dashboard-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    min-width: 160px;
+    text-decoration: none;
+    margin-bottom: 0;
+}
+
+.user-dashboard-logout {
+    min-width: 160px;
+}

@@ -182,53 +182,56 @@ public final class ReportModuleCatalog {
                 "Lesson Plan Reports",
                 "Lesson Plan",
                 List.of(
-                        report("lessonplanreport", "Lesson Plan Report", "Lesson Plan List", true, true, true),
-                        report("syllabusstatusreport", "Syllabus Status Report", "Syllabus Status List", true, false, true),
-                        report("subjectlessonreport", "Subject Lesson Report", "Subject Lesson List", true, false, true)
+                        report("lessonplanreport", "Lesson Plan Report", "Lesson Plan Report", true, true, true),
+                        report("syllabusstatusreport", "Syllabus Status Report", "Syllabus Status Report", false, false, true),
+                        report("subjectlessonreport", "Subject Lesson Plan Report", "Subject Lesson Plan Report", false, false, true)
                 )
         ));
 
         map.put("humanresource", category(
                 "humanresource",
-                "Human Resource Reports",
+                "Human Resource Report",
                 "Human Resource",
                 List.of(
-                        report("staffreport", "Staff Report", "Staff List", false, false, false),
-                        report("payrollreport", "Payroll Report", "Payroll List", false, true, true),
-                        report("leaveapplicationreport", "Leave Application Report", "Leave Application List", false, true, true),
-                        report("staffattendancesummary", "Staff Attendance Summary", "Staff Attendance Summary List", false, true, true)
+                        report("staffreport", "Staff Report", "Staff Report", false, false, true),
+                        report("payrollreport", "Payroll Report", "Payroll Report", false, false, true),
+                        report("leaverequestreport", "Leave Request Report", "Leave Request Report", false, false, true),
+                        report("myleaverequestreport", "My Leave Request Report", "My Leave Request Report", false, false, true)
                 )
         ));
 
         map.put("homework", category(
                 "homework",
-                "Homework Reports",
+                "Homework Report",
                 "Homework",
                 List.of(
-                        report("homeworkreport", "Homework Report", "Homework List", true, true, true),
-                        report("homeworkevaluationreport", "Homework Evaluation Report", "Homework Evaluation List", true, false, true)
+                        report("homeworkreport", "Homework Report", "Homework Report", true, false, true),
+                        report("evaluation_report", "Homework Evaluation Report", "Homework Evaluation Report", true, false, true),
+                        report("homeworkordailyassignmentreport", "Daily Assignment Report", "Daily Assignment Report", true, false, true),
+                        report("homeworksmarksreport", "Homework Marks Report", "Homework Marks Report", true, false, true)
                 )
         ));
 
         map.put("library", category(
                 "library",
-                "Library Reports",
+                "Library Report",
                 "Library",
                 List.of(
-                        report("bookduereport", "Book Due Report", "Book Due List", false, false, false),
-                        report("bookinventoryreport", "Book Inventory Report", "Book Inventory List", false, false, false),
-                        report("bookissuereport", "Book Issue Report", "Book Issue List", false, true, true)
+                        report("studentbookissuereport", "Book Issue Report", "Book Issue Report", false, false, true),
+                        report("bookduereport", "Book Due Report", "Book Due Report", false, false, true),
+                        report("bookinventory", "Book Inventory Report", "Book Inventory Report", false, false, true),
+                        report("issuereturnreport", "Book Issue Return Report", "Book Issue Return Report", false, false, true)
                 )
         ));
 
         map.put("inventory", category(
                 "inventory",
-                "Inventory Reports",
+                "Inventory Report",
                 "Inventory",
                 List.of(
-                        report("stockreport", "Stock Report", "Stock List", false, false, false),
-                        report("itemreport", "Item Report", "Item List", false, false, false),
-                        report("issuereport", "Issue Report", "Issue List", false, true, true)
+                        report("inventorystock", "Stock Report", "Stock Report", false, false, true),
+                        report("additem", "Add Item Report", "Add Item Report", false, false, true),
+                        report("issueinventory", "Issue Item Report", "Issue Item Report", false, false, true)
                 )
         ));
 
@@ -237,6 +240,7 @@ public final class ReportModuleCatalog {
                 "Transport Reports",
                 "Transport",
                 List.of(
+                        report("studenttransportdetails", "Student Transport Report", "Student Transport Report", true, false, true),
                         report("transportfeesreport", "Transport Fees Report", "Transport Fees List", true, false, true),
                         report("studenttransportreport", "Student Transport Report", "Student Transport List", true, false, true),
                         report("routereport", "Route Report", "Route List", false, false, false)
@@ -248,6 +252,7 @@ public final class ReportModuleCatalog {
                 "Hostel Reports",
                 "Hostel",
                 List.of(
+                        report("studenthosteldetails", "Student Hostel Report", "Student Hostel Report", true, false, true),
                         report("hostelroomreport", "Hostel Room Report", "Hostel Room List", false, false, false),
                         report("hostelstudentreport", "Hostel Student Report", "Hostel Student List", false, false, true)
                 )
@@ -258,7 +263,7 @@ public final class ReportModuleCatalog {
                 "Alumni Reports",
                 "Alumni",
                 List.of(
-                        report("alumnireport", "Alumni Report", "Alumni List", false, false, false),
+                        report("alumnireport", "Alumni Report", "Alumni Report", true, false, true),
                         report("alumnieventreport", "Alumni Event Report", "Alumni Event List", false, true, true)
                 )
         ));

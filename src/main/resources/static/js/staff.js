@@ -2016,9 +2016,7 @@
     }
 
     function formatCurrency(amount) {
-        if (window.AppCurrency) return window.AppCurrency.formatCurrency(amount);
-        const value = Number(amount) || 0;
-        return '$' + value.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        return window.formatCurrency(amount);
     }
 
     function formatSalaryAmount(amount) {

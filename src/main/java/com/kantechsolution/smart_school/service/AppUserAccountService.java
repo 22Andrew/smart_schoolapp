@@ -27,6 +27,7 @@ public class AppUserAccountService {
     private final AppUserAccountRepository appUserAccountRepository;
     private final StudentAdmissionRepository studentAdmissionRepository;
     private final StaffMemberRepository staffMemberRepository;
+    private final UserLoginAuthService userLoginAuthService;
 
     @Transactional(readOnly = true)
     public List<Map<String, Object>> listByType(String type) {
@@ -135,23 +136,11 @@ public class AppUserAccountService {
     }
 
     private AppUserAccount ensureStudentAccount(StudentAdmission student) {
-        return appUserAccountRepository.findByUserTypeAndSourceId(TYPE_STUDENT, student.getId())
-                .orElseGet(() -> appUserAccountRepository.save(AppUserAccount.builder()
-                        .userType(TYPE_STUDENT)
-                        .sourceId(student.getId())
-                        .username(buildStudentUsername(student))
-                        .loginEnabled(true)
-                        .build()));
+        return userLoginAuthService.ensureStudentAccount(student);
     }
 
     private AppUserAccount ensureParentAccount(StudentAdmission student) {
-        return appUserAccountRepository.findByUserTypeAndSourceId(TYPE_PARENT, student.getId())
-                .orElseGet(() -> appUserAccountRepository.save(AppUserAccount.builder()
-                        .userType(TYPE_PARENT)
-                        .sourceId(student.getId())
-                        .username(buildParentUsername(student))
-                        .loginEnabled(true)
-                        .build()));
+        return userLoginAuthService.ensureParentAccount(student);
     }
 
     private AppUserAccount ensureStaffAccount(StaffMember staff) {

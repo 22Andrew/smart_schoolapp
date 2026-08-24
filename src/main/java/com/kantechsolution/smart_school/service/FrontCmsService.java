@@ -58,6 +58,9 @@ public class FrontCmsService implements ApplicationRunner {
             galleryRepository.save(gallery);
         }
         if (newsRepository.count() == 0) {
+            seedNews("National Level Workshop for Science Teachers Teaching in Class X to XII (Online)",
+                    LocalDate.of(2026, 3, 20),
+                    "A two-day capacity building programme was organised for science teachers to strengthen classroom practices.");
             seedNews("New Books Added to Library", LocalDate.of(2026, 3, 18),
                     "The school library has added new educational and reference books.");
             seedNews("Unit Test Schedule Released", LocalDate.of(2026, 3, 5),

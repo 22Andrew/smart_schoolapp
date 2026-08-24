@@ -40,6 +40,36 @@ public class ReportModuleController {
         if ("onlineexaminations".equalsIgnoreCase(category)) {
             return new RedirectView("/admin/onlineexam/report");
         }
+        if ("lessonplan".equalsIgnoreCase(category)) {
+            return new RedirectView("/report/lessonplan");
+        }
+        if ("humanresource".equalsIgnoreCase(category)) {
+            return new RedirectView("/report/staffreport");
+        }
+        if ("homework".equalsIgnoreCase(category)) {
+            return new RedirectView("/homework/homeworkreport");
+        }
+        if ("library".equalsIgnoreCase(category)) {
+            return new RedirectView("/report/studentbookissuereport");
+        }
+        if ("inventory".equalsIgnoreCase(category)) {
+            return new RedirectView("/admin/report/inventorystock");
+        }
+        if ("transport".equalsIgnoreCase(category)) {
+            return new RedirectView("/admin/route/studenttransportdetails");
+        }
+        if ("hostel".equalsIgnoreCase(category)) {
+            return new RedirectView("/admin/hostelroom/studenthosteldetails");
+        }
+        if ("alumni".equalsIgnoreCase(category)) {
+            return new RedirectView("/report/alumnireport");
+        }
+        if ("userlog".equalsIgnoreCase(category)) {
+            return new RedirectView("/admin/userlog");
+        }
+        if ("audittrail".equalsIgnoreCase(category)) {
+            return new RedirectView("/admin/audit");
+        }
         ReportCategoryDefinition categoryDef = reportModuleService.findCategory(category)
                 .orElseThrow(() -> new IllegalArgumentException("Unknown report category"));
         ReportDefinition defaultReport = categoryDef.defaultReport();
@@ -114,12 +144,20 @@ public class ReportModuleController {
                                        @RequestParam(required = false) String expenseHead,
                                        @RequestParam(required = false) Long feeTypeId,
                                        @RequestParam(required = false) String collectBy,
-                                       @RequestParam(required = false) String groupBy) {
+                                       @RequestParam(required = false) String groupBy,
+                                       @RequestParam(required = false) Long subjectGroupId,
+                                       @RequestParam(required = false) Long subjectId,
+                                       @RequestParam(required = false) String status,
+                                       @RequestParam(required = false) String designation,
+                                       @RequestParam(required = false) String searchTypeBy,
+                                       @RequestParam(required = false) Long staffMemberId,
+                                       @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate joiningDate) {
         try {
             return ResponseEntity.ok(reportModuleService.runReport(
                     category, reportKey, classId, section, dateFrom, dateTo, categoryId, gender, rte, role, month, year,
                     source, examId, searchType, dateType, searchDuration, studentId, incomeHead, expenseHead,
-                    feeTypeId, collectBy, groupBy));
+                    feeTypeId, collectBy, groupBy, subjectGroupId, subjectId, status, designation, searchTypeBy,
+                    staffMemberId, joiningDate));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(errorBody(e.getMessage()));
         } catch (Exception e) {

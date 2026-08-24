@@ -33,9 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function money(value) {
-        if (window.AppCurrency) return window.AppCurrency.formatCurrency(value);
-        const num = Number(value || 0);
-        return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        return window.formatCurrency(value);
     }
 
     function statusBadge(status) {
@@ -1473,7 +1471,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const summaryNameEl = document.getElementById('summaryName');
         const name = fullName(row) || (summaryNameEl ? summaryNameEl.textContent : '') || 'Student';
         const id = row.id != null ? String(row.id) : (studentId || '');
-        const loginUrl = window.location.origin + '/user-login';
+        const loginUrl = window.location.origin + '/site/login';
 
         const nameEl = document.getElementById('loginDetailsName');
         if (nameEl) nameEl.textContent = name;
