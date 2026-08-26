@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface OnlineCourseQuestionRepository extends JpaRepository<OnlineCourseQuestion, Long> {
@@ -32,4 +33,6 @@ public interface OnlineCourseQuestionRepository extends JpaRepository<OnlineCour
     List<String> findDistinctCreatedBy();
 
     long countByTagId(Long tagId);
+
+    Optional<OnlineCourseQuestion> findFirstByQuestionTextIgnoreCase(String questionText);
 }

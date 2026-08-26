@@ -511,3 +511,471 @@
         flex-direction: column;
     }
 }
+
+/* Shared user panel pages */
+.user-page-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+}
+
+.user-page-header {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #edf2f7;
+}
+
+.user-page-header h1 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin: 0;
+}
+
+.user-page-toolbar {
+    padding: 1rem 1.25rem 0;
+}
+
+.user-btn-primary {
+    background: #3182ce;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.user-btn-primary:hover {
+    background: #2b6cb0;
+}
+
+.user-table-wrap {
+    padding: 1rem 1.25rem 1.25rem;
+    overflow-x: auto;
+}
+
+.user-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.user-data-table th,
+.user-data-table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #edf2f7;
+    white-space: nowrap;
+}
+
+.user-data-table th {
+    background: #fafafa;
+    font-weight: 600;
+    color: #4a5568;
+}
+
+.user-data-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+.user-empty-cell {
+    text-align: center;
+    color: #718096;
+    padding: 2rem 1rem !important;
+}
+
+.user-sidebar .submenu-item.active {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.user-profile-header {
+    display: flex;
+    gap: 1.25rem;
+    align-items: center;
+}
+
+.user-profile-photo {
+    width: 96px;
+    height: 96px;
+    border-radius: 4px;
+    object-fit: cover;
+    border: 1px solid #e2e8f0;
+}
+
+.user-profile-header p {
+    margin: 0.25rem 0 0;
+    color: #718096;
+    font-size: 0.875rem;
+}
+
+.user-profile-admission {
+    color: #4a5568 !important;
+}
+
+.user-profile-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+}
+
+.user-profile-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.85rem 1.25rem;
+    border-bottom: 1px solid #edf2f7;
+    border-right: 1px solid #edf2f7;
+}
+
+.user-profile-label {
+    font-size: 0.78rem;
+    color: #718096;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.user-profile-value {
+    font-size: 0.9rem;
+    color: #2d3748;
+    font-weight: 500;
+}
+
+/* Student profile page (demo layout) */
+.user-student-profile-page {
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    gap: 1rem;
+    align-items: start;
+}
+
+.user-profile-summary-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+}
+
+.user-profile-summary-head {
+    padding: 1.25rem 1rem 1rem;
+    text-align: center;
+    border-bottom: 1px solid #edf2f7;
+}
+
+.user-profile-summary-photo {
+    width: 72px;
+    height: 72px;
+    border-radius: 4px;
+    object-fit: cover;
+    background: #edf2f7;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 0.75rem;
+}
+
+.user-profile-summary-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 0.35rem;
+}
+
+.user-profile-summary-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    font-size: 0.78rem;
+    color: #4a5568;
+}
+
+.user-profile-summary-meta strong {
+    color: #3182ce;
+    font-weight: 600;
+}
+
+.user-profile-summary-rows {
+    padding: 0.25rem 0;
+}
+
+.user-profile-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.65rem 1rem;
+    border-bottom: 1px solid #edf2f7;
+    font-size: 0.82rem;
+}
+
+.user-profile-summary-label {
+    color: #2d3748;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.user-profile-summary-value {
+    color: #3182ce;
+    font-weight: 500;
+    text-align: right;
+}
+
+.user-profile-summary-barcode-row,
+.user-profile-summary-qr-row {
+    align-items: flex-start;
+}
+
+.user-profile-summary-barcode {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.2rem;
+}
+
+.user-profile-barcode-image {
+    width: 110px;
+    height: 36px;
+}
+
+.user-profile-summary-barcode span {
+    font-size: 0.72rem;
+    color: #3182ce;
+    letter-spacing: 0.06em;
+}
+
+.user-profile-summary-qr {
+    width: 70px;
+    height: 70px;
+    border: 1px solid #e2e8f0;
+    border-radius: 2px;
+}
+
+.user-profile-summary-download-row {
+    border-bottom: none;
+}
+
+.user-profile-download-btn {
+    background: transparent;
+    border: none;
+    color: #4a5568;
+    cursor: pointer;
+    padding: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-profile-download-btn:hover {
+    color: #3182ce;
+}
+
+.user-profile-main-panel {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    min-width: 0;
+}
+
+.user-profile-tabs-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #edf2f7;
+    padding: 0 0.5rem 0 0;
+    background: #fff;
+    overflow-x: auto;
+}
+
+.user-profile-tabs {
+    display: flex;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    min-width: 0;
+}
+
+.user-profile-tab {
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 0.9rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #4a5568;
+    cursor: pointer;
+    white-space: nowrap;
+    font-family: inherit;
+}
+
+.user-profile-tab:hover {
+    color: #2d3748;
+}
+
+.user-profile-tab.active {
+    color: #7c3aed;
+    border-bottom-color: #7c3aed;
+}
+
+.user-profile-print-btn {
+    background: transparent;
+    border: none;
+    color: #4a5568;
+    cursor: pointer;
+    padding: 0.5rem 0.75rem;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
+.user-profile-print-btn:hover {
+    color: #2d3748;
+}
+
+.user-profile-tab-panel {
+    display: none;
+    padding: 0;
+}
+
+.user-profile-tab-panel.active {
+    display: block;
+}
+
+.user-profile-info-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.user-profile-info-table tr {
+    border-bottom: 1px solid #edf2f7;
+}
+
+.user-profile-info-table td {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.875rem;
+    vertical-align: top;
+}
+
+.user-profile-info-label {
+    width: 220px;
+    color: #2d3748;
+    font-weight: 600;
+    background: #fff;
+}
+
+.user-profile-info-value {
+    color: #4a5568;
+}
+
+.user-profile-section {
+    border-top: 1px solid #edf2f7;
+}
+
+.user-profile-section-title {
+    background: #f7fafc;
+    padding: 0.65rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #2d3748;
+    border-bottom: 1px solid #edf2f7;
+}
+
+.user-profile-guardian-body {
+    position: relative;
+    min-height: 160px;
+}
+
+.user-profile-no-image {
+    position: absolute;
+    right: 1.5rem;
+    bottom: 1rem;
+    width: 110px;
+    height: 110px;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    color: #a0aec0;
+    text-align: center;
+    font-size: 0.65rem;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: 0.02em;
+}
+
+.user-profile-no-image svg {
+    opacity: 0.45;
+}
+
+.user-profile-tab-placeholder {
+    padding: 2rem 1.25rem;
+    color: #718096;
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+.user-notice-page-list {
+    padding: 0.5rem 0;
+}
+
+.user-notice-page-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #edf2f7;
+}
+
+.user-notice-page-icon {
+    color: #e53e3e;
+    flex-shrink: 0;
+    margin-top: 0.15rem;
+}
+
+.user-notice-page-body h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin: 0 0 0.35rem;
+}
+
+.user-notice-page-body p {
+    font-size: 0.875rem;
+    color: #4a5568;
+    margin: 0 0 0.35rem;
+    line-height: 1.5;
+}
+
+.user-notice-page-date {
+    font-size: 0.8rem;
+    color: #3182ce;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .user-profile-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .user-profile-field {
+        border-right: none;
+    }
+
+    .user-student-profile-page {
+        grid-template-columns: 1fr;
+    }
+
+    .user-profile-info-label {
+        width: 140px;
+    }
+
+    .user-profile-no-image {
+        position: static;
+        margin: 1rem auto;
+    }
+}

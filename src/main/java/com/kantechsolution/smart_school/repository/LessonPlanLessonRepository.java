@@ -15,6 +15,12 @@ public interface LessonPlanLessonRepository extends JpaRepository<LessonPlanLess
     List<LessonPlanLesson> findByClassIdAndSectionIgnoreCaseAndSubjectGroupIdOrderBySubjectNameAscLessonNameAsc(
             Long classId, String section, Long subjectGroupId);
 
+    List<LessonPlanLesson> findByClassIdAndSectionIgnoreCaseOrderBySubjectNameAscIdAsc(
+            Long classId, String section);
+
+    List<LessonPlanLesson> findByClassNameIgnoreCaseAndSectionIgnoreCaseOrderBySubjectNameAscIdAsc(
+            String className, String section);
+
     List<LessonPlanLesson> findByAcademicSessionIgnoreCaseAndClassIdAndSectionIgnoreCaseAndSubjectGroupIdAndSubjectIdOrderByLessonNameAsc(
             String academicSession, Long classId, String section, Long subjectGroupId, Long subjectId);
 }

@@ -33,4 +33,6 @@ public interface HomeworkRepository extends JpaRepository<Homework, Long> {
             @Param("subjectId") Long subjectId,
             @Param("tab") String tab,
             @Param("today") LocalDate today);
+
+    boolean existsByClassNameIgnoreCaseAndSectionIgnoreCaseAndIsActiveTrue(String className, String section);
 }

@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
     const UI = window.StudentCvUI;
-    const studentId = (window.location.pathname.match(/\/admin\/resume\/print\/(\d+)/) || [])[1];
+    const studentId = window.STUDENT_CV_STUDENT_ID
+        || (window.location.pathname.match(/\/(?:admin\/resume|user\/user\/resume)\/print(?:\/(\d+))?/) || [])[1];
+    const backUrl = window.STUDENT_CV_BACK_URL || '/admin/resume/download';
     const root = document.getElementById('cvPrintRoot');
 
     if (!studentId) {
@@ -98,9 +100,13 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('cvPrintBtn').addEventListener('click', function () {
         window.print();
     });
-    document.getElementById('cvCloseBtn').addEventListener('click', function () {
-        window.close();
-        window.location.href = '/admin/resume/download';
+    document.getElementById('cvCloseBtn').addEventListener('click', function (event) {
+        if (window.opener) {
+            event.preventDefault();
+            window.close();
+            return;
+        }
+        window.location.href = backUrl;
     });
 
     UI.fetchJson('/api/resume/student/' + studentId).then(function (resume) {

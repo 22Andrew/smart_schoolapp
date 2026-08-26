@@ -81,11 +81,23 @@ public class StudentCvService implements ApplicationRunner {
                     .skillsEnabled(true)
                     .referencesEnabled(true)
                     .otherDetailsEnabled(true)
-                    .studentPanelDownload(false)
+                    .studentPanelDownload(true)
                     .build();
             setting.setIsActive(true);
             settingRepository.save(setting);
+        } else {
+            settingRepository.findAll().forEach(setting -> {
+                if (!setting.isStudentPanelDownload()) {
+                    setting.setStudentPanelDownload(true);
+                    settingRepository.save(setting);
+                }
+            });
         }
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isStudentPanelDownloadEnabled() {
+        return currentSetting().isStudentPanelDownload();
     }
 
     @Transactional(readOnly = true)
@@ -266,7 +278,7 @@ public class StudentCvService implements ApplicationRunner {
                 .skillsEnabled(true)
                 .referencesEnabled(true)
                 .otherDetailsEnabled(true)
-                .studentPanelDownload(false)
+                .studentPanelDownload(true)
                 .build();
         setting.setIsActive(true);
         return settingRepository.save(setting);

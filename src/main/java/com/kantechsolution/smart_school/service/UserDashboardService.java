@@ -1,14 +1,10 @@
 package com.kantechsolution.smart_school.service;
 
-import com.kantechsolution.smart_school.model.AppUserAccount;
 import com.kantechsolution.smart_school.model.Homework;
 import com.kantechsolution.smart_school.model.NoticeBoard;
 import com.kantechsolution.smart_school.model.StudentAdmission;
-import com.kantechsolution.smart_school.repository.AppUserAccountRepository;
 import com.kantechsolution.smart_school.repository.HomeworkRepository;
 import com.kantechsolution.smart_school.repository.NoticeBoardRepository;
-import com.kantechsolution.smart_school.repository.StudentAdmissionRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,44 +16,33 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class UserDashboardService {
 
     private static final DateTimeFormatter US_DATE = DateTimeFormatter.ofPattern("MM/dd/yyyy", Locale.US);
 
-    private final LoginPageService loginPageService;
-    private final AcademicSessionService academicSessionService;
-    private final AppUserAccountRepository appUserAccountRepository;
-    private final StudentAdmissionRepository studentAdmissionRepository;
+    private final UserPanelContextService contextService;
     private final NoticeBoardRepository noticeBoardRepository;
     private final HomeworkRepository homeworkRepository;
 
+    public UserDashboardService(UserPanelContextService contextService,
+                                NoticeBoardRepository noticeBoardRepository,
+                                HomeworkRepository homeworkRepository) {
+        this.contextService = contextService;
+        this.noticeBoardRepository = noticeBoardRepository;
+        this.homeworkRepository = homeworkRepository;
+    }
+
     @Transactional(readOnly = true)
     public void populateDashboardModel(Model model, Authentication authentication) {
-        loginPageService.populateLoginModel(model);
+        contextService.populateLayoutModel(model, authentication, "dashboard", "Dashboard");
 
-        String username = authentication != null ? authentication.getName() : "";
-        AppUserAccount account = appUserAccountRepository.findByUsernameIgnoreCase(username).orElse(null);
-        StudentAdmission student = resolveStudent(account);
+        StudentAdmission student = contextService.resolveStudent(authentication);
+        String studentName = contextService.resolveStudentName(student);
 
-        String studentName = resolveStudentName(student);
-        String admissionNo = resolveAdmissionNo(student);
-        String classLabel = resolveClassLabel(student);
-
-        model.addAttribute("pageTitle", "Dashboard");
-        model.addAttribute("activeMenu", "dashboard");
-        model.addAttribute("userRole", account != null ? account.getUserType() : "STUDENT");
-        model.addAttribute("username", username);
-        model.addAttribute("studentName", studentName);
-        model.addAttribute("admissionNo", admissionNo);
-        model.addAttribute("classLabel", classLabel);
         model.addAttribute("attendancePercent", "81.82");
         model.addAttribute("minAttendancePercent", "75.00");
-        model.addAttribute("currentSession", resolveCurrentSession());
-        model.addAttribute("noticeCount", resolveNoticeCount());
         model.addAttribute("notices", resolveNotices());
         model.addAttribute("subjectProgress", demoSubjectProgress());
         model.addAttribute("upcomingClasses", demoUpcomingClasses());
@@ -65,53 +50,7 @@ public class UserDashboardService {
         model.addAttribute("teachers", demoTeachers());
         model.addAttribute("visitors", demoVisitors());
         model.addAttribute("libraryIssues", demoLibraryIssues());
-        model.addAttribute("profileImageUrl", resolveProfileImage(studentName));
-    }
-
-    private StudentAdmission resolveStudent(AppUserAccount account) {
-        if (account == null || account.getSourceId() == null) {
-            return studentAdmissionRepository.findById(1L).orElse(null);
-        }
-        return studentAdmissionRepository.findById(account.getSourceId()).orElse(null);
-    }
-
-    private String resolveStudentName(StudentAdmission student) {
-        if (student == null) {
-            return "Edward Thomas";
-        }
-        String first = Optional.ofNullable(student.getFirstName()).orElse("").trim();
-        String last = Optional.ofNullable(student.getLastName()).orElse("").trim();
-        String full = (first + " " + last).trim();
-        return full.isBlank() ? "Edward Thomas" : full;
-    }
-
-    private String resolveAdmissionNo(StudentAdmission student) {
-        if (student != null && student.getAdmissionNo() != null && !student.getAdmissionNo().isBlank()) {
-            return student.getAdmissionNo().trim();
-        }
-        return "1000011";
-    }
-
-    private String resolveClassLabel(StudentAdmission student) {
-        if (student == null || student.getSchoolClass() == null) {
-            return "Class 1 (A)";
-        }
-        String className = student.getSchoolClass().getName();
-        String section = student.getSection() == null ? "" : student.getSection().trim();
-        if (section.isBlank()) {
-            return className;
-        }
-        return className + " (" + section + ")";
-    }
-
-    private String resolveCurrentSession() {
-        Object name = academicSessionService.getCurrentSession().get("sessionName");
-        return name != null ? String.valueOf(name) : "2026-27";
-    }
-
-    private long resolveNoticeCount() {
-        long count = noticeBoardRepository.count();
-        return count > 0 ? count : 26L;
+        model.addAttribute("profileImageUrl", contextService.resolveProfileImage(studentName));
     }
 
     private List<Map<String, Object>> resolveNotices() {
@@ -148,11 +87,6 @@ public class UserDashboardService {
             return items;
         }
         return demoHomework();
-    }
-
-    private String resolveProfileImage(String studentName) {
-        String encoded = studentName.replace(" ", "+");
-        return "https://ui-avatars.com/api/?name=" + encoded + "&background=e2e8f0&color=64748b&size=128";
     }
 
     private List<Map<String, Object>> demoNotices() {

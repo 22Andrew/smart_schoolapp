@@ -347,6 +347,51 @@
             link.href = '/css/app-theme-overrides.css';
         }
         document.head.appendChild(link);
+        ensureProfileDocumentsStylesheet();
+        ensureProfileTimelineStylesheet();
+        ensureProfileBehaviourStylesheet();
+    }
+
+    function ensureProfileBehaviourStylesheet() {
+        if (!document.getElementById('student-profile-page')) {
+            return;
+        }
+        var link = document.getElementById('user-profile-behaviour-css');
+        if (!link) {
+            link = document.createElement('link');
+            link.id = 'user-profile-behaviour-css';
+            link.rel = 'stylesheet';
+            link.href = '/css/user-profile-behaviour.css';
+        }
+        document.head.appendChild(link);
+    }
+
+    function ensureProfileDocumentsStylesheet() {
+        if (!document.getElementById('student-profile-page')) {
+            return;
+        }
+        var link = document.getElementById('user-profile-documents-css');
+        if (!link) {
+            link = document.createElement('link');
+            link.id = 'user-profile-documents-css';
+            link.rel = 'stylesheet';
+            link.href = '/css/user-profile-documents.css';
+        }
+        document.head.appendChild(link);
+    }
+
+    function ensureProfileTimelineStylesheet() {
+        if (!document.getElementById('student-profile-page')) {
+            return;
+        }
+        var link = document.getElementById('user-profile-timeline-css');
+        if (!link) {
+            link = document.createElement('link');
+            link.id = 'user-profile-timeline-css';
+            link.rel = 'stylesheet';
+            link.href = '/css/user-profile-timeline.css';
+        }
+        document.head.appendChild(link);
     }
 
 

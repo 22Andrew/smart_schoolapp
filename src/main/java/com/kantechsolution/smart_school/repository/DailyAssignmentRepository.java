@@ -30,4 +30,12 @@ public interface DailyAssignmentRepository extends JpaRepository<DailyAssignment
             @Param("subjectGroupId") Long subjectGroupId,
             @Param("subjectId") Long subjectId,
             @Param("assignmentDate") LocalDate assignmentDate);
+
+    List<DailyAssignment> findByStudentAdmissionIdAndIsActiveTrueOrderByAssignmentDateDescCreatedAtDesc(
+            Long studentAdmissionId);
+
+    boolean existsByStudentAdmissionIdAndIsActiveTrue(Long studentAdmissionId);
+
+    List<DailyAssignment> findByClassNameIgnoreCaseAndSectionIgnoreCaseAndIsActiveTrueOrderByAssignmentDateDescCreatedAtDesc(
+            String className, String section);
 }

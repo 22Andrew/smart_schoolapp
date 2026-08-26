@@ -17,4 +17,6 @@ public interface ExamGroupExamRepository extends JpaRepository<ExamGroupExam, Lo
 
     @Query("SELECT e FROM ExamGroupExam e WHERE e.id = :examId AND e.examGroup.id = :groupId")
     Optional<ExamGroupExam> findByIdAndExamGroupId(@Param("examId") Long examId, @Param("groupId") Long groupId);
+
+    Optional<ExamGroupExam> findByNameIgnoreCase(String name);
 }

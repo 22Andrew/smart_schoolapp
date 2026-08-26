@@ -83,6 +83,34 @@ public class OfflineBankPaymentService {
         return toRow(offlineBankPaymentRepository.save(payment));
     }
 
+    @Transactional
+    public Map<String, Object> createPaymentForStudent(Long studentAdmissionId,
+                                                       LocalDate paymentDate,
+                                                       Double amount,
+                                                       String note) {
+        if (studentAdmissionId == null) {
+            throw new IllegalArgumentException("Student is required");
+        }
+        if (amount == null || amount <= 0) {
+            throw new IllegalArgumentException("Amount must be greater than zero");
+        }
+
+        StudentAdmission student = studentAdmissionRepository.findById(studentAdmissionId)
+                .orElseThrow(() -> new IllegalArgumentException("Student not found"));
+
+        OfflineBankPayment payment = new OfflineBankPayment();
+        payment.setStudentAdmissionId(student.getId());
+        payment.setAdmissionNo(student.getAdmissionNo());
+        payment.setStudentName(fullName(student));
+        payment.setClassLabel(classLabel(student));
+        payment.setPaymentDate(paymentDate != null ? paymentDate : LocalDate.now());
+        payment.setSubmitDate(LocalDateTime.now());
+        payment.setAmount(amount);
+        payment.setStatus(PaymentStatus.PENDING);
+        payment.setNote(note);
+        return toRow(offlineBankPaymentRepository.save(payment));
+    }
+
     private Map<String, Object> toRow(OfflineBankPayment payment) {
         Map<String, Object> row = new LinkedHashMap<>();
         row.put("id", payment.getId());

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+      th:replace="~{fragments/user-layout :: layout(~{::title}, ~{::.user-page-card})}">
+<head>
+    <title th:text="|${schoolName} - ${pageTitle}|">Mount Carmel School</title>
+</head>
+<body>
+<div class="user-page-card">
+        <div class="user-page-header">
+            <h1 th:text="${pageTitle}">Page Title</h1>
+        </div>
+
+        <div class="user-page-toolbar" th:if="${showApplyLeaveForm != null or showTeacherReviewForm != null}">
+            <button type="button" class="user-btn-primary" th:if="${showApplyLeaveForm != null}">Apply Leave</button>
+            <button type="button" class="user-btn-primary" th:if="${showTeacherReviewForm != null}">Add Review</button>
+        </div>
+
+        <div class="user-table-wrap">
+            <table class="user-data-table">
+                <thead>
+                    <tr>
+                        <th th:each="header : ${tableHeaders}" th:text="${header}">Column</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="row : ${tableRows}">
+                        <td th:each="cell : ${row}" th:text="${cell}">Value</td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(tableRows)}">
+                        <td th:colspan="${#lists.size(tableHeaders)}" class="user-empty-cell" th:text="${emptyMessage}">No record found</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+</div>
+</body>
+</html>

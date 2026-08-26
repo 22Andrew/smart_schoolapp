@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+      th:replace="~{fragments/user-layout :: layout(~{::title}, ~{::#user-syllabus-status-page})}">
+<head>
+    <title th:text="|${schoolName} - Syllabus Status|">Mount Carmel School - Syllabus Status</title>
+</head>
+<body>
+<div id="user-syllabus-status-page" class="uss-page">
+    <link rel="stylesheet" th:href="@{/css/user-syllabus-status.css}">
+
+    <div class="uss-card">
+        <div class="uss-charts" id="ussCharts">
+            <div class="uss-loading">Loading syllabus status...</div>
+        </div>
+
+        <div class="uss-list-panel">
+            <div class="uss-list-header">
+                <h2 class="uss-list-title">Subject - Lesson - Topic Status</h2>
+                <div class="uss-list-actions">
+                    <button type="button" class="icon-action-btn" id="ussPdfBtn" title="PDF">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <path d="M10 12h4"></path>
+                            <path d="M10 16h4"></path>
+                        </svg>
+                    </button>
+                    <button type="button" class="icon-action-btn" id="ussPrintBtn" title="Print">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                            <rect x="6" y="14" width="12" height="8"></rect>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="uss-list" id="ussList"></div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/user-syllabus-status.js}"></script>
+</div>
+</body>
+</html>

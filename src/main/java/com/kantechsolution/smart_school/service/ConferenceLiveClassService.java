@@ -28,16 +28,34 @@ public class ConferenceLiveClassService implements ApplicationRunner {
     @Override
     @Transactional
     public void run(ApplicationArguments args) {
-        if (repository.count() > 0) {
+        if (repository.count() == 0) {
+            seedSampleData();
             return;
         }
-        seedSampleData();
+        ensureStudentDemoClasses();
     }
 
     public List<Map<String, Object>> listAll() {
         List<Map<String, Object>> rows = new ArrayList<>();
         for (ConferenceLiveClass item : repository.findAllByOrderByClassDateTimeDescIdDesc()) {
             rows.add(toMap(item));
+        }
+        return rows;
+    }
+
+    public List<Map<String, Object>> listForClassSection(String className, String section) {
+        String normalizedClassName = text(className);
+        String normalizedSection = text(section);
+        if (normalizedClassName.isBlank() || normalizedSection.isBlank()) {
+            return List.of();
+        }
+
+        String classSectionToken = normalizedClassName + " (" + normalizedSection + ")";
+        List<Map<String, Object>> rows = new ArrayList<>();
+        for (ConferenceLiveClass item : repository.findAllByOrderByClassDateTimeDescIdDesc()) {
+            if (matchesClassSection(item, normalizedClassName, normalizedSection, classSectionToken)) {
+                rows.add(toMap(item));
+            }
         }
         return rows;
     }
@@ -196,6 +214,7 @@ public class ConferenceLiveClassService implements ApplicationRunner {
     private List<Map<String, Object>> staffList() {
         List<Map<String, Object>> staff = new ArrayList<>();
         staff.add(staffOption("9002", "Shivam Verma", "Teacher"));
+        staff.add(staffOption("1002", "Nishant Khare", "Teacher"));
         staff.add(staffOption("9003", "William Abbot", "Admin"));
         staff.add(staffOption("9004", "Michael Chen", "Teacher"));
         staff.add(staffOption("9006", "Brandon Heart", "Librarian"));
@@ -367,51 +386,79 @@ public class ConferenceLiveClassService implements ApplicationRunner {
         return value == null ? "" : String.valueOf(value).trim();
     }
 
+    private record StudentDemo(String title, String description, LocalDateTime dateTime, int duration,
+                               String hostName, String hostRole, String hostId, String status) {
+    }
+
+    private List<StudentDemo> class1Demos() {
+        return List.of(
+                new StudentDemo("Doubt Question Answer", "Doubt Question Answer",
+                        LocalDateTime.of(2026, 8, 25, 10, 32), 45, "Shivam Verma", "Teacher", "9002", "Awaited"),
+                new StudentDemo("Extra Class Social Studies", "Extra Class Social Studies",
+                        LocalDateTime.of(2026, 8, 25, 10, 31), 60, "Shivam Verma", "Teacher", "9002", "Awaited"),
+                new StudentDemo("Extra Class Social Studies", "Extra Class Social Studies",
+                        LocalDateTime.of(2026, 8, 25, 10, 30), 45, "Shivam Verma", "Teacher", "9002", "Awaited"),
+                new StudentDemo("Extra Class Social Studies", "Extra Class Social Studies",
+                        LocalDateTime.of(2026, 8, 25, 10, 29), 45, "Shivam Verma", "Teacher", "9002", "Awaited"),
+                new StudentDemo("Extra Class Social Studies", "Extra Class Social Studies",
+                        LocalDateTime.of(2026, 8, 25, 10, 28), 45, "Shivam Verma", "Teacher", "9002", "Awaited"),
+                new StudentDemo("Extra Class Social Studies", "Extra Class Social Studies",
+                        LocalDateTime.of(2026, 8, 25, 10, 27), 60, "Shivam Verma", "Teacher", "9002", "Awaited"),
+                new StudentDemo("Extra Class Social Studies", "Extra Class Social Studies",
+                        LocalDateTime.of(2026, 8, 25, 10, 26), 60, "Shivam Verma", "Teacher", "9002", "Awaited"),
+                new StudentDemo("Extra Class Social Studies", "Extra Class Social Studies",
+                        LocalDateTime.of(2026, 8, 25, 10, 25), 45, "Shivam Verma", "Teacher", "9002", "Awaited"),
+                new StudentDemo("Extra Class Social Studies", "Extra Class Social Studies",
+                        LocalDateTime.of(2026, 4, 25, 10, 36), 45, "Shivam Verma", "Teacher", "9002", "Awaited"),
+                new StudentDemo("Computer Studies Classes", "",
+                        LocalDateTime.of(2026, 4, 25, 10, 35), 45, "Nishant Khare", "Teacher", "1002", "Finished")
+        );
+    }
+
+    private void ensureStudentDemoClasses() {
+        List<ConferenceLiveClass> existing = repository.findAll();
+        for (StudentDemo demo : class1Demos()) {
+            ConferenceLiveClass match = null;
+            for (ConferenceLiveClass item : existing) {
+                if (demo.title().equals(item.getClassTitle())
+                        && demo.dateTime().equals(item.getClassDateTime())
+                        && matchesClassSection(item, "Class 1", "A", "Class 1 (A)")) {
+                    match = item;
+                    break;
+                }
+            }
+            if (match != null) {
+                if ("Finished".equals(demo.status()) && !"Finished".equals(match.getStatus())) {
+                    match.setStatus("Finished");
+                    repository.save(match);
+                }
+                continue;
+            }
+            saveDemo(demo);
+        }
+    }
+
     private void seedSampleData() {
+        for (StudentDemo demo : class1Demos()) {
+            saveDemo(demo);
+        }
+    }
+
+    private void saveDemo(StudentDemo demo) {
         saveSeed(
-                "Computer Studies Classes",
-                "",
-                LocalDateTime.of(2026, 4, 25, 10, 35),
-                45,
+                demo.title(),
+                demo.description(),
+                demo.dateTime(),
+                demo.duration(),
                 "Global",
-                "Nishant Khare", "Teacher", "1002",
+                demo.hostName(), demo.hostRole(), demo.hostId(),
                 "Class 1", "A",
                 "Class 1 (A)",
                 0,
                 "",
                 false,
                 false,
-                "Awaited"
-        );
-        saveSeed(
-                "Doubt Question Answer",
-                "Doubt Question Answer",
-                LocalDateTime.of(2026, 8, 31, 17, 28),
-                45,
-                "Global",
-                "Shivam Verma", "Teacher", "9002",
-                "Class 1", "A",
-                "Class 1 (A)||Class 1 (B)||Class 1 (C)||Class 1 (D)||Class 1 (E)",
-                0,
-                "",
-                false,
-                false,
-                "Awaited"
-        );
-        saveSeed(
-                "Extra Class Social Studies",
-                "Extra Class Social Studies",
-                LocalDateTime.of(2026, 8, 30, 15, 0),
-                60,
-                "Global",
-                "Shivam Verma", "Teacher", "9002",
-                "Class 2", "A",
-                "Class 2 (A)||Class 2 (B)",
-                0,
-                "",
-                false,
-                false,
-                "Awaited"
+                demo.status()
         );
     }
 

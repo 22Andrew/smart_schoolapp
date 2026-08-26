@@ -11,5 +11,11 @@ public interface LessonPlanScheduleRepository extends JpaRepository<LessonPlanSc
     List<LessonPlanSchedule> findByTeacherCodeIgnoreCaseAndPlanDateBetweenOrderByPlanDateAscTimeFromAsc(
             String teacherCode, LocalDate startDate, LocalDate endDate);
 
+    List<LessonPlanSchedule> findByClassNameIgnoreCaseAndSectionIgnoreCaseAndPlanDateBetweenOrderByPlanDateAscTimeFromAsc(
+            String className, String section, LocalDate startDate, LocalDate endDate);
+
+    boolean existsByClassNameIgnoreCaseAndSectionIgnoreCaseAndPlanDateBetween(
+            String className, String section, LocalDate startDate, LocalDate endDate);
+
     boolean existsByTeacherCodeIgnoreCase(String teacherCode);
 }

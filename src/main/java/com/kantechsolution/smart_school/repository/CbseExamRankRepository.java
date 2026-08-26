@@ -16,4 +16,13 @@ public interface CbseExamRankRepository extends JpaRepository<CbseExamRank, Long
     @Modifying
     @Query("DELETE FROM CbseExamRank r WHERE r.cbseExam.id = :examId")
     void deleteByCbseExamId(@Param("examId") Long examId);
+
+    @Query("""
+            SELECT r FROM CbseExamRank r
+            WHERE r.cbseExam.id = :examId AND r.studentAdmissionId = :studentId
+            """)
+    java.util.Optional<CbseExamRank> findByCbseExamIdAndStudentAdmissionId(
+            @Param("examId") Long examId,
+            @Param("studentId") Long studentId
+    );
 }

@@ -61,9 +61,44 @@
         });
     }
 
+    function initProfileTabs() {
+        var tabs = document.querySelectorAll('.sp-tab, .user-profile-tab');
+        var panels = document.querySelectorAll('.sp-tab-content, .user-profile-tab-panel');
+        if (!tabs.length || !panels.length) {
+            return;
+        }
+
+        tabs.forEach(function (tab) {
+            tab.addEventListener('click', function () {
+                var target = tab.getAttribute('data-profile-tab');
+                tabs.forEach(function (item) {
+                    item.classList.toggle('active', item === tab);
+                });
+                panels.forEach(function (panel) {
+                    panel.classList.toggle('active', panel.getAttribute('data-profile-panel') === target);
+                });
+            });
+        });
+    }
+
+    function initActiveSubmenu() {
+        document.querySelectorAll('.submenu.open').forEach(function (submenu) {
+            var wrapper = submenu.closest('.menu-item-wrapper');
+            if (!wrapper) {
+                return;
+            }
+            var toggle = wrapper.querySelector('.menu-item-expandable');
+            if (toggle) {
+                toggle.classList.add('expanded');
+            }
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         initSidebarToggle();
         initSubmenus();
         initProfileDropdown();
+        initProfileTabs();
+        initActiveSubmenu();
     });
 })();

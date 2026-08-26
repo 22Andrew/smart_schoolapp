@@ -10,4 +10,6 @@ public interface ExamGroupExamStudentRepository extends JpaRepository<ExamGroupE
     List<ExamGroupExamStudent> findByExamGroupExamIdOrderByIdAsc(Long examGroupExamId);
 
     void deleteByExamGroupExamId(Long examGroupExamId);
+
+    boolean existsByExamGroupExamIdAndStudentAdmissionId(Long examGroupExamId, Long studentAdmissionId);
 }

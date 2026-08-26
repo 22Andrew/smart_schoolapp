@@ -11,6 +11,8 @@ public interface OnlineExamStudentRepository extends JpaRepository<OnlineExamStu
 
     List<OnlineExamStudent> findByOnlineExamId(Long onlineExamId);
 
+    List<OnlineExamStudent> findByStudentAdmissionId(Long studentAdmissionId);
+
     void deleteByOnlineExamId(Long onlineExamId);
 
     boolean existsByOnlineExamIdAndStudentAdmissionId(Long onlineExamId, Long studentAdmissionId);

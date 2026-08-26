@@ -27,9 +27,7 @@ public class LessonPlanViewService implements ApplicationRunner {
     @Override
     @Transactional
     public void run(ApplicationArguments args) {
-        if (detailRepository.count() == 0) {
-            seedSampleDetails();
-        }
+        ensureMissingDetails();
     }
 
     @Transactional(readOnly = true)
@@ -137,11 +135,11 @@ public class LessonPlanViewService implements ApplicationRunner {
 
     private String formatDateLabel(LessonPlanSchedule schedule) {
         String date = schedule.getPlanDate().format(US_DATE);
-        return date + " " + formatDisplayTime(schedule.getTimeFrom())
-                + " To " + formatDisplayTime(schedule.getTimeTo());
+        return date + " " + formatDisplayTime(schedule.getTimeFrom(), false)
+                + " To " + formatDisplayTime(schedule.getTimeTo(), true);
     }
 
-    private String formatDisplayTime(java.time.LocalTime time) {
+    private String formatDisplayTime(java.time.LocalTime time, boolean padHour) {
         if (time == null) {
             return "";
         }
@@ -152,27 +150,41 @@ public class LessonPlanViewService implements ApplicationRunner {
         if (displayHour == 0) {
             displayHour = 12;
         }
-        return displayHour + ":" + String.format("%02d", minutes) + " " + suffix;
+        String hourText = padHour ? String.format("%02d", displayHour) : String.valueOf(displayHour);
+        return hourText + ":" + String.format("%02d", minutes) + " " + suffix;
     }
 
     private String valueOrEmpty(String value) {
         return value == null ? "" : value;
     }
 
-    private void seedSampleDetails() {
+    @Transactional
+    public void ensureMissingDetails() {
         scheduleRepository.findAll().forEach(schedule -> {
-            if (detailRepository.findByScheduleId(schedule.getId()).isPresent()) {
+            Optional<LessonPlanDetail> existing = detailRepository.findByScheduleId(schedule.getId());
+            if (existing.isEmpty()) {
+                LessonPlanDetail detail = buildInferredDetail(schedule);
+                applyEnglishDemo(schedule, detail);
+                detailRepository.save(detail);
                 return;
             }
-
-            LessonPlanDetail detail = buildInferredDetail(schedule);
-
-            if ("English".equalsIgnoreCase(schedule.getSubjectName())) {
-                detail.setLessonName("The Grasshopper and the Ant");
-                detail.setTopicName("The Ant");
+            LessonPlanDetail detail = existing.get();
+            if (applyEnglishDemo(schedule, detail)) {
+                detailRepository.save(detail);
             }
-
-            detailRepository.save(detail);
         });
+    }
+
+    private boolean applyEnglishDemo(LessonPlanSchedule schedule, LessonPlanDetail detail) {
+        if (!"English".equalsIgnoreCase(schedule.getSubjectName())) {
+            return false;
+        }
+        String lessonName = valueOrEmpty(detail.getLessonName());
+        if (!lessonName.isBlank() && !"The Grasshopper and the Ant".equalsIgnoreCase(lessonName)) {
+            return false;
+        }
+        detail.setLessonName("Storm in the Garden");
+        detail.setTopicName("My Garden");
+        return true;
     }
 }

@@ -28,16 +28,34 @@ public class GmeetLiveClassService implements ApplicationRunner {
     @Override
     @Transactional
     public void run(ApplicationArguments args) {
-        if (repository.count() > 0) {
+        if (repository.count() == 0) {
+            seedSampleData();
             return;
         }
-        seedSampleData();
+        ensureStudentDemoClasses();
     }
 
     public List<Map<String, Object>> listAll() {
         List<Map<String, Object>> rows = new ArrayList<>();
         for (GmeetLiveClass item : repository.findAllByOrderByClassDateTimeDescIdDesc()) {
             rows.add(toMap(item));
+        }
+        return rows;
+    }
+
+    public List<Map<String, Object>> listForClassSection(String className, String section) {
+        String normalizedClassName = text(className);
+        String normalizedSection = text(section);
+        if (normalizedClassName.isBlank() || normalizedSection.isBlank()) {
+            return List.of();
+        }
+
+        String classSectionToken = normalizedClassName + " (" + normalizedSection + ")";
+        List<Map<String, Object>> rows = new ArrayList<>();
+        for (GmeetLiveClass item : repository.findAllByOrderByClassDateTimeDescIdDesc()) {
+            if (matchesClassSection(item, normalizedClassName, normalizedSection, classSectionToken)) {
+                rows.add(toMap(item));
+            }
         }
         return rows;
     }
@@ -362,10 +380,53 @@ public class GmeetLiveClassService implements ApplicationRunner {
         return value == null ? "" : String.valueOf(value).trim();
     }
 
+    private void ensureStudentDemoClasses() {
+        boolean hasGk = false;
+        boolean hasExtra = false;
+        String token = "Class 1 (A)";
+        for (GmeetLiveClass item : repository.findAll()) {
+            if (!matchesClassSection(item, "Class 1", "A", token)) {
+                continue;
+            }
+            if ("GK Combined Online Classes".equals(item.getClassTitle())) {
+                hasGk = true;
+            }
+            if ("Extra Practice Class".equals(item.getClassTitle())) {
+                hasExtra = true;
+            }
+        }
+        if (!hasGk) {
+            saveSeed(
+                    "GK Combined Online Classes",
+                    "All Class 1 Combined",
+                    LocalDateTime.of(2026, 8, 31, 17, 28),
+                    25,
+                    "Joe Black", "Super Admin", "9000",
+                    "Shivam Verma", "Teacher", "9002",
+                    "Class 1 (A)||Class 1 (B)||Class 1 (C)||Class 1 (D)||Class 1 (E)",
+                    "https://meet.google.com/demo-gk-class",
+                    "Awaited"
+            );
+        }
+        if (!hasExtra) {
+            saveSeed(
+                    "Extra Practice Class",
+                    "extra",
+                    LocalDateTime.of(2026, 8, 31, 17, 25),
+                    45,
+                    "Joe Black", "Super Admin", "9000",
+                    "Shivam Verma", "Teacher", "9002",
+                    "Class 1 (A)",
+                    "https://meet.google.com/demo-practice-class",
+                    "Awaited"
+            );
+        }
+    }
+
     private void seedSampleData() {
         saveSeed(
                 "GK Combined Online Classes",
-                "GK Combined Online Classes",
+                "All Class 1 Combined",
                 LocalDateTime.of(2026, 8, 31, 17, 28),
                 25,
                 "Joe Black", "Super Admin", "9000",
@@ -376,12 +437,12 @@ public class GmeetLiveClassService implements ApplicationRunner {
         );
         saveSeed(
                 "Extra Practice Class",
-                "Extra Practice Class",
-                LocalDateTime.of(2026, 8, 30, 15, 0),
-                30,
+                "extra",
+                LocalDateTime.of(2026, 8, 31, 17, 25),
+                45,
                 "Joe Black", "Super Admin", "9000",
-                "Sarah Johnson", "Teacher", "9003",
-                "Class 2 (A)||Class 2 (B)",
+                "Shivam Verma", "Teacher", "9002",
+                "Class 1 (A)",
                 "https://meet.google.com/demo-practice-class",
                 "Awaited"
         );
@@ -411,6 +472,15 @@ public class GmeetLiveClassService implements ApplicationRunner {
         item.setStaffName(createdForName);
         item.setStaffId(createdForId);
         item.setClassSections(classSections);
+        if (classSections != null && classSections.contains("(")) {
+            String first = classSections.split("\\|\\|")[0].trim();
+            int open = first.lastIndexOf('(');
+            int close = first.lastIndexOf(')');
+            if (open > 0 && close > open) {
+                item.setClassName(first.substring(0, open).trim());
+                item.setSection(first.substring(open + 1, close).trim());
+            }
+        }
         item.setCreatedByName(createdByName);
         item.setCreatedByRole(createdByRole);
         item.setCreatedById(createdById);

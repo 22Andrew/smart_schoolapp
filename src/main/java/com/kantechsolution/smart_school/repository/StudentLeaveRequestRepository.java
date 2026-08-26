@@ -10,4 +10,8 @@ import java.util.List;
 public interface StudentLeaveRequestRepository extends JpaRepository<StudentLeaveRequest, Long> {
 
     List<StudentLeaveRequest> findByClassIdAndSectionOrderByApplyDateDescIdDesc(Long classId, String section);
+
+    List<StudentLeaveRequest> findByStudentAdmissionIdOrderByApplyDateDescIdDesc(Long studentAdmissionId);
+
+    boolean existsByStudentAdmissionId(Long studentAdmissionId);
 }

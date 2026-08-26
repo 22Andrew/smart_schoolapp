@@ -1,6 +1,8 @@
 package com.kantechsolution.smart_school.service;
 
+import com.kantechsolution.smart_school.model.LessonPlanDetail;
 import com.kantechsolution.smart_school.model.LessonPlanSchedule;
+import com.kantechsolution.smart_school.repository.LessonPlanDetailRepository;
 import com.kantechsolution.smart_school.repository.LessonPlanScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
@@ -22,8 +24,10 @@ import java.util.*;
 public class LessonPlanScheduleService implements ApplicationRunner {
 
     private static final DateTimeFormatter US_DATE = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+    private static final LocalDate STUDENT_DEMO_WEEK = LocalDate.of(2026, 8, 24);
 
     private final LessonPlanScheduleRepository scheduleRepository;
+    private final LessonPlanDetailRepository detailRepository;
 
     @Override
     @Transactional
@@ -31,6 +35,7 @@ public class LessonPlanScheduleService implements ApplicationRunner {
         if (scheduleRepository.count() == 0) {
             seedSampleSchedules();
         }
+        ensureStudentWeekSchedules();
     }
 
     @Transactional(readOnly = true)
@@ -47,6 +52,41 @@ public class LessonPlanScheduleService implements ApplicationRunner {
                 .stream()
                 .map(this::toMap)
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Map<String, Object>> getWeeklyScheduleForClass(String className, String section, LocalDate weekStart) {
+        if (className == null || className.isBlank() || section == null || section.isBlank()) {
+            return List.of();
+        }
+        LocalDate start = normalizeWeekStart(weekStart);
+        LocalDate end = start.plusDays(6);
+        return scheduleRepository
+                .findByClassNameIgnoreCaseAndSectionIgnoreCaseAndPlanDateBetweenOrderByPlanDateAscTimeFromAsc(
+                        className.trim(), section.trim().toUpperCase(Locale.ROOT), start, end)
+                .stream()
+                .map(this::toMap)
+                .toList();
+    }
+
+    @Transactional
+    public void ensureStudentWeekSchedules() {
+        ensureWeekForClass("Class 1", "A", STUDENT_DEMO_WEEK, null);
+    }
+
+    @Transactional
+    public void ensureWeekForClass(String className, String section, LocalDate weekStart, Long classId) {
+        if (className == null || className.isBlank() || section == null || section.isBlank()) {
+            return;
+        }
+        LocalDate start = normalizeWeekStart(weekStart);
+        LocalDate end = start.plusDays(6);
+        String normalizedSection = section.trim().toUpperCase(Locale.ROOT);
+        if (scheduleRepository.existsByClassNameIgnoreCaseAndSectionIgnoreCaseAndPlanDateBetween(
+                className.trim(), normalizedSection, start, end)) {
+            return;
+        }
+        seedWeekForClass(className.trim(), normalizedSection, start, classId);
     }
 
     @Transactional(readOnly = true)
@@ -207,22 +247,58 @@ public class LessonPlanScheduleService implements ApplicationRunner {
         );
 
         for (ScheduleSeed item : seeds) {
-            LessonPlanSchedule schedule = LessonPlanSchedule.builder()
-                    .teacherCode(teacherCode)
-                    .teacherName(teacherName)
-                    .planDate(item.date())
-                    .dayOfWeek(item.date().getDayOfWeek().name().substring(0, 1)
-                            + item.date().getDayOfWeek().name().substring(1).toLowerCase(Locale.ROOT))
-                    .subjectName(item.subjectName())
-                    .subjectCode(item.subjectCode())
-                    .className(item.className())
-                    .section(item.section())
-                    .timeFrom(LocalTime.parse(item.timeFrom() + ":00"))
-                    .timeTo(LocalTime.parse(item.timeTo() + ":00"))
-                    .roomNo(item.roomNo())
-                    .build();
-            scheduleRepository.save(schedule);
+            saveSeededSchedule(teacherCode, teacherName, null, item);
         }
+    }
+
+    private void seedWeekForClass(String className, String section, LocalDate weekStart, Long classId) {
+        String teacherCode = "9002";
+        String teacherName = "Shivam Verma";
+        List<ScheduleSeed> seeds = new ArrayList<>();
+        for (int day = 0; day < 4; day++) {
+            LocalDate date = weekStart.plusDays(day);
+            seeds.add(seed(date, "English", "210", className, section, "08:00", "08:45", "100"));
+            seeds.add(seed(date, "Hindi", "230", className, section, "08:45", "09:30", "100"));
+        }
+        seeds.add(seed(weekStart.plusDays(4), "Hindi", "230", className, section, "08:00", "08:45", "100"));
+        seeds.add(seed(weekStart.plusDays(4), "English", "210", className, section, "08:45", "09:30", "100"));
+        seeds.add(seed(weekStart.plusDays(5), "Science", "111", className, section, "08:00", "08:45", "100"));
+
+        for (ScheduleSeed item : seeds) {
+            saveSeededSchedule(teacherCode, teacherName, classId, item);
+        }
+    }
+
+    private void saveSeededSchedule(String teacherCode, String teacherName, Long classId, ScheduleSeed item) {
+        LessonPlanSchedule schedule = LessonPlanSchedule.builder()
+                .teacherCode(teacherCode)
+                .teacherName(teacherName)
+                .planDate(item.date())
+                .dayOfWeek(item.date().getDayOfWeek().name().substring(0, 1)
+                        + item.date().getDayOfWeek().name().substring(1).toLowerCase(Locale.ROOT))
+                .subjectName(item.subjectName())
+                .subjectCode(item.subjectCode())
+                .classId(classId)
+                .className(item.className())
+                .section(item.section())
+                .timeFrom(LocalTime.parse(item.timeFrom() + ":00"))
+                .timeTo(LocalTime.parse(item.timeTo() + ":00"))
+                .roomNo(item.roomNo())
+                .build();
+        LessonPlanSchedule saved = scheduleRepository.save(schedule);
+        if (detailRepository.findByScheduleId(saved.getId()).isPresent()) {
+            return;
+        }
+        LessonPlanDetail detail = LessonPlanDetail.builder()
+                .scheduleId(saved.getId())
+                .lessonName("")
+                .topicName("")
+                .build();
+        if ("English".equalsIgnoreCase(saved.getSubjectName())) {
+            detail.setLessonName("Storm in the Garden");
+            detail.setTopicName("My Garden");
+        }
+        detailRepository.save(detail);
     }
 
     private ScheduleSeed seed(LocalDate date, String subjectName, String subjectCode,

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface OnlineExamRepository extends JpaRepository<OnlineExam, Long> {
@@ -13,4 +14,6 @@ public interface OnlineExamRepository extends JpaRepository<OnlineExam, Long> {
     List<OnlineExam> findByExamToGreaterThanEqualOrderByExamFromAsc(LocalDateTime now);
 
     List<OnlineExam> findByExamToLessThanOrderByExamToDesc(LocalDateTime now);
+
+    Optional<OnlineExam> findFirstByTitleIgnoreCase(String title);
 }

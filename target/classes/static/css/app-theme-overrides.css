@@ -689,3 +689,144 @@ html.front-cms-theme-darkgray textarea::placeholder {
     color: #e5e7eb !important;
 }
 
+/* User profile Documents tab — theme color, toolbar above Action column */
+html.theme-light .student-profile-page .sp-documents-layout,
+html.theme-dark .student-profile-page .sp-documents-layout {
+    display: grid !important;
+}
+
+html.theme-light .student-profile-page .sp-documents-toolbar,
+html.theme-dark .student-profile-page .sp-documents-toolbar {
+    grid-column: 2 / 4 !important;
+    grid-row: 1 !important;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    justify-self: stretch !important;
+    width: auto !important;
+}
+
+html.theme-light .student-profile-page .sp-documents-table-wrap,
+html.theme-dark .student-profile-page .sp-documents-table-wrap {
+    grid-column: 1 / -1 !important;
+    grid-row: 2 !important;
+}
+
+html.theme-light .student-profile-page .sp-doc-upload-btn,
+html.theme-dark .student-profile-page .sp-doc-upload-btn,
+html.theme-light .student-profile-page .sp-doc-download-btn,
+html.theme-dark .student-profile-page .sp-doc-download-btn {
+    background-color: var(--theme-primary) !important;
+    background: var(--theme-primary) !important;
+    border-color: var(--theme-primary) !important;
+    color: #ffffff !important;
+}
+
+html.theme-light .student-profile-page .sp-doc-upload-btn:hover,
+html.theme-dark .student-profile-page .sp-doc-upload-btn:hover,
+html.theme-light .student-profile-page .sp-doc-download-btn:hover,
+html.theme-dark .student-profile-page .sp-doc-download-btn:hover {
+    background-color: var(--theme-primary-dark) !important;
+    background: var(--theme-primary-dark) !important;
+    border-color: var(--theme-primary-dark) !important;
+    color: #ffffff !important;
+}
+
+html.theme-light .student-profile-page .sp-doc-upload-btn svg,
+html.theme-dark .student-profile-page .sp-doc-upload-btn svg,
+html.theme-light .student-profile-page .sp-doc-download-btn svg,
+html.theme-dark .student-profile-page .sp-doc-download-btn svg {
+    stroke: #ffffff !important;
+    color: #ffffff !important;
+}
+
+html.theme-light .student-profile-page .sp-documents-row,
+html.theme-dark .student-profile-page .sp-documents-row {
+    display: grid !important;
+}
+
+html.theme-light .student-profile-page .sp-documents-cell-action,
+html.theme-dark .student-profile-page .sp-documents-cell-action {
+    text-align: left !important;
+    justify-self: start !important;
+}
+
+html.theme-light .student-profile-page .sp-timeline-track::before,
+html.theme-dark .student-profile-page .sp-timeline-track::before {
+    background: var(--theme-primary) !important;
+}
+
+html.theme-light .student-profile-page .sp-timeline-date,
+html.theme-dark .student-profile-page .sp-timeline-date,
+html.theme-light .student-profile-page .sp-timeline-node,
+html.theme-dark .student-profile-page .sp-timeline-node {
+    background: var(--theme-primary) !important;
+}
+
+html.theme-light .student-profile-page .sp-timeline-card-title,
+html.theme-dark .student-profile-page .sp-timeline-card-title {
+    color: #31b0d5 !important;
+}
+
+html.theme-light .student-profile-page .sp-behaviour-comment-btn,
+html.theme-dark .student-profile-page .sp-behaviour-comment-btn,
+html.theme-light .student-profile-page .sp-behaviour-comment-header,
+html.theme-dark .student-profile-page .sp-behaviour-comment-header,
+html.theme-light .student-profile-page .sp-behaviour-comment-send,
+html.theme-dark .student-profile-page .sp-behaviour-comment-send {
+    background: var(--theme-primary) !important;
+    background-color: var(--theme-primary) !important;
+    border-color: var(--theme-primary) !important;
+}
+
+html.theme-light .student-profile-page .sp-behaviour-comment-btn:hover,
+html.theme-dark .student-profile-page .sp-behaviour-comment-btn:hover,
+html.theme-light .student-profile-page .sp-behaviour-comment-send:hover,
+html.theme-dark .student-profile-page .sp-behaviour-comment-send:hover {
+    background: var(--theme-primary-dark) !important;
+    background-color: var(--theme-primary-dark) !important;
+    border-color: var(--theme-primary-dark) !important;
+}
+
+html.theme-light .usc-page .usc-btn-preview,
+html.theme-dark .usc-page .usc-btn-preview,
+html.theme-light .usc-page .usc-cert-btn,
+html.theme-dark .usc-page .usc-cert-btn,
+html.theme-light .usc-page .usc-view-btn.active,
+html.theme-dark .usc-page .usc-view-btn.active {
+    background: var(--theme-primary) !important;
+    background-color: var(--theme-primary) !important;
+    border-color: var(--theme-primary) !important;
+    color: #fff !important;
+}
+
+html.theme-light .usc-page .usc-btn-preview:hover,
+html.theme-dark .usc-page .usc-btn-preview:hover,
+html.theme-light .usc-page .usc-cert-btn:hover,
+html.theme-dark .usc-page .usc-cert-btn:hover {
+    background: var(--theme-primary-dark) !important;
+    background-color: var(--theme-primary-dark) !important;
+}
+
+html.theme-light .uscp-page .uscp-performance-btn,
+html.theme-dark .uscp-page .uscp-performance-btn,
+html.theme-light .uscp-page .uscp-section-header,
+html.theme-dark .uscp-page .uscp-section-header,
+html.theme-light .uscp-page .uscp-lesson-header,
+html.theme-dark .uscp-page .uscp-lesson-header,
+html.theme-light .uscp-page .uscp-start-btn.lesson,
+html.theme-dark .uscp-page .uscp-start-btn.lesson {
+    background: var(--theme-primary) !important;
+    background-color: var(--theme-primary) !important;
+    border-color: var(--theme-primary) !important;
+}
+
+html.theme-light .uscp-page .uscp-performance-btn:hover,
+html.theme-dark .uscp-page .uscp-performance-btn:hover,
+html.theme-light .uscp-page .uscp-start-btn.lesson:hover,
+html.theme-dark .uscp-page .uscp-start-btn.lesson:hover {
+    background: var(--theme-primary-dark) !important;
+    background-color: var(--theme-primary-dark) !important;
+}

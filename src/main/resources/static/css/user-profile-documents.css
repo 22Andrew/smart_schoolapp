@@ -1,0 +1,196 @@
+/* User profile Documents tab — loaded after app-theme-overrides */
+
+.sp-documents-panel {
+    padding: 15px 15px 18px;
+    background: #fff;
+    --sp-doc-col-title: minmax(120px, 220px);
+    --sp-doc-col-file: minmax(180px, 1fr);
+    --sp-doc-col-action: 90px;
+    --sp-doc-col-gap: 20px;
+}
+
+.sp-documents-layout {
+    display: grid;
+    grid-template-columns: var(--sp-doc-col-title) var(--sp-doc-col-file) var(--sp-doc-col-action);
+    column-gap: var(--sp-doc-col-gap);
+    row-gap: 14px;
+    align-items: start;
+}
+
+.sp-documents-toolbar {
+    grid-column: 2 / 4;
+    grid-row: 1;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    justify-self: stretch;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    width: auto;
+    min-width: 0;
+}
+
+.sp-doc-upload-btn {
+    background: var(--theme-primary, #727cf5) !important;
+    border: 1px solid var(--theme-primary, #727cf5) !important;
+    color: #fff !important;
+    border-radius: 3px;
+    padding: 7px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+    font-family: inherit;
+    cursor: pointer;
+    display: inline-flex !important;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    box-shadow: none !important;
+    min-height: auto;
+    height: auto;
+}
+
+.sp-doc-upload-btn:hover {
+    background: var(--theme-primary-dark, #5f6af0) !important;
+    border-color: var(--theme-primary-dark, #5f6af0) !important;
+    color: #fff !important;
+}
+
+.sp-doc-upload-btn svg {
+    stroke: #fff !important;
+    flex-shrink: 0;
+    width: 15px;
+    height: 15px;
+}
+
+.sp-documents-table-wrap {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    overflow-x: auto;
+    background: #fff;
+}
+
+.sp-documents-table {
+    width: 100%;
+    max-width: 100%;
+}
+
+.sp-documents-row {
+    display: grid !important;
+    grid-template-columns: var(--sp-doc-col-title) var(--sp-doc-col-file) var(--sp-doc-col-action);
+    column-gap: var(--sp-doc-col-gap);
+    align-items: center;
+    padding: 0;
+    border-bottom: 1px solid #eee;
+    min-height: 44px;
+}
+
+.sp-documents-head-row {
+    border-bottom: 1px solid #ddd;
+    min-height: 40px;
+}
+
+.sp-documents-head-row .sp-documents-cell {
+    font-size: 13px;
+    font-weight: 700;
+    color: #333 !important;
+    padding: 10px 0;
+    text-align: left;
+}
+
+.sp-documents-data-row .sp-documents-cell {
+    font-size: 13px;
+    font-weight: 400;
+    color: #333 !important;
+    padding: 12px 0;
+    text-align: left;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.sp-documents-data-row .sp-documents-cell-filename {
+    color: #555 !important;
+}
+
+.sp-documents-cell-action {
+    text-align: left !important;
+    justify-self: start;
+}
+
+.sp-documents-actions {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.sp-doc-download-btn {
+    width: 30px !important;
+    height: 30px !important;
+    min-width: 30px !important;
+    min-height: 30px !important;
+    max-width: 30px !important;
+    max-height: 30px !important;
+    border: none !important;
+    border-radius: 3px;
+    background: var(--theme-primary, #727cf5) !important;
+    color: #fff !important;
+    cursor: pointer;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    padding: 0 !important;
+    margin: 0;
+    text-decoration: none !important;
+    box-shadow: none !important;
+    line-height: 1;
+}
+
+.sp-doc-download-btn:hover {
+    background: var(--theme-primary-dark, #5f6af0) !important;
+    color: #fff !important;
+}
+
+.sp-doc-download-btn svg {
+    stroke: #fff !important;
+    width: 14px !important;
+    height: 14px !important;
+    display: block;
+}
+
+.sp-documents-empty {
+    padding: 30px 15px;
+    text-align: center;
+    color: #dd4b39 !important;
+    font-weight: 600;
+    font-size: 13px;
+    border-bottom: none;
+}
+
+.sp-tab-content[data-profile-panel="documents"].active {
+    padding: 0 !important;
+    background: #fff !important;
+}
+
+@media (max-width: 768px) {
+    .sp-documents-panel {
+        --sp-doc-col-title: minmax(90px, 130px);
+        --sp-doc-col-file: minmax(120px, 1fr);
+        --sp-doc-col-action: 70px;
+        --sp-doc-col-gap: 12px;
+    }
+
+    .sp-documents-toolbar {
+        grid-column: 1 / -1;
+        flex-wrap: nowrap !important;
+        justify-content: flex-end !important;
+        overflow-x: auto;
+    }
+
+    .sp-doc-upload-btn {
+        flex: 0 0 auto;
+    }
+}

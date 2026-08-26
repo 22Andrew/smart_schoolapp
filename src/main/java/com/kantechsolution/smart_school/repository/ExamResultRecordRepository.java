@@ -38,4 +38,17 @@ public interface ExamResultRecordRepository extends JpaRepository<ExamResultReco
     List<ExamResultRecord> findByExamGroupExamIdOrderByStudentRankAsc(@Param("examId") Long examGroupExamId);
 
     Optional<ExamResultRecord> findByExamGroupExamIdAndStudentAdmissionId(Long examGroupExamId, Long studentAdmissionId);
+
+    long countByStudentAdmissionId(Long studentAdmissionId);
+
+    @Query("""
+            SELECT DISTINCT r FROM ExamResultRecord r
+            JOIN FETCH r.examGroupExam e
+            JOIN FETCH e.examGroup g
+            LEFT JOIN FETCH r.subjectMarks
+            WHERE r.studentAdmission.id = :studentId
+              AND (e.publishResult IS NULL OR e.publishResult = TRUE)
+            ORDER BY e.id ASC
+            """)
+    List<ExamResultRecord> findPublishedByStudentAdmissionId(@Param("studentId") Long studentId);
 }

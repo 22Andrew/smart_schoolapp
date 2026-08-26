@@ -749,16 +749,16 @@ public class CbseExamService implements ApplicationRunner {
 
         createSeedExam("CBSE All Term Examination (August 2026)", "Term 1 (T021)",
                 classOneName, classOneSections, "Periodic Assessment", "Exam Grade",
-                "Main Subjects", true, true, 3);
-        createSeedExam("CBSE All Term Examination (August 2026)", "Term 1 (T021)",
+                "Main Subjects", true, true, 3, "Theory (TH02), Practical (PC03)");
+        createSeedExam("CBSE Periodic Test-II (August 2026)", "Term 1 (T021)",
                 classOneName, classOneSections, "Periodic Assessment", "Exam Grade",
-                "Internal Assessment", true, true, 2);
+                "Internal Assessment", true, true, 3, "Theory (TH02), Practical (PC03), Assignment (AS05)");
 
         if (classes.size() > 1) {
             SchoolClass classTwo = classes.get(1);
             createSeedExam("CBSE Half Yearly Examination (August 2026)", "Term 2 (T015)",
                     classTwo.getName(), joinSections(classTwo.getSections(), 2), "Half Yearly", "Exam Grade",
-                    "Main Subjects", true, false, 3);
+                    "Main Subjects", true, false, 3, "Theory (TH02), Practical (PC03)");
         }
     }
 
@@ -773,7 +773,8 @@ public class CbseExamService implements ApplicationRunner {
 
     private void createSeedExam(String name, String term, String className, String sections,
                                 String assessment, String grade, String category,
-                                boolean published, boolean publishResult, int subjectCount) {
+                                boolean published, boolean publishResult, int subjectCount,
+                                String subjectAssessments) {
         CbseExam exam = CbseExam.builder()
                 .examName(name)
                 .description(name)
@@ -787,11 +788,15 @@ public class CbseExamService implements ApplicationRunner {
                 .categoryName(category)
                 .build();
 
+        String assessments = subjectAssessments == null || subjectAssessments.isBlank()
+                ? "Theory (TH02), Practical (PC03)"
+                : subjectAssessments;
+
         for (int i = 0; i < subjectCount && i < SUBJECTS.size(); i++) {
             exam.getSubjects().add(CbseExamSubject.builder()
                     .cbseExam(exam)
                     .subjectName(SUBJECTS.get(i))
-                    .assessments("Theory (TH02), Practical (PC03)")
+                    .assessments(assessments)
                     .examDate(LocalDate.of(2026, 8, 6))
                     .startTime(LocalTime.of(16, 27, 11))
                     .durationMinutes(60)
