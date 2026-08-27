@@ -13,7 +13,7 @@ public interface CbseExamRankRepository extends JpaRepository<CbseExamRank, Long
     @Query("SELECT r FROM CbseExamRank r WHERE r.cbseExam.id = :examId ORDER BY r.studentRank ASC")
     List<CbseExamRank> findByCbseExamIdOrderByStudentRankAsc(@Param("examId") Long examId);
 
-    @Modifying
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("DELETE FROM CbseExamRank r WHERE r.cbseExam.id = :examId")
     void deleteByCbseExamId(@Param("examId") Long examId);
 

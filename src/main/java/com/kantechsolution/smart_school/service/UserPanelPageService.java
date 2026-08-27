@@ -3,8 +3,14 @@ package com.kantechsolution.smart_school.service;
 import com.kantechsolution.smart_school.model.Homework;
 import com.kantechsolution.smart_school.model.NoticeBoard;
 import com.kantechsolution.smart_school.model.StudentAdmission;
+import com.kantechsolution.smart_school.model.TransportRoute;
+import com.kantechsolution.smart_school.model.TransportRouteVehicle;
+import com.kantechsolution.smart_school.model.TransportVehicle;
+import com.kantechsolution.smart_school.repository.BehaviourStudentIncidentRepository;
 import com.kantechsolution.smart_school.repository.HomeworkRepository;
 import com.kantechsolution.smart_school.repository.NoticeBoardRepository;
+import com.kantechsolution.smart_school.repository.TransportRouteRepository;
+import com.kantechsolution.smart_school.repository.TransportRouteVehicleRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,15 +32,24 @@ public class UserPanelPageService {
     private final HomeworkRepository homeworkRepository;
     private final NoticeBoardRepository noticeBoardRepository;
     private final StudentCvService studentCvService;
+    private final BehaviourStudentIncidentRepository behaviourIncidentRepository;
+    private final TransportRouteRepository transportRouteRepository;
+    private final TransportRouteVehicleRepository transportRouteVehicleRepository;
 
     public UserPanelPageService(UserPanelContextService contextService,
                                 HomeworkRepository homeworkRepository,
                                 NoticeBoardRepository noticeBoardRepository,
-                                StudentCvService studentCvService) {
+                                StudentCvService studentCvService,
+                                BehaviourStudentIncidentRepository behaviourIncidentRepository,
+                                TransportRouteRepository transportRouteRepository,
+                                TransportRouteVehicleRepository transportRouteVehicleRepository) {
         this.contextService = contextService;
         this.homeworkRepository = homeworkRepository;
         this.noticeBoardRepository = noticeBoardRepository;
         this.studentCvService = studentCvService;
+        this.behaviourIncidentRepository = behaviourIncidentRepository;
+        this.transportRouteRepository = transportRouteRepository;
+        this.transportRouteVehicleRepository = transportRouteVehicleRepository;
     }
 
     @Transactional(readOnly = true)
@@ -62,121 +77,145 @@ public class UserPanelPageService {
         StudentAdmission student = contextService.resolveStudent(authentication);
         populateProfileDetails(model, student);
         model.addAttribute("resumeDownloadEnabled", studentCvService.isStudentPanelDownloadEnabled());
-        model.addAttribute("profileStudentId", student != null ? student.getId() : 1L);
+        model.addAttribute("profileStudentId", student != null ? student.getId() : null);
     }
 
     private void populateProfileDetails(Model model, StudentAdmission student) {
         String studentName = contextService.resolveStudentName(student);
-        String admissionNo = orDefault(student != null ? student.getAdmissionNo() : null, "1800011");
-        String rollNumber = orDefault(student != null ? student.getRollNumber() : null, "001");
+        String admissionNo = orDefault(student != null ? student.getAdmissionNo() : null);
+        String rollNumber = orDefault(student != null ? student.getRollNumber() : null);
         String className = student != null && student.getSchoolClass() != null
                 ? student.getSchoolClass().getName()
-                : "Class 1";
+                : "";
         String session = contextService.resolveCurrentSession();
-        String section = orDefault(student != null ? student.getSection() : null, "A");
-        String gender = orDefault(student != null ? student.getGender() : null, "Male");
-        String rte = orDefault(student != null ? student.getRte() : null, "No");
+        String section = orDefault(student != null ? student.getSection() : null);
+        String gender = orDefault(student != null ? student.getGender() : null);
+        String rte = orDefault(student != null ? student.getRte() : null);
         String category = student != null && student.getCategory() != null
                 ? student.getCategory().getCategoryName()
-                : "OBC";
+                : "";
 
         model.addAttribute("profileImageUrl", contextService.resolveProfileImage(studentName));
         model.addAttribute("studentName", studentName);
         model.addAttribute("admissionNo", admissionNo);
         model.addAttribute("rollNumber", rollNumber);
-        model.addAttribute("profileClass", className + " (" + session + ")");
+        model.addAttribute("profileClass", className.isBlank() ? "" : className + " (" + session + ")");
         model.addAttribute("profileSection", section);
         model.addAttribute("profileGender", gender);
         model.addAttribute("profileRte", rte.isBlank() ? "No" : rte);
-        model.addAttribute("behaviourScore", "75");
+        model.addAttribute("behaviourScore", resolveBehaviourScore(student));
         model.addAttribute("profileActiveTab", "profile");
 
-        model.addAttribute("admissionDate", formatDate(student != null ? student.getAdmissionDate() : null, "04/01/2026"));
-        model.addAttribute("dateOfBirth", formatDate(student != null ? student.getDateOfBirth() : null, "04/08/2020"));
+        model.addAttribute("admissionDate", formatDate(student != null ? student.getAdmissionDate() : null));
+        model.addAttribute("dateOfBirth", formatDate(student != null ? student.getDateOfBirth() : null));
         model.addAttribute("profileCategory", category);
-        model.addAttribute("mobileNumber", orDefault(student != null ? student.getMobileNumber() : null, "98262573272"));
+        model.addAttribute("mobileNumber", orDefault(student != null ? student.getMobileNumber() : null));
         model.addAttribute("caste", "");
-        model.addAttribute("religion", orDefault(student != null ? student.getReligion() : null, "Indian"));
-        model.addAttribute("profileEmail", orDefault(student != null ? student.getEmail() : null, "edward@gmail.com"));
-        model.addAttribute("medicalHistory", orDefault(student != null ? student.getMedicalHistory() : null, ""));
-        model.addAttribute("profileNote", orDefault(student != null ? student.getNote() : null, ""));
+        model.addAttribute("religion", orDefault(student != null ? student.getReligion() : null));
+        model.addAttribute("profileEmail", orDefault(student != null ? student.getEmail() : null));
+        model.addAttribute("medicalHistory", orDefault(student != null ? student.getMedicalHistory() : null));
+        model.addAttribute("profileNote", orDefault(student != null ? student.getNote() : null));
 
-        String address = orDefault(student != null ? student.getCurrentAddress() : null,
-                "56 Main Street, Suite 3, Brooklyn, NY 11210-0000");
-        if (student != null && student.getPermanentAddress() != null && !student.getPermanentAddress().isBlank()) {
-            model.addAttribute("currentAddress", orBlank(student.getCurrentAddress(), address));
-            model.addAttribute("permanentAddress", student.getPermanentAddress());
-        } else {
-            model.addAttribute("currentAddress", address);
-            model.addAttribute("permanentAddress", address);
-        }
+        model.addAttribute("currentAddress", orDefault(student != null ? student.getCurrentAddress() : null));
+        model.addAttribute("permanentAddress", orDefault(student != null ? student.getPermanentAddress() : null));
 
-        model.addAttribute("fatherName", orDefault(student != null ? student.getFatherName() : null, "Olivier Thomas"));
-        model.addAttribute("fatherPhone", orDefault(student != null ? student.getFatherPhone() : null, "98654646"));
-        model.addAttribute("fatherOccupation", orDefault(student != null ? student.getFatherOccupation() : null, "Lawyer"));
-        model.addAttribute("motherName", orDefault(student != null ? student.getMotherName() : null, "Caroline Thomas"));
-        model.addAttribute("motherPhone", orDefault(student != null ? student.getMotherPhone() : null, "6598656"));
-        model.addAttribute("motherOccupation", orDefault(student != null ? student.getMotherOccupation() : null, "Teacher"));
-        model.addAttribute("guardianName", orDefault(student != null ? student.getGuardianName() : null, "Olivier Thomas"));
+        model.addAttribute("fatherName", orDefault(student != null ? student.getFatherName() : null));
+        model.addAttribute("fatherPhone", orDefault(student != null ? student.getFatherPhone() : null));
+        model.addAttribute("fatherOccupation", orDefault(student != null ? student.getFatherOccupation() : null));
+        model.addAttribute("motherName", orDefault(student != null ? student.getMotherName() : null));
+        model.addAttribute("motherPhone", orDefault(student != null ? student.getMotherPhone() : null));
+        model.addAttribute("motherOccupation", orDefault(student != null ? student.getMotherOccupation() : null));
+        model.addAttribute("guardianName", orDefault(student != null ? student.getGuardianName() : null));
         model.addAttribute("guardianEmail", student != null ? blankToEmpty(student.getGuardianEmail()) : "");
-        model.addAttribute("guardianRelation", orDefault(student != null ? student.getGuardianRelation() : null, "Father"));
-        model.addAttribute("guardianPhone", orDefault(student != null ? student.getGuardianPhone() : null, "986546468758"));
-        model.addAttribute("guardianOccupation", orDefault(student != null ? student.getGuardianOccupation() : null, "Lawyer"));
-        model.addAttribute("guardianAddress", orDefault(student != null ? student.getGuardianAddress() : null, "West Brooklyn"));
+        model.addAttribute("guardianRelation", orDefault(student != null ? student.getGuardianRelation() : null));
+        model.addAttribute("guardianPhone", orDefault(student != null ? student.getGuardianPhone() : null));
+        model.addAttribute("guardianOccupation", orDefault(student != null ? student.getGuardianOccupation() : null));
+        model.addAttribute("guardianAddress", orDefault(student != null ? student.getGuardianAddress() : null));
 
-        model.addAttribute("pickupPoint", orDefault(student != null ? student.getPickupPoint() : null, "Brooklyn North"));
-        model.addAttribute("transportRoute", orDefault(student != null ? student.getRouteList() : null, "Brooklyn East"));
-        model.addAttribute("vehicleNumber", "VH4584");
-        model.addAttribute("driverName", "Jasper");
-        model.addAttribute("driverContact", "8521479630");
+        model.addAttribute("pickupPoint", orDefault(student != null ? student.getPickupPoint() : null));
+        model.addAttribute("transportRoute", orDefault(student != null ? student.getRouteList() : null));
+        populateTransportVehicle(model, student);
 
         if (student != null && student.getHostel() != null) {
             model.addAttribute("hostelName", student.getHostel().getHostelName());
         } else {
-            model.addAttribute("hostelName", "Boys Hostel 101");
+            model.addAttribute("hostelName", "");
         }
         if (student != null && student.getHostelRoom() != null) {
-            model.addAttribute("hostelRoomNo", orDefault(student.getHostelRoom().getRoomNumber(), "G1"));
+            model.addAttribute("hostelRoomNo", orDefault(student.getHostelRoom().getRoomNumber()));
             model.addAttribute("hostelRoomType", student.getHostelRoom().getRoomType() != null
                     ? student.getHostelRoom().getRoomType().getRoomType()
-                    : "One Bed");
+                    : "");
         } else {
-            model.addAttribute("hostelRoomNo", "G1");
-            model.addAttribute("hostelRoomType", "One Bed");
+            model.addAttribute("hostelRoomNo", "");
+            model.addAttribute("hostelRoomType", "");
         }
 
-        model.addAttribute("bloodGroup", orDefault(student != null ? student.getBloodGroup() : null, "O+"));
+        model.addAttribute("bloodGroup", orDefault(student != null ? student.getBloodGroup() : null));
         model.addAttribute("houseName", student != null && student.getHouse() != null
                 ? student.getHouse().getName()
-                : "Blue");
-        model.addAttribute("studentHeight", orDefault(student != null ? student.getHeight() : null, "4"));
-        model.addAttribute("studentWeight", orDefault(student != null ? student.getWeight() : null, "22"));
-        model.addAttribute("measurementDate", formatDate(student != null ? student.getMeasurementDate() : null, "04/01/2026"));
-        model.addAttribute("previousSchoolDetails", orDefault(student != null ? student.getPreviousSchoolDetails() : null, "NO"));
-        model.addAttribute("nationalId", orDefault(student != null ? student.getNationalId() : null, "565387365"));
-        model.addAttribute("localId", orDefault(student != null ? student.getLocalId() : null, "783676878"));
-        model.addAttribute("bankAccountNumber", orDefault(student != null ? student.getBankAccountNumber() : null, "7876737766735778"));
-        model.addAttribute("bankName", orDefault(student != null ? student.getBankName() : null, "CDFGG"));
-        model.addAttribute("ifscCode", orDefault(student != null ? student.getIfscCode() : null, "SDA0009998"));
+                : "");
+        model.addAttribute("studentHeight", orDefault(student != null ? student.getHeight() : null));
+        model.addAttribute("studentWeight", orDefault(student != null ? student.getWeight() : null));
+        model.addAttribute("measurementDate", formatDate(student != null ? student.getMeasurementDate() : null));
+        model.addAttribute("previousSchoolDetails", orDefault(student != null ? student.getPreviousSchoolDetails() : null));
+        model.addAttribute("nationalId", orDefault(student != null ? student.getNationalId() : null));
+        model.addAttribute("localId", orDefault(student != null ? student.getLocalId() : null));
+        model.addAttribute("bankAccountNumber", orDefault(student != null ? student.getBankAccountNumber() : null));
+        model.addAttribute("bankName", orDefault(student != null ? student.getBankName() : null));
+        model.addAttribute("ifscCode", orDefault(student != null ? student.getIfscCode() : null));
+    }
+
+    private String resolveBehaviourScore(StudentAdmission student) {
+        if (student == null || student.getId() == null) {
+            return "0";
+        }
+        int total = behaviourIncidentRepository
+                .findByStudentAdmissionIdOrderByIncidentDateDescIdDesc(student.getId())
+                .stream()
+                .mapToInt(incident -> incident.getPoints() != null ? incident.getPoints() : 0)
+                .sum();
+        return String.valueOf(total);
+    }
+
+    private void populateTransportVehicle(Model model, StudentAdmission student) {
+        model.addAttribute("vehicleNumber", "");
+        model.addAttribute("driverName", "");
+        model.addAttribute("driverContact", "");
+        if (student == null || student.getRouteList() == null || student.getRouteList().isBlank()) {
+            return;
+        }
+        transportRouteRepository.findByTitleIgnoreCase(student.getRouteList().trim()).ifPresent(route -> {
+            TransportVehicle vehicle = resolveAssignedVehicle(route);
+            if (vehicle != null) {
+                model.addAttribute("vehicleNumber", orDefault(vehicle.getVehicleNumber()));
+                model.addAttribute("driverName", orDefault(vehicle.getDriverName()));
+                model.addAttribute("driverContact", orDefault(vehicle.getDriverContact()));
+            }
+        });
+    }
+
+    private TransportVehicle resolveAssignedVehicle(TransportRoute route) {
+        List<TransportRouteVehicle> assignments = transportRouteVehicleRepository.findByRoute_IdWithVehicle(route.getId());
+        if (assignments.isEmpty()) {
+            return null;
+        }
+        return assignments.get(0).getVehicle();
     }
 
     private String blankToEmpty(String value) {
         return value == null || value.isBlank() ? "" : value.trim();
     }
 
-    private String formatDate(java.time.LocalDate date, String fallback) {
+    private String formatDate(java.time.LocalDate date) {
         if (date == null) {
-            return fallback;
+            return "";
         }
         return date.format(US_DATE);
     }
 
-    private String orDefault(String value, String fallback) {
-        return value == null || value.isBlank() ? fallback : value.trim();
-    }
-
-    private String orBlank(String value, String fallback) {
-        return value == null || value.isBlank() ? fallback : value.trim();
+    private String orDefault(String value) {
+        return value == null || value.isBlank() ? "" : value.trim();
     }
 
     @Transactional(readOnly = true)
@@ -186,19 +225,19 @@ public class UserPanelPageService {
         String session = contextService.resolveCurrentSession();
         String className = student != null && student.getSchoolClass() != null
                 ? student.getSchoolClass().getName()
-                : "Class 1";
-        String section = orDefault(student != null ? student.getSection() : null, "A");
+                : "";
+        String section = orDefault(student != null ? student.getSection() : null);
 
-        model.addAttribute("feeStudentId", student != null ? student.getId() : 1L);
+        model.addAttribute("feeStudentId", student != null ? student.getId() : null);
         model.addAttribute("feeSessionYear", session);
-        model.addAttribute("feeFatherName", orDefault(student != null ? student.getFatherName() : null, "Olivier Thomas"));
-        model.addAttribute("feeMobileNumber", orDefault(student != null ? student.getMobileNumber() : null, "98262573272"));
+        model.addAttribute("feeFatherName", orDefault(student != null ? student.getFatherName() : null));
+        model.addAttribute("feeMobileNumber", orDefault(student != null ? student.getMobileNumber() : null));
         model.addAttribute("feeCategory", student != null && student.getCategory() != null
                 ? student.getCategory().getCategoryName()
-                : "OBC");
-        model.addAttribute("feeClassSection", className + " (" + section + ")");
-        model.addAttribute("feeRollNumber", orDefault(student != null ? student.getRollNumber() : null, "001"));
-        model.addAttribute("feeRte", orDefault(student != null ? student.getRte() : null, "No"));
+                : "");
+        model.addAttribute("feeClassSection", className.isBlank() ? "" : className + " (" + section + ")");
+        model.addAttribute("feeRollNumber", orDefault(student != null ? student.getRollNumber() : null));
+        model.addAttribute("feeRte", orDefault(student != null ? student.getRte() : null));
     }
 
     @Transactional(readOnly = true)

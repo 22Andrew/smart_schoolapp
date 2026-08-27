@@ -753,6 +753,9 @@ public class CbseExamService implements ApplicationRunner {
         createSeedExam("CBSE Periodic Test-II (August 2026)", "Term 1 (T021)",
                 classOneName, classOneSections, "Periodic Assessment", "Exam Grade",
                 "Internal Assessment", true, true, 3, "Theory (TH02), Practical (PC03), Assignment (AS05)");
+        createSeedExam("CBSE Single Term Report Card (August 2026)", "Term 1 (T021)",
+                classOneName, classOneSections, "Periodic Assessment", "Exam Grade",
+                "Main Subjects", true, true, 3, "Theory (TH02), Practical (PC03)");
 
         if (classes.size() > 1) {
             SchoolClass classTwo = classes.get(1);

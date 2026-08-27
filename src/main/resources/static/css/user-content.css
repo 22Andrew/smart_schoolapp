@@ -1,0 +1,31 @@
+/* User panel - Content List */
+
+.ucl-page .ucl-table {
+    min-width: 760px;
+}
+
+.ucl-page .ucl-file-link {
+    display: inline-flex;
+    align-items: center;
+    color: var(--theme-primary, #727cf5);
+    text-decoration: none;
+    font-weight: 600;
+    margin: 4px 0;
+}
+
+.ucl-page .ucl-file-link:hover {
+    text-decoration: underline;
+}
+
+.ucl-table.ucl-col-hidden-0 td:nth-child(1),
+.ucl-table.ucl-col-hidden-0 th:nth-child(1),
+.ucl-table.ucl-col-hidden-1 td:nth-child(2),
+.ucl-table.ucl-col-hidden-1 th:nth-child(2),
+.ucl-table.ucl-col-hidden-2 td:nth-child(3),
+.ucl-table.ucl-col-hidden-2 th:nth-child(3),
+.ucl-table.ucl-col-hidden-3 td:nth-child(4),
+.ucl-table.ucl-col-hidden-3 th:nth-child(4),
+.ucl-table.ucl-col-hidden-4 td:nth-child(5),
+.ucl-table.ucl-col-hidden-4 th:nth-child(5) {
+    display: none;
+}

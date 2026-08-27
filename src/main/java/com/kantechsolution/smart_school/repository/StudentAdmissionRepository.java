@@ -14,6 +14,12 @@ public interface StudentAdmissionRepository extends JpaRepository<StudentAdmissi
 
     List<StudentAdmission> findAllByOrderByIdDesc();
 
+    List<StudentAdmission> findByDisabledFalseOrderByFirstNameAscLastNameAsc();
+
+    boolean existsByHostelRoom_Id(Long hostelRoomId);
+
+    long countByHostelRoom_Id(Long hostelRoomId);
+
     Optional<StudentAdmission> findByAdmissionNoIgnoreCase(String admissionNo);
 
     boolean existsByAdmissionNoIgnoreCase(String admissionNo);

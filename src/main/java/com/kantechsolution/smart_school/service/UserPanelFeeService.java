@@ -63,11 +63,10 @@ public class UserPanelFeeService {
         this.feePaymentRepository = feePaymentRepository;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Map<String, Object> getFeesPage(Authentication authentication, String sessionYear) {
         StudentAdmission student = requireStudent(authentication);
         String session = normalizeSession(sessionYear);
-        ensureStudentPanelFeesSeeded(student.getId(), session);
         return studentFeeService.getStudentFeePage(student.getId(), session);
     }
 

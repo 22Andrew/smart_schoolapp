@@ -46,9 +46,6 @@ public class UserPanelTimetableService {
                 periods = new ArrayList<>();
             }
         }
-        if (periods.isEmpty()) {
-            periods.addAll(demoPeriods());
-        }
 
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("days", DAYS);
@@ -67,56 +64,6 @@ public class UserPanelTimetableService {
         period.put("teacherId", text(row.get("teacherId")));
         period.put("roomNo", text(row.get("roomNo")));
         return period;
-    }
-
-    private List<Map<String, Object>> demoPeriods() {
-        List<Map<String, Object>> rows = new ArrayList<>();
-        addDay(rows, "Monday",
-                period("English", "210", "08:00", "08:45", "Shivam Verma", "9002", "100"),
-                period("Mathematics", "110", "08:45", "09:30", "Joe Black", "9000", "101"),
-                period("Science", "111", "09:30", "10:15", "Shivam Verma", "9002", "102"));
-        addDay(rows, "Tuesday",
-                period("Hindi", "230", "08:00", "08:45", "Shivam Verma", "9002", "100"),
-                period("English", "210", "08:45", "09:30", "Shivam Verma", "9002", "100"),
-                period("Mathematics", "110", "09:30", "10:15", "Joe Black", "9000", "101"));
-        addDay(rows, "Wednesday",
-                period("Science", "111", "08:00", "08:45", "Shivam Verma", "9002", "102"),
-                period("Social Studies", "212", "08:45", "09:30", "Joe Black", "9000", "104"),
-                period("English", "210", "09:30", "10:15", "Shivam Verma", "9002", "100"));
-        addDay(rows, "Thursday",
-                period("Mathematics", "110", "08:00", "08:45", "Joe Black", "9000", "101"),
-                period("Hindi", "230", "08:45", "09:30", "Shivam Verma", "9002", "100"),
-                period("Science", "111", "09:30", "10:15", "Shivam Verma", "9002", "102"));
-        addDay(rows, "Friday",
-                period("English", "210", "08:00", "08:45", "Shivam Verma", "9002", "100"),
-                period("Social Studies", "212", "08:45", "09:30", "Joe Black", "9000", "104"),
-                period("Mathematics", "110", "09:30", "10:15", "Joe Black", "9000", "101"));
-        addDay(rows, "Saturday",
-                period("Science", "111", "08:00", "08:45", "Shivam Verma", "9002", "102"),
-                period("English", "210", "08:45", "09:30", "Shivam Verma", "9002", "100"),
-                period("Hindi", "230", "09:30", "10:15", "Shivam Verma", "9002", "100"));
-        return rows;
-    }
-
-    @SafeVarargs
-    private void addDay(List<Map<String, Object>> rows, String day, Map<String, Object>... periods) {
-        for (Map<String, Object> period : periods) {
-            period.put("dayOfWeek", day);
-            rows.add(period);
-        }
-    }
-
-    private Map<String, Object> period(String subjectName, String subjectCode, String timeFrom, String timeTo,
-                                       String teacherName, String teacherId, String roomNo) {
-        Map<String, Object> row = new LinkedHashMap<>();
-        row.put("subjectName", subjectName);
-        row.put("subjectCode", subjectCode);
-        row.put("timeFrom", timeFrom);
-        row.put("timeTo", timeTo);
-        row.put("teacherName", teacherName);
-        row.put("teacherId", teacherId);
-        row.put("roomNo", roomNo);
-        return row;
     }
 
     private String text(Object value) {

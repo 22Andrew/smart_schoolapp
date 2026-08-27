@@ -40,11 +40,10 @@ public class UserPanelApplyLeaveService {
         this.uploadStorage = uploadStorage;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Map<String, Object> listLeaves(Authentication authentication) {
         StudentAdmission student = contextService.resolveStudent(authentication);
         Long studentId = requireStudentId(student);
-        ensureDemoLeaves(student, studentId);
 
         List<Map<String, Object>> rows = new ArrayList<>();
         for (StudentLeaveRequest leave : leaveRequestRepository

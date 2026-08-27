@@ -8,13 +8,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class UserPanelCbseExamService {
 
+    private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+    private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("HH:mm:ss");
+
     private final UserPanelContextService userPanelContextService;
+    private final CbseExamRepository cbseExamRepository;
     private final CbseExamStudentRepository cbseExamStudentRepository;
     private final CbseExamSubjectRepository cbseExamSubjectRepository;
     private final CbseExamStudentMarkRepository cbseExamStudentMarkRepository;
@@ -23,6 +28,7 @@ public class UserPanelCbseExamService {
 
     public UserPanelCbseExamService(
             UserPanelContextService userPanelContextService,
+            CbseExamRepository cbseExamRepository,
             CbseExamStudentRepository cbseExamStudentRepository,
             CbseExamSubjectRepository cbseExamSubjectRepository,
             CbseExamStudentMarkRepository cbseExamStudentMarkRepository,
@@ -30,6 +36,7 @@ public class UserPanelCbseExamService {
             CbseExamGradeRepository cbseExamGradeRepository
     ) {
         this.userPanelContextService = userPanelContextService;
+        this.cbseExamRepository = cbseExamRepository;
         this.cbseExamStudentRepository = cbseExamStudentRepository;
         this.cbseExamSubjectRepository = cbseExamSubjectRepository;
         this.cbseExamStudentMarkRepository = cbseExamStudentMarkRepository;
@@ -37,16 +44,12 @@ public class UserPanelCbseExamService {
         this.cbseExamGradeRepository = cbseExamGradeRepository;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Map<String, Object> getProfileCbseExams(Authentication authentication) {
         StudentAdmission student = requireStudent(authentication);
 
-        List<CbseExamStudent> assignments = cbseExamStudentRepository
-                .findPublishedAssignmentsForStudent(student.getId());
-
         List<Map<String, Object>> exams = new ArrayList<>();
-        for (CbseExamStudent assignment : assignments) {
-            CbseExam exam = assignment.getCbseExam();
+        for (CbseExam exam : resolveExamsForStudent(student, true)) {
             Map<String, Object> panel = toExamPanel(exam, student.getId());
             if (panel != null) {
                 exams.add(panel);
@@ -57,6 +60,84 @@ public class UserPanelCbseExamService {
         response.put("studentId", student.getId());
         response.put("exams", exams);
         return response;
+    }
+
+    @Transactional(readOnly = true)
+    public Map<String, Object> getStudentTimetable(Authentication authentication) {
+        StudentAdmission student = requireStudent(authentication);
+
+        List<Map<String, Object>> exams = new ArrayList<>();
+        for (CbseExam exam : resolveExamsForStudent(student, false)) {
+            List<CbseExamSubject> subjects = cbseExamSubjectRepository
+                    .findByCbseExamIdOrderByIdAsc(exam.getId());
+            if (subjects.isEmpty()) {
+                continue;
+            }
+
+            List<Map<String, Object>> rows = new ArrayList<>();
+            for (CbseExamSubject subject : subjects) {
+                Map<String, Object> row = new LinkedHashMap<>();
+                row.put("subjectName", defaultText(subject.getSubjectName()));
+                row.put("examDate", subject.getExamDate() != null ? subject.getExamDate().format(DATE_FMT) : "");
+                row.put("startTime", subject.getStartTime() != null ? subject.getStartTime().format(TIME_FMT) : "");
+                row.put("durationMinutes", subject.getDurationMinutes() != null ? subject.getDurationMinutes() : "");
+                row.put("roomNo", defaultText(subject.getRoomNo()));
+                rows.add(row);
+            }
+
+            Map<String, Object> group = new LinkedHashMap<>();
+            group.put("id", exam.getId());
+            group.put("title", defaultText(exam.getExamName()));
+            group.put("subjects", rows);
+            exams.add(group);
+        }
+
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("studentId", student.getId());
+        response.put("exams", exams);
+        return response;
+    }
+
+    private List<CbseExam> resolveExamsForStudent(StudentAdmission student, boolean resultExams) {
+        List<CbseExamStudent> assignments = resultExams
+                ? cbseExamStudentRepository.findPublishedAssignmentsForStudent(student.getId())
+                : cbseExamStudentRepository.findPublishedScheduleAssignmentsForStudent(student.getId());
+        Set<Long> assignedExamIds = assignments.stream()
+                .map(assignment -> assignment.getCbseExam() != null ? assignment.getCbseExam().getId() : null)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+
+        String className = student.getSchoolClass() != null
+                ? defaultText(student.getSchoolClass().getName())
+                : "";
+        String section = defaultText(student.getSection());
+
+        List<CbseExam> exams = new ArrayList<>();
+        for (CbseExam exam : cbseExamRepository.findAllByOrderByCreatedAtDescIdDesc()) {
+            if (resultExams ? !exam.isPublishResult() : !exam.isPublished()) {
+                continue;
+            }
+            if (assignedExamIds.contains(exam.getId()) || matchesClassSection(exam, className, section)) {
+                exams.add(exam);
+            }
+        }
+        return exams;
+    }
+
+    private boolean matchesClassSection(CbseExam exam, String className, String section) {
+        if (className.isBlank() || !className.equalsIgnoreCase(defaultText(exam.getClassName()))) {
+            return false;
+        }
+        if (section.isBlank()) {
+            return true;
+        }
+        String sections = defaultText(exam.getSections());
+        for (String part : sections.split(",")) {
+            if (section.equalsIgnoreCase(part.trim())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private Map<String, Object> toExamPanel(CbseExam exam, Long studentId) {
@@ -126,6 +207,7 @@ public class UserPanelCbseExamService {
 
             obtainedTotal = obtainedTotal.add(subjectTotal);
             row.put("total", formatDecimal(subjectTotal));
+            row.put("note", "");
             subjectRows.add(row);
         }
 

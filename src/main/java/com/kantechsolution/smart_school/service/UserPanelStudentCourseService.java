@@ -25,7 +25,6 @@ public class UserPanelStudentCourseService {
     private final UserPanelContextService userPanelContextService;
     private final OnlineCourseRepository courseRepository;
     private final OnlineCourseStudentProgressRepository progressRepository;
-    private final StudentCourseProgressSeedService seedService;
     private final OnlineCourseService onlineCourseService;
     private final OnlineCourseManageService onlineCourseManageService;
 
@@ -33,23 +32,20 @@ public class UserPanelStudentCourseService {
             UserPanelContextService userPanelContextService,
             OnlineCourseRepository courseRepository,
             OnlineCourseStudentProgressRepository progressRepository,
-            StudentCourseProgressSeedService seedService,
             OnlineCourseService onlineCourseService,
             OnlineCourseManageService onlineCourseManageService
     ) {
         this.userPanelContextService = userPanelContextService;
         this.courseRepository = courseRepository;
         this.progressRepository = progressRepository;
-        this.seedService = seedService;
         this.onlineCourseService = onlineCourseService;
         this.onlineCourseManageService = onlineCourseManageService;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Map<String, Object> getCourses(org.springframework.security.core.Authentication authentication) {
         StudentAdmission student = requireStudent(authentication);
         onlineCourseService.getAllCourses();
-        seedService.seedIfEmpty(student.getId());
 
         Map<Long, OnlineCourseStudentProgress> progressByCourse = progressRepository
                 .findByStudentAdmissionId(student.getId())
@@ -88,7 +84,6 @@ public class UserPanelStudentCourseService {
         }
 
         onlineCourseService.getAllCourses();
-        seedService.seedIfEmpty(student.getId());
 
         Map<String, Object> managePayload = onlineCourseManageService.getManagePayload(courseId);
         OnlineCourseStudentProgress progress = progressRepository

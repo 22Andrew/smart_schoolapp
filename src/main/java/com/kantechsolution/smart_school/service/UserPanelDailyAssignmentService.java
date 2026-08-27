@@ -29,7 +29,7 @@ public class UserPanelDailyAssignmentService {
         this.assignmentRepository = assignmentRepository;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Map<String, Object> listAssignments(Authentication authentication) {
         StudentAdmission student = contextService.resolveStudent(authentication);
         String className = resolveClassName(student);
@@ -38,9 +38,6 @@ public class UserPanelDailyAssignmentService {
                 ? student.getSchoolClass().getId()
                 : null;
         Long studentId = student != null ? student.getId() : null;
-        String studentName = contextService.resolveStudentName(student);
-
-        ensureDemoAssignment(studentId, studentName, className, section, classId);
 
         List<DailyAssignment> items = studentId != null
                 ? assignmentRepository.findByStudentAdmissionIdAndIsActiveTrueOrderByAssignmentDateDescCreatedAtDesc(studentId)

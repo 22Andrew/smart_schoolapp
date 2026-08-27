@@ -1895,3 +1895,213 @@ body.side-menu-compact .sidebar .sidebar-quick-links-title {
     background-color: var(--theme-primary-dark) !important;
     border-color: var(--theme-primary-dark) !important;
 }
+
+/* Admin dashboard demo layout */
+.main-content.admin-dashboard-main {
+    background: #f4f4f4;
+    padding: 15px 20px;
+    min-height: calc(100vh - 56px);
+}
+
+.admin-dashboard-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 400px;
+    width: 100%;
+}
+
+.admin-present-card,
+.admin-attendance-card,
+.admin-student-count-card {
+    background: #ffffff;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.admin-present-card {
+    padding: 12px 15px 14px;
+}
+
+.admin-present-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 8px;
+}
+
+.admin-present-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.admin-present-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #555555;
+    flex-shrink: 0;
+}
+
+.admin-present-icon svg {
+    display: block;
+}
+
+.admin-present-title,
+.admin-card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333333;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.admin-present-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333333;
+    white-space: nowrap;
+}
+
+.admin-progress-track {
+    width: 100%;
+    height: 4px;
+    background: #ececec;
+    border-radius: 0;
+    overflow: hidden;
+}
+
+.admin-progress-fill {
+    height: 100%;
+    border-radius: 0;
+    transition: width 0.3s ease;
+}
+
+.admin-progress-yellow .admin-progress-fill {
+    background: #f39c12;
+}
+
+.admin-progress-blue .admin-progress-fill {
+    background: #337ab7;
+}
+
+.admin-attendance-card {
+    padding: 12px 15px 6px;
+}
+
+.admin-attendance-list {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+.admin-attendance-row {
+    padding: 10px 0 12px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.admin-attendance-row:last-child {
+    border-bottom: none;
+    padding-bottom: 10px;
+}
+
+.admin-attendance-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.admin-attendance-count {
+    font-size: 13px;
+    font-weight: 400;
+    color: #333333;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+}
+
+.admin-attendance-percent {
+    font-size: 13px;
+    font-weight: 400;
+    color: #666666;
+}
+
+.admin-student-count-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 15px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.admin-student-icon {
+    width: 50px;
+    height: 50px;
+    border: 1px solid #dddddd;
+    border-radius: 3px;
+    background: #f8f8f8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555555;
+    flex-shrink: 0;
+}
+
+.admin-student-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.admin-student-label {
+    font-size: 14px;
+    font-weight: 400;
+    color: #333333;
+    line-height: 1.2;
+}
+
+.admin-student-count {
+    font-size: 28px;
+    font-weight: 700;
+    color: #333333;
+    line-height: 1;
+}
+
+.teacher-dashboard-page .brand-badge {
+    display: none;
+}
+
+.teacher-dashboard-page .logo-icon {
+    display: none;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    border-radius: 999px;
+    background: #ef4444;
+    color: #ffffff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    line-height: 16px;
+    text-align: center;
+}
+
+.icon-btn {
+    position: relative;
+}
+
+@media (max-width: 900px) {
+    .admin-dashboard-stack {
+        max-width: 100%;
+    }
+}

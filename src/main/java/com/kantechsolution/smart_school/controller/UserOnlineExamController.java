@@ -1,7 +1,6 @@
 package com.kantechsolution.smart_school.controller;
 
 import com.kantechsolution.smart_school.service.UserPanelContextService;
-import com.kantechsolution.smart_school.service.UserPanelOnlineExamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -18,8 +17,9 @@ public class UserOnlineExamController {
     private final UserPanelContextService userPanelContextService;
 
     @GetMapping({"/onlineexam", "/onlineexam/"})
-    public String redirectToView() {
-        return "redirect:/user/onlineexam/view/" + UserPanelOnlineExamService.DEMO_VIEW_ID;
+    public String onlineExamList(Model model, Authentication authentication) {
+        userPanelContextService.populateLayoutModel(model, authentication, "online-exam", "Online Exam");
+        return "user-onlineexam";
     }
 
     @GetMapping({"/onlineexam/view/{id}", "/onlineexam/view/{id}/"})

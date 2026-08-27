@@ -92,7 +92,7 @@ public class UserPanelController {
 
     @GetMapping("/online-exam")
     public String onlineExam() {
-        return "redirect:/user/onlineexam/view/405";
+        return "redirect:/user/onlineexam";
     }
 
     @GetMapping("/apply-leave")
@@ -101,39 +101,33 @@ public class UserPanelController {
     }
 
     @GetMapping("/visitor-book")
-    public String visitorBook(Model model, Authentication authentication) {
-        userPanelPageService.populateVisitorBook(model, authentication);
-        return "user-panel-table";
+    public String visitorBook() {
+        return "redirect:/user/visitor";
     }
 
     @GetMapping("/download-center/contents")
-    public String downloadContents(Model model, Authentication authentication) {
-        userPanelPageService.populateDownloadContents(model, authentication);
-        return "user-panel-table";
+    public String downloadContents() {
+        return "redirect:/user/content/list";
     }
 
     @GetMapping("/download-center/video-tutorial")
-    public String downloadVideo(Model model, Authentication authentication) {
-        userPanelPageService.populateDownloadVideo(model, authentication);
-        return "user-panel-table";
+    public String downloadVideo() {
+        return "redirect:/user/videotutorial";
     }
 
     @GetMapping("/attendance")
-    public String attendance(Model model, Authentication authentication) {
-        userPanelPageService.populateAttendance(model, authentication);
-        return "user-panel-table";
+    public String attendance() {
+        return "redirect:/user/attendance";
     }
 
     @GetMapping("/cbse-exam/schedule")
-    public String cbseSchedule(Model model, Authentication authentication) {
-        userPanelPageService.populateCbseSchedule(model, authentication);
-        return "user-panel-table";
+    public String cbseSchedule() {
+        return "redirect:/user/cbse/exam/timetable";
     }
 
     @GetMapping("/cbse-exam/result")
-    public String cbseResult(Model model, Authentication authentication) {
-        userPanelPageService.populateCbseResult(model, authentication);
-        return "user-panel-table";
+    public String cbseResult() {
+        return "redirect:/user/cbse/exam/result";
     }
 
     @GetMapping("/examinations/schedule")
@@ -149,38 +143,32 @@ public class UserPanelController {
     }
 
     @GetMapping("/notice-board")
-    public String noticeBoard(Model model, Authentication authentication) {
-        userPanelPageService.populateNoticeBoard(model, authentication);
-        return "user-notice-board";
+    public String noticeBoard() {
+        return "redirect:/user/notification";
     }
 
     @GetMapping("/teacher-review")
-    public String teacherReview(Model model, Authentication authentication) {
-        userPanelPageService.populateTeacherReview(model, authentication);
-        return "user-panel-table";
+    public String teacherReview() {
+        return "redirect:/user/teacher";
     }
 
     @GetMapping("/library/books")
-    public String libraryBooks(Model model, Authentication authentication) {
-        userPanelPageService.populateLibraryBooks(model, authentication);
-        return "user-panel-table";
+    public String libraryBooks() {
+        return "redirect:/user/book";
     }
 
     @GetMapping("/library/issued")
-    public String libraryIssued(Model model, Authentication authentication) {
-        userPanelPageService.populateLibraryIssued(model, authentication);
-        return "user-panel-table";
+    public String libraryIssued() {
+        return "redirect:/user/book/issue";
     }
 
     @GetMapping("/transport")
-    public String transport(Model model, Authentication authentication) {
-        userPanelPageService.populateTransport(model, authentication);
-        return "user-panel-table";
+    public String transport() {
+        return "redirect:/user/route";
     }
 
     @GetMapping("/hostel")
-    public String hostel(Model model, Authentication authentication) {
-        userPanelPageService.populateHostel(model, authentication);
-        return "user-panel-table";
+    public String hostel() {
+        return "redirect:/user/hostelroom";
     }
 }

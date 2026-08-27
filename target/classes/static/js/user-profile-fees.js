@@ -51,133 +51,6 @@
             + '</svg></span>';
     }
 
-    function buildDemoFees() {
-        var months = [
-            ['April', 'apr', '04/01/2026'],
-            ['May', 'may', '05/01/2026'],
-            ['June', 'jun', '06/01/2026'],
-            ['July', 'jul', '07/01/2026'],
-            ['August', 'aug', '08/01/2026'],
-            ['September', 'sep', '09/01/2026'],
-            ['October', 'oct', '10/01/2026'],
-            ['November', 'nov', '11/01/2026'],
-            ['December', 'dec', '12/01/2026'],
-            ['January', 'jan', '01/01/2027'],
-            ['February', 'feb', '02/01/2027'],
-            ['March', 'mar', '03/01/2027']
-        ];
-
-        var fees = months.map(function (item, index) {
-            var row = {
-                name: item[0] + ' Month Fees',
-                slug: item[1] + '-month-fees',
-                dueDate: item[2],
-                amount: 350,
-                fine: 0,
-                discount: 0,
-                paid: 0,
-                status: 'Unpaid',
-                alert: false,
-                payments: []
-            };
-
-            if (index === 0) {
-                row.status = 'Paid';
-                row.paid = 350;
-                row.payments = [{
-                    paymentId: '5458/1',
-                    mode: 'Cash',
-                    date: '04/08/2026',
-                    discount: 0,
-                    fine: 0,
-                    paid: 350,
-                    balance: 0
-                }];
-            } else if (index === 1) {
-                row.status = 'Partial';
-                row.fine = 50;
-                row.paid = 200;
-                row.alert = true;
-                row.payments = [{
-                    paymentId: '5490/1',
-                    mode: 'Cash',
-                    date: '05/02/2026',
-                    discount: 0,
-                    fine: 0,
-                    paid: 200,
-                    balance: 150
-                }];
-            } else if (index === 3) {
-                row.status = 'Paid';
-                row.paid = 350;
-                row.payments = [{
-                    paymentId: '5490/2',
-                    mode: 'Cash',
-                    date: '07/05/2026',
-                    discount: 0,
-                    fine: 0,
-                    paid: 350,
-                    balance: 0
-                }];
-            }
-
-            return row;
-        });
-
-        fees.push({
-            name: 'Admission Fees',
-            slug: 'admission-fees',
-            dueDate: '04/01/2026',
-            amount: 2000,
-            fine: 0,
-            discount: 0,
-            paid: 0,
-            status: 'Unpaid',
-            alert: false,
-            payments: []
-        });
-
-        for (var i = 1; i <= 6; i++) {
-            fees.push({
-                name: i + (i === 1 ? 'st' : i === 2 ? 'nd' : i === 3 ? 'rd' : 'th') + ' Installment Fees',
-                slug: i + '-installment-fees',
-                dueDate: '0' + Math.min(i + 3, 9) + '/15/2026',
-                amount: 2500,
-                fine: i === 1 ? 100 : 0,
-                discount: 0,
-                paid: 0,
-                status: 'Unpaid',
-                alert: i <= 2,
-                payments: []
-            });
-        }
-
-        months.forEach(function (item, index) {
-            fees.push({
-                name: item[0] + ' Transport Fees',
-                slug: item[1] + '-transport-fees',
-                dueDate: item[2],
-                amount: 800,
-                fine: index === 0 ? 50 : 0,
-                discount: 0,
-                paid: index === 0 ? 50 : 0,
-                status: index === 0 ? 'Partial' : 'Unpaid',
-                alert: index === 0,
-                payments: index === 0 ? [{
-                    paymentId: '5491/1',
-                    mode: 'Cash',
-                    date: '04/10/2026',
-                    discount: 0,
-                    fine: 50,
-                    paid: 50,
-                    balance: 800
-                }] : []
-            });
-        });
-
-        return fees;
-    }
-
     function mapApiFees(apiFees) {
         return (apiFees || []).map(function (item) {
             var label = item.feesLabel || item.feeTypeName || 'Fees';
@@ -208,6 +81,28 @@
                 payments: payments
             };
         });
+    }
+
+    function loadFees() {
+        var studentId = window.USER_PROFILE_STUDENT_ID;
+        if (!studentId) {
+            renderFeesTable([]);
+            return;
+        }
+
+        fetch('/api/student-fees/' + encodeURIComponent(String(studentId)))
+            .then(function (response) {
+                if (!response.ok) {
+                    throw new Error('Failed to load fees');
+                }
+                return response.json();
+            })
+            .then(function (data) {
+                renderFeesTable(mapApiFees(data && data.fees));
+            })
+            .catch(function () {
+                renderFeesTable([]);
+            });
     }
 
     function renderFeesTable(fees) {
@@ -277,29 +172,6 @@
             + '<td>$' + escapeHtml(money(totalPaid)) + '</td>'
             + '<td>$' + escapeHtml(money(totalBalance)) + '</td>'
             + '</tr>';
-    }
-
-    function loadFees() {
-        var studentId = window.USER_PROFILE_STUDENT_ID;
-        if (!studentId) {
-            renderFeesTable(buildDemoFees());
-            return;
-        }
-
-        fetch('/api/student-fees/' + encodeURIComponent(String(studentId)))
-            .then(function (response) {
-                if (!response.ok) {
-                    throw new Error('Failed to load fees');
-                }
-                return response.json();
-            })
-            .then(function (data) {
-                var apiFees = mapApiFees(data && data.fees);
-                renderFeesTable(apiFees.length ? apiFees : buildDemoFees());
-            })
-            .catch(function () {
-                renderFeesTable(buildDemoFees());
-            });
     }
 
     document.addEventListener('DOMContentLoaded', loadFees);

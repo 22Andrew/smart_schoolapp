@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
+import org.springframework.dao.DataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -148,13 +149,17 @@ public class UserLoginAuthService implements ApplicationRunner {
     }
 
     private void reconcileDemoAccountLinks() {
-        studentAdmissionRepository.search(null, null, null, false, null).stream()
-                .filter(student -> Long.valueOf(1L).equals(student.getId()))
-                .findFirst()
-                .ifPresent(student -> {
-                    linkDemoAccountToStudent(DEMO_STUDENT_USERNAME, TYPE_STUDENT, student.getId());
-                    linkDemoAccountToStudent(DEMO_PARENT_USERNAME, TYPE_PARENT, student.getId());
-                });
+        try {
+            studentAdmissionRepository.search(null, null, null, false, null).stream()
+                    .filter(student -> Long.valueOf(1L).equals(student.getId()))
+                    .findFirst()
+                    .ifPresent(student -> {
+                        linkDemoAccountToStudent(DEMO_STUDENT_USERNAME, TYPE_STUDENT, student.getId());
+                        linkDemoAccountToStudent(DEMO_PARENT_USERNAME, TYPE_PARENT, student.getId());
+                    });
+        } catch (DataAccessException ignored) {
+            // Skip when student_admissions is not available yet.
+        }
     }
 
     private void linkDemoAccountToStudent(String demoUsername, String userType, Long sourceId) {
@@ -174,11 +179,15 @@ public class UserLoginAuthService implements ApplicationRunner {
     }
 
     private void backfillMissingPasswords() {
-        studentAdmissionRepository.search(null, null, null, false, null)
-                .forEach(student -> {
-                    ensureStudentAccount(student);
-                    ensureParentAccount(student);
-                });
+        try {
+            studentAdmissionRepository.search(null, null, null, false, null)
+                    .forEach(student -> {
+                        ensureStudentAccount(student);
+                        ensureParentAccount(student);
+                    });
+        } catch (DataAccessException ignored) {
+            // Skip when student_admissions is not available yet.
+        }
     }
 
     private void repairStoredPasswordHashes() {

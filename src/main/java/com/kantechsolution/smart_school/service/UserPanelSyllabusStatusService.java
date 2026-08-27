@@ -58,7 +58,7 @@ public class UserPanelSyllabusStatusService {
         this.schoolClassRepository = schoolClassRepository;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Map<String, Object> getStatus(Authentication authentication) {
         StudentAdmission student = contextService.resolveStudent(authentication);
         String className = resolveClassName(student);
@@ -67,7 +67,6 @@ public class UserPanelSyllabusStatusService {
                 ? student.getSchoolClass().getId()
                 : null;
 
-        ensureOverviewData(className, section, classId);
         List<LessonPlanLesson> lessons = loadLessons(className, section, classId);
         List<Map<String, Object>> subjects = buildSubjects(lessons);
 

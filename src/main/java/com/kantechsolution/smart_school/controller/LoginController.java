@@ -21,9 +21,8 @@ public class LoginController {
     }
 
     @GetMapping("/dashboard")
-    public String dashboard(Model model) {
-        model.addAttribute("appName", "Smart School");
-        return "dashboard";
+    public String dashboard() {
+        return "redirect:/admin/admin/dashboard";
     }
 
     @PostMapping("/logout")

@@ -11,6 +11,8 @@ public interface CbseExamStudentRepository extends JpaRepository<CbseExamStudent
 
     List<CbseExamStudent> findByCbseExamIdOrderByIdAsc(Long cbseExamId);
 
+    boolean existsByCbseExam_IdAndStudentAdmissionId(Long cbseExamId, Long studentAdmissionId);
+
     void deleteByCbseExamIdAndStudentAdmissionId(Long cbseExamId, Long studentAdmissionId);
 
     @Query("""
@@ -20,4 +22,12 @@ public interface CbseExamStudentRepository extends JpaRepository<CbseExamStudent
             ORDER BY e.createdAt DESC, e.id DESC
             """)
     List<CbseExamStudent> findPublishedAssignmentsForStudent(@Param("studentId") Long studentId);
+
+    @Query("""
+            SELECT es FROM CbseExamStudent es
+            JOIN FETCH es.cbseExam e
+            WHERE es.studentAdmissionId = :studentId AND e.published = true
+            ORDER BY e.createdAt DESC, e.id DESC
+            """)
+    List<CbseExamStudent> findPublishedScheduleAssignmentsForStudent(@Param("studentId") Long studentId);
 }

@@ -20,7 +20,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     public LoginSuccessHandler(UserLogService userLogService, AuditTrailService auditTrailService) {
         this.userLogService = userLogService;
         this.auditTrailService = auditTrailService;
-        setDefaultTargetUrl("/dashboard");
+        setDefaultTargetUrl("/admin/admin/dashboard");
         setAlwaysUseDefaultTargetUrl(true);
     }
 

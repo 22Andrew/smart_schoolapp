@@ -30,8 +30,6 @@ import java.util.regex.Pattern;
 @Service
 public class UserPanelOnlineExamService {
 
-    public static final long DEMO_VIEW_ID = 405L;
-
     private static final DateTimeFormatter DISPLAY_DATETIME =
             DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm a", Locale.US);
     private static final String GENERAL_TEST = "General Test";
@@ -65,7 +63,6 @@ public class UserPanelOnlineExamService {
     public Map<String, Object> listExams(Authentication authentication, String tab) {
         StudentAdmission student = contextService.resolveStudent(authentication);
         Long studentId = student != null ? student.getId() : null;
-        ensureStudentExams(studentId);
         String normalizedTab = tab == null || tab.isBlank() ? "upcoming" : tab.trim().toLowerCase(Locale.ROOT);
         LocalDateTime now = LocalDateTime.now();
 
@@ -91,16 +88,14 @@ public class UserPanelOnlineExamService {
     public Map<String, Object> getExam(Authentication authentication, Long examId) {
         StudentAdmission student = contextService.resolveStudent(authentication);
         Long studentId = student != null ? student.getId() : null;
-        ensureStudentExams(studentId);
         OnlineExam exam = requireAssignedExam(examId, studentId);
         return toDetail(exam, student, studentId);
     }
 
     @Transactional
     public Map<String, Object> startExam(Authentication authentication, Long examId) {
-        StudentAdmission student = contextService.resolveStudent(authentication);
-        Long studentId = student != null && student.getId() != null ? student.getId() : 1L;
-        ensureStudentExams(studentId);
+        StudentAdmission student = requireStudent(authentication);
+        Long studentId = student.getId();
         OnlineExam exam = requireAssignedExam(examId, studentId);
         LocalDateTime now = LocalDateTime.now();
         if (exam.getExamFrom() != null && now.isBefore(exam.getExamFrom())) {
@@ -193,10 +188,7 @@ public class UserPanelOnlineExamService {
     }
 
     private void ensureStudentExams(Long studentId) {
-        if (!loadAssignedExams(studentId).isEmpty()) {
-            return;
-        }
-        ensureDemoExam(studentId);
+        // Read-only: exams must be assigned through admin panel.
     }
 
     private List<OnlineExam> loadAssignedExams(Long studentId) {
@@ -524,6 +516,14 @@ public class UserPanelOnlineExamService {
 
     private String formatDateTime(LocalDateTime value) {
         return value == null ? "" : value.format(DISPLAY_DATETIME).replace("AM", "am").replace("PM", "pm");
+    }
+
+    private StudentAdmission requireStudent(Authentication authentication) {
+        StudentAdmission student = contextService.resolveStudent(authentication);
+        if (student == null) {
+            throw new IllegalArgumentException("Student profile not found");
+        }
+        return student;
     }
 
     private Long longValue(Object value) {

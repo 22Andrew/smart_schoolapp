@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+      th:replace="~{fragments/user-layout :: layout(~{::title}, ~{::#user-videotutorial-page})}">
+<head>
+    <title th:text="|${schoolName} - Video Tutorial List|">Mount Carmel School - Video Tutorial List</title>
+</head>
+<body>
+<div id="user-videotutorial-page" class="ugm-page uvt-page">
+    <link rel="stylesheet" th:href="@{/css/user-gmeet.css}">
+    <link rel="stylesheet" th:href="@{/css/user-videotutorial.css}">
+
+    <div class="ugm-card uvt-card">
+        <div class="uvt-header">
+            <h1 class="uvt-title">Video Tutorial List</h1>
+        </div>
+        <div class="uvt-grid" id="uvtGrid">
+            <div class="uvt-empty">Loading video tutorials...</div>
+        </div>
+    </div>
+
+    <div class="uvt-modal" id="uvtModal" hidden>
+        <div class="uvt-modal-overlay" id="uvtModalOverlay"></div>
+        <div class="uvt-modal-dialog" role="dialog" aria-modal="true">
+            <div class="uvt-modal-header">
+                <h2 id="uvtModalTitle">Video Tutorial</h2>
+                <button type="button" class="uvt-modal-close" id="uvtModalClose" aria-label="Close">&times;</button>
+            </div>
+            <div class="uvt-modal-body">
+                <div class="uvt-embed-wrap">
+                    <iframe id="uvtPlayer" title="Video tutorial" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/user-videotutorial.js}"></script>
+</div>
+</body>
+</html>

@@ -28,5 +28,7 @@ public interface CbseExamStudentMarkRepository extends JpaRepository<CbseExamStu
 
     boolean existsByCbseExamId(Long examId);
 
+    boolean existsByCbseExam_IdAndStudentAdmissionId(Long examId, Long studentAdmissionId);
+
     void deleteByCbseExamId(Long cbseExamId);
 }

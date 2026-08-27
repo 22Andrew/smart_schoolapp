@@ -1,0 +1,234 @@
+/**
+ * Teacher/admin dashboard widgets — matches Smart School demo layout.
+ * Loaded AFTER app-theme.css so these rules win over global !important theme styles.
+ */
+
+:root {
+    --admin-demo-bg: #ecf0f5;
+    --admin-demo-gold: #f39c12;
+    --admin-demo-blue: #337ab7;
+    --admin-demo-track: #eeeeee;
+    --admin-demo-card-border: #d2d6de;
+}
+
+html.theme-light main.main-content.admin-dashboard-main,
+html.theme-dark main.main-content.admin-dashboard-main {
+    background: var(--admin-demo-bg) !important;
+    background-color: var(--admin-demo-bg) !important;
+    padding: 15px !important;
+    min-height: calc(100vh - 56px);
+}
+
+.admin-dashboard-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 370px;
+    max-width: 100%;
+    font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+html.theme-light .admin-dashboard-stack .admin-present-card,
+html.theme-light .admin-dashboard-stack .admin-attendance-card,
+html.theme-light .admin-dashboard-stack .admin-student-count-card,
+html.theme-dark .admin-dashboard-stack .admin-present-card,
+html.theme-dark .admin-dashboard-stack .admin-attendance-card,
+html.theme-dark .admin-dashboard-stack .admin-student-count-card {
+    background-color: #ffffff !important;
+    border: 1px solid #d2d6de !important;
+    border-radius: 3px !important;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1) !important;
+    color: #333333 !important;
+}
+
+/* --- Student Present Today --- */
+.admin-present-card {
+    padding: 10px 12px 12px !important;
+}
+
+.admin-present-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 8px !important;
+}
+
+.admin-present-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.admin-present-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    color: #444444 !important;
+    flex-shrink: 0;
+}
+
+.admin-present-icon svg {
+    display: block;
+    width: 16px;
+    height: 16px;
+}
+
+.admin-present-title,
+.admin-dashboard-stack .admin-card-title {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #333333 !important;
+    margin: 0 !important;
+    line-height: 1.3 !important;
+}
+
+.admin-present-value {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #333333 !important;
+    white-space: nowrap;
+}
+
+.admin-dashboard-stack .admin-progress-track {
+    width: 100%;
+    height: 6px !important;
+    background: var(--admin-demo-track) !important;
+    background-color: var(--admin-demo-track) !important;
+    background-image: none !important;
+    border-radius: 0 !important;
+    overflow: hidden;
+}
+
+.admin-dashboard-stack .admin-progress-fill {
+    height: 100% !important;
+    border-radius: 0 !important;
+    display: block;
+    min-width: 0;
+    transition: width 0.3s ease;
+    background-image: none !important;
+}
+
+html.theme-light .admin-dashboard-stack .admin-progress-yellow .admin-progress-fill,
+html.theme-dark .admin-dashboard-stack .admin-progress-yellow .admin-progress-fill {
+    background: var(--admin-demo-gold) !important;
+    background-color: var(--admin-demo-gold) !important;
+}
+
+html.theme-light .admin-dashboard-stack .admin-progress-blue .admin-progress-fill,
+html.theme-dark .admin-dashboard-stack .admin-progress-blue .admin-progress-fill {
+    background: var(--admin-demo-blue) !important;
+    background-color: var(--admin-demo-blue) !important;
+}
+
+/* --- Student Today Attendance --- */
+.admin-attendance-card {
+    padding: 0 !important;
+    overflow: hidden;
+}
+
+.admin-attendance-card-head {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f4f4f4 !important;
+}
+
+.admin-attendance-list {
+    display: flex;
+    flex-direction: column;
+    padding: 0 12px;
+}
+
+.admin-attendance-row {
+    padding: 10px 0 11px;
+    border-bottom: 1px solid #f4f4f4 !important;
+}
+
+.admin-attendance-row:last-child {
+    border-bottom: none !important;
+    padding-bottom: 12px;
+}
+
+.admin-attendance-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px !important;
+}
+
+.admin-attendance-count {
+    font-size: 13px !important;
+    font-weight: 400 !important;
+    color: #333333 !important;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+}
+
+.admin-attendance-percent {
+    font-size: 13px !important;
+    font-weight: 400 !important;
+    color: #666666 !important;
+}
+
+/* --- Student count --- */
+.admin-student-count-card {
+    display: flex !important;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px !important;
+    width: auto !important;
+    align-self: flex-start;
+    min-width: 190px;
+}
+
+.admin-student-icon {
+    width: 50px;
+    height: 50px;
+    border: 1px solid #d2d6de !important;
+    border-radius: 2px;
+    background-color: #f9f9f9 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555555 !important;
+    flex-shrink: 0;
+}
+
+.admin-student-icon svg {
+    width: 22px;
+    height: 22px;
+}
+
+.admin-student-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.admin-student-label {
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    color: #333333 !important;
+    line-height: 1.2;
+}
+
+.admin-student-count {
+    font-size: 30px !important;
+    font-weight: 700 !important;
+    color: #333333 !important;
+    line-height: 1;
+}
+
+/* Teacher header tweaks */
+.teacher-dashboard-page .brand-badge,
+.teacher-dashboard-page .logo-icon {
+    display: none !important;
+}
+
+@media (max-width: 900px) {
+    .admin-dashboard-stack {
+        width: 100%;
+    }
+}

@@ -47,7 +47,7 @@ public class UserPanelHomeworkService {
         this.uploadStorage = uploadStorage;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Map<String, Object> listHomework(Authentication authentication, String tab) {
         StudentAdmission student = contextService.resolveStudent(authentication);
         String className = resolveClassName(student);
@@ -55,7 +55,6 @@ public class UserPanelHomeworkService {
         Long classId = student != null && student.getSchoolClass() != null
                 ? student.getSchoolClass().getId()
                 : null;
-        ensureDemoHomework(className, section, classId);
 
         String normalizedTab = tab == null || tab.isBlank() ? "upcoming" : tab.trim().toLowerCase(Locale.ROOT);
         List<Homework> items = homeworkService.searchHomework(classId, section, null, null, normalizedTab);

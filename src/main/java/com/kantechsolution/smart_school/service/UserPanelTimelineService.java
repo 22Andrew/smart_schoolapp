@@ -21,22 +21,18 @@ public class UserPanelTimelineService {
 
     private final UserPanelContextService userPanelContextService;
     private final StudentTimelineRepository studentTimelineRepository;
-    private final StudentTimelineProfileSeedService timelineProfileSeedService;
 
     public UserPanelTimelineService(
             UserPanelContextService userPanelContextService,
-            StudentTimelineRepository studentTimelineRepository,
-            StudentTimelineProfileSeedService timelineProfileSeedService
+            StudentTimelineRepository studentTimelineRepository
     ) {
         this.userPanelContextService = userPanelContextService;
         this.studentTimelineRepository = studentTimelineRepository;
-        this.timelineProfileSeedService = timelineProfileSeedService;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Map<String, Object> getTimeline(Authentication authentication) {
         StudentAdmission student = requireStudent(authentication);
-        timelineProfileSeedService.seedIfEmpty(student.getId());
 
         List<Map<String, Object>> entries = studentTimelineRepository
                 .findByStudentAdmissionIdAndVisibleToStudentTrueOrderByEventDateAscIdAsc(student.getId())

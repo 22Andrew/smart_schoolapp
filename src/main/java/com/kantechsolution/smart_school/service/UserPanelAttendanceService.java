@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.YearMonth;
 import java.util.*;
 
 @Service
@@ -17,15 +18,65 @@ public class UserPanelAttendanceService {
     private final UserPanelContextService userPanelContextService;
     private final AcademicSessionService academicSessionService;
     private final StudentAttendanceEntryRepository attendanceEntryRepository;
+    private final StudentAttendanceProfileSeedService attendanceSeedService;
 
     public UserPanelAttendanceService(
             UserPanelContextService userPanelContextService,
             AcademicSessionService academicSessionService,
-            StudentAttendanceEntryRepository attendanceEntryRepository
+            StudentAttendanceEntryRepository attendanceEntryRepository,
+            StudentAttendanceProfileSeedService attendanceSeedService
     ) {
         this.userPanelContextService = userPanelContextService;
         this.academicSessionService = academicSessionService;
         this.attendanceEntryRepository = attendanceEntryRepository;
+        this.attendanceSeedService = attendanceSeedService;
+    }
+
+    @Transactional(readOnly = true)
+    public Map<String, Object> getMonthCalendar(Authentication authentication, Integer year, Integer month) {
+        StudentAdmission student = requireStudent(authentication);
+        LocalDate today = LocalDate.now();
+        int resolvedYear = year == null ? today.getYear() : year;
+        int resolvedMonth = month == null ? today.getMonthValue() : month;
+        if (resolvedMonth < 1 || resolvedMonth > 12) {
+            throw new IllegalArgumentException("Month must be between 1 and 12");
+        }
+
+        YearMonth yearMonth = YearMonth.of(resolvedYear, resolvedMonth);
+        LocalDate monthStart = yearMonth.atDay(1);
+        LocalDate monthEnd = yearMonth.atEndOfMonth();
+        LocalDate gridStart = monthStart.with(java.time.temporal.TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY));
+        LocalDate gridEnd = monthEnd.with(java.time.temporal.TemporalAdjusters.nextOrSame(java.time.DayOfWeek.SUNDAY));
+
+        List<StudentAttendanceEntry> entries = attendanceEntryRepository.findByStudentAndDateRange(
+                student.getId(), gridStart, gridEnd);
+        Map<LocalDate, StudentAttendanceEntry> byDate = new HashMap<>();
+        for (StudentAttendanceEntry entry : entries) {
+            if (entry.getAttendanceDate() != null) {
+                byDate.put(entry.getAttendanceDate(), entry);
+            }
+        }
+
+        List<Map<String, Object>> days = new ArrayList<>();
+        for (LocalDate date = gridStart; !date.isAfter(gridEnd); date = date.plusDays(1)) {
+            StudentAttendanceEntry entry = byDate.get(date);
+            String code = entry == null ? "" : StudentAttendanceProfileSeedService.statusToCode(entry.getStatus());
+            Map<String, Object> day = new LinkedHashMap<>();
+            day.put("date", date.toString());
+            day.put("day", date.getDayOfMonth());
+            day.put("inMonth", date.getMonthValue() == resolvedMonth);
+            day.put("code", code);
+            day.put("status", statusLabel(code));
+            days.add(day);
+        }
+
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("year", resolvedYear);
+        response.put("month", resolvedMonth);
+        response.put("monthLabel", yearMonth.getMonth().getDisplayName(java.time.format.TextStyle.FULL, Locale.US)
+                + " " + resolvedYear);
+        response.put("days", days);
+        return response;
     }
 
     @Transactional(readOnly = true)
@@ -139,6 +190,18 @@ public class UserPanelAttendanceService {
             }
         }
         return counts;
+    }
+
+    private String statusLabel(String code) {
+        return switch (String.valueOf(code).toUpperCase(Locale.ROOT)) {
+            case "P" -> "Present";
+            case "A" -> "Absent";
+            case "F" -> "Half Day";
+            case "L" -> "Late";
+            case "H" -> "Holiday";
+            case "E" -> "Late With Excuse";
+            default -> "";
+        };
     }
 
     private StudentAdmission requireStudent(Authentication authentication) {

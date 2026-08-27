@@ -49,7 +49,7 @@ public class UserPanelContextService {
     @Transactional(readOnly = true)
     public StudentAdmission resolveStudent(AppUserAccount account) {
         if (account == null || account.getSourceId() == null) {
-            return studentAdmissionRepository.findById(1L).orElse(null);
+            return null;
         }
         return studentAdmissionRepository.findById(account.getSourceId()).orElse(null);
     }
@@ -84,24 +84,24 @@ public class UserPanelContextService {
 
     public String resolveStudentName(StudentAdmission student) {
         if (student == null) {
-            return "Edward Thomas";
+            return "";
         }
         String first = Optional.ofNullable(student.getFirstName()).orElse("").trim();
         String last = Optional.ofNullable(student.getLastName()).orElse("").trim();
         String full = (first + " " + last).trim();
-        return full.isBlank() ? "Edward Thomas" : full;
+        return full.isBlank() ? "" : full;
     }
 
     public String resolveAdmissionNo(StudentAdmission student) {
         if (student != null && student.getAdmissionNo() != null && !student.getAdmissionNo().isBlank()) {
             return student.getAdmissionNo().trim();
         }
-        return "1000011";
+        return "";
     }
 
     public String resolveClassLabel(StudentAdmission student) {
         if (student == null || student.getSchoolClass() == null) {
-            return "Class 1 (A)";
+            return "";
         }
         String className = student.getSchoolClass().getName();
         String section = student.getSection() == null ? "" : student.getSection().trim();
@@ -113,15 +113,17 @@ public class UserPanelContextService {
 
     public String resolveCurrentSession() {
         Object name = academicSessionService.getCurrentSession().get("sessionName");
-        return name != null ? String.valueOf(name) : "2026-27";
+        return name != null ? String.valueOf(name) : "";
     }
 
     public long resolveNoticeCount() {
-        long count = noticeBoardRepository.count();
-        return count > 0 ? count : 26L;
+        return noticeBoardRepository.count();
     }
 
     public String resolveProfileImage(String studentName) {
+        if (studentName == null || studentName.isBlank()) {
+            return "https://ui-avatars.com/api/?name=Student&background=e2e8f0&color=64748b&size=128";
+        }
         String encoded = studentName.replace(" ", "+");
         return "https://ui-avatars.com/api/?name=" + encoded + "&background=e2e8f0&color=64748b&size=128";
     }

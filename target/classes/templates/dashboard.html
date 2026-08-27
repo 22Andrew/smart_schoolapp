@@ -7,15 +7,15 @@
     <title>Mount Carmel School - Admin Dashboard</title>
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
     <link rel="stylesheet" th:href="@{/css/app-theme.css}">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/admin-dashboard.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body th:classappend="${teacherSidebar} ? ' teacher-dashboard-page' : ''">
     <!-- Top Navigation Bar -->
     <nav class="top-navbar">
         <div class="nav-left">
             <div class="logo-container">
-                <a href="/dashboard" class="brand-badge" style="text-decoration: none;">Smart School</a>
+                <a href="/admin/admin/dashboard" class="brand-badge" style="text-decoration: none;">Smart School</a>
                 <div class="logo-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="35" height="35">
                         <defs>
@@ -39,11 +39,11 @@
                         <line x1="3" y1="18" x2="21" y2="18"></line>
                     </svg>
                 </button>
-                <span class="school-name">Smart School</span>
+                <span class="school-name" th:text="${schoolName}">Mount Carmel School</span>
             </div>
-            <div class="session-info">
+            <div class="session-info" th:if="${!teacherSidebar}">
                 <span class="session-label">Current Session:</span>
-                <span class="session-value">2023-24</span>
+                <span class="session-value" th:text="${currentSession}">2026-27</span>
             </div>
         </div>
         
@@ -102,6 +102,8 @@
                         <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
                         <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
                     </svg>
+                    <span class="notification-badge" th:if="${noticeCount != null and noticeCount > 0}"
+                          th:text="${noticeCount}">0</span>
                 </button>
                 <div class="profile-dropdown-container">
                     <button class="icon-btn user-btn" id="profileBtn" title="Profile">
@@ -119,7 +121,7 @@
                             </div>
                             <div class="profile-info">
                                 <div class="profile-name" th:text="${session.user != null ? session.user.name : 'Alhaji Mohamed Kanu'}">Alhaji Mohamed Kanu</div>
-                                <div class="profile-role" th:text="${session.user != null ? session.user.role : 'Super Admin'}">Super Admin</div>
+                                <div class="profile-role" th:text="${staffRole != null and !#strings.isEmpty(staffRole) ? staffRole : (session.user != null ? session.user.role : 'Super Admin')}">Super Admin</div>
                             </div>
                         </div>
                         <div class="profile-dropdown-body">
@@ -155,437 +157,57 @@
         <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
 
         <!-- Main Content -->
-        <main class="main-content">
-            <!-- Top Summary Boxes -->
-            <div class="mini-stats">
-                <div class="mini-stat">
-                    <div class="mini-stat-title">FEES AWAITING PAYMENT</div>
-                    <div class="mini-stat-value">5/31</div>
-                </div>
-                <div class="mini-stat">
-                    <div class="mini-stat-title">CONVERTED LEADS</div>
-                    <div class="mini-stat-value">0/0</div>
-                </div>
-                <div class="mini-stat">
-                    <div class="mini-stat-title">STAFF PRESENT TODAY</div>
-                    <div class="mini-stat-value">0/4</div>
-                </div>
-                <div class="mini-stat">
-                    <div class="mini-stat-title">STUDENT PRESENT TODAY</div>
-                    <div class="mini-stat-value">3/18</div>
-                </div>
-            </div>
-
-            <!-- Statistics Cards -->
-            <div class="stats-grid">
-                <div class="stat-card stat-card-green">
-                    <div class="stat-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="12" y1="1" x2="12" y2="23"></line>
-                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                        </svg>
+        <main class="main-content admin-dashboard-main">
+            <div class="admin-dashboard-stack">
+                <div class="admin-present-card">
+                    <div class="admin-present-header">
+                        <div class="admin-present-title-wrap">
+                            <span class="admin-present-icon" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                            </span>
+                            <span class="admin-present-title">Student Present Today</span>
+                        </div>
+                        <span class="admin-present-value" th:text="${studentPresentTodayLabel}">0/0</span>
                     </div>
-                    <div class="stat-content">
-                        <div class="stat-title">MONTHLY FEES COLLECTION</div>
-                        <div class="stat-value">$9,691.00</div>
+                    <div class="admin-progress-track admin-progress-yellow">
+                        <div class="admin-progress-fill"
+                             th:style="|width: ${studentPresentTodayPercent}%; background-color: #f39c12;|"></div>
                     </div>
                 </div>
 
-                <div class="stat-card stat-card-pink">
-                    <div class="stat-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-                        </svg>
+                <div class="admin-attendance-card">
+                    <div class="admin-attendance-card-head">
+                        <h3 class="admin-card-title">Student Today Attendance</h3>
                     </div>
-                    <div class="stat-content">
-                        <div class="stat-title">MONTHLY EXPENSES</div>
-                        <div class="stat-value">$420.00</div>
+                    <div class="admin-attendance-list">
+                        <div class="admin-attendance-row" th:each="row : ${studentTodayAttendance}">
+                            <div class="admin-attendance-meta">
+                                <span class="admin-attendance-count" th:text="${row.count} + ' ' + ${row.label}">0 PRESENT</span>
+                                <span class="admin-attendance-percent" th:text="${row.percent} + '%'">0.00%</span>
+                            </div>
+                            <div class="admin-progress-track admin-progress-blue">
+                                <div class="admin-progress-fill"
+                                     th:style="|width: ${row.percentValue}%; background-color: #337ab7;|"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="stat-card stat-card-cyan">
-                    <div class="stat-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <div class="admin-student-count-card">
+                    <div class="admin-student-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                             <circle cx="12" cy="7" r="4"></circle>
                         </svg>
                     </div>
-                    <div class="stat-content">
-                        <div class="stat-title">STUDENT</div>
-                        <div class="stat-value">18</div>
-                    </div>
-                </div>
-
-                <div class="stat-card stat-card-orange">
-                    <div class="stat-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="9" cy="7" r="4"></circle>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                        </svg>
-                    </div>
-                    <div class="stat-content">
-                        <div class="stat-title">ADMIN</div>
-                        <div class="stat-value">1</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Charts Grid (matches screenshot layout) -->
-            <div class="charts-grid charts-grid-2">
-                <div class="chart-card chart-card-tall">
-                    <h3 class="chart-title">Fees Collection & Expenses For December 2023</h3>
-                    <div class="chart-canvas-wrap">
-                        <canvas id="feesChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="chart-card chart-card-tall">
-                    <h3 class="chart-title">Income - December 2023</h3>
-                    <div class="donut-chart-container">
-                        <canvas id="studentsPresentChart"></canvas>
-                        <div class="chart-legend">
-                            <div class="legend-item">
-                                <span class="legend-color" style="background: #48bb78;"></span>
-                                <span>Donation</span>
-                            </div>
-                            <div class="legend-item">
-                                <span class="legend-color" style="background: #f6ad55;"></span>
-                                <span>Rent</span>
-                            </div>
-                            <div class="legend-item">
-                                <span class="legend-color" style="background: #4299e1;"></span>
-                                <span>Miscellaneous</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="charts-grid charts-grid-2">
-                <div class="chart-card chart-card-tall">
-                    <h3 class="chart-title">Fees Collection & Expenses For Session 2023-24</h3>
-                    <div class="chart-canvas-wrap chart-canvas-wrap-lg">
-                        <canvas id="feesCollectionYearChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="chart-card chart-card-tall">
-                    <h3 class="chart-title">Expense - December 2023</h3>
-                    <div class="donut-chart-container">
-                        <canvas id="expenseChart"></canvas>
-                        <div class="chart-legend">
-                            <div class="legend-item">
-                                <span class="legend-color" style="background: #9f7aea;"></span>
-                                <span>Electricity Bill</span>
-                            </div>
-                            <div class="legend-item">
-                                <span class="legend-color" style="background: #4299e1;"></span>
-                                <span>Miscellaneous</span>
-                            </div>
-                            <div class="legend-item">
-                                <span class="legend-color" style="background: #f6ad55;"></span>
-                                <span>Telephone Bill</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Details Tables -->
-            <div class="details-row">
-                <div class="detail-table">
-                    <h3 class="table-title">Fees Overview</h3>
-                    <table>
-                        <tr>
-                            <td>UNPAID</td>
-                            <td class="text-right">$2,668.00</td>
-                        </tr>
-                        <tr>
-                            <td>PARTIAL</td>
-                            <td class="text-right">0%</td>
-                        </tr>
-                        <tr>
-                            <td>PAID</td>
-                            <td class="text-right">16.13%</td>
-                        </tr>
-                    </table>
-                </div>
-
-                <div class="detail-table">
-                    <h3 class="table-title">Enquiry Overview</h3>
-                    <table>
-                        <tr>
-                            <td>ACTIVE</td>
-                            <td class="text-right">0%</td>
-                        </tr>
-                        <tr>
-                            <td>WON</td>
-                            <td class="text-right">0%</td>
-                        </tr>
-                        <tr>
-                            <td>PASSIVE</td>
-                            <td class="text-right">0%</td>
-                        </tr>
-                        <tr>
-                            <td>LOST</td>
-                            <td class="text-right">0%</td>
-                        </tr>
-                        <tr>
-                            <td>DEAD</td>
-                            <td class="text-right">0%</td>
-                        </tr>
-                    </table>
-                </div>
-
-                <div class="detail-table">
-                    <h3 class="table-title">Library Overview</h3>
-                    <table>
-                        <tr>
-                            <td>ISSUED</td>
-                            <td class="text-right">3.3%</td>
-                        </tr>
-                        <tr>
-                            <td>RETURNED</td>
-                            <td class="text-right"></td>
-                        </tr>
-                        <tr>
-                            <td>ISSUED OUT OF 300</td>
-                            <td class="text-right">3.3%</td>
-                        </tr>
-                        <tr>
-                            <td>AVAILABLE OUT OF 300</td>
-                            <td class="text-right">96.5%</td>
-                        </tr>
-                    </table>
-                </div>
-
-                <div class="detail-table">
-                    <h3 class="table-title">Student Today Attendance</h3>
-                    <table>
-                        <tr>
-                            <td>PRESENT</td>
-                            <td class="text-right">5.56%</td>
-                        </tr>
-                        <tr>
-                            <td>LATE</td>
-                            <td class="text-right">5.56%</td>
-                        </tr>
-                        <tr>
-                            <td>ABSENT</td>
-                            <td class="text-right">11.11%</td>
-                        </tr>
-                        <tr>
-                            <td>HALF DAY</td>
-                            <td class="text-right">5.56%</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-
-            <!-- User Statistics Cards -->
-            <div class="user-stats-section">
-                <div class="user-card user-card-cyan">
-                    <div class="user-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                    </div>
-                    <div class="user-content">
-                        <div class="user-label">STUDENT</div>
-                        <div class="user-count">18</div>
-                    </div>
-                </div>
-
-                <div class="user-card user-card-orange">
-                    <div class="user-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="9" cy="7" r="4"></circle>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                        </svg>
-                    </div>
-                    <div class="user-content">
-                        <div class="user-label">TEACHER</div>
-                        <div class="user-count">3</div>
-                    </div>
-                </div>
-
-                <div class="user-card user-card-orange">
-                    <div class="user-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="12" y1="1" x2="12" y2="23"></line>
-                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                        </svg>
-                    </div>
-                    <div class="user-content">
-                        <div class="user-label">ACCOUNTANT</div>
-                        <div class="user-count">0</div>
-                    </div>
-                </div>
-
-                <div class="user-card user-card-orange">
-                    <div class="user-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                        </svg>
-                    </div>
-                    <div class="user-content">
-                        <div class="user-label">LIBRARIAN</div>
-                        <div class="user-count">0</div>
-                    </div>
-                </div>
-
-                <div class="user-card user-card-orange">
-                    <div class="user-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                    </div>
-                    <div class="user-content">
-                        <div class="user-label">RECEPTIONIST</div>
-                        <div class="user-count">1</div>
-                    </div>
-                </div>
-
-                <div class="user-card user-card-orange">
-                    <div class="user-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                            <path d="M2 17l10 5 10-5"></path>
-                            <path d="M2 12l10 5 10-5"></path>
-                        </svg>
-                    </div>
-                    <div class="user-content">
-                        <div class="user-label">SUPER ADMIN</div>
-                        <div class="user-count">1</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Calendar Section -->
-            <div class="calendar-section">
-                <div class="calendar-header">
-                    <button class="calendar-nav-btn" id="prevBtn" aria-label="Previous">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="15 18 9 12 15 6"></polyline>
-                        </svg>
-                    </button>
-                    <button class="calendar-nav-btn" id="nextBtn" aria-label="Next">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                    </button>
-                    <button class="calendar-view-btn" id="todayBtn">Today</button>
-                    <div class="calendar-title" id="calendarTitle">January 2026</div>
-                    <div class="calendar-view-tabs">
-                        <button class="view-tab" data-view="month">Month</button>
-                        <button class="view-tab active" data-view="week">Week</button>
-                        <button class="view-tab" data-view="day">Day</button>
-                    </div>
-                </div>
-                
-                <!-- Month View -->
-                <div class="calendar-month-view" id="monthView" style="display: none;">
-                    <div class="month-weekdays">
-                        <div class="month-weekday">Sun</div>
-                        <div class="month-weekday">Mon</div>
-                        <div class="month-weekday">Tue</div>
-                        <div class="month-weekday">Wed</div>
-                        <div class="month-weekday">Thu</div>
-                        <div class="month-weekday">Fri</div>
-                        <div class="month-weekday">Sat</div>
-                    </div>
-                    <div class="month-days-grid" id="monthDaysGrid">
-                        <!-- Days will be generated by JavaScript -->
-                    </div>
-                </div>
-
-                <!-- Week View -->
-                <div class="calendar-week-view" id="weekView">
-                    <div class="calendar-grid">
-                        <div class="calendar-time-col">
-                            <div class="time-label time-label-header"></div>
-                            <div class="time-label">12am</div>
-                            <div class="time-label">1am</div>
-                            <div class="time-label">2am</div>
-                            <div class="time-label">3am</div>
-                            <div class="time-label">4am</div>
-                            <div class="time-label">5am</div>
-                            <div class="time-label">6am</div>
-                            <div class="time-label">7am</div>
-                            <div class="time-label">8am</div>
-                            <div class="time-label">9am</div>
-                            <div class="time-label">10am</div>
-                            <div class="time-label">11am</div>
-                            <div class="time-label">12pm</div>
-                            <div class="time-label">1pm</div>
-                            <div class="time-label">2pm</div>
-                            <div class="time-label">3pm</div>
-                            <div class="time-label">4pm</div>
-                            <div class="time-label">5pm</div>
-                            <div class="time-label">6pm</div>
-                            <div class="time-label">7pm</div>
-                            <div class="time-label">8pm</div>
-                            <div class="time-label">9pm</div>
-                            <div class="time-label">10pm</div>
-                            <div class="time-label">11pm</div>
-                        </div>
-                        <div class="calendar-days-container">
-                            <div class="calendar-days-headers" id="weekDaysHeaders">
-                                <!-- Headers will be generated by JavaScript -->
-                            </div>
-                            <div class="calendar-days-body" id="weekDaysBody">
-                                <!-- Day columns will be generated by JavaScript -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Day View -->
-                <div class="calendar-day-view" id="dayView" style="display: none;">
-                    <div class="calendar-grid">
-                        <div class="calendar-time-col">
-                            <div class="time-label time-label-header"></div>
-                            <div class="time-label">12am</div>
-                            <div class="time-label">1am</div>
-                            <div class="time-label">2am</div>
-                            <div class="time-label">3am</div>
-                            <div class="time-label">4am</div>
-                            <div class="time-label">5am</div>
-                            <div class="time-label">6am</div>
-                            <div class="time-label">7am</div>
-                            <div class="time-label">8am</div>
-                            <div class="time-label">9am</div>
-                            <div class="time-label">10am</div>
-                            <div class="time-label">11am</div>
-                            <div class="time-label">12pm</div>
-                            <div class="time-label">1pm</div>
-                            <div class="time-label">2pm</div>
-                            <div class="time-label">3pm</div>
-                            <div class="time-label">4pm</div>
-                            <div class="time-label">5pm</div>
-                            <div class="time-label">6pm</div>
-                            <div class="time-label">7pm</div>
-                            <div class="time-label">8pm</div>
-                            <div class="time-label">9pm</div>
-                            <div class="time-label">10pm</div>
-                            <div class="time-label">11pm</div>
-                        </div>
-                        <div class="calendar-days-container">
-                            <div class="calendar-days-headers" id="dayHeader">
-                                <!-- Header will be generated by JavaScript -->
-                            </div>
-                            <div class="calendar-days-body" id="dayBody">
-                                <!-- Day column will be generated by JavaScript -->
-                            </div>
-                        </div>
+                    <div class="admin-student-content">
+                        <div class="admin-student-label">Student</div>
+                        <div class="admin-student-count" th:text="${totalStudents}">0</div>
                     </div>
                 </div>
             </div>

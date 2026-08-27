@@ -1,0 +1,246 @@
+/* User panel - Transport Routes */
+
+.utrans-page .ugm-card {
+    overflow: visible;
+}
+
+.utrans-content {
+    padding: 8px 20px 24px;
+}
+
+.utrans-loading,
+.utrans-error {
+    padding: 24px 0;
+    color: #718096;
+    font-size: 14px;
+}
+
+.utrans-error {
+    color: #e53e3e;
+}
+
+.utrans-route-card {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    padding: 18px 0 24px;
+    border-bottom: 1px solid #edf2f7;
+}
+
+.utrans-driver-photo {
+    width: 120px;
+    min-width: 120px;
+    height: 120px;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    background: #f8fafc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.utrans-driver-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.utrans-driver-placeholder {
+    width: 56px;
+    height: 56px;
+    color: #cbd5e0;
+}
+
+.utrans-route-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.utrans-route-title {
+    margin: 0 0 14px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #2d3748;
+}
+
+.utrans-info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px 24px;
+}
+
+.utrans-info-item {
+    font-size: 14px;
+    color: #4a5568;
+    line-height: 1.5;
+}
+
+.utrans-info-item strong {
+    color: #2d3748;
+    font-weight: 600;
+}
+
+.utrans-pickup-section {
+    padding-top: 20px;
+}
+
+.utrans-pickup-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.utrans-pickup-header h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+.utrans-scroll-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.utrans-scroll-btn {
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 4px;
+    background: var(--theme-primary, #727cf5);
+    color: #fff;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.utrans-scroll-btn:hover {
+    filter: brightness(0.95);
+}
+
+.utrans-scroll-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.utrans-timeline-wrap {
+    overflow-x: auto;
+    padding: 8px 0 16px;
+}
+
+.utrans-timeline {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    min-width: max-content;
+    padding: 110px 24px 110px;
+}
+
+.utrans-timeline-line {
+    position: absolute;
+    left: 24px;
+    right: 24px;
+    top: 50%;
+    height: 6px;
+    margin-top: -3px;
+    background: #4a5568;
+    border-radius: 999px;
+    z-index: 0;
+}
+
+.utrans-stop {
+    position: relative;
+    flex: 0 0 190px;
+    min-height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+
+.utrans-stop-card {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 168px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 10px 12px;
+    background: #faf6ef;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+}
+
+.utrans-stop-card.active {
+    background: #d4edda;
+    border-color: #b7dfc4;
+}
+
+.utrans-stop-card.above {
+    bottom: calc(50% + 28px);
+}
+
+.utrans-stop-card.below {
+    top: calc(50% + 28px);
+}
+
+.utrans-stop-name {
+    margin: 0 0 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #2d3748;
+    line-height: 1.3;
+}
+
+.utrans-stop-meta {
+    font-size: 12px;
+    color: #4a5568;
+    line-height: 1.45;
+}
+
+.utrans-stop-pin {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 12px;
+    line-height: 1;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.18);
+}
+
+.utrans-stop-pin.active {
+    background: #38a169;
+}
+
+.utrans-stop-pin.inactive {
+    background: #e53e3e;
+}
+
+@media (max-width: 900px) {
+    .utrans-route-card {
+        flex-direction: column;
+    }
+
+    .utrans-info-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media print {
+    .utrans-scroll-actions {
+        display: none !important;
+    }
+}

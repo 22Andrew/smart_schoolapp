@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,12 @@ public class CbseExamStudentMarkSeedService implements ApplicationRunner {
 
     private static final Pattern SUBJECT_CODE_PATTERN = Pattern.compile("^(.+?)\\s*\\(([^)]+)\\)$");
 
+    private static final List<List<String>> MARK_SETS = List.of(
+            List.of("78.00", "56.00", "76.00", "67.00", "87.00", "46.00", "8.00", "18.00", "11.00"),
+            List.of("87.00", "35.00", "87.00", "45.00", "88.00", "35.00", "8.00", "18.00", "11.00"),
+            List.of("56.00", "46.00", "56.00", "72.00", "35.00", "ABS", "8.00", "18.00", "11.00")
+    );
+
     private final CbseExamRepository cbseExamRepository;
     private final CbseExamSubjectRepository cbseExamSubjectRepository;
     private final CbseExamStudentRepository cbseExamStudentRepository;
@@ -35,14 +42,18 @@ public class CbseExamStudentMarkSeedService implements ApplicationRunner {
         if (cbseExamStudentMarkRepository.count() > 0) {
             return;
         }
-        List<CbseExam> exams = cbseExamRepository.findAllByOrderByCreatedAtDescIdDesc();
-        for (CbseExam exam : exams) {
-            if (!exam.isPublishResult()) {
-                continue;
+        try {
+            List<CbseExam> exams = cbseExamRepository.findAllByOrderByCreatedAtDescIdDesc();
+            for (CbseExam exam : exams) {
+                if (!exam.isPublishResult()) {
+                    continue;
+                }
+                ensureStudentsAssigned(exam);
+                seedMarksForExam(exam);
+                ensureRanks(exam);
             }
-            ensureStudentsAssigned(exam);
-            seedMarksForExam(exam);
-            ensureRanks(exam);
+        } catch (DataAccessException ignored) {
+            // Skip when student_admissions is not available yet.
         }
     }
 
@@ -85,55 +96,54 @@ public class CbseExamStudentMarkSeedService implements ApplicationRunner {
         if (cbseExamStudentMarkRepository.existsByCbseExamId(exam.getId())) {
             return;
         }
+        List<CbseExamStudent> assigned = cbseExamStudentRepository.findByCbseExamIdOrderByIdAsc(exam.getId());
+        for (CbseExamStudent assignment : assigned) {
+            seedMarksForStudent(exam, assignment.getStudentAdmissionId());
+        }
+    }
+
+    private void seedMarksForStudent(CbseExam exam, Long studentId) {
+        if (studentId == null || cbseExamStudentMarkRepository.existsByCbseExam_IdAndStudentAdmissionId(exam.getId(), studentId)) {
+            return;
+        }
 
         List<CbseExamSubject> subjects = cbseExamSubjectRepository.findByCbseExamIdOrderByIdAsc(exam.getId());
         if (subjects.isEmpty()) {
             return;
         }
 
-        List<CbseExamStudent> assigned = cbseExamStudentRepository.findByCbseExamIdOrderByIdAsc(exam.getId());
-        if (assigned.isEmpty()) {
-            return;
-        }
-
-        List<List<String>> markSets = List.of(
-                List.of("78.00", "56.00", "76.00", "67.00", "87.00", "46.00", "8.00", "18.00", "11.00"),
-                List.of("87.00", "35.00", "87.00", "45.00", "88.00", "35.00", "8.00", "18.00", "11.00"),
-                List.of("56.00", "46.00", "56.00", "72.00", "35.00", "ABS", "8.00", "18.00", "11.00")
-        );
-
+        int setIndex = (int) (Math.abs(studentId) % MARK_SETS.size());
+        List<String> sourceMarks = MARK_SETS.get(setIndex);
+        int markPointer = 0;
         List<CbseExamStudentMark> marks = new ArrayList<>();
-        for (int studentIndex = 0; studentIndex < assigned.size(); studentIndex++) {
-            CbseExamStudent assignment = assigned.get(studentIndex);
-            List<String> sourceMarks = markSets.get(Math.min(studentIndex, markSets.size() - 1));
-            int markPointer = 0;
 
-            for (CbseExamSubject subject : subjects) {
-                List<AssessmentDef> assessments = parseAssessments(subject.getAssessments());
-                for (int order = 0; order < assessments.size(); order++) {
-                    AssessmentDef assessment = assessments.get(order);
-                    String raw = markPointer < sourceMarks.size() ? sourceMarks.get(markPointer) : "0.00";
-                    markPointer++;
+        for (CbseExamSubject subject : subjects) {
+            List<AssessmentDef> assessments = parseAssessments(subject.getAssessments());
+            for (int order = 0; order < assessments.size(); order++) {
+                AssessmentDef assessment = assessments.get(order);
+                String raw = markPointer < sourceMarks.size() ? sourceMarks.get(markPointer) : "0.00";
+                markPointer++;
 
-                    boolean absent = "ABS".equalsIgnoreCase(raw);
-                    BigDecimal obtained = absent ? null : new BigDecimal(raw);
+                boolean absent = "ABS".equalsIgnoreCase(raw);
+                BigDecimal obtained = absent ? null : new BigDecimal(raw);
 
-                    marks.add(CbseExamStudentMark.builder()
-                            .cbseExam(exam)
-                            .studentAdmissionId(assignment.getStudentAdmissionId())
-                            .subjectName(subject.getSubjectName())
-                            .assessmentLabel(assessment.label())
-                            .assessmentKey(assessment.key())
-                            .maxMarks(assessment.maxMarks())
-                            .marksObtained(obtained)
-                            .absent(absent)
-                            .assessmentOrder(order)
-                            .build());
-                }
+                marks.add(CbseExamStudentMark.builder()
+                        .cbseExam(exam)
+                        .studentAdmissionId(studentId)
+                        .subjectName(subject.getSubjectName())
+                        .assessmentLabel(assessment.label())
+                        .assessmentKey(assessment.key())
+                        .maxMarks(assessment.maxMarks())
+                        .marksObtained(obtained)
+                        .absent(absent)
+                        .assessmentOrder(order)
+                        .build());
             }
         }
 
-        cbseExamStudentMarkRepository.saveAll(marks);
+        if (!marks.isEmpty()) {
+            cbseExamStudentMarkRepository.saveAll(marks);
+        }
     }
 
     private void ensureRanks(CbseExam exam) {
@@ -175,6 +185,58 @@ public class CbseExamStudentMarkSeedService implements ApplicationRunner {
         cbseExamRankRepository.saveAll(ranks);
         exam.setRankGenerated(true);
         cbseExamRepository.save(exam);
+    }
+
+    private void rebuildRanksFromMarks(CbseExam exam) {
+        List<CbseExamStudentMark> allMarks = cbseExamStudentMarkRepository.findByCbseExamId(exam.getId());
+        Map<Long, BigDecimal> totalsByStudent = new LinkedHashMap<>();
+        for (CbseExamStudentMark mark : allMarks) {
+            BigDecimal add = !Boolean.TRUE.equals(mark.getAbsent()) && mark.getMarksObtained() != null
+                    ? mark.getMarksObtained()
+                    : BigDecimal.ZERO;
+            totalsByStudent.merge(mark.getStudentAdmissionId(), add, BigDecimal::add);
+        }
+        if (totalsByStudent.isEmpty()) {
+            return;
+        }
+
+        List<Map.Entry<Long, BigDecimal>> sorted = totalsByStudent.entrySet().stream()
+                .sorted(Map.Entry.<Long, BigDecimal>comparingByValue().reversed())
+                .toList();
+
+        cbseExamRankRepository.deleteByCbseExamId(exam.getId());
+        int rank = 1;
+        List<CbseExamRank> ranks = new ArrayList<>();
+        for (Map.Entry<Long, BigDecimal> entry : sorted) {
+            ranks.add(CbseExamRank.builder()
+                    .cbseExam(exam)
+                    .studentAdmissionId(entry.getKey())
+                    .studentRank(rank++)
+                    .build());
+        }
+        cbseExamRankRepository.saveAll(ranks);
+        exam.setRankGenerated(true);
+        cbseExamRepository.save(exam);
+    }
+
+    @Transactional
+    public void ensureStudentResultData(CbseExam exam, Long studentId) {
+        if (exam == null || exam.getId() == null || studentId == null || !exam.isPublishResult()) {
+            return;
+        }
+        if (!cbseExamStudentRepository.existsByCbseExam_IdAndStudentAdmissionId(exam.getId(), studentId)) {
+            cbseExamStudentRepository.save(CbseExamStudent.builder()
+                    .cbseExam(exam)
+                    .studentAdmissionId(studentId)
+                    .assigned(true)
+                    .build());
+        }
+        if (!cbseExamStudentMarkRepository.existsByCbseExam_IdAndStudentAdmissionId(exam.getId(), studentId)) {
+            seedMarksForStudent(exam, studentId);
+        }
+        if (cbseExamRankRepository.findByCbseExamIdAndStudentAdmissionId(exam.getId(), studentId).isEmpty()) {
+            rebuildRanksFromMarks(exam);
+        }
     }
 
     private Long resolveClassId(String className) {

@@ -25,24 +25,20 @@ public class UserPanelBehaviourService {
     private final UserPanelContextService userPanelContextService;
     private final BehaviourStudentIncidentRepository incidentRepository;
     private final BehaviourStudentIncidentCommentRepository commentRepository;
-    private final StudentBehaviourProfileSeedService seedService;
 
     public UserPanelBehaviourService(
             UserPanelContextService userPanelContextService,
             BehaviourStudentIncidentRepository incidentRepository,
-            BehaviourStudentIncidentCommentRepository commentRepository,
-            StudentBehaviourProfileSeedService seedService
+            BehaviourStudentIncidentCommentRepository commentRepository
     ) {
         this.userPanelContextService = userPanelContextService;
         this.incidentRepository = incidentRepository;
         this.commentRepository = commentRepository;
-        this.seedService = seedService;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Map<String, Object> getBehaviour(Authentication authentication) {
         StudentAdmission student = requireStudent(authentication);
-        seedService.seedIfEmpty(student.getId());
 
         List<Map<String, Object>> records = incidentRepository
                 .findByStudentAdmissionIdOrderByIncidentDateDescIdDesc(student.getId())

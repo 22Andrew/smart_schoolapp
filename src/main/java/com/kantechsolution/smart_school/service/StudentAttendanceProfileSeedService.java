@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,7 +42,49 @@ public class StudentAttendanceProfileSeedService implements ApplicationRunner {
         if (attendanceEntryRepository.count() > 0) {
             return;
         }
-        seedDemoAttendance();
+        try {
+            seedDemoAttendance();
+        } catch (DataAccessException ignored) {
+            // Skip when student_admissions is not available yet.
+        }
+    }
+
+    @Transactional
+    public void ensureStudentMonth(Long studentId, int year, int month) {
+        if (studentId == null) {
+            return;
+        }
+        YearMonth yearMonth = YearMonth.of(year, month);
+        seedMonthIfEmpty(studentId, yearMonth);
+        seedMonthIfEmpty(studentId, yearMonth.minusMonths(1));
+    }
+
+    private void seedMonthIfEmpty(Long studentId, YearMonth yearMonth) {
+        LocalDate start = yearMonth.atDay(1);
+        LocalDate end = yearMonth.atEndOfMonth();
+        List<StudentAttendanceEntry> existing = attendanceEntryRepository.findByStudentAndDateRange(
+                studentId, start, end);
+        if (!existing.isEmpty()) {
+            return;
+        }
+        int studentOffset = (int) (studentId % STATUS_PATTERN.length);
+        List<StudentAttendanceEntry> entries = new ArrayList<>();
+        for (int day = 1; day <= yearMonth.lengthOfMonth(); day++) {
+            LocalDate date = LocalDate.of(yearMonth.getYear(), yearMonth.getMonth(), day);
+            if (date.getDayOfWeek() == java.time.DayOfWeek.SUNDAY) {
+                continue;
+            }
+            int patternIndex = (day + studentOffset) % STATUS_PATTERN.length;
+            entries.add(StudentAttendanceEntry.builder()
+                    .studentAdmissionId(studentId)
+                    .attendanceDate(date)
+                    .status(STATUS_PATTERN[patternIndex])
+                    .source("Manual")
+                    .build());
+        }
+        if (!entries.isEmpty()) {
+            attendanceEntryRepository.saveAll(entries);
+        }
     }
 
     private void seedDemoAttendance() {

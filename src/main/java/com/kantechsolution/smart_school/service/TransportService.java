@@ -6,6 +6,7 @@ import com.kantechsolution.smart_school.repository.*;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -103,6 +104,95 @@ public class TransportService implements ApplicationRunner {
                     .build();
             vehicle.setIsActive(true);
             vehicleRepository.save(vehicle);
+        }
+        seedBrooklynEastDemoRoute();
+        assignDemoStudentTransport();
+    }
+
+    private void seedBrooklynEastDemoRoute() {
+        TransportRoute route = routeRepository.findByTitleIgnoreCase("Brooklyn East")
+                .orElseGet(() -> {
+                    TransportRoute created = TransportRoute.builder().title("Brooklyn East").build();
+                    created.setIsActive(true);
+                    return routeRepository.save(created);
+                });
+
+        TransportVehicle vehicle = vehicleRepository.findByVehicleNumberIgnoreCase("VH4584")
+                .orElseGet(() -> {
+                    TransportVehicle created = TransportVehicle.builder()
+                            .vehicleNumber("VH4584")
+                            .vehicleModel("Ford CAB")
+                            .yearMade("2015")
+                            .registrationNumber("VH4584")
+                            .driverName("Jasper")
+                            .driverLicence("258714545")
+                            .driverContact("8521479630")
+                            .maxSeatingCapacity(40)
+                            .build();
+                    created.setIsActive(true);
+                    return vehicleRepository.save(created);
+                });
+
+        if (routeVehicleRepository.findByRoute_Id(route.getId()).isEmpty()) {
+            TransportRouteVehicle assignment = TransportRouteVehicle.builder()
+                    .route(route)
+                    .vehicle(vehicle)
+                    .build();
+            assignment.setIsActive(true);
+            routeVehicleRepository.save(assignment);
+        }
+
+        if (!routeStopRepository.existsByRoute_Id(route.getId())) {
+            seedRouteStop(route, "Brooklyn North", new BigDecimal("12.0"), LocalTime.of(7, 10), 1);
+            seedRouteStop(route, "Brooklyn South", new BigDecimal("13.0"), LocalTime.of(7, 20), 2);
+            seedRouteStop(route, "Railway Station", new BigDecimal("10.0"), LocalTime.of(7, 25), 3);
+            seedRouteStop(route, "Ranital Chowk", new BigDecimal("14.0"), LocalTime.of(19, 10), 4);
+            seedRouteStop(route, "Manhattan", new BigDecimal("11.0"), LocalTime.of(7, 35), 5);
+        }
+    }
+
+    private void seedRouteStop(TransportRoute route, String pickupName, BigDecimal distance,
+                               LocalTime pickupTime, int sortOrder) {
+        TransportPickupPoint pickup = pickupPointRepository.findByNameIgnoreCase(pickupName)
+                .orElseGet(() -> {
+                    TransportPickupPoint created = TransportPickupPoint.builder()
+                            .name(pickupName)
+                            .latitude("0")
+                            .longitude("0")
+                            .build();
+                    created.setIsActive(true);
+                    return pickupPointRepository.save(created);
+                });
+        TransportRouteStop stop = TransportRouteStop.builder()
+                .route(route)
+                .pickupPoint(pickup)
+                .distance(distance)
+                .pickupTime(pickupTime)
+                .monthlyFees(new BigDecimal("500.00"))
+                .sortOrder(sortOrder)
+                .build();
+        stop.setIsActive(true);
+        routeStopRepository.save(stop);
+    }
+
+    private void assignDemoStudentTransport() {
+        try {
+            studentAdmissionRepository.findById(1L).ifPresent(student -> {
+                boolean changed = false;
+                if (student.getRouteList() == null || student.getRouteList().isBlank()) {
+                    student.setRouteList("Brooklyn East");
+                    changed = true;
+                }
+                if (student.getPickupPoint() == null || student.getPickupPoint().isBlank()) {
+                    student.setPickupPoint("Brooklyn North");
+                    changed = true;
+                }
+                if (changed) {
+                    studentAdmissionRepository.save(student);
+                }
+            });
+        } catch (DataAccessException ignored) {
+            // Optional demo link; skip when student_admissions is not available yet.
         }
     }
 

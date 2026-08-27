@@ -1451,11 +1451,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function applySidebarSubMenus(parentSlug, submenuItems, wrapper) {
         const submenuEl = wrapper ? wrapper.querySelector('#submenu-' + parentSlug) : document.getElementById('submenu-' + parentSlug);
-        if (!submenuEl || !Array.isArray(submenuItems) || !submenuItems.length) {
+        if (!submenuEl) {
             return;
         }
 
         const links = Array.from(submenuEl.querySelectorAll('.submenu-item'));
+        if (!Array.isArray(submenuItems) || !submenuItems.length) {
+            links.forEach(function (link) {
+                if (!link.classList.contains('submenu-item-expandable')) {
+                    link.style.display = 'none';
+                }
+            });
+            return;
+        }
+
         const linkByHref = new Map();
         links.forEach(function (link) {
             linkByHref.set(normalizeMenuPath(link.getAttribute('href')), link);
@@ -1467,6 +1476,13 @@ document.addEventListener('DOMContentLoaded', function() {
             if (link) {
                 link.setAttribute('data-submenu-slug', item.slug);
             }
+        });
+
+        links.forEach(function (link) {
+            if (link.classList.contains('submenu-item-expandable')) {
+                return;
+            }
+            link.style.display = 'none';
         });
 
         submenuItems.forEach(function (item) {

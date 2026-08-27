@@ -98,7 +98,7 @@
             <span>Homework</span>
         </a>
 
-        <a th:href="@{/user/onlineexam/view/405}" class="menu-item" th:classappend="${activeMenu == 'online-exam'} ? ' active'">
+        <a th:href="@{/user/onlineexam}" class="menu-item" th:classappend="${activeMenu == 'online-exam'} ? ' active'">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
                 <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
@@ -116,7 +116,7 @@
             <span>Apply Leave</span>
         </a>
 
-        <a th:href="@{/user/user/visitor-book}" class="menu-item" th:classappend="${activeMenu == 'visitor-book'} ? ' active'">
+        <a th:href="@{/user/visitor}" class="menu-item" th:classappend="${activeMenu == 'visitor-book'} ? ' active'">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="9 11 12 14 22 4"></polyline>
                 <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
@@ -139,14 +139,14 @@
             </a>
             <div class="submenu" id="submenu-user-download-center"
                  th:classappend="${activeSubmenu == 'contents' or activeSubmenu == 'video'} ? ' open'">
-                <a th:href="@{/user/user/download-center/contents}" class="submenu-item"
+                <a th:href="@{/user/content/list}" class="submenu-item"
                    th:classappend="${activeSubmenu == 'contents'} ? ' active'">Contents</a>
-                <a th:href="@{/user/user/download-center/video-tutorial}" class="submenu-item"
+                <a th:href="@{/user/videotutorial}" class="submenu-item"
                    th:classappend="${activeSubmenu == 'video'} ? ' active'">Video Tutorial</a>
             </div>
         </div>
 
-        <a th:href="@{/user/user/attendance}" class="menu-item" th:classappend="${activeMenu == 'attendance'} ? ' active'">
+        <a th:href="@{/user/attendance}" class="menu-item" th:classappend="${activeMenu == 'attendance'} ? ' active'">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="3" y="4" width="18" height="18" rx="2"></rect>
                 <line x1="16" y1="2" x2="16" y2="6"></line>
@@ -170,35 +170,14 @@
             </a>
             <div class="submenu" id="submenu-user-cbse-exam"
                  th:classappend="${activeSubmenu == 'cbse-schedule' or activeSubmenu == 'cbse-result'} ? ' open'">
-                <a th:href="@{/user/user/cbse-exam/schedule}" class="submenu-item"
+                <a th:href="@{/user/cbse/exam/timetable}" class="submenu-item"
                    th:classappend="${activeSubmenu == 'cbse-schedule'} ? ' active'">Exam Schedule</a>
-                <a th:href="@{/user/user/cbse-exam/result}" class="submenu-item"
+                <a th:href="@{/user/cbse/exam/result}" class="submenu-item"
                    th:classappend="${activeSubmenu == 'cbse-result'} ? ' active'">Exam Result</a>
             </div>
         </div>
 
-        <div class="menu-item-wrapper">
-            <a href="#" class="menu-item menu-item-expandable" data-submenu="user-examinations"
-               th:classappend="${activeMenu == 'examinations'} ? ' active expanded'">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                </svg>
-                <span>Examinations</span>
-                <svg class="menu-caret" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
-            </a>
-            <div class="submenu" id="submenu-user-examinations"
-                 th:classappend="${activeSubmenu == 'exam-schedule' or activeSubmenu == 'exam-result'} ? ' open'">
-                <a th:href="@{/user/user/examinations/schedule}" class="submenu-item"
-                   th:classappend="${activeSubmenu == 'exam-schedule'} ? ' active'">Exam Schedule</a>
-                <a th:href="@{/user/user/examinations/result}" class="submenu-item"
-                   th:classappend="${activeSubmenu == 'exam-result'} ? ' active'">Exam Result</a>
-            </div>
-        </div>
-
-        <a th:href="@{/user/user/notice-board}" class="menu-item user-menu-badge-item" th:classappend="${activeMenu == 'notice-board'} ? ' active'">
+        <a th:href="@{/user/notification}" class="menu-item user-menu-badge-item" th:classappend="${activeMenu == 'notice-board'} ? ' active'">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
                 <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
@@ -207,7 +186,7 @@
             <span class="sidebar-menu-badge" th:text="${noticeCount}">26</span>
         </a>
 
-        <a th:href="@{/user/user/teacher-review}" class="menu-item" th:classappend="${activeMenu == 'teacher-review'} ? ' active'">
+        <a th:href="@{/user/teacher}" class="menu-item" th:classappend="${activeMenu == 'teacher-review'} ? ' active'">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
             </svg>
@@ -228,14 +207,14 @@
             </a>
             <div class="submenu" id="submenu-user-library"
                  th:classappend="${activeSubmenu == 'books' or activeSubmenu == 'issued'} ? ' open'">
-                <a th:href="@{/user/user/library/books}" class="submenu-item"
+                <a th:href="@{/user/book}" class="submenu-item"
                    th:classappend="${activeSubmenu == 'books'} ? ' active'">Book List</a>
-                <a th:href="@{/user/user/library/issued}" class="submenu-item"
+                <a th:href="@{/user/book/issue}" class="submenu-item"
                    th:classappend="${activeSubmenu == 'issued'} ? ' active'">Book Issued</a>
             </div>
         </div>
 
-        <a th:href="@{/user/user/transport}" class="menu-item" th:classappend="${activeMenu == 'transport'} ? ' active'">
+        <a th:href="@{/user/route}" class="menu-item" th:classappend="${activeMenu == 'transport'} ? ' active'">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="1" y="3" width="15" height="13"></rect>
                 <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
@@ -245,7 +224,7 @@
             <span>Transport Routes</span>
         </a>
 
-        <a th:href="@{/user/user/hostel}" class="menu-item" th:classappend="${activeMenu == 'hostel'} ? ' active'">
+        <a th:href="@{/user/hostelroom}" class="menu-item" th:classappend="${activeMenu == 'hostel'} ? ' active'">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M3 21h18"></path>
                 <path d="M5 21V7l8-4v18"></path>

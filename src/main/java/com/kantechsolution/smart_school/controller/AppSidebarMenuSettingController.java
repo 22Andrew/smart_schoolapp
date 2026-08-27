@@ -1,8 +1,10 @@
 package com.kantechsolution.smart_school.controller;
 
 import com.kantechsolution.smart_school.service.AppSidebarMenuSettingService;
+import com.kantechsolution.smart_school.service.RoleSidebarMenuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +18,7 @@ import java.util.Map;
 public class AppSidebarMenuSettingController {
 
     private final AppSidebarMenuSettingService appSidebarMenuSettingService;
+    private final RoleSidebarMenuService roleSidebarMenuService;
 
     @GetMapping({"/admin/sidemenu", "/admin/sidemenu/", "/admin/sidemenu/index"})
     public String page() {
@@ -24,8 +27,9 @@ public class AppSidebarMenuSettingController {
 
     @GetMapping("/api/sidebar-menu-settings")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> getSettings() {
-        return ResponseEntity.ok(appSidebarMenuSettingService.getSettings());
+    public ResponseEntity<Map<String, Object>> getSettings(Authentication authentication) {
+        Map<String, Object> settings = appSidebarMenuSettingService.getSettings();
+        return ResponseEntity.ok(roleSidebarMenuService.filterForRole(settings, authentication));
     }
 
     @PutMapping("/api/sidebar-menu-settings")
