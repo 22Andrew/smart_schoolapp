@@ -78,9 +78,7 @@ public class RoleSidebarMenuService {
 
             "certificate",
 
-            "reports",
-
-            "system-setting"
+            "reports"
 
     );
 
@@ -106,25 +104,25 @@ public class RoleSidebarMenuService {
 
                     "assign-incident", "incidents", "reports", "setting")),
 
-            Map.entry("multi-branch", Set.of("overview", "report")),
+            Map.entry("multi-branch", Set.of("overview")),
 
             Map.entry("gmeet-live-classes", Set.of(
 
-                    "live-classes", "live-meeting", "live-classes-report", "live-meeting-report")),
+                    "live-classes", "live-meeting", "live-classes-report", "live-meeting-report", "setting")),
 
             Map.entry("zoom-live-classes", Set.of(
 
-                    "live-classes", "live-meeting", "live-classes-report", "live-meeting-report")),
+                    "live-meeting", "live-classes", "live-classes-report", "live-meeting-report", "setting")),
 
             Map.entry("cbse-examination", Set.of(
 
-                    "exam", "exam-schedule", "print-marksheet", "assign-observation", "admit-card", "reports")),
+                    "exam", "exam-schedule", "print-marksheet", "template", "assign-observation", "reports", "setting")),
 
             Map.entry("examinations", Set.of(
 
-                    "exam-group", "exam-schedule", "exam-result", "print-admit-card",
+                    "exam-group", "exam-result", "design-admit-card", "print-admit-card",
 
-                    "print-marksheet", "marks-grade", "marks-division")),
+                    "design-marksheet", "print-marksheet", "marks-grade")),
 
             Map.entry("attendance", Set.of(
 
@@ -136,37 +134,37 @@ public class RoleSidebarMenuService {
 
                     "class-timetable", "teachers-timetable", "assign-class-teacher",
 
-                    "subject-group", "subjects")),
+                    "subject-group", "subjects", "class", "sections")),
 
             Map.entry("lesson-plan", Set.of(
 
-                    "copy-old-lessons", "manage-lesson-plan", "manage-syllabus-status", "lesson", "topic")),
+                    "manage-lesson-plan", "manage-syllabus-status", "lesson", "topic")),
 
             Map.entry("human-resource", Set.of(
 
-                    "staff-attendance", "apply-leave", "teachers-rating")),
+                    "staff-directory", "apply-leave")),
 
-            Map.entry("communicate", Set.of("notice-board")),
+            Map.entry("communicate", Set.of(
+
+                    "notice-board", "send-email", "send-sms", "email-sms-log")),
 
             Map.entry("download-center", Set.of(
 
-                    "upload-share-content", "content-share-list", "video-tutorial")),
+                    "upload-share-content", "content-share-list", "video-tutorial", "content-type")),
 
             Map.entry("homework", Set.of("add-homework", "daily-assignment")),
 
             Map.entry("certificate", Set.of(
 
-                    "transfer-certificate", "student-certificate", "generate-certificate",
-
-                    "student-id-card", "generate-id-card", "staff-id-card", "generate-staff-id-card")),
+                    "staff-id-card", "generate-staff-id-card")),
 
             Map.entry("reports", Set.of(
 
                     "student-information", "attendance", "examinations",
 
-                    "online-examinations", "lesson-plan", "homework")),
+                    "online-examinations", "lesson-plan", "homework",
 
-            Map.entry("system-setting", Set.of("general-setting"))
+                    "transport", "hostel", "alumni"))
 
     );
 
