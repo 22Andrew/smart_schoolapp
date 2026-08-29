@@ -117,6 +117,8 @@ if (typeof window.applyAppBranding !== 'function') {
 
 // Initialize Dashboard Charts
 document.addEventListener('DOMContentLoaded', function() {
+    applyStaffSessionContext();
+
     // Chart.js default configuration (only if Chart.js is loaded)
     if (typeof Chart !== 'undefined') {
         Chart.defaults.font.family = 'Poppins, sans-serif';
@@ -134,23 +136,68 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Dashboard chart data from server (accountant layout)
+    const chartData = window.dashboardChartData || {};
+    const incomePalette = ['#48bb78', '#f6ad55', '#4299e1', '#38b2ac', '#667eea', '#ed8936'];
+    const expensePalette = ['#9f7aea', '#4299e1', '#f6ad55', '#805ad5', '#dd6b20', '#718096'];
+
+    function pickColors(count, palette) {
+        const colors = [];
+        for (let i = 0; i < count; i++) {
+            colors.push(palette[i % palette.length]);
+        }
+        return colors;
+    }
+
+    function renderChartLegend(containerId, labels, colors) {
+        const container = document.getElementById(containerId);
+        if (!container || !Array.isArray(labels)) {
+            return;
+        }
+        container.innerHTML = '';
+        labels.forEach(function (label, index) {
+            const item = document.createElement('div');
+            item.className = 'legend-item';
+            item.innerHTML = '<span class="legend-color" style="background: ' + (colors[index] || '#718096') + ';"></span><span>' + label + '</span>';
+            container.appendChild(item);
+        });
+    }
+
+    function semiDoughnutOptions() {
+        return {
+            responsive: true,
+            maintainAspectRatio: false,
+            rotation: -90,
+            circumference: 180,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            cutout: '65%'
+        };
+    }
+
     // Fees Collection Bar Chart
     const feesCtx = document.getElementById('feesChart');
     if (feesCtx && typeof Chart !== 'undefined') {
+        const dayLabels = chartData.dayLabels || ['01', '02', '03', '04', '05'];
+        const dailyFees = chartData.dailyFees || [];
+        const dailyExpenses = chartData.dailyExpenses || [];
         new Chart(feesCtx, {
             type: 'bar',
             data: {
-                labels: ['05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'],
+                labels: dayLabels,
                 datasets: [{
-                    label: 'Main Menu Navigation',
-                    data: [0, 0, 0, 0, 0, 0, 0, 8000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2000, 0, 2000, 0, 0, 0, 0],
+                    label: 'Fees Collection',
+                    data: dailyFees.length ? dailyFees : dayLabels.map(function () { return 0; }),
                     backgroundColor: '#48bb78',
-                    borderRadius: 4
+                    borderRadius: 2
                 }, {
-                    label: 'Currently Selected Session',
-                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4000, 0, 0, 0, 0, 0],
-                    backgroundColor: '#f6ad55',
-                    borderRadius: 4
+                    label: 'Expenses',
+                    data: dailyExpenses.length ? dailyExpenses : dayLabels.map(function () { return 0; }),
+                    backgroundColor: '#f687b3',
+                    borderRadius: 2
                 }]
             },
             options: {
@@ -169,7 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         },
                         ticks: {
                             callback: function(value) {
-                                return window.formatCurrency(value);
+                                return window.formatCurrency ? window.formatCurrency(value) : value;
                             }
                         }
                     },
@@ -183,87 +230,80 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Students Present Today Donut Chart
+    // Income semi-doughnut chart
     const studentsPresentCtx = document.getElementById('studentsPresentChart');
     if (studentsPresentCtx && typeof Chart !== 'undefined') {
+        const incomeLabels = chartData.incomeLabels || ['Donation', 'Rent', 'Miscellaneous'];
+        const incomeValues = chartData.incomeValues || incomeLabels.map(function () { return 0; });
+        const incomeColors = pickColors(incomeLabels.length, incomePalette);
+        renderChartLegend('incomeChartLegend', incomeLabels, incomeColors);
         new Chart(studentsPresentCtx, {
             type: 'doughnut',
             data: {
-                labels: ['Donation', 'Rent', 'Miscellaneous'],
+                labels: incomeLabels,
                 datasets: [{
-                    data: [35, 45, 20],
-                    backgroundColor: ['#48bb78', '#f6ad55', '#4299e1'],
+                    data: incomeValues,
+                    backgroundColor: incomeColors,
                     borderWidth: 0
                 }]
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                },
-                cutout: '70%'
-            }
+            options: semiDoughnutOptions()
         });
     }
 
-    // Expense Donut Chart
+    // Expense semi-doughnut chart
     const expenseCtx = document.getElementById('expenseChart');
     if (expenseCtx && typeof Chart !== 'undefined') {
+        const expenseLabels = chartData.expenseLabels || ['Stationery Purchase', 'Telephone Bill', 'Miscellaneous'];
+        const expenseValues = chartData.expenseValues || expenseLabels.map(function () { return 0; });
+        const expenseColors = pickColors(expenseLabels.length, expensePalette);
+        renderChartLegend('expenseChartLegend', expenseLabels, expenseColors);
         new Chart(expenseCtx, {
             type: 'doughnut',
             data: {
-                labels: ['Electricity Bill', 'Miscellaneous', 'Telephone Bill'],
+                labels: expenseLabels,
                 datasets: [{
-                    data: [40, 35, 25],
-                    backgroundColor: ['#9f7aea', '#4299e1', '#f6ad55'],
+                    data: expenseValues,
+                    backgroundColor: expenseColors,
                     borderWidth: 0
                 }]
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                },
-                cutout: '70%'
-            }
+            options: semiDoughnutOptions()
         });
     }
 
     // Fees Collection Year Chart (Line)
     const feesYearCtx = document.getElementById('feesCollectionYearChart');
     if (feesYearCtx && typeof Chart !== 'undefined') {
+        const sessionMonths = chartData.sessionMonths || ['April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December', 'January', 'February', 'March'];
+        const sessionFees = chartData.sessionFees || sessionMonths.map(function () { return 0; });
+        const sessionExpenses = chartData.sessionExpenses || sessionMonths.map(function () { return 0; });
         new Chart(feesYearCtx, {
             type: 'line',
             data: {
-                labels: ['April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December', 'January', 'February', 'March'],
+                labels: sessionMonths,
                 datasets: [{
                     label: 'Fees Collection',
-                    data: [0, 3000, 0, 0, 5000, 0, 0, 0, 9000, 0, 0, 0],
-                    borderColor: '#4299e1',
-                    backgroundColor: 'rgba(66, 153, 225, 0.1)',
+                    data: sessionFees,
+                    borderColor: '#48bb78',
+                    backgroundColor: 'rgba(72, 187, 120, 0.12)',
                     fill: true,
-                    tension: 0.4,
-                    pointBackgroundColor: '#4299e1',
+                    tension: 0.35,
+                    pointBackgroundColor: '#48bb78',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
-                    pointRadius: 5
+                    pointRadius: 4
                 }, {
                     label: 'Expenses',
-                    data: [0, 0, 0, 0, 0, 0, 0, 0, 420, 0, 0, 0],
-                    borderColor: '#f6ad55',
-                    backgroundColor: 'rgba(246, 173, 85, 0.1)',
+                    data: sessionExpenses,
+                    borderColor: '#e53e3e',
+                    backgroundColor: 'rgba(229, 62, 62, 0.08)',
                     fill: true,
-                    tension: 0.4,
-                    pointBackgroundColor: '#f6ad55',
+                    tension: 0.35,
+                    pointBackgroundColor: '#e53e3e',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
-                    pointRadius: 5
+                    pointRadius: 4
                 }]
             },
             options: {
@@ -275,7 +315,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         position: 'top',
                         labels: {
                             usePointStyle: true,
-                            padding: 20
+                            padding: 16
                         }
                     }
                 },
@@ -287,7 +327,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         },
                         ticks: {
                             callback: function(value) {
-                                return window.formatCurrency(value);
+                                return window.formatCurrency ? window.formatCurrency(value) : value;
                             }
                         }
                     },
@@ -1507,8 +1547,69 @@ document.addEventListener('DOMContentLoaded', function() {
 
     window.applySidebarMenuSettings = applySidebarMenuSettings;
 
+    function applyStaffSessionContext() {
+        const ctx = document.getElementById('staffSessionContext');
+        if (!ctx) {
+            return;
+        }
+
+        const role = ctx.getAttribute('data-role') || '';
+        const name = ctx.getAttribute('data-name') || '';
+        const dashboardUrl = ctx.getAttribute('data-dashboard') || '';
+        const roleSidebar = ctx.getAttribute('data-role-sidebar') === 'true';
+
+        if (roleSidebar) {
+            document.documentElement.setAttribute('data-role-sidebar', 'true');
+        }
+
+        if (role) {
+            document.querySelectorAll('.profile-role').forEach(function (el) {
+                el.textContent = role;
+            });
+        }
+
+        if (name) {
+            document.querySelectorAll('.profile-name').forEach(function (el) {
+                el.textContent = name;
+            });
+            document.querySelectorAll('.profile-avatar img').forEach(function (img) {
+                img.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(name) + '&background=3182ce&color=fff&size=80';
+            });
+        }
+
+        if (dashboardUrl) {
+            document.querySelectorAll('.brand-badge').forEach(function (link) {
+                link.setAttribute('href', dashboardUrl);
+            });
+        }
+
+        const sidebarSession = document.querySelector('.sidebar-session-value');
+        if (sidebarSession && sidebarSession.textContent) {
+            document.querySelectorAll('.session-value').forEach(function (el) {
+                el.textContent = sidebarSession.textContent;
+            });
+        }
+
+        if (roleSidebar) {
+            document.body.classList.remove('teacher-dashboard-page', 'accountant-dashboard-page', 'receptionist-dashboard-page');
+            if (role === 'Teacher') {
+                document.body.classList.add('teacher-dashboard-page');
+            } else if (role === 'Accountant') {
+                document.body.classList.add('accountant-dashboard-page');
+            } else if (role === 'Receptionist') {
+                document.body.classList.add('receptionist-dashboard-page');
+            }
+        }
+    }
+
+    function isRoleBasedSidebarActive() {
+        return document.documentElement.getAttribute('data-role-sidebar') === 'true';
+    }
+
+    window.applyStaffSessionContext = applyStaffSessionContext;
+
     fetchSidebarMenuSettings().then(function (settings) {
-        if (settings) {
+        if (settings && !isRoleBasedSidebarActive()) {
             applySidebarMenuSettings(settings);
         }
     });

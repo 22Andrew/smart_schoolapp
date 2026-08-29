@@ -69,6 +69,11 @@ public class AdmissionEnquiry extends BaseEntity {
 
     public enum EnquiryStatus {
         ACTIVE,
+        WON,
+        PASSIVE,
+        LOST,
+        DEAD,
+        /** @deprecated use PASSIVE */
         INACTIVE
     }
 }

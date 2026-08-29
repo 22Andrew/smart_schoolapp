@@ -399,6 +399,7 @@ com\kantechsolution\smart_school\repository\BackupSettingRepository.class
 com\kantechsolution\smart_school\repository\PrintHeaderFooterRepository.class
 com\kantechsolution\smart_school\service\UserPanelConferenceService.class
 com\kantechsolution\smart_school\controller\UserHostelRoomController.class
+com\kantechsolution\smart_school\service\AdminDashboardService$1.class
 com\kantechsolution\smart_school\repository\WhatsappConfigRepository.class
 com\kantechsolution\smart_school\model\AppModule$AppModuleBuilder.class
 com\kantechsolution\smart_school\service\StaffTeacherRatingService$SeedRating.class

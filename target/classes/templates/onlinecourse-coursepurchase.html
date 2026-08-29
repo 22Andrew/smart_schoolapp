@@ -149,33 +149,33 @@
         <main class="main-content onlinecourse-report-page">
             <div class="report-panel">
                 <h2 class="panel-title">Online Course Report</h2>
-                <div class="report-nav-grid">
+                <div class="report-nav-grid" th:classappend="${accountantSidebar} ? ' report-nav-grid-accountant' : ''">
                     <div class="report-nav-col">
                         <a href="/onlinecourse/coursereport/coursepurchase" class="report-nav-item" th:classappend="${reportKey == 'coursepurchase'} ? ' active' : ''">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                             <span>Student Course Purchase Report</span>
                         </a>
-                        <a href="/onlinecourse/coursereport/coursecomplete" class="report-nav-item" th:classappend="${reportKey == 'coursecomplete'} ? ' active' : ''">
+                        <a href="/onlinecourse/coursereport/coursecomplete" class="report-nav-item" th:if="${!accountantSidebar}" th:classappend="${reportKey == 'coursecomplete'} ? ' active' : ''">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                             <span>Course Complete Report</span>
                         </a>
-                        <a href="/onlinecourse/coursereport/courseassignment" class="report-nav-item" th:classappend="${reportKey == 'courseassignment'} ? ' active' : ''">
+                        <a href="/onlinecourse/coursereport/courseassignment" class="report-nav-item" th:if="${!accountantSidebar}" th:classappend="${reportKey == 'courseassignment'} ? ' active' : ''">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                             <span>Course Assignment Report</span>
                         </a>
-                        <a href="/onlinecourse/coursereport/courseexamattempt" class="report-nav-item" th:classappend="${reportKey == 'courseexamattempt'} ? ' active' : ''">
+                        <a href="/onlinecourse/coursereport/courseexamattempt" class="report-nav-item" th:if="${!accountantSidebar}" th:classappend="${reportKey == 'courseexamattempt'} ? ' active' : ''">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                             <span>Course Exam Attempt Report</span>
-                        </a>
-                    </div>
-                    <div class="report-nav-col">
-                        <a href="/onlinecourse/coursereport/coursesellcount" class="report-nav-item" th:classappend="${reportKey == 'coursesellcount'} ? ' active' : ''">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-                            <span>Course Sell Count Report</span>
                         </a>
                         <a href="/onlinecourse/coursereport/courserating" class="report-nav-item" th:classappend="${reportKey == 'courserating'} ? ' active' : ''">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                             <span>Course Rating Report</span>
+                        </a>
+                    </div>
+                    <div class="report-nav-col" th:if="${!accountantSidebar}">
+                        <a href="/onlinecourse/coursereport/coursesellcount" class="report-nav-item" th:classappend="${reportKey == 'coursesellcount'} ? ' active' : ''">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                            <span>Course Sell Count Report</span>
                         </a>
                         <a href="/onlinecourse/coursereport/courseexamresult" class="report-nav-item" th:classappend="${reportKey == 'courseexamresult'} ? ' active' : ''">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
@@ -183,7 +183,7 @@
                         </a>
                     </div>
                     <div class="report-nav-col">
-                        <a href="/onlinecourse/coursereport/coursetrending" class="report-nav-item" th:classappend="${reportKey == 'coursetrending'} ? ' active' : ''">
+                        <a href="/onlinecourse/coursereport/coursetrending" class="report-nav-item" th:if="${!accountantSidebar}" th:classappend="${reportKey == 'coursetrending'} ? ' active' : ''">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                             <span>Course Trending Report</span>
                         </a>
@@ -191,7 +191,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                             <span>Guest Report</span>
                         </a>
-                        <a href="/onlinecourse/coursereport/courseexam" class="report-nav-item" th:classappend="${reportKey == 'courseexam'} ? ' active' : ''">
+                        <a href="/onlinecourse/coursereport/courseexam" class="report-nav-item" th:if="${!accountantSidebar}" th:classappend="${reportKey == 'courseexam'} ? ' active' : ''">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                             <span>Course Exam Report</span>
                         </a>

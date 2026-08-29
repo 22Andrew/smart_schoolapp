@@ -62,6 +62,12 @@
     let staffTimelineSelectedFile = null;
     let staffTimelineEventsBound = false;
 
+    let staffDirectoryContext = {
+        restricted: false,
+        currentStaffMemberId: null,
+        currentStaffLoginEmail: null
+    };
+
     const staffProfileModal = document.getElementById('staffProfileModal');
     const staffProfileOverlay = document.getElementById('staffProfileOverlay');
     const staffProfileCloseBtn = document.getElementById('staffProfileCloseBtn');
@@ -79,11 +85,231 @@
 
     let activePayslipDetail = null;
 
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', () => {
+        init().catch((error) => console.error('Staff directory init failed', error));
+    });
 
-    function init() {
-        bindEvents();
-        loadFormOptions().then(handleInitialRoute);
+    async function init() {
+        applyDirectoryContext(readStaffDirectoryContext());
+        try {
+            bindEvents();
+        } catch (error) {
+            console.error('Staff directory event binding failed', error);
+        }
+        await loadFormOptions();
+        await handleInitialRoute();
+        ensureStaffDirectoryContext()
+            .then(() => {
+                applyStaffDirectoryRestrictions();
+                if (staffRecords.length) {
+                    renderStaff();
+                }
+            })
+            .catch(() => {
+                applyStaffDirectoryRestrictions();
+            });
+    }
+
+    async function ensureStaffDirectoryContext() {
+        const endpoints = ['/api/staff/session/context', '/api/staff/directory-context'];
+        for (const endpoint of endpoints) {
+            try {
+                const response = await fetch(endpoint);
+                if (!response.ok) {
+                    continue;
+                }
+                const contentType = response.headers.get('content-type') || '';
+                if (!contentType.includes('application/json')) {
+                    continue;
+                }
+                applyDirectoryContext(await response.json());
+                return;
+            } catch (error) {
+                // Try the next endpoint or fall back to page context.
+            }
+        }
+
+        applyDirectoryContext(readStaffDirectoryContext());
+    }
+
+    function applyDirectoryContext(data) {
+        if (!data || typeof data !== 'object') {
+            return;
+        }
+
+        staffDirectoryContext.restricted = data.restricted === true;
+        staffDirectoryContext.currentStaffMemberId = data.currentStaffMemberId != null && data.currentStaffMemberId !== 'null'
+            ? String(data.currentStaffMemberId)
+            : null;
+        staffDirectoryContext.currentStaffLoginEmail = data.loginEmail || staffDirectoryContext.currentStaffLoginEmail || null;
+
+        if (staffDirectoryContext.restricted) {
+            document.documentElement.setAttribute('data-receptionist-staff-directory', 'true');
+            if (document.body) {
+                document.body.classList.add('receptionist-staff-directory-mode');
+            }
+        }
+    }
+
+    function readStaffDirectoryContext() {
+        const body = document.body;
+        if (body) {
+            const receptionistFlag = body.dataset.receptionistStaff;
+            if (receptionistFlag === 'true' || receptionistFlag === true) {
+                document.documentElement.setAttribute('data-receptionist-staff-directory', 'true');
+                body.classList.add('receptionist-staff-directory-mode');
+                const memberId = body.dataset.staffMemberId;
+                return {
+                    restricted: true,
+                    currentStaffMemberId: memberId && memberId !== 'null' ? String(memberId) : null,
+                    loginEmail: body.dataset.loginEmail || 'receptionist@gmail.com'
+                };
+            }
+        }
+
+        const fromWindow = window.staffDirectoryContext;
+        if (fromWindow && typeof fromWindow === 'object') {
+            const currentStaffMemberId = fromWindow.currentStaffMemberId;
+            const restricted = fromWindow.restricted === true;
+            if (restricted) {
+                document.documentElement.setAttribute('data-receptionist-staff-directory', 'true');
+                if (document.body) {
+                    document.body.classList.add('receptionist-staff-directory-mode');
+                }
+            }
+            return {
+                restricted: restricted,
+                currentStaffMemberId: currentStaffMemberId != null && currentStaffMemberId !== 'null'
+                    ? String(currentStaffMemberId)
+                    : null,
+                loginEmail: fromWindow.loginEmail || null
+            };
+        }
+
+        const sessionEl = document.getElementById('staffSessionContext');
+        if (sessionEl && /receptionist/i.test(sessionEl.dataset.role || '')) {
+            document.documentElement.setAttribute('data-receptionist-staff-directory', 'true');
+            if (document.body) {
+                document.body.classList.add('receptionist-staff-directory-mode');
+            }
+            return {
+                restricted: true,
+                currentStaffMemberId: null,
+                loginEmail: 'receptionist@gmail.com'
+            };
+        }
+
+        return { restricted: false, currentStaffMemberId: null, loginEmail: null };
+    }
+
+    function resolveOwnStaffFromRecords() {
+        if (!staffRecords.length) {
+            return null;
+        }
+
+        if (staffDirectoryContext.currentStaffMemberId) {
+            const byId = staffRecords.find((staff) => String(staff.id) === String(staffDirectoryContext.currentStaffMemberId));
+            if (byId) {
+                return byId;
+            }
+        }
+
+        const loginEmail = (staffDirectoryContext.currentStaffLoginEmail || 'receptionist@gmail.com').trim().toLowerCase();
+        const byEmail = staffRecords.find((staff) => staff.email && staff.email.trim().toLowerCase() === loginEmail);
+        if (byEmail) {
+            return byEmail;
+        }
+
+        const byStaffId = staffRecords.find((staff) => String(staff.staffId) === '9006');
+        if (byStaffId) {
+            return byStaffId;
+        }
+
+        const byName = staffRecords.find((staff) => (staff.fullName || '').trim().toLowerCase() === 'receptionist user');
+        if (byName) {
+            return byName;
+        }
+
+        const receptionists = staffRecords.filter((staff) => {
+            const roles = Array.isArray(staff.roles) ? staff.roles : (staff.role ? [staff.role] : []);
+            return roles.some((role) => /^receptionist$/i.test(String(role || '').trim()));
+        });
+        if (receptionists.length === 1) {
+            return receptionists[0];
+        }
+
+        return receptionists.find((staff) => (staff.fullName || '').toLowerCase().includes('receptionist')) || null;
+    }
+
+    function isOwnStaffRecord(staff) {
+        if (!staff) {
+            return false;
+        }
+
+        if (!isReceptionistStaffDirectoryMode()) {
+            return staff.canView === true && staff.canEdit === false;
+        }
+
+        const ownStaff = resolveOwnStaffFromRecords();
+        if (ownStaff && staff.id != null) {
+            return String(staff.id) === String(ownStaff.id);
+        }
+
+        if (staffDirectoryContext.currentStaffMemberId && staff.id != null
+            && String(staff.id) === String(staffDirectoryContext.currentStaffMemberId)) {
+            return true;
+        }
+
+        if (staffDirectoryContext.currentStaffLoginEmail && staff.email) {
+            return staff.email.trim().toLowerCase() === staffDirectoryContext.currentStaffLoginEmail.trim().toLowerCase();
+        }
+
+        if (String(staff.staffId) === '9006') {
+            return true;
+        }
+
+        return (staff.fullName || '').trim().toLowerCase() === 'receptionist user';
+    }
+
+    function getStaffActionPermissions(staff) {
+        if (isReceptionistStaffDirectoryMode()) {
+            const isSelf = isOwnStaffRecord(staff);
+            return { view: isSelf, edit: false };
+        }
+
+        if (staff && (staff.canView !== undefined || staff.canEdit !== undefined)) {
+            return {
+                view: staff.canView === true,
+                edit: staff.canEdit === true
+            };
+        }
+
+        return { view: true, edit: true };
+    }
+
+    function isReceptionistStaffDirectoryMode() {
+        if (staffDirectoryContext.restricted) {
+            return true;
+        }
+        if (document.documentElement.getAttribute('data-receptionist-staff-directory') === 'true') {
+            return true;
+        }
+        if (document.body && document.body.classList.contains('receptionist-staff-directory-mode')) {
+            return true;
+        }
+        const sessionEl = document.getElementById('staffSessionContext');
+        return !!(sessionEl && /receptionist/i.test(sessionEl.dataset.role || ''));
+    }
+
+    function applyStaffDirectoryRestrictions() {
+        if (!isReceptionistStaffDirectoryMode() || !addStaffBtn) {
+            return;
+        }
+        addStaffBtn.hidden = true;
+    }
+
+    function canOpenStaffProfile(staff) {
+        return getStaffActionPermissions(staff).view;
     }
 
     async function handleInitialRoute() {
@@ -109,26 +335,32 @@
         return /^\/staff\/add\/?$/.test(window.location.pathname);
     }
 
+    function safeBind(element, eventName, handler) {
+        if (element) {
+            element.addEventListener(eventName, handler);
+        }
+    }
+
     function bindEvents() {
-        addStaffBtn.addEventListener('click', () => {
+        safeBind(addStaffBtn, 'click', () => {
             window.location.href = '/staff/add';
         });
-        backToDirectoryBtn.addEventListener('click', () => {
+        safeBind(backToDirectoryBtn, 'click', () => {
             window.location.href = '/staff';
         });
-        roleSearchBtn.addEventListener('click', () => searchStaff('role'));
-        keywordSearchBtn.addEventListener('click', () => searchStaff('keyword'));
-        keywordFilter.addEventListener('keydown', (event) => {
+        safeBind(roleSearchBtn, 'click', () => searchStaff('role'));
+        safeBind(keywordSearchBtn, 'click', () => searchStaff('keyword'));
+        safeBind(keywordFilter, 'keydown', (event) => {
             if (event.key === 'Enter') {
                 event.preventDefault();
                 searchStaff('keyword');
             }
         });
-        cardViewBtn.addEventListener('click', () => setViewMode('card'));
-        listViewBtn.addEventListener('click', () => setViewMode('list'));
-        staffForm.addEventListener('submit', saveStaff);
-        staffPhoto.addEventListener('change', updatePhotoLabel);
-        staffMoreDetailsToggle.addEventListener('click', toggleMoreDetails);
+        safeBind(cardViewBtn, 'click', () => setViewMode('card'));
+        safeBind(listViewBtn, 'click', () => setViewMode('list'));
+        safeBind(staffForm, 'submit', saveStaff);
+        safeBind(staffPhoto, 'change', updatePhotoLabel);
+        safeBind(staffMoreDetailsToggle, 'click', toggleMoreDetails);
         documentFields.forEach(({ inputId, labelId }) => {
             const input = document.getElementById(inputId);
             const label = document.getElementById(labelId);
@@ -185,7 +417,7 @@
             });
         });
 
-        staffListWrap.addEventListener('click', (event) => {
+        staffListWrap?.addEventListener('click', (event) => {
             const viewBtn = event.target.closest('.staff-list-view-btn');
             const editBtn = event.target.closest('.staff-list-edit-btn');
             const nameBtn = event.target.closest('.staff-name-link');
@@ -196,8 +428,14 @@
             if (!staff) return;
 
             if (viewBtn || nameBtn) {
+                if (!canOpenStaffProfile(staff)) {
+                    return;
+                }
                 viewStaffMember(staff);
             } else if (editBtn) {
+                if (!getStaffActionPermissions(staff).edit) {
+                    return;
+                }
                 editStaffMember(staff);
             }
         });
@@ -221,7 +459,7 @@
         if (!staffProfileModal || !staffProfileCloseBtn || !staffProfileTabs) return;
 
         staffProfileCloseBtn.addEventListener('click', closeStaffProfileModal);
-        staffProfileOverlay.addEventListener('click', closeStaffProfileModal);
+        staffProfileOverlay?.addEventListener('click', closeStaffProfileModal);
 
         staffProfileTabs.addEventListener('click', (event) => {
             const tabBtn = event.target.closest('.staff-profile-tab');
@@ -1186,6 +1424,62 @@
         }
     }
 
+    function syncReceptionistModeFromStaffRecords() {
+        if (!isReceptionistStaffDirectoryMode()) {
+            return;
+        }
+
+        staffDirectoryContext.restricted = true;
+        const ownRecord = resolveOwnStaffFromRecords();
+        if (ownRecord && ownRecord.id != null) {
+            staffDirectoryContext.currentStaffMemberId = String(ownRecord.id);
+        }
+
+        document.documentElement.setAttribute('data-receptionist-staff-directory', 'true');
+        if (document.body) {
+            document.body.classList.add('receptionist-staff-directory-mode');
+        }
+    }
+
+    function enforceReceptionistStaffActions() {
+        if (!isReceptionistStaffDirectoryMode()) {
+            return;
+        }
+
+        document.querySelectorAll('.staff-card-edit-btn, .staff-list-edit-btn').forEach((button) => {
+            button.remove();
+        });
+
+        const ownStaff = resolveOwnStaffFromRecords();
+        const ownStaffId = ownStaff ? String(ownStaff.id) : null;
+
+        document.querySelectorAll('.staff-card[data-staff-id], tr[data-staff-id]').forEach((row) => {
+            const isOwn = ownStaffId != null && row.dataset.staffId === ownStaffId;
+
+            if (!isOwn) {
+                row.querySelectorAll('.staff-card-view-btn, .staff-list-view-btn').forEach((button) => {
+                    button.remove();
+                });
+                row.querySelector('.staff-card-actions')?.remove();
+                row.querySelector('.staff-list-action-buttons')?.remove();
+
+                const nameLink = row.querySelector('.staff-list-name-btn');
+                if (nameLink) {
+                    const plainName = document.createElement('span');
+                    plainName.className = 'staff-name-text';
+                    plainName.textContent = nameLink.textContent;
+                    nameLink.replaceWith(plainName);
+                }
+                return;
+            }
+
+            row.querySelectorAll('.staff-card-view-btn, .staff-list-view-btn').forEach((button) => {
+                button.classList.add('staff-own-record-action');
+                button.dataset.ownStaff = 'true';
+            });
+        });
+    }
+
     async function loadStaff(role, keyword) {
         try {
             const params = new URLSearchParams();
@@ -1196,11 +1490,22 @@
             if (!response.ok) {
                 throw new Error('Failed to load staff directory');
             }
-            staffRecords = await response.json();
+            const contentType = response.headers.get('content-type') || '';
+            if (!contentType.includes('application/json')) {
+                throw new Error('Failed to load staff directory');
+            }
+            const payload = await response.json();
+            if (!Array.isArray(payload)) {
+                throw new Error('Invalid staff directory response');
+            }
+            staffRecords = payload;
+            syncReceptionistModeFromStaffRecords();
             listCurrentPage = 1;
             renderStaff();
         } catch (error) {
-            showAlert('error', error.message);
+            staffRecords = [];
+            renderStaff();
+            showAlert('error', error.message || 'Failed to load staff directory');
         }
     }
 
@@ -1221,23 +1526,33 @@
 
     function renderStaff() {
         const hasRecords = staffRecords.length > 0;
-        staffNoRecord.hidden = hasRecords;
-        staffCardGrid.hidden = !hasRecords || currentView !== 'card';
-        staffListWrap.hidden = !hasRecords || currentView !== 'list';
+        if (staffNoRecord) {
+            staffNoRecord.hidden = hasRecords;
+        }
+        if (staffCardGrid) {
+            staffCardGrid.hidden = !hasRecords || currentView !== 'card';
+        }
+        if (staffListWrap) {
+            staffListWrap.hidden = !hasRecords || currentView !== 'list';
+        }
 
         if (!hasRecords) {
-            staffCardGrid.innerHTML = '';
-            staffListBody.innerHTML = '';
+            if (staffCardGrid) staffCardGrid.innerHTML = '';
+            if (staffListBody) staffListBody.innerHTML = '';
             return;
         }
 
         if (currentView === 'card') {
-            staffListBody.innerHTML = '';
-            staffCardGrid.innerHTML = staffRecords.map(renderCard).join('');
+            if (staffListBody) staffListBody.innerHTML = '';
+            if (staffCardGrid) {
+                staffCardGrid.innerHTML = staffRecords.map(renderCard).join('');
+            }
         } else {
-            staffCardGrid.innerHTML = '';
+            if (staffCardGrid) staffCardGrid.innerHTML = '';
             renderStaffList();
         }
+
+        enforceReceptionistStaffActions();
     }
 
     function getRoleText(staff) {
@@ -1284,6 +1599,10 @@
     }
 
     function renderStaffList() {
+        if (!staffListBody) {
+            return;
+        }
+
         const filtered = getFilteredListRecords();
         const total = filtered.length;
         const totalPages = Math.max(1, Math.ceil(total / listPageSize) || 1);
@@ -1413,6 +1732,9 @@
     }
 
     function bindCardActions() {
+        if (!staffCardGrid) {
+            return;
+        }
         staffCardGrid.addEventListener('click', (event) => {
             const viewBtn = event.target.closest('.staff-card-view-btn');
             const editBtn = event.target.closest('.staff-card-edit-btn');
@@ -1428,8 +1750,14 @@
             }
 
             if (viewBtn) {
+                if (!canOpenStaffProfile(staff)) {
+                    return;
+                }
                 viewStaffMember(staff);
             } else if (editBtn) {
+                if (!getStaffActionPermissions(staff).edit) {
+                    return;
+                }
                 editStaffMember(staff);
             }
         });
@@ -1444,6 +1772,7 @@
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                     <circle cx="12" cy="7" r="4"></circle>
                </svg>`;
+        const actions = renderStaffCardActions(staff);
 
         return `
             <article class="staff-card" data-staff-id="${escapeHtml(staff.id)}">
@@ -1457,8 +1786,19 @@
                     </div>
                     <div class="staff-role-tags">${roleTags}</div>
                 </div>
-                <div class="staff-card-actions">
-                    <button type="button" class="staff-card-action-btn staff-card-view-btn" title="View">
+                ${actions}
+            </article>
+        `;
+    }
+
+    function renderStaffCardActions(staff) {
+        const permissions = getStaffActionPermissions(staff);
+        if (!permissions.view && !permissions.edit) {
+            return '';
+        }
+
+        const viewButton = permissions.view ? `
+                    <button type="button" class="staff-card-action-btn staff-card-view-btn${permissions.edit ? '' : ' staff-own-record-action'}" title="View"${permissions.edit ? '' : ' data-own-staff="true"'}>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <line x1="8" y1="6" x2="21" y2="6"></line>
                             <line x1="8" y1="12" x2="21" y2="12"></line>
@@ -1467,19 +1807,28 @@
                             <line x1="3" y1="12" x2="3.01" y2="12"></line>
                             <line x1="3" y1="18" x2="3.01" y2="18"></line>
                         </svg>
-                    </button>
+                    </button>` : '';
+        const editButton = permissions.edit ? `
                     <button type="button" class="staff-card-action-btn staff-card-edit-btn" title="Edit">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M12 20h9"></path>
                             <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"></path>
                         </svg>
-                    </button>
+                    </button>` : '';
+
+        return `
+                <div class="staff-card-actions${permissions.edit ? '' : ' staff-own-record-actions'}">
+                    ${viewButton}
+                    ${editButton}
                 </div>
-            </article>
         `;
     }
 
     async function viewStaffMember(staff) {
+        if (!canOpenStaffProfile(staff)) {
+            return;
+        }
+
         let data = staff;
         if (staff.id) {
             try {
@@ -1504,8 +1853,21 @@
         renderProfileSidebar(staff);
         renderProfileTabPanels(staff);
         switchProfileTab('profile');
+        updateProfileHeaderActions(staff);
         staffProfileModal.hidden = false;
         document.body.style.overflow = 'hidden';
+    }
+
+    function updateProfileHeaderActions(staff) {
+        const headerActions = document.querySelector('.staff-profile-header-actions');
+        if (!headerActions) {
+            return;
+        }
+        if (staffDirectoryContext.restricted) {
+            headerActions.hidden = true;
+            return;
+        }
+        headerActions.hidden = false;
     }
 
     function closeStaffProfileModal() {
@@ -2930,20 +3292,33 @@
 
     function renderListRow(staff) {
         const roles = getRoleText(staff);
+        const permissions = getStaffActionPermissions(staff);
+        const nameCell = permissions.view
+            ? `<button type="button" class="staff-name-link staff-list-name-btn">${escapeHtml(staff.fullName || '')}</button>`
+            : `<span class="staff-name-text">${escapeHtml(staff.fullName || '')}</span>`;
+        const actions = renderStaffListActions(staff, permissions);
+
         return `
             <tr data-staff-id="${escapeHtml(staff.id)}">
                 <td>${escapeHtml(staff.staffId || '')}</td>
-                <td>
-                    <button type="button" class="staff-name-link staff-list-name-btn">${escapeHtml(staff.fullName || '')}</button>
-                </td>
+                <td>${nameCell}</td>
                 <td>${escapeHtml(roles)}</td>
                 <td>${escapeHtml(staff.department || '-')}</td>
                 <td>${escapeHtml(staff.designation || '-')}</td>
                 <td>${escapeHtml(staff.phone || '-')}</td>
                 <td>${escapeHtml(staff.panNumber || '-')}</td>
-                <td>
-                    <div class="staff-list-action-buttons">
-                        <button type="button" class="staff-list-action-btn staff-list-view-btn" title="View">
+                <td>${actions}</td>
+            </tr>
+        `;
+    }
+
+    function renderStaffListActions(staff, permissions) {
+        if (!permissions.view && !permissions.edit) {
+            return '';
+        }
+
+        const viewButton = permissions.view ? `
+                        <button type="button" class="staff-list-action-btn staff-list-view-btn${permissions.edit ? '' : ' staff-own-record-action'}" title="View"${permissions.edit ? '' : ' data-own-staff="true"'}>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <line x1="8" y1="6" x2="21" y2="6"></line>
                                 <line x1="8" y1="12" x2="21" y2="12"></line>
@@ -2952,16 +3327,20 @@
                                 <line x1="3" y1="12" x2="3.01" y2="12"></line>
                                 <line x1="3" y1="18" x2="3.01" y2="18"></line>
                             </svg>
-                        </button>
+                        </button>` : '';
+        const editButton = permissions.edit ? `
                         <button type="button" class="staff-list-action-btn staff-list-edit-btn" title="Edit">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M12 20h9"></path>
                                 <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"></path>
                             </svg>
-                        </button>
+                        </button>` : '';
+
+        return `
+                    <div class="staff-list-action-buttons${permissions.edit ? '' : ' staff-own-record-actions'}">
+                        ${viewButton}
+                        ${editButton}
                     </div>
-                </td>
-            </tr>
         `;
     }
 

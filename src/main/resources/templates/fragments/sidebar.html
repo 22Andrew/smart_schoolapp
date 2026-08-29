@@ -2,6 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <body>
 <aside class="sidebar" th:fragment="sidebar">
+            <div id="staffSessionContext" hidden
+                 th:attr="data-role=${staffRole},data-name=${staffUserName},data-dashboard=${staffDashboardUrl},data-role-sidebar=${roleBasedSidebar}"></div>
+            <script th:if="${roleBasedSidebar}" th:inline="javascript">
+                document.documentElement.setAttribute('data-role-sidebar', 'true');
+            </script>
             <div class="sidebar-top">
                 <div class="sidebar-session">
                     <div class="sidebar-session-text" id="sidebarSessionTrigger" role="button" tabindex="0">
@@ -9,7 +14,7 @@
                         <span class="sidebar-session-value" th:text="${currentSession != null ? currentSession : '2026-27'}">2026-27</span>
                     </div>
                     <button class="sidebar-session-edit-btn" type="button" id="sidebarSessionEditBtn" aria-label="Edit current session"
-                            th:if="${!teacherSidebar}">
+                            th:if="${!teacherSidebar and !receptionistSidebar}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M12 20h9"></path>
                             <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
@@ -705,6 +710,78 @@
                     </div>
                 </div>
             </div>
+            <script th:if="${accountantSidebar}" th:inline="javascript">
+                (function applyAccountantSidebarImmediately() {
+                    var allowedMenus = /*[[${accountantSidebarMenus}]]*/ [];
+                    var allowedSubmenus = /*[[${accountantSidebarSubmenus}]]*/ {};
+                    var menuSet = new Set(allowedMenus || []);
+
+                    function slugify(value) {
+                        return String(value || '')
+                            .toLowerCase()
+                            .replace(/[^a-z0-9]+/g, '-')
+                            .replace(/^-|-$/g, '');
+                    }
+
+                    document.querySelectorAll('.sidebar .menu-item-wrapper').forEach(function (wrapper) {
+                        var expandable = wrapper.querySelector('.menu-item-expandable[data-submenu]');
+                        if (!expandable) {
+                            return;
+                        }
+                        var menuSlug = expandable.getAttribute('data-submenu');
+                        if (!menuSet.has(menuSlug)) {
+                            wrapper.style.display = 'none';
+                            return;
+                        }
+                        wrapper.style.display = '';
+                        var submenuEl = wrapper.querySelector('#submenu-' + menuSlug);
+                        if (!submenuEl) {
+                            return;
+                        }
+                        var allowed = new Set((allowedSubmenus && allowedSubmenus[menuSlug]) || []);
+                        submenuEl.querySelectorAll('.submenu-item:not(.submenu-item-expandable)').forEach(function (link) {
+                            var slug = slugify(link.textContent);
+                            link.style.display = allowed.has(slug) ? '' : 'none';
+                        });
+                    });
+                })();
+            </script>
+            <script th:if="${receptionistSidebar}" th:inline="javascript">
+                (function applyReceptionistSidebarImmediately() {
+                    var allowedMenus = /*[[${receptionistSidebarMenus}]]*/ [];
+                    var allowedSubmenus = /*[[${receptionistSidebarSubmenus}]]*/ {};
+                    var menuSet = new Set(allowedMenus || []);
+
+                    function slugify(value) {
+                        return String(value || '')
+                            .toLowerCase()
+                            .replace(/[^a-z0-9]+/g, '-')
+                            .replace(/^-|-$/g, '');
+                    }
+
+                    document.querySelectorAll('.sidebar .menu-item-wrapper').forEach(function (wrapper) {
+                        var expandable = wrapper.querySelector('.menu-item-expandable[data-submenu]');
+                        if (!expandable) {
+                            return;
+                        }
+                        var menuSlug = expandable.getAttribute('data-submenu');
+                        if (!menuSet.has(menuSlug)) {
+                            wrapper.style.display = 'none';
+                            return;
+                        }
+                        wrapper.style.display = '';
+                        var submenuEl = wrapper.querySelector('#submenu-' + menuSlug);
+                        if (!submenuEl) {
+                            return;
+                        }
+                        var allowed = new Set((allowedSubmenus && allowedSubmenus[menuSlug]) || []);
+                        submenuEl.querySelectorAll('.submenu-item:not(.submenu-item-expandable)').forEach(function (link) {
+                            var slug = slugify(link.textContent);
+                            link.style.display = allowed.has(slug) ? '' : 'none';
+                        });
+                    });
+                })();
+            </script>
             <script th:if="${teacherSidebar}" th:inline="javascript">
                 (function applyTeacherSidebarImmediately() {
                     var allowedMenus = /*[[${teacherSidebarMenus}]]*/ [];

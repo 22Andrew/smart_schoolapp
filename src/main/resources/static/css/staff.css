@@ -399,7 +399,7 @@
     height: 30px;
     border: none;
     border-radius: 4px;
-    background: #8b5cf6;
+    background: var(--theme-primary, #8b5cf6);
     color: #ffffff;
     display: inline-flex;
     align-items: center;
@@ -409,12 +409,13 @@
 }
 
 .staff-list-action-btn:hover {
-    background: #7c3aed;
+    background: var(--theme-primary-dark, #7c3aed);
 }
 
 .staff-list-action-btn svg {
     width: 14px;
     height: 14px;
+    stroke: currentColor;
 }
 
 .staff-table-footer {
@@ -2491,4 +2492,31 @@
     text-align: center;
     line-height: 1.4;
     letter-spacing: 0.04em;
+}
+
+/* Receptionist staff directory: hide all actions except own-record view */
+html[data-receptionist-staff-directory="true"] .staff-card-edit-btn,
+html[data-receptionist-staff-directory="true"] .staff-list-edit-btn,
+body.receptionist-staff-directory-mode .staff-card-edit-btn,
+body.receptionist-staff-directory-mode .staff-list-edit-btn {
+    display: none !important;
+}
+
+html[data-receptionist-staff-directory="true"] .staff-card-view-btn:not(.staff-own-record-action),
+html[data-receptionist-staff-directory="true"] .staff-list-view-btn:not(.staff-own-record-action),
+body.receptionist-staff-directory-mode .staff-card-view-btn:not(.staff-own-record-action),
+body.receptionist-staff-directory-mode .staff-list-view-btn:not(.staff-own-record-action) {
+    display: none !important;
+}
+
+html[data-receptionist-staff-directory="true"] .staff-card-actions:not(.staff-own-record-actions),
+html[data-receptionist-staff-directory="true"] .staff-list-action-buttons:not(.staff-own-record-actions),
+body.receptionist-staff-directory-mode .staff-card-actions:not(.staff-own-record-actions),
+body.receptionist-staff-directory-mode .staff-list-action-buttons:not(.staff-own-record-actions) {
+    display: none !important;
+}
+
+html[data-receptionist-staff-directory="true"] .btn-add-staff,
+body.receptionist-staff-directory-mode .btn-add-staff {
+    display: none !important;
 }

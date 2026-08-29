@@ -12,6 +12,8 @@ public interface FeeGroupAssignmentRepository extends JpaRepository<FeeGroupAssi
 
     List<FeeGroupAssignment> findByStudentAdmissionIdAndSessionYear(Long studentAdmissionId, String sessionYear);
 
+    List<FeeGroupAssignment> findBySessionYear(String sessionYear);
+
     void deleteByFeeGroupIdAndSessionYear(Long feeGroupId, String sessionYear);
 
     boolean existsByFeeGroupIdAndStudentAdmissionIdAndSessionYear(Long feeGroupId, Long studentAdmissionId, String sessionYear);

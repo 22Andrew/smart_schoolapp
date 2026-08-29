@@ -358,7 +358,7 @@ public class StaffMemberService implements ApplicationRunner {
                         "Priya", "Sharma", "priya.sharma@school.com", "Female",
                         "9876543215", "Ground Floor, Finance", "ABCDE1239F"),
                 sample("9006", "Receptionist", "Receptionist", "Reception",
-                        "David", "Wilson", "david.wilson@school.com", "Male",
+                        "Receptionist", "User", "receptionist@gmail.com", "Female",
                         "9876543216", "Ground Floor, Reception", "ABCDE1240F"),
                 sample("654", "Teacher", "Teacher", "Academic",
                         "Aman", "Verma", "aman.verma@school.com", "Male",

@@ -1,8 +1,23 @@
 /* Online Course Category Page */
+main.main-content.onlinecourse-category-page {
+    flex: 1 1 auto;
+    min-width: 0;
+    width: 100%;
+    max-width: none;
+    box-sizing: border-box;
+}
+
 .onlinecourse-category-page {
     background: #e8edf2;
     padding: 20px;
     min-height: calc(100vh - 80px);
+}
+
+.onlinecourse-category-page.accountant-category-view-only {
+    padding: 0;
+    min-height: calc(100vh - 56px);
+    display: flex;
+    flex-direction: column;
 }
 
 .category-container {
@@ -11,6 +26,48 @@
     gap: 20px;
     max-width: 1600px;
     margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Full width when Add Category is hidden (accountant) */
+.category-container.category-container-accountant,
+.category-container.category-container-list-only {
+    display: block !important;
+    max-width: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+    gap: 0;
+}
+
+.category-list-panel.category-list-panel-full,
+.onlinecourse-category-page.accountant-category-view-only > .category-list-panel-full {
+    width: 100% !important;
+    max-width: none !important;
+    box-sizing: border-box;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.onlinecourse-category-page.accountant-category-view-only .table-responsive {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+}
+
+.onlinecourse-category-page.accountant-category-view-only .data-table {
+    width: 100%;
+}
+
+.onlinecourse-category-page.accountant-category-view-only .action-cell {
+    display: table-cell;
+    text-align: right;
+}
+
+.onlinecourse-category-page.accountant-category-view-only .table-footer {
+    margin-top: auto;
 }
 
 .add-category-panel,

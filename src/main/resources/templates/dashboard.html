@@ -9,8 +9,9 @@
     <link rel="stylesheet" th:href="@{/css/app-theme.css}">
     <link rel="stylesheet" th:href="@{/css/admin-dashboard.css}">
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <script th:if="${dashboardLayout == 'accountant'}" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
-<body th:classappend="${teacherSidebar} ? ' teacher-dashboard-page' : ''">
+<body th:classappend="${teacherSidebar} ? ' teacher-dashboard-page' : (${accountantSidebar} ? ' accountant-dashboard-page' : (${receptionistSidebar} ? ' receptionist-dashboard-page' : ''))">
     <!-- Top Navigation Bar -->
     <nav class="top-navbar">
         <div class="nav-left">
@@ -46,20 +47,25 @@
                 <span class="session-value" th:text="${currentSession}">2026-27</span>
             </div>
         </div>
-        
+
         <div class="nav-right">
-            <div class="search-container">
+            <div class="search-container" th:if="${!accountantSidebar}">
                 <input type="text" placeholder="Search By Student Name..." class="search-input">
-                <button class="search-btn">
+                <button class="search-btn" type="button">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="11" cy="11" r="8"></circle>
                         <path d="m21 21-4.35-4.35"></path>
                     </svg>
                 </button>
             </div>
-            
+
             <div class="nav-icons">
-                <button class="icon-btn" id="topQuickLinksBtn" type="button" title="Quick Links" aria-label="Quick Links">
+                <!-- Accountant header: US flag, calendar, checklist, notifications, WhatsApp -->
+                <button th:if="${accountantSidebar}" class="icon-btn icon-btn-flag" type="button" title="Language">
+                    <img src="https://flagcdn.com/w20/us.png" alt="English" width="20" height="14">
+                </button>
+
+                <button th:if="${!accountantSidebar}" class="icon-btn" id="topQuickLinksBtn" type="button" title="Quick Links" aria-label="Quick Links">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="3" y="3" width="5" height="5" rx="1"></rect>
                         <rect x="10" y="3" width="5" height="5" rx="1"></rect>
@@ -72,18 +78,18 @@
                         <rect x="17" y="17" width="5" height="5" rx="1"></rect>
                     </svg>
                 </button>
-                <button class="icon-btn" title="Currency">
+                <button th:if="${!accountantSidebar}" class="icon-btn" type="button" title="Currency">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                         <circle cx="12" cy="7" r="4"></circle>
                     </svg>
                 </button>
-                <button class="icon-btn" title="Messages">
+                <button th:if="${!accountantSidebar}" class="icon-btn" type="button" title="Messages">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                     </svg>
                 </button>
-                <button class="icon-btn" title="Calendar">
+                <button class="icon-btn" type="button" title="Calendar">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                         <line x1="16" y1="2" x2="16" y2="6"></line>
@@ -91,13 +97,13 @@
                         <line x1="3" y1="10" x2="21" y2="10"></line>
                     </svg>
                 </button>
-                <button class="icon-btn" title="Tasks">
+                <button class="icon-btn" type="button" title="Tasks">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="9 11 12 14 22 4"></polyline>
                         <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
                     </svg>
                 </button>
-                <button class="icon-btn" title="Notifications">
+                <button class="icon-btn" type="button" title="Notifications">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
                         <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
@@ -105,23 +111,28 @@
                     <span class="notification-badge" th:if="${noticeCount != null and noticeCount > 0}"
                           th:text="${noticeCount}">0</span>
                 </button>
+                <button th:if="${accountantSidebar}" class="icon-btn icon-btn-whatsapp" type="button" title="WhatsApp">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#25D366">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                        <path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.75.75 0 0 0 .918.918l4.458-1.495A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.714 9.714 0 0 1-4.956-1.354l-.355-.211-2.642.886.886-2.578-.231-.375A9.714 9.714 0 0 1 2.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/>
+                    </svg>
+                </button>
                 <div class="profile-dropdown-container">
-                    <button class="icon-btn user-btn" id="profileBtn" title="Profile">
+                    <button class="icon-btn user-btn" id="profileBtn" type="button" title="Profile">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                             <circle cx="12" cy="7" r="4"></circle>
                         </svg>
                     </button>
-                    
-                    <!-- Profile Dropdown -->
+
                     <div class="profile-dropdown" id="profileDropdown">
                         <div class="profile-dropdown-header">
                             <div class="profile-avatar">
-                                <img src="https://ui-avatars.com/api/?name=Alhaji+Mohamed+Kanu&background=3182ce&color=fff&size=80" alt="Profile Picture">
+                                <img src="https://ui-avatars.com/api/?name=Accountant&background=3182ce&color=fff&size=80" alt="Profile Picture">
                             </div>
                             <div class="profile-info">
-                                <div class="profile-name" th:text="${session.user != null ? session.user.name : 'Alhaji Mohamed Kanu'}">Alhaji Mohamed Kanu</div>
-                                <div class="profile-role" th:text="${staffRole != null and !#strings.isEmpty(staffRole) ? staffRole : (session.user != null ? session.user.role : 'Super Admin')}">Super Admin</div>
+                                <div class="profile-name" th:text="${session.user != null ? session.user.name : 'Staff User'}">Staff User</div>
+                                <div class="profile-role" th:text="${staffRole != null and !#strings.isEmpty(staffRole) ? staffRole : (session.user != null ? session.user.role : 'Admin')}">Accountant</div>
                             </div>
                         </div>
                         <div class="profile-dropdown-body">
@@ -151,13 +162,11 @@
         </div>
     </nav>
 
-    <!-- Main Container -->
     <div class="main-container">
-        <!-- Sidebar -->
         <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
 
-        <!-- Main Content -->
-        <main class="main-content admin-dashboard-main">
+        <!-- Teacher dashboard -->
+        <main th:if="${dashboardLayout == 'teacher'}" class="main-content admin-dashboard-main">
             <div class="admin-dashboard-stack">
                 <div class="admin-present-card">
                     <div class="admin-present-header">
@@ -212,11 +221,306 @@
                 </div>
             </div>
         </main>
+
+        <!-- Receptionist dashboard -->
+        <main th:if="${dashboardLayout == 'receptionist'}" class="main-content admin-dashboard-main receptionist-dashboard-main">
+            <div class="receptionist-top-stats">
+                <div class="receptionist-mini-stat">
+                    <div class="receptionist-mini-stat-head">
+                        <div class="receptionist-mini-stat-title-wrap">
+                            <span class="receptionist-mini-stat-icon" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <circle cx="12" cy="12" r="6"></circle>
+                                    <circle cx="12" cy="12" r="2"></circle>
+                                </svg>
+                            </span>
+                            <span class="receptionist-mini-stat-title">Converted Leads</span>
+                        </div>
+                        <span class="receptionist-mini-stat-value" th:text="${convertedLeadsLabel}">0/0</span>
+                    </div>
+                    <div class="admin-progress-track admin-progress-red">
+                        <div class="admin-progress-fill"
+                             th:style="|width: ${convertedLeadsPercent}%; background-color: #dd4b39;|"></div>
+                    </div>
+                </div>
+                <div class="receptionist-mini-stat">
+                    <div class="receptionist-mini-stat-head">
+                        <div class="receptionist-mini-stat-title-wrap">
+                            <span class="receptionist-mini-stat-icon" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                            </span>
+                            <span class="receptionist-mini-stat-title">Student Present Today</span>
+                        </div>
+                        <span class="receptionist-mini-stat-value" th:text="${studentPresentTodayLabel}">0/0</span>
+                    </div>
+                    <div class="admin-progress-track admin-progress-yellow">
+                        <div class="admin-progress-fill"
+                             th:style="|width: ${studentPresentTodayPercent}%; background-color: #f39c12;|"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-dashboard-stack receptionist-dashboard-stack">
+                <div class="admin-attendance-card">
+                    <div class="admin-attendance-card-head">
+                        <h3 class="admin-card-title">Enquiry Overview</h3>
+                    </div>
+                    <div class="admin-attendance-list">
+                        <div class="admin-attendance-row" th:each="row : ${enquiryOverview}">
+                            <div class="admin-attendance-meta">
+                                <span class="admin-attendance-count" th:text="${row.count} + ' ' + ${row.label}">0 ACTIVE</span>
+                                <span class="admin-attendance-percent" th:text="${row.percent} + '%'">0.00%</span>
+                            </div>
+                            <div class="admin-progress-track" th:classappend="${row.barClass}">
+                                <div class="admin-progress-fill"
+                                     th:if="${row.percentValue > 0}"
+                                     th:style="|width: ${row.percentValue}%; background-color: ${row.barClass == 'admin-progress-red' ? '#dd4b39' : '#f39c12'};|"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-student-count-card">
+                    <div class="admin-student-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                    <div class="admin-student-content">
+                        <div class="admin-student-label">Student</div>
+                        <div class="admin-student-count" th:text="${totalStudents}">0</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Accountant dashboard -->
+        <main th:if="${dashboardLayout == 'accountant'}" class="main-content admin-dashboard-main accountant-dashboard-main">
+            <div class="accountant-mini-stats">
+                <div class="accountant-mini-stat">
+                    <div class="accountant-mini-stat-head">
+                        <span class="accountant-mini-stat-title">Fees Awaiting Payment</span>
+                        <span class="accountant-mini-stat-value" th:text="${feesAwaitingLabel}">0/0</span>
+                    </div>
+                    <div class="admin-progress-track admin-progress-blue">
+                        <div class="admin-progress-fill"
+                             th:style="|width: ${feesAwaitingPercent}%; background-color: #337ab7;|"></div>
+                    </div>
+                </div>
+                <div class="accountant-mini-stat">
+                    <div class="accountant-mini-stat-head">
+                        <span class="accountant-mini-stat-title">Staff Present Today</span>
+                        <span class="accountant-mini-stat-value" th:text="${staffPresentTodayLabel}">0/0</span>
+                    </div>
+                    <div class="admin-progress-track admin-progress-grey">
+                        <div class="admin-progress-fill"
+                             th:style="|width: ${staffPresentTodayPercent}%; background-color: #cccccc;|"></div>
+                    </div>
+                </div>
+                <div class="accountant-mini-stat">
+                    <div class="accountant-mini-stat-head">
+                        <span class="accountant-mini-stat-title">Student Present Today</span>
+                        <span class="accountant-mini-stat-value" th:text="${studentPresentTodayLabel}">0/0</span>
+                    </div>
+                    <div class="admin-progress-track admin-progress-yellow">
+                        <div class="admin-progress-fill"
+                             th:style="|width: ${studentPresentTodayPercent}%; background-color: #f39c12;|"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="charts-grid charts-grid-2">
+                <div class="chart-card chart-card-tall">
+                    <h3 class="chart-title" th:text="'Fees Collection &amp; Expenses For ' + ${dashboardMonthTitle}">Fees Collection &amp; Expenses</h3>
+                    <div class="chart-canvas-wrap">
+                        <canvas id="feesChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card chart-card-tall">
+                    <h3 class="chart-title" th:text="'Income - ' + ${dashboardMonthTitle}">Income</h3>
+                    <div class="donut-chart-container accountant-donut-wrap">
+                        <canvas id="studentsPresentChart"></canvas>
+                    </div>
+                    <div class="chart-legend" id="incomeChartLegend"></div>
+                </div>
+            </div>
+
+            <div class="charts-grid charts-grid-2">
+                <div class="chart-card chart-card-tall">
+                    <h3 class="chart-title" th:text="'Fees Collection &amp; Expenses For Session ' + ${dashboardSessionTitle}">Fees Collection &amp; Expenses For Session</h3>
+                    <div class="chart-canvas-wrap chart-canvas-wrap-lg">
+                        <canvas id="feesCollectionYearChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card chart-card-tall">
+                    <h3 class="chart-title" th:text="'Expense - ' + ${dashboardMonthTitle}">Expense</h3>
+                    <div class="donut-chart-container accountant-donut-wrap">
+                        <canvas id="expenseChart"></canvas>
+                    </div>
+                    <div class="chart-legend" id="expenseChartLegend"></div>
+                </div>
+            </div>
+
+            <div class="accountant-summary-section">
+                <div class="accountant-fees-overview-card">
+                    <h3 class="admin-card-title">Fees Overview</h3>
+                    <div class="admin-attendance-list accountant-fees-overview-list">
+                        <div class="admin-attendance-row" th:each="row : ${feesOverview}">
+                            <div class="admin-attendance-meta">
+                                <span class="admin-attendance-count" th:text="${row.count} + ' ' + ${row.label}">0 UNPAID</span>
+                                <span class="admin-attendance-percent" th:text="${row.percent} + '%'">0.00%</span>
+                            </div>
+                            <div class="admin-progress-track admin-progress-blue">
+                                <div class="admin-progress-fill"
+                                     th:style="|width: ${row.percentValue}%; background-color: #337ab7;|"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-grid accountant-stats-grid">
+                    <div class="stat-card stat-card-green">
+                        <div class="stat-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+                                <circle cx="12" cy="12" r="2"></circle>
+                                <path d="M6 12h.01M18 12h.01"></path>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-title">Monthly Fees Collection</div>
+                            <div class="stat-value" th:text="${monthlyFeesCollection}">$0.00</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card stat-card-pink">
+                        <div class="stat-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-title">Monthly Expenses</div>
+                            <div class="stat-value" th:text="${monthlyExpensesTotal}">$0.00</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card stat-card-cyan">
+                        <div class="stat-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-title">Student</div>
+                            <div class="stat-value" th:text="${totalStudents}">0</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card stat-card-orange">
+                        <div class="stat-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-title">Admin</div>
+                            <div class="stat-value" th:text="${totalAdmins}">0</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card stat-card-orange">
+                        <div class="stat-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-title">Teacher</div>
+                            <div class="stat-value" th:text="${totalTeachers}">0</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card stat-card-orange">
+                        <div class="stat-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-title">Accountant</div>
+                            <div class="stat-value" th:text="${totalAccountants}">0</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card stat-card-orange">
+                        <div class="stat-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-title">Librarian</div>
+                            <div class="stat-value" th:text="${totalLibrarians}">0</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card stat-card-orange">
+                        <div class="stat-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-title">Receptionist</div>
+                            <div class="stat-value" th:text="${totalReceptionists}">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 
     <div th:replace="~{fragments/quick-links-modal :: modal}"></div>
 
+    <script th:if="${dashboardLayout == 'accountant'}" th:inline="javascript">
+        window.dashboardChartData = {
+            dayLabels: /*[[${chartDayLabels}]]*/ [],
+            dailyFees: /*[[${chartDailyFees}]]*/ [],
+            dailyExpenses: /*[[${chartDailyExpenses}]]*/ [],
+            sessionMonths: /*[[${chartSessionMonths}]]*/ [],
+            sessionFees: /*[[${chartSessionFees}]]*/ [],
+            sessionExpenses: /*[[${chartSessionExpenses}]]*/ [],
+            incomeLabels: /*[[${chartIncomeLabels}]]*/ [],
+            incomeValues: /*[[${chartIncomeValues}]]*/ [],
+            expenseLabels: /*[[${chartExpenseLabels}]]*/ [],
+            expenseValues: /*[[${chartExpenseValues}]]*/ []
+        };
+    </script>
     <script th:src="@{/js/dashboard.js}"></script>
 </body>
 </html>
-

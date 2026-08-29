@@ -4,6 +4,7 @@ import com.kantechsolution.smart_school.model.FeePayment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +17,10 @@ public interface FeePaymentRepository extends JpaRepository<FeePayment, Long> {
     Optional<FeePayment> findByPaymentRefIgnoreCase(String paymentRef);
 
     List<FeePayment> findByPaymentRefContainingIgnoreCaseOrderByIdDesc(String paymentRef);
+
+    List<FeePayment> findByPaymentDateBetween(LocalDate startDate, LocalDate endDate);
+
+    List<FeePayment> findBySessionYear(String sessionYear);
 
     void deleteByIdAndStudentAdmissionId(Long id, Long studentAdmissionId);
 }

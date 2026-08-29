@@ -187,7 +187,10 @@
                             <label for="status">Status</label>
                             <select id="status" class="form-select">
                                 <option value="active" selected>Active</option>
-                                <option value="inactive">Inactive</option>
+                                <option value="won">Won</option>
+                                <option value="passive">Passive</option>
+                                <option value="lost">Lost</option>
+                                <option value="dead">Dead</option>
                             </select>
                         </div>
 
@@ -510,7 +513,10 @@
                             <label for="followUpStatus">Status</label>
                             <select id="followUpStatus" class="followup-select">
                                 <option value="ACTIVE">Active</option>
-                                <option value="INACTIVE">Inactive</option>
+                                <option value="WON">Won</option>
+                                <option value="PASSIVE">Passive</option>
+                                <option value="LOST">Lost</option>
+                                <option value="DEAD">Dead</option>
                             </select>
                         </div>
                     </div>
@@ -1344,6 +1350,18 @@
                     });
             }
 
+            function formatEnquiryStatus(status) {
+                const labels = {
+                    ACTIVE: 'Active',
+                    WON: 'Won',
+                    PASSIVE: 'Passive',
+                    LOST: 'Lost',
+                    DEAD: 'Dead',
+                    INACTIVE: 'Passive'
+                };
+                return labels[status] || status || '';
+            }
+
             function formatDisplayDate(dateString) {
                 if (!dateString) return '';
                 const date = new Date(dateString);
@@ -1405,7 +1423,7 @@
                     + '<td>' + formatSourceLabel(enquiry.source) + '</td>'
                     + '<td>' + formatDisplayDate(enquiry.date) + '</td>'
                     + '<td>' + formatDisplayDate(enquiry.followUpDate) + '</td>'
-                    + '<td>' + (enquiry.status === 'ACTIVE' ? 'Active' : 'Inactive') + '</td>'
+                    + '<td>' + formatEnquiryStatus(enquiry.status) + '</td>'
                     + '<td>' + buildActionButtons(enquiry.id, enquiry.phone) + '</td>';
 
                 tbody.insertBefore(newRow, tbody.firstChild);
@@ -1657,7 +1675,7 @@
                     + '<td>' + formatSourceLabel(enquiry.source) + '</td>'
                     + '<td>' + formatDisplayDate(enquiry.date) + '</td>'
                     + '<td>' + formatDisplayDate(enquiry.followUpDate) + '</td>'
-                    + '<td>' + (enquiry.status === 'ACTIVE' ? 'Active' : 'Inactive') + '</td>'
+                    + '<td>' + formatEnquiryStatus(enquiry.status) + '</td>'
                     + '<td>' + buildActionButtons(enquiry.id, enquiry.phone) + '</td>';
             }
 

@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Course Category - Smart School</title>
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
-    <link rel="stylesheet" th:href="@{/css/onlinecourse-category.css}">
     <link rel="stylesheet" th:href="@{/css/app-theme.css}">
     <link rel="stylesheet" th:href="@{/css/onlinecourse-modals-light.css}">
+    <link rel="stylesheet" th:href="@{/css/onlinecourse-category.css}" id="onlinecourse-category-css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- SweetAlert2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -17,12 +17,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 </head>
-<body>
+<body th:classappend="${accountantSidebar} ? ' accountant-dashboard-page' : ''">
     <!-- Top Navigation Bar -->
     <nav class="top-navbar">
         <div class="nav-left">
             <div class="logo-container">
-                <a href="/dashboard" class="brand-badge" style="text-decoration: none;">Smart School</a>
+                <a th:href="${accountantSidebar} ? '/admin/admin/dashboard' : '/dashboard'" class="brand-badge" style="text-decoration: none;">Smart School</a>
                 <div class="logo-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="35" height="35">
                         <defs>
@@ -46,18 +46,18 @@
                         <line x1="3" y1="18" x2="21" y2="18"></line>
                     </svg>
                 </button>
-                <span class="school-name">Smart School</span>
+                <span class="school-name">Mount Carmel School</span>
             </div>
             <div class="session-info">
                 <span class="session-label">Current Session:</span>
-                <span class="session-value">2023-24</span>
+                <span class="session-value" th:text="${currentSession}">2023-24</span>
             </div>
         </div>
 
         <div class="nav-right">
-            <div class="search-container">
+            <div class="search-container" th:if="${!accountantSidebar}">
                 <input type="text" placeholder="Search By Student Name..." class="search-input">
-                <button class="search-btn">
+                <button class="search-btn" type="button">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="11" cy="11" r="8"></circle>
                         <path d="m21 21-4.35-4.35"></path>
@@ -66,18 +66,34 @@
             </div>
 
             <div class="nav-icons">
-                <button class="icon-btn" title="Currency">
+                <button th:if="${accountantSidebar}" class="icon-btn icon-btn-flag" type="button" title="Language">
+                    <img src="https://flagcdn.com/w20/us.png" alt="English" width="20" height="14">
+                </button>
+                <button th:if="${!accountantSidebar}" class="icon-btn" id="topQuickLinksBtn" type="button" title="Quick Links" aria-label="Quick Links">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="5" height="5" rx="1"></rect>
+                        <rect x="10" y="3" width="5" height="5" rx="1"></rect>
+                        <rect x="17" y="3" width="5" height="5" rx="1"></rect>
+                        <rect x="3" y="10" width="5" height="5" rx="1"></rect>
+                        <rect x="10" y="10" width="5" height="5" rx="1"></rect>
+                        <rect x="17" y="10" width="5" height="5" rx="1"></rect>
+                        <rect x="3" y="17" width="5" height="5" rx="1"></rect>
+                        <rect x="10" y="17" width="5" height="5" rx="1"></rect>
+                        <rect x="17" y="17" width="5" height="5" rx="1"></rect>
+                    </svg>
+                </button>
+                <button th:if="${!accountantSidebar}" class="icon-btn" type="button" title="Currency">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                         <circle cx="12" cy="7" r="4"></circle>
                     </svg>
                 </button>
-                <button class="icon-btn" title="Messages">
+                <button th:if="${!accountantSidebar}" class="icon-btn" type="button" title="Messages">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                     </svg>
                 </button>
-                <button class="icon-btn" title="Calendar">
+                <button class="icon-btn" type="button" title="Calendar">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                         <line x1="16" y1="2" x2="16" y2="6"></line>
@@ -85,20 +101,27 @@
                         <line x1="3" y1="10" x2="21" y2="10"></line>
                     </svg>
                 </button>
-                <button class="icon-btn" title="Tasks">
+                <button class="icon-btn" type="button" title="Tasks">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="9 11 12 14 22 4"></polyline>
                         <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
                     </svg>
                 </button>
-                <button class="icon-btn" title="Notifications">
+                <button class="icon-btn" type="button" title="Notifications">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
                         <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
                     </svg>
+                    <span class="notification-badge" th:if="${noticeCount != null and noticeCount > 0}" th:text="${noticeCount}">0</span>
+                </button>
+                <button th:if="${accountantSidebar}" class="icon-btn icon-btn-whatsapp" type="button" title="WhatsApp">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#25D366">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                        <path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.75.75 0 0 0 .918.918l4.458-1.495A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.714 9.714 0 0 1-4.956-1.354l-.355-.211-2.642.886.886-2.578-.231-.375A9.714 9.714 0 0 1 2.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/>
+                    </svg>
                 </button>
                 <div class="profile-dropdown-container">
-                    <button class="icon-btn user-btn" id="profileBtn" title="Profile">
+                    <button class="icon-btn user-btn" id="profileBtn" type="button" title="Profile">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                             <circle cx="12" cy="7" r="4"></circle>
@@ -109,11 +132,11 @@
                     <div class="profile-dropdown" id="profileDropdown">
                         <div class="profile-dropdown-header">
                             <div class="profile-avatar">
-                                <img src="https://ui-avatars.com/api/?name=Alhaji+Mohamed+Kanu&background=3182ce&color=fff&size=80" alt="Profile Picture">
+                                <img src="https://ui-avatars.com/api/?name=Accountant&background=3182ce&color=fff&size=80" alt="Profile Picture">
                             </div>
                             <div class="profile-info">
-                                <div class="profile-name" th:text="${session.user != null ? session.user.name : 'Alhaji Mohamed Kanu'}">Alhaji Mohamed Kanu</div>
-                                <div class="profile-role" th:text="${session.user != null ? session.user.role : 'Super Admin'}">Super Admin</div>
+                                <div class="profile-name" th:text="${session.user != null ? session.user.name : 'Staff User'}">Staff User</div>
+                                <div class="profile-role" th:text="${staffRole != null and !#strings.isEmpty(staffRole) ? staffRole : (session.user != null ? session.user.role : 'Accountant')}">Accountant</div>
                             </div>
                         </div>
                         <div class="profile-dropdown-body">
@@ -149,8 +172,15 @@
         <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
 
         <!-- Main Content -->
-        <main class="main-content onlinecourse-category-page">
-            <div class="category-container">
+        <main class="main-content onlinecourse-category-page" th:classappend="${accountantSidebar} ? ' accountant-category-view-only' : ''">
+
+            <!-- Accountant: Category List fills entire content area (no grid wrapper) -->
+            <div th:if="${accountantSidebar}" class="category-list-panel category-list-panel-full">
+                <th:block th:replace="~{fragments/onlinecourse-category-list-body :: categoryListBody}"></th:block>
+            </div>
+
+            <!-- Other roles: Add Category + Category List side by side -->
+            <div th:unless="${accountantSidebar}" class="category-container">
                 <div class="add-category-panel">
                     <h2 class="panel-title">Add Category</h2>
                     <form id="categoryForm">
@@ -166,98 +196,7 @@
                 </div>
 
                 <div class="category-list-panel">
-                    <h2 class="panel-title">Category List</h2>
-
-                    <div class="table-controls">
-                        <div class="table-search">
-                            <input type="text" id="categorySearchInput" class="table-search-input" placeholder="Search">
-                        </div>
-                        <div class="table-actions">
-                            <select class="entries-select" id="categoryEntriesSelect">
-                                <option value="50" selected>50</option>
-                                <option value="100">100</option>
-                                <option value="250">250</option>
-                                <option value="500">500</option>
-                            </select>
-                            <button type="button" class="icon-action-btn" id="categoryCopyBtn" title="Copy">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                                </svg>
-                            </button>
-                            <button type="button" class="icon-action-btn" id="categoryCsvBtn" title="CSV">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                    <polyline points="14 2 14 8 20 8"></polyline>
-                                </svg>
-                            </button>
-                            <button type="button" class="icon-action-btn" id="categoryExcelBtn" title="Excel">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                    <polyline points="14 2 14 8 20 8"></polyline>
-                                    <line x1="16" y1="13" x2="8" y2="13"></line>
-                                    <line x1="16" y1="17" x2="8" y2="17"></line>
-                                </svg>
-                            </button>
-                            <button type="button" class="icon-action-btn" id="categoryPdfBtn" title="PDF">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                    <polyline points="14 2 14 8 20 8"></polyline>
-                                </svg>
-                            </button>
-                            <button type="button" class="icon-action-btn" id="categoryPrintBtn" title="Print">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="6 9 6 2 18 2 18 9"></polyline>
-                                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-                                    <rect x="6" y="14" width="12" height="8"></rect>
-                                </svg>
-                            </button>
-                            <button type="button" class="icon-action-btn" id="categoryColumnBtn" title="Column Visibility">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="3" y="3" width="7" height="7"></rect>
-                                    <rect x="14" y="3" width="7" height="7"></rect>
-                                    <rect x="14" y="14" width="7" height="7"></rect>
-                                    <rect x="3" y="14" width="7" height="7"></rect>
-                                </svg>
-                            </button>
-                            <div class="column-visibility-dropdown" id="categoryColumnDropdown">
-                                <div class="dropdown-header"><span>Toggle Columns</span></div>
-                                <div class="dropdown-content">
-                                    <label class="column-toggle-item">
-                                        <input type="checkbox" class="column-toggle" data-column="0" checked>
-                                        <span>Category Name</span>
-                                    </label>
-                                    <label class="column-toggle-item">
-                                        <input type="checkbox" class="column-toggle" data-column="1" checked>
-                                        <span>Action</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="table-responsive">
-                        <table class="data-table" id="categoryTable">
-                            <thead>
-                                <tr>
-                                    <th>Category Name</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="categoryTableBody">
-                                <tr><td colspan="2" class="loading-cell">Loading...</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="table-footer">
-                        <div class="showing-info">Showing 0 to 0 of 0 entries</div>
-                        <div class="pagination">
-                            <button type="button" class="pagination-btn" disabled>&lt;</button>
-                            <button type="button" class="pagination-btn active">1</button>
-                            <button type="button" class="pagination-btn" disabled>&gt;</button>
-                        </div>
-                    </div>
+                    <th:block th:replace="~{fragments/onlinecourse-category-list-body :: categoryListBody}"></th:block>
                 </div>
             </div>
         </main>
@@ -436,6 +375,20 @@
         </div>
     </div>
 
+    <script th:inline="javascript">
+        window.courseCategoryReadOnly = /*[[${accountantSidebar}]]*/ false;
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var pageCss = document.getElementById('onlinecourse-category-css');
+            var overrides = document.getElementById('app-theme-overrides');
+            if (pageCss && overrides && overrides.parentNode) {
+                overrides.parentNode.insertBefore(pageCss, overrides.nextSibling);
+            } else if (pageCss) {
+                document.head.appendChild(pageCss);
+            }
+        });
+    </script>
     <script th:src="@{/js/dashboard.js}"></script>
     <script th:src="@{/js/onlinecourse-category.js}"></script>
 </body>

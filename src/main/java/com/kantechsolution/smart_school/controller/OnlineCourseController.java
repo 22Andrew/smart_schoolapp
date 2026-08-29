@@ -9,11 +9,13 @@ import com.kantechsolution.smart_school.service.OnlineCourseQuestionService;
 import com.kantechsolution.smart_school.service.OnlineCourseQuestionTagService;
 import com.kantechsolution.smart_school.service.OnlineCourseService;
 import com.kantechsolution.smart_school.service.OnlineCourseSettingService;
+import com.kantechsolution.smart_school.service.RoleSidebarMenuService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -54,6 +56,9 @@ public class OnlineCourseController {
 
     @Autowired
     private OnlineCourseQuestionService onlineCourseQuestionService;
+
+    @Autowired
+    private RoleSidebarMenuService roleSidebarMenuService;
 
     @GetMapping({"/onlinecourse/course/index", "/onlinecourse/course"})
     public String showOnlineCoursePage() {
@@ -97,9 +102,13 @@ public class OnlineCourseController {
             "/onlinecourse/coursereport/guestreport",
             "/onlinecourse/coursereport/courseexam"
     })
-    public String showCourseReportPage(HttpServletRequest request, Model model) {
+    public String showCourseReportPage(HttpServletRequest request, Model model, Authentication authentication) {
         String path = request.getRequestURI();
         String reportKey = path.substring(path.lastIndexOf('/') + 1);
+        if (roleSidebarMenuService.isAccountant(authentication)
+                && !roleSidebarMenuService.isAccountantOnlineCourseReportAllowed(reportKey)) {
+            return "redirect:/onlinecourse/coursereport/coursepurchase";
+        }
         model.addAttribute("reportKey", reportKey);
         model.addAttribute("reportTitle", resolveReportTitle(reportKey));
         return "onlinecourse-coursepurchase";

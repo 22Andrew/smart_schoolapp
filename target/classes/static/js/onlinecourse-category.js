@@ -10,11 +10,15 @@ document.addEventListener('DOMContentLoaded', function () {
     const entriesSelect = document.getElementById('categoryEntriesSelect');
     const columnBtn = document.getElementById('categoryColumnBtn');
     const columnDropdown = document.getElementById('categoryColumnDropdown');
+    const readOnly = window.courseCategoryReadOnly === true;
 
     let categories = [];
     let currentPage = 1;
 
     function createActionButtonsHtml() {
+        if (readOnly) {
+            return '';
+        }
         return ''
             + '<button type="button" class="btn-action btn-edit" title="Edit">'
             + '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'
@@ -29,6 +33,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function resetForm() {
+        if (!categoryForm) {
+            return;
+        }
         categoryForm.reset();
         categoryIdInput.value = '';
         saveBtn.textContent = 'Save';
@@ -227,6 +234,9 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!row || row.classList.contains('no-data-row')) return;
 
             if (editBtn) {
+                if (!categoryForm || !categoryNameInput || !categoryIdInput || !saveBtn) {
+                    return;
+                }
                 const id = row.getAttribute('data-id');
                 const item = categories.find(function (c) { return String(c.id) === String(id); });
                 if (!item) return;
