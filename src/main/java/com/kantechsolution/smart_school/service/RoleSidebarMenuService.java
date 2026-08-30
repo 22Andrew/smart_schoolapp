@@ -257,6 +257,11 @@ public class RoleSidebarMenuService {
             "coursepurchase", "courserating", "guestreport"
     );
 
+    /** Main menus hidden for Admin (Super Admin still sees all menus). */
+    private static final List<String> ADMIN_HIDDEN_MENU_SLUGS = List.of(
+            "qr-code-attendance"
+    );
+
     /**
      * Top-level menus visible when logging in as Receptionist on the demo admin panel.
      */
@@ -304,6 +309,53 @@ public class RoleSidebarMenuService {
                     "staff-id-card", "generate-staff-id-card"))
     );
 
+    /**
+     * Top-level menus visible when logging in as Librarian on the demo admin panel.
+     */
+    private static final List<String> LIBRARIAN_MENU_SLUGS = List.of(
+            "online-course",
+            "behaviour-records",
+            "gmeet-live-classes",
+            "zoom-live-classes",
+            "cbse-examination",
+            "human-resource",
+            "communicate",
+            "library",
+            "reports"
+    );
+
+    /**
+     * Submenu slugs visible to librarians (matches Smart School demo librarian sidebar).
+     */
+    private static final Map<String, Set<String>> LIBRARIAN_ALLOWED_SUBMENU_SLUGS = Map.ofEntries(
+            Map.entry("online-course", Set.of(
+                    "course-category", "online-course-report")),
+
+            Map.entry("behaviour-records", Set.of(
+                    "assign-incident", "incidents", "reports", "setting")),
+
+            Map.entry("gmeet-live-classes", Set.of(
+                    "live-classes", "live-meeting", "setting")),
+
+            Map.entry("zoom-live-classes", Set.of(
+                    "live-meeting", "live-classes", "live-classes-report", "setting")),
+
+            Map.entry("cbse-examination", Set.of(
+                    "exam", "template", "setting")),
+
+            Map.entry("human-resource", Set.of(
+                    "staff-directory")),
+
+            Map.entry("communicate", Set.of(
+                    "notice-board", "send-email", "send-sms", "email-sms-log")),
+
+            Map.entry("library", Set.of(
+                    "book-list", "issue-return", "add-student", "add-staff-member")),
+
+            Map.entry("reports", Set.of(
+                    "library"))
+    );
+
     public Map<String, Object> filterForRole(Map<String, Object> settings, Authentication authentication) {
 
         if (settings == null || authentication == null) {
@@ -327,6 +379,18 @@ public class RoleSidebarMenuService {
         if (isReceptionist(authentication)) {
 
             return filterReceptionistMenus(settings);
+
+        }
+
+        if (isLibrarian(authentication)) {
+
+            return filterLibrarianMenus(settings);
+
+        }
+
+        if (isAdmin(authentication)) {
+
+            return filterAdminMenus(settings);
 
         }
 
@@ -354,6 +418,43 @@ public class RoleSidebarMenuService {
 
     }
 
+    public boolean isLibrarian(Authentication authentication) {
+
+        return authentication != null && hasAuthority(authentication, "ROLE_LIBRARIAN");
+
+    }
+
+    public boolean isAdmin(Authentication authentication) {
+
+        return authentication != null && hasAuthority(authentication, "ROLE_ADMIN");
+
+    }
+
+    public boolean isSuperAdmin(Authentication authentication) {
+
+        return authentication != null && hasAuthority(authentication, "ROLE_SUPER_ADMIN");
+
+    }
+
+    public boolean isAdminDashboardUser(Authentication authentication) {
+
+        if (authentication == null) {
+            return false;
+        }
+        if (isTeacher(authentication) || isAccountant(authentication) || isReceptionist(authentication)
+                || isLibrarian(authentication)) {
+            return false;
+        }
+        return isAdmin(authentication) || isSuperAdmin(authentication);
+
+    }
+
+    public List<String> getAdminHiddenMenuSlugs() {
+
+        return ADMIN_HIDDEN_MENU_SLUGS;
+
+    }
+
     public List<String> getReceptionistMenuSlugs() {
 
         return RECEPTIONIST_MENU_SLUGS;
@@ -363,6 +464,18 @@ public class RoleSidebarMenuService {
     public Map<String, Set<String>> getReceptionistAllowedSubmenuSlugs() {
 
         return RECEPTIONIST_ALLOWED_SUBMENU_SLUGS;
+
+    }
+
+    public List<String> getLibrarianMenuSlugs() {
+
+        return LIBRARIAN_MENU_SLUGS;
+
+    }
+
+    public Map<String, Set<String>> getLibrarianAllowedSubmenuSlugs() {
+
+        return LIBRARIAN_ALLOWED_SUBMENU_SLUGS;
 
     }
 
@@ -705,6 +818,62 @@ public class RoleSidebarMenuService {
         return filtered;
     }
 
+    private Map<String, Object> filterLibrarianMenus(Map<String, Object> settings) {
+
+        Map<String, Object> filtered = new LinkedHashMap<>(settings);
+
+        @SuppressWarnings("unchecked")
+        List<Map<String, Object>> selectedMenus =
+                (List<Map<String, Object>>) settings.getOrDefault("selectedMenus", List.of());
+        Map<String, Map<String, Object>> selectedBySlug = indexMenusBySlug(selectedMenus);
+
+        List<Map<String, Object>> librarianMenus = new ArrayList<>();
+        int order = 1;
+        for (String slug : LIBRARIAN_MENU_SLUGS) {
+            Map<String, Object> menu = selectedBySlug.get(slug);
+            if (menu != null) {
+                Map<String, Object> copy = new LinkedHashMap<>(menu);
+                copy.put("sortOrder", order++);
+                librarianMenus.add(copy);
+            }
+        }
+        filtered.put("selectedMenus", librarianMenus);
+
+        @SuppressWarnings("unchecked")
+        Map<String, List<Map<String, Object>>> submenus =
+                (Map<String, List<Map<String, Object>>>) settings.getOrDefault("submenus", Map.of());
+        Map<String, List<Map<String, Object>>> librarianSubmenus = new LinkedHashMap<>();
+
+        for (String parentSlug : LIBRARIAN_MENU_SLUGS) {
+            List<Map<String, Object>> items = submenus.get(parentSlug);
+            if (items == null || items.isEmpty()) {
+                continue;
+            }
+            librarianSubmenus.put(parentSlug, filterLibrarianSubmenus(parentSlug, items));
+        }
+        filtered.put("submenus", librarianSubmenus);
+        return filtered;
+    }
+
+    private List<Map<String, Object>> filterLibrarianSubmenus(String parentSlug, List<Map<String, Object>> items) {
+
+        Set<String> allowed = LIBRARIAN_ALLOWED_SUBMENU_SLUGS.getOrDefault(parentSlug, Set.of());
+
+        List<Map<String, Object>> visible = new ArrayList<>();
+        int order = 1;
+        for (Map<String, Object> item : items) {
+            String slug = String.valueOf(item.getOrDefault("slug", ""));
+            if (!allowed.contains(slug)) {
+                continue;
+            }
+            Map<String, Object> copy = new LinkedHashMap<>(item);
+            copy.put("selected", true);
+            copy.put("sortOrder", order++);
+            visible.add(copy);
+        }
+        return visible;
+    }
+
     private List<Map<String, Object>> filterReceptionistSubmenus(String parentSlug, List<Map<String, Object>> items) {
 
         Set<String> allowed = RECEPTIONIST_ALLOWED_SUBMENU_SLUGS.getOrDefault(parentSlug, Set.of());
@@ -722,6 +891,37 @@ public class RoleSidebarMenuService {
             visible.add(copy);
         }
         return visible;
+    }
+
+    private Map<String, Object> filterAdminMenus(Map<String, Object> settings) {
+
+        Map<String, Object> filtered = new LinkedHashMap<>(settings);
+        Set<String> hidden = new LinkedHashSet<>(ADMIN_HIDDEN_MENU_SLUGS);
+
+        @SuppressWarnings("unchecked")
+        List<Map<String, Object>> selectedMenus =
+                (List<Map<String, Object>>) settings.getOrDefault("selectedMenus", List.of());
+        List<Map<String, Object>> adminMenus = new ArrayList<>();
+        for (Map<String, Object> menu : selectedMenus) {
+            String slug = String.valueOf(menu.getOrDefault("slug", ""));
+            if (!hidden.contains(slug)) {
+                adminMenus.add(menu);
+            }
+        }
+        filtered.put("selectedMenus", adminMenus);
+
+        @SuppressWarnings("unchecked")
+        Map<String, List<Map<String, Object>>> submenus =
+                (Map<String, List<Map<String, Object>>>) settings.getOrDefault("submenus", Map.of());
+        Map<String, List<Map<String, Object>>> adminSubmenus = new LinkedHashMap<>();
+        for (Map.Entry<String, List<Map<String, Object>>> entry : submenus.entrySet()) {
+            if (!hidden.contains(entry.getKey())) {
+                adminSubmenus.put(entry.getKey(), entry.getValue());
+            }
+        }
+        filtered.put("submenus", adminSubmenus);
+        return filtered;
+
     }
 
     private Map<String, Map<String, Object>> indexMenusBySlug(List<Map<String, Object>> menus) {

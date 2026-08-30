@@ -80,15 +80,16 @@ public class CbseExamStudentMarkSeedService implements ApplicationRunner {
                     .forEach(assigned::add);
         }
 
+        List<CbseExamStudent> assignments = new ArrayList<>();
         for (Long studentId : assigned) {
-            exam.getStudents().add(CbseExamStudent.builder()
+            assignments.add(CbseExamStudent.builder()
                     .cbseExam(exam)
                     .studentAdmissionId(studentId)
                     .assigned(true)
                     .build());
         }
-        if (!assigned.isEmpty()) {
-            cbseExamRepository.save(exam);
+        if (!assignments.isEmpty()) {
+            cbseExamStudentRepository.saveAll(assignments);
         }
     }
 

@@ -246,7 +246,7 @@
                         <a href="/expense/expensehead" class="submenu-item">Expense Head</a>
                     </div>
                 </div>
-                <div class="menu-item-wrapper">
+                <div class="menu-item-wrapper" th:if="${!adminSidebar}">
                     <a href="#" class="menu-item menu-item-expandable" data-submenu="qr-code-attendance">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <rect x="3" y="3" width="6" height="6"></rect>
@@ -750,6 +750,42 @@
                 (function applyReceptionistSidebarImmediately() {
                     var allowedMenus = /*[[${receptionistSidebarMenus}]]*/ [];
                     var allowedSubmenus = /*[[${receptionistSidebarSubmenus}]]*/ {};
+                    var menuSet = new Set(allowedMenus || []);
+
+                    function slugify(value) {
+                        return String(value || '')
+                            .toLowerCase()
+                            .replace(/[^a-z0-9]+/g, '-')
+                            .replace(/^-|-$/g, '');
+                    }
+
+                    document.querySelectorAll('.sidebar .menu-item-wrapper').forEach(function (wrapper) {
+                        var expandable = wrapper.querySelector('.menu-item-expandable[data-submenu]');
+                        if (!expandable) {
+                            return;
+                        }
+                        var menuSlug = expandable.getAttribute('data-submenu');
+                        if (!menuSet.has(menuSlug)) {
+                            wrapper.style.display = 'none';
+                            return;
+                        }
+                        wrapper.style.display = '';
+                        var submenuEl = wrapper.querySelector('#submenu-' + menuSlug);
+                        if (!submenuEl) {
+                            return;
+                        }
+                        var allowed = new Set((allowedSubmenus && allowedSubmenus[menuSlug]) || []);
+                        submenuEl.querySelectorAll('.submenu-item:not(.submenu-item-expandable)').forEach(function (link) {
+                            var slug = slugify(link.textContent);
+                            link.style.display = allowed.has(slug) ? '' : 'none';
+                        });
+                    });
+                })();
+            </script>
+            <script th:if="${librarianSidebar}" th:inline="javascript">
+                (function applyLibrarianSidebarImmediately() {
+                    var allowedMenus = /*[[${librarianSidebarMenus}]]*/ [];
+                    var allowedSubmenus = /*[[${librarianSidebarSubmenus}]]*/ {};
                     var menuSet = new Set(allowedMenus || []);
 
                     function slugify(value) {

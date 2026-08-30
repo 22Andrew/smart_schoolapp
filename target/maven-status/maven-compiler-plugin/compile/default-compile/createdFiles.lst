@@ -677,6 +677,7 @@ com\kantechsolution\smart_school\controller\StaffAttendanceController.class
 com\kantechsolution\smart_school\model\InventoryItem.class
 com\kantechsolution\smart_school\model\CbseExamTerm$CbseExamTermBuilder.class
 com\kantechsolution\smart_school\service\UserPanelSyllabusStatusService.class
+com\kantechsolution\smart_school\service\DatabasePopulationReportService.class
 com\kantechsolution\smart_school\service\StudentSiblingService.class
 com\kantechsolution\smart_school\model\SchoolBackendThemeSetting$SchoolBackendThemeSettingBuilder.class
 com\kantechsolution\smart_school\model\SchoolChatSetting.class

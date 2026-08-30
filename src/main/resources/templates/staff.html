@@ -17,8 +17,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 </head>
-<body th:classappend="${receptionistSidebar} ? 'receptionist-staff-directory-mode' : ''"
-      th:attr="data-receptionist-staff=${receptionistSidebar},data-staff-member-id=${currentStaffMemberId},data-login-email=${staffUserEmail}">
+<body th:classappend="${staffDirectoryRestricted} ? ' restricted-staff-directory-mode receptionist-staff-directory-mode' : ''"
+      th:attr="data-restricted-staff=${staffDirectoryRestricted},data-receptionist-staff=${staffDirectoryRestricted},data-staff-member-id=${currentStaffMemberId},data-login-email=${staffUserEmail},data-restricted-role=${staffDirectoryRole}">
     <!-- Top Navigation Bar -->
     <nav class="top-navbar">
         <div class="nav-left">
@@ -156,7 +156,7 @@
                 <div class="staff-criteria-panel">
                     <div class="staff-criteria-header">
                         <h2 class="section-title">Select Criteria</h2>
-                        <button type="button" class="btn-add-staff" id="addStaffBtn" th:if="${!receptionistSidebar}">
+                        <button type="button" class="btn-add-staff" id="addStaffBtn" th:if="${!staffDirectoryRestricted}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <line x1="12" y1="5" x2="12" y2="19"></line>
                                 <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -1000,10 +1000,11 @@
     </div>
 
     <script th:src="@{/js/dashboard.js}"></script>
-    <script th:if="${receptionistSidebar}" th:inline="javascript">
+    <script th:if="${staffDirectoryRestricted}" th:inline="javascript">
+        document.documentElement.setAttribute('data-restricted-staff-directory', 'true');
         document.documentElement.setAttribute('data-receptionist-staff-directory', 'true');
     </script>
-    <script th:src="@{/js/staff.js(v='20260829-2')}"></script>
+    <script th:src="@{/js/staff.js(v='20260830-2')}"></script>
 </body>
 </html>
 

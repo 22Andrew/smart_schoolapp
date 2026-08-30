@@ -997,7 +997,7 @@ html.theme-light .btn-print-primary,
 html.theme-light [class*="btn-save"]:not([class*="cancel"]),
 html.theme-light [class*="btn-primary"],
 html.theme-light [class*="btn-add"]:not(.btn-add-student):not([class*="cancel"]),
-html.theme-light button[type="submit"]:not(.btn-cancel):not(.btn-secondary):not(.btn-reset) {
+html.theme-light button[type="submit"]:not(.btn-cancel):not(.btn-secondary):not(.btn-reset):not(.profile-logout-link) {
     background-color: var(--theme-primary) !important;
     border-color: var(--theme-primary) !important;
     color: #ffffff !important;
@@ -1024,7 +1024,7 @@ html.theme-light .btn-print-primary:hover,
 html.theme-light [class*="btn-save"]:not([class*="cancel"]):hover,
 html.theme-light [class*="btn-primary"]:hover,
 html.theme-light [class*="btn-add"]:not(.btn-add-student):not([class*="cancel"]):hover,
-html.theme-light button[type="submit"]:not(.btn-cancel):not(.btn-secondary):not(.btn-reset):hover {
+html.theme-light button[type="submit"]:not(.btn-cancel):not(.btn-secondary):not(.btn-reset):not(.profile-logout-link):hover {
     background-color: var(--theme-primary-dark) !important;
     border-color: var(--theme-primary-dark) !important;
     color: #ffffff !important;
@@ -1658,6 +1658,162 @@ a.btn svg,
     width: var(--app-icon-size) !important;
     height: var(--app-icon-size) !important;
     flex-shrink: 0;
+}
+
+/* Profile dropdown — Smart School reference layout (overrides global submit/icon rules) */
+.profile-dropdown-container .profile-dropdown {
+    width: 250px;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    border: 1px solid #e8e8e8;
+    font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.profile-dropdown-container .profile-dropdown-header {
+    padding: 11px 12px 10px;
+    border-bottom: 1px solid #eeeeee;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile-dropdown-container .profile-info {
+    padding-top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+}
+
+.profile-dropdown-container .profile-avatar img,
+.profile-dropdown-container .profile-avatar-img {
+    width: 48px;
+    height: 48px;
+    border-radius: 2px;
+}
+
+.profile-dropdown-container .profile-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #444444;
+    margin: 0 0 1px;
+    line-height: 1.4;
+}
+
+.profile-dropdown-container .profile-role {
+    font-size: 13px;
+    font-weight: 400;
+    color: #888888;
+    margin: 0 0 10px;
+    line-height: 1.4;
+}
+
+.profile-dropdown-container .profile-password-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #888888;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+.profile-dropdown-container .profile-password-link span,
+.profile-dropdown-container .profile-password-link .profile-password-label {
+    color: inherit;
+    display: inline !important;
+    visibility: visible !important;
+    font-size: 13px !important;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+.profile-dropdown-container .profile-password-link:hover {
+    color: #666666;
+}
+
+.profile-dropdown-container .profile-password-link .profile-icon-key {
+    color: #444444;
+}
+
+.profile-dropdown-container .profile-dropdown-footer {
+    padding: 9px 12px;
+    border-top: 1px solid #eeeeee;
+    background: #ffffff;
+}
+
+.profile-dropdown-container .profile-footer-link {
+    color: #888888;
+    font-size: 13px;
+    font-weight: 400;
+    gap: 6px;
+    line-height: 1.4;
+    min-height: 0;
+    padding: 0;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.profile-dropdown-container .profile-footer-link span {
+    color: inherit;
+}
+
+.profile-dropdown-container .profile-footer-link:hover {
+    color: #666666;
+    background: transparent !important;
+}
+
+.profile-dropdown-container .profile-footer-link svg {
+    color: #666666;
+}
+
+.profile-dropdown-container .profile-logout-link,
+.profile-dropdown-container .profile-dropdown-footer button[type="submit"] {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: #888888 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    font-size: 13px !important;
+    font-weight: 400 !important;
+    line-height: 1.4 !important;
+}
+
+.profile-dropdown-container .profile-logout-link:hover,
+.profile-dropdown-container .profile-dropdown-footer button[type="submit"]:hover {
+    background: transparent !important;
+    color: #666666 !important;
+}
+
+.profile-dropdown-container .profile-icon-key {
+    width: 12px !important;
+    height: 12px !important;
+    flex-shrink: 0;
+}
+
+.profile-dropdown-container .profile-icon-globe,
+.profile-dropdown-container .profile-icon-logout {
+    width: 14px !important;
+    height: 14px !important;
+    flex-shrink: 0;
+}
+
+html.theme-dark .profile-dropdown-container .profile-name {
+    color: #f1f5f9 !important;
+}
+
+html.theme-dark .profile-dropdown-container .profile-role,
+html.theme-dark .profile-dropdown-container .profile-password-link,
+html.theme-dark .profile-dropdown-container .profile-footer-link,
+html.theme-dark .profile-dropdown-container .profile-logout-link {
+    color: #94a3b8 !important;
+}
+
+html.theme-dark .profile-dropdown-container .profile-logout-link:hover,
+html.theme-dark .profile-dropdown-container .profile-dropdown-footer button[type="submit"]:hover {
+    background: transparent !important;
+    color: #ffffff !important;
 }
 
 /* ===== Global themed modal headers (all modals app-wide) ===== */

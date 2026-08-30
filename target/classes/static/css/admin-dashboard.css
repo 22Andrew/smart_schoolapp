@@ -466,3 +466,200 @@ html.theme-dark main.main-content.receptionist-dashboard-main {
         width: 100%;
     }
 }
+
+/* Librarian dashboard */
+.librarian-dashboard-page .nav-right {
+    gap: 0.75rem;
+}
+
+.librarian-dashboard-page .icon-btn-flag img {
+    display: block;
+    border-radius: 2px;
+}
+
+.librarian-dashboard-page .icon-btn-whatsapp {
+    padding: 0.35rem;
+}
+
+html.theme-light main.main-content.librarian-dashboard-main,
+html.theme-dark main.main-content.librarian-dashboard-main {
+    background: var(--admin-demo-bg) !important;
+    background-color: var(--admin-demo-bg) !important;
+    padding: 15px !important;
+}
+
+.librarian-top-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 10px;
+    max-width: 760px;
+}
+
+.librarian-dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 10px;
+    max-width: 760px;
+}
+
+.librarian-dashboard-grid .admin-attendance-card {
+    background: #ffffff !important;
+    border: 1px solid var(--admin-demo-card-border) !important;
+    border-radius: 3px !important;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1) !important;
+    color: #333333 !important;
+}
+
+.librarian-dashboard-stack {
+    width: 370px;
+}
+
+.librarian-dashboard-main .admin-progress-green .admin-progress-fill {
+    background: #00a65a !important;
+    background-color: #00a65a !important;
+}
+
+.librarian-percent-label {
+    text-transform: uppercase;
+}
+
+@media (max-width: 900px) {
+    .librarian-top-stats,
+    .librarian-dashboard-grid {
+        grid-template-columns: 1fr;
+        max-width: 100%;
+    }
+
+    .librarian-dashboard-stack {
+        width: 100%;
+    }
+}
+
+/* Admin / Super Admin full dashboard */
+html.theme-light main.main-content.admin-full-dashboard-main,
+html.theme-dark main.main-content.admin-full-dashboard-main {
+    background: var(--admin-demo-bg) !important;
+    background-color: var(--admin-demo-bg) !important;
+    padding: 15px !important;
+}
+
+.admin-full-mini-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.admin-full-dashboard-main .admin-full-mini-stats-row {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 10px;
+    width: 100%;
+}
+
+.admin-full-dashboard-main .admin-full-mini-stats-row .accountant-mini-stat {
+    min-width: 0;
+    width: 100%;
+}
+
+.admin-full-dashboard-main .charts-grid {
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.admin-full-dashboard-main .chart-card {
+    border: 1px solid var(--admin-demo-card-border) !important;
+    border-radius: 3px !important;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1) !important;
+}
+
+.admin-overview-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.admin-overview-card {
+    background: #ffffff !important;
+    border: 1px solid var(--admin-demo-card-border) !important;
+    border-radius: 3px !important;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1) !important;
+    padding: 10px 12px 4px !important;
+    min-height: 180px;
+}
+
+.admin-overview-card .admin-card-title {
+    margin-bottom: 8px !important;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f4f4f4;
+}
+
+.admin-full-stats-grid {
+    margin-top: 0 !important;
+}
+
+.admin-full-dashboard-main .admin-progress-cyan .admin-progress-fill {
+    background: #00c0ef !important;
+    background-color: #00c0ef !important;
+}
+
+.admin-full-dashboard-main .admin-progress-navy .admin-progress-fill {
+    background: #001f3f !important;
+    background-color: #001f3f !important;
+}
+
+.admin-full-dashboard-main .admin-progress-orange .admin-progress-fill {
+    background: #f39c12 !important;
+    background-color: #f39c12 !important;
+}
+
+.admin-full-dashboard-main .chart-title {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #333333 !important;
+    margin-bottom: 0.75rem !important;
+}
+
+.admin-full-dashboard-main .chart-canvas-wrap {
+    height: 220px;
+}
+
+.admin-full-dashboard-main .chart-canvas-wrap-lg {
+    height: 260px;
+}
+
+.admin-full-dashboard-main .accountant-donut-wrap {
+    height: 180px !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.admin-full-dashboard-main .chart-card {
+    padding: 12px !important;
+    background: #ffffff !important;
+}
+
+@media (max-width: 1200px) {
+    .admin-overview-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 900px) {
+    .admin-full-dashboard-main .admin-full-mini-stats-row {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-overview-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-full-stats-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}

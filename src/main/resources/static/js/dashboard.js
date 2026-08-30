@@ -1404,6 +1404,100 @@ document.addEventListener('DOMContentLoaded', function() {
         renderWeekView();
     } // End of calendar functionality check
 
+    // Profile Dropdown — normalize legacy markup to Smart School layout
+    const PROFILE_ICONS = {
+        key: '<svg class="profile-icon profile-icon-key" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 2l-2 2"></path><path d="M7.5 8.5a5.5 5.5 0 1 0 0 7.778"></path><path d="m15.5 7.5 3 3L22 7l-3-3"></path></svg>',
+        globe: '<svg class="profile-icon profile-icon-globe" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>',
+        logout: '<svg class="profile-icon profile-icon-logout" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>'
+    };
+
+    function normalizeProfileDropdownIcons(dropdown) {
+        const passwordLink = dropdown.querySelector('.profile-password-link');
+        if (passwordLink) {
+            passwordLink.href = '/admin/admin/changepass';
+            passwordLink.innerHTML = PROFILE_ICONS.key + '<span class="profile-password-label">Password</span>';
+        }
+
+        const frontSite = dropdown.querySelector('.profile-front-site-link');
+        if (frontSite) {
+            frontSite.innerHTML = PROFILE_ICONS.globe + '<span>Front Site</span>';
+        }
+
+        const logoutBtn = dropdown.querySelector('.profile-dropdown-footer button[type="submit"]');
+        if (logoutBtn) {
+            logoutBtn.classList.remove('logout-btn');
+            logoutBtn.classList.add('profile-footer-link', 'profile-logout-link');
+            logoutBtn.innerHTML = PROFILE_ICONS.logout + '<span>Logout</span>';
+        }
+    }
+
+    function enhanceProfileDropdown() {
+        const dropdown = document.getElementById('profileDropdown');
+        if (!dropdown) {
+            return;
+        }
+
+        if (dropdown.dataset.enhanced !== 'true') {
+            const profileInfo = dropdown.querySelector('.profile-info');
+            const body = dropdown.querySelector('.profile-dropdown-body');
+            const passwordItem = body ? body.querySelector('.profile-dropdown-item') : null;
+
+            if (profileInfo && passwordItem && !profileInfo.querySelector('.profile-password-link')) {
+                passwordItem.classList.add('profile-password-link');
+                passwordItem.href = '/admin/admin/changepass';
+                if (!passwordItem.querySelector('.profile-password-label, span')) {
+                    const label = document.createElement('span');
+                    label.className = 'profile-password-label';
+                    label.textContent = 'Password';
+                    passwordItem.appendChild(label);
+                }
+                profileInfo.appendChild(passwordItem);
+                if (body) {
+                    body.remove();
+                }
+            }
+
+            if (profileInfo && !profileInfo.querySelector('.profile-password-link')) {
+                const passwordLink = document.createElement('a');
+                passwordLink.href = '/admin/admin/changepass';
+                passwordLink.className = 'profile-password-link';
+                passwordLink.setAttribute('role', 'menuitem');
+                passwordLink.innerHTML = PROFILE_ICONS.key + '<span class="profile-password-label">Password</span>';
+                profileInfo.appendChild(passwordLink);
+            }
+
+            const footer = dropdown.querySelector('.profile-dropdown-footer');
+            if (footer && !footer.querySelector('.profile-front-site-link')) {
+                const frontSite = document.createElement('a');
+                frontSite.href = '/';
+                frontSite.className = 'profile-footer-link profile-front-site-link';
+                frontSite.target = '_blank';
+                frontSite.rel = 'noopener noreferrer';
+                frontSite.setAttribute('role', 'menuitem');
+                frontSite.innerHTML = PROFILE_ICONS.globe + '<span>Front Site</span>';
+                footer.insertBefore(frontSite, footer.firstChild);
+            }
+
+            if (footer) {
+                const logoutForm = footer.querySelector('form');
+                if (logoutForm) {
+                    logoutForm.classList.add('profile-logout-form');
+                }
+            }
+
+            dropdown.querySelectorAll('.profile-avatar img').forEach(function (img) {
+                img.classList.add('profile-avatar-img');
+            });
+
+            dropdown.dataset.enhanced = 'true';
+        }
+
+        normalizeProfileDropdownIcons(dropdown);
+    }
+
+    enhanceProfileDropdown();
+    window.enhanceProfileDropdown = enhanceProfileDropdown;
+
     // Profile Dropdown Functionality
     const profileBtn = document.getElementById('profileBtn');
     const profileDropdown = document.getElementById('profileDropdown');
@@ -1572,7 +1666,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.profile-name').forEach(function (el) {
                 el.textContent = name;
             });
-            document.querySelectorAll('.profile-avatar img').forEach(function (img) {
+            document.querySelectorAll('.profile-avatar img, .profile-avatar-img').forEach(function (img) {
                 img.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(name) + '&background=3182ce&color=fff&size=80';
             });
         }
@@ -1591,13 +1685,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         if (roleSidebar) {
-            document.body.classList.remove('teacher-dashboard-page', 'accountant-dashboard-page', 'receptionist-dashboard-page');
+            document.body.classList.remove('teacher-dashboard-page', 'accountant-dashboard-page', 'receptionist-dashboard-page', 'librarian-dashboard-page');
             if (role === 'Teacher') {
                 document.body.classList.add('teacher-dashboard-page');
             } else if (role === 'Accountant') {
                 document.body.classList.add('accountant-dashboard-page');
             } else if (role === 'Receptionist') {
                 document.body.classList.add('receptionist-dashboard-page');
+            } else if (role === 'Librarian') {
+                document.body.classList.add('librarian-dashboard-page');
             }
         }
     }

@@ -124,9 +124,35 @@ public class AdminLayoutAdvice {
         return roleSidebarMenuService.getReceptionistAllowedSubmenuSlugs();
     }
 
+    @ModelAttribute("librarianSidebar")
+    public boolean librarianSidebar(Authentication authentication) {
+        return roleSidebarMenuService.isLibrarian(authentication);
+    }
+
+    @ModelAttribute("librarianSidebarMenus")
+    public List<String> librarianSidebarMenus(Authentication authentication) {
+        if (!roleSidebarMenuService.isLibrarian(authentication)) {
+            return List.of();
+        }
+        return roleSidebarMenuService.getLibrarianMenuSlugs();
+    }
+
+    @ModelAttribute("librarianSidebarSubmenus")
+    public Map<String, Set<String>> librarianSidebarSubmenus(Authentication authentication) {
+        if (!roleSidebarMenuService.isLibrarian(authentication)) {
+            return Map.of();
+        }
+        return roleSidebarMenuService.getLibrarianAllowedSubmenuSlugs();
+    }
+
+    @ModelAttribute("adminSidebar")
+    public boolean adminSidebar(Authentication authentication) {
+        return roleSidebarMenuService.isAdmin(authentication);
+    }
+
     @ModelAttribute("staffDirectoryRestricted")
     public boolean staffDirectoryRestricted(Authentication authentication) {
-        return staffSessionService.isReceptionistStaffDirectoryRestricted(authentication);
+        return staffSessionService.isStaffDirectoryRestricted(authentication);
     }
 
     @ModelAttribute("currentStaffMemberId")

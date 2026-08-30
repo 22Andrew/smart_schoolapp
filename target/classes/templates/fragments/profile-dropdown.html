@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<body>
+    <!-- Staff / admin panel profile popup (Super Admin, Admin, Teacher, etc.) -->
+    <div class="profile-dropdown-container" th:fragment="staff-profile-dropdown">
+        <button class="icon-btn user-btn" id="profileBtn" type="button" title="Profile" aria-expanded="false" aria-haspopup="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+        </button>
+
+        <div class="profile-dropdown" id="profileDropdown" role="menu" aria-label="Profile menu">
+            <div class="profile-dropdown-header">
+                <div class="profile-avatar">
+                    <img class="profile-avatar-img"
+                         src="https://ui-avatars.com/api/?name=Staff+User&amp;background=3182ce&amp;color=fff&amp;size=80"
+                         alt="Profile Picture">
+                </div>
+                <div class="profile-info">
+                    <div class="profile-name" th:text="${staffUserName != null ? staffUserName : (session.user != null ? session.user.name : 'Staff User')}">Staff User</div>
+                    <div class="profile-role" th:text="${staffRole != null and !#strings.isEmpty(staffRole) ? staffRole : (session.user != null ? session.user.role : 'Admin')}">Admin</div>
+                    <a th:href="@{/admin/admin/changepass}" class="profile-password-link" role="menuitem">
+                        <svg class="profile-icon profile-icon-key" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M21 2l-2 2"></path>
+                            <path d="M7.5 8.5a5.5 5.5 0 1 0 0 7.778"></path>
+                            <path d="m15.5 7.5 3 3L22 7l-3-3"></path>
+                        </svg>
+                        <span class="profile-password-label">Password</span>
+                    </a>
+                </div>
+            </div>
+            <div class="profile-dropdown-footer">
+                <a href="/" class="profile-footer-link profile-front-site-link" target="_blank" rel="noopener noreferrer" role="menuitem">
+                    <svg class="profile-icon profile-icon-globe" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                    </svg>
+                    <span>Front Site</span>
+                </a>
+                <form th:action="@{/logout}" method="post" class="profile-logout-form">
+                    <button type="submit" class="profile-footer-link profile-logout-link" role="menuitem">
+                        <svg class="profile-icon profile-icon-logout" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                        <span>Logout</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student / parent user panel profile popup -->
+    <div class="profile-dropdown-container" th:fragment="user-profile-dropdown">
+        <button class="icon-btn user-btn" id="profileBtn" type="button" title="Profile" aria-expanded="false" aria-haspopup="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+        </button>
+
+        <div class="profile-dropdown" id="profileDropdown" role="menu" aria-label="Profile menu">
+            <div class="profile-dropdown-header">
+                <div class="profile-avatar">
+                    <img class="profile-avatar-img" th:src="${profileImageUrl}" alt="Profile Picture">
+                </div>
+                <div class="profile-info">
+                    <div class="profile-name" th:text="${studentName}">Student</div>
+                    <div class="profile-role" th:text="${userRole == 'PARENT' ? 'Parent' : 'Student'}">Student</div>
+                    <a th:href="@{/user/changepass}" class="profile-password-link" role="menuitem">
+                        <svg class="profile-icon profile-icon-key" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M21 2l-2 2"></path>
+                            <path d="M7.5 8.5a5.5 5.5 0 1 0 0 7.778"></path>
+                            <path d="m15.5 7.5 3 3L22 7l-3-3"></path>
+                        </svg>
+                        <span class="profile-password-label">Password</span>
+                    </a>
+                </div>
+            </div>
+            <div class="profile-dropdown-footer">
+                <a href="/" class="profile-footer-link profile-front-site-link" target="_blank" rel="noopener noreferrer" role="menuitem">
+                    <svg class="profile-icon profile-icon-globe" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                    </svg>
+                    <span>Front Site</span>
+                </a>
+                <form th:action="@{/site/logout}" method="post" class="profile-logout-form">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <button type="submit" class="profile-footer-link profile-logout-link" role="menuitem">
+                        <svg class="profile-icon profile-icon-logout" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                        <span>Logout</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

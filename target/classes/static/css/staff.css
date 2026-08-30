@@ -2494,29 +2494,43 @@
     letter-spacing: 0.04em;
 }
 
-/* Receptionist staff directory: hide all actions except own-record view */
+/* Restricted staff directory (Receptionist / Librarian): hide all actions except own-record view */
+html[data-restricted-staff-directory="true"] .staff-card-edit-btn,
+html[data-restricted-staff-directory="true"] .staff-list-edit-btn,
 html[data-receptionist-staff-directory="true"] .staff-card-edit-btn,
 html[data-receptionist-staff-directory="true"] .staff-list-edit-btn,
+body.restricted-staff-directory-mode .staff-card-edit-btn,
+body.restricted-staff-directory-mode .staff-list-edit-btn,
 body.receptionist-staff-directory-mode .staff-card-edit-btn,
 body.receptionist-staff-directory-mode .staff-list-edit-btn {
     display: none !important;
 }
 
+html[data-restricted-staff-directory="true"] .staff-card-view-btn:not(.staff-own-record-action),
+html[data-restricted-staff-directory="true"] .staff-list-view-btn:not(.staff-own-record-action),
 html[data-receptionist-staff-directory="true"] .staff-card-view-btn:not(.staff-own-record-action),
 html[data-receptionist-staff-directory="true"] .staff-list-view-btn:not(.staff-own-record-action),
+body.restricted-staff-directory-mode .staff-card-view-btn:not(.staff-own-record-action),
+body.restricted-staff-directory-mode .staff-list-view-btn:not(.staff-own-record-action),
 body.receptionist-staff-directory-mode .staff-card-view-btn:not(.staff-own-record-action),
 body.receptionist-staff-directory-mode .staff-list-view-btn:not(.staff-own-record-action) {
     display: none !important;
 }
 
+html[data-restricted-staff-directory="true"] .staff-card-actions:not(.staff-own-record-actions),
+html[data-restricted-staff-directory="true"] .staff-list-action-buttons:not(.staff-own-record-actions),
 html[data-receptionist-staff-directory="true"] .staff-card-actions:not(.staff-own-record-actions),
 html[data-receptionist-staff-directory="true"] .staff-list-action-buttons:not(.staff-own-record-actions),
+body.restricted-staff-directory-mode .staff-card-actions:not(.staff-own-record-actions),
+body.restricted-staff-directory-mode .staff-list-action-buttons:not(.staff-own-record-actions),
 body.receptionist-staff-directory-mode .staff-card-actions:not(.staff-own-record-actions),
 body.receptionist-staff-directory-mode .staff-list-action-buttons:not(.staff-own-record-actions) {
     display: none !important;
 }
 
+html[data-restricted-staff-directory="true"] .btn-add-staff,
 html[data-receptionist-staff-directory="true"] .btn-add-staff,
+body.restricted-staff-directory-mode .btn-add-staff,
 body.receptionist-staff-directory-mode .btn-add-staff {
     display: none !important;
 }

@@ -35,6 +35,29 @@ public class StaffSessionService {
             "librarian@gmail.com", "9004"
     );
 
+    private record StaffDirectoryRoleProfile(
+            String loginEmail,
+            String demoStaffId,
+            String preferredFullName,
+            String searchRole
+    ) {
+    }
+
+    private static final Map<String, StaffDirectoryRoleProfile> STAFF_DIRECTORY_ROLE_PROFILES = Map.of(
+            "Receptionist", new StaffDirectoryRoleProfile(
+                    "receptionist@gmail.com", "9006", "Receptionist User", "Receptionist"),
+            "Librarian", new StaffDirectoryRoleProfile(
+                    "librarian@gmail.com", "9004", "Librarian User", "Librarian"),
+            "Teacher", new StaffDirectoryRoleProfile(
+                    "teacher@gmail.com", "9002", null, "Teacher"),
+            "Accountant", new StaffDirectoryRoleProfile(
+                    "accountant@gmail.com", "9005", null, "Accountant")
+    );
+
+    private static final List<String> STAFF_DIRECTORY_RESTRICTED_ROLES = List.of(
+            "Receptionist", "Librarian", "Teacher", "Accountant"
+    );
+
     private final RoleSidebarMenuService roleSidebarMenuService;
     private final StaffMemberRepository staffMemberRepository;
 
@@ -67,7 +90,8 @@ public class StaffSessionService {
     public boolean usesRoleBasedSidebar(Authentication authentication) {
         return roleSidebarMenuService.isTeacher(authentication)
                 || roleSidebarMenuService.isAccountant(authentication)
-                || roleSidebarMenuService.isReceptionist(authentication);
+                || roleSidebarMenuService.isReceptionist(authentication)
+                || roleSidebarMenuService.isLibrarian(authentication);
     }
 
     public String resolveDashboardUrl(Authentication authentication) {
@@ -100,34 +124,68 @@ public class StaffSessionService {
             }
         }
 
-        if (roleSidebarMenuService.isReceptionist(authentication)) {
-            return staffMemberRepository.findByEmail("receptionist@gmail.com").map(StaffMember::getId)
-                    .or(() -> staffMemberRepository.findByStaffId("9006").map(StaffMember::getId))
-                    .or(() -> staffMemberRepository.search("Receptionist", null).stream()
-                            .filter(member -> "Receptionist".equalsIgnoreCase(member.getFirstName())
-                                    && "User".equalsIgnoreCase(member.getLastName()))
-                            .findFirst()
-                            .map(StaffMember::getId))
-                    .or(() -> staffMemberRepository.search("Receptionist", null).stream()
-                            .findFirst()
-                            .map(StaffMember::getId));
-        }
+        return resolveStaffDirectoryRestrictedRole(authentication)
+                .flatMap(this::resolveFallbackStaffIdForRole);
+    }
 
+    public Optional<String> resolveStaffDirectoryRestrictedRole(Authentication authentication) {
+        for (String role : STAFF_DIRECTORY_RESTRICTED_ROLES) {
+            if (isStaffDirectoryRestrictedForRole(authentication, role)) {
+                return Optional.of(role);
+            }
+        }
         return Optional.empty();
     }
 
+    public boolean isStaffDirectoryRestricted(Authentication authentication) {
+        return resolveStaffDirectoryRestrictedRole(authentication).isPresent();
+    }
+
     public boolean isReceptionistStaffDirectoryRestricted(Authentication authentication) {
-        if (roleSidebarMenuService.isReceptionist(authentication)) {
+        return isStaffDirectoryRestrictedForRole(authentication, "Receptionist");
+    }
+
+    public boolean isLibrarianStaffDirectoryRestricted(Authentication authentication) {
+        return isStaffDirectoryRestrictedForRole(authentication, "Librarian");
+    }
+
+    public boolean isTeacherStaffDirectoryRestricted(Authentication authentication) {
+        return isStaffDirectoryRestrictedForRole(authentication, "Teacher");
+    }
+
+    public boolean isAccountantStaffDirectoryRestricted(Authentication authentication) {
+        return isStaffDirectoryRestrictedForRole(authentication, "Accountant");
+    }
+
+    private boolean isStaffDirectoryRestrictedForRole(Authentication authentication, String roleLabel) {
+        StaffDirectoryRoleProfile profile = STAFF_DIRECTORY_ROLE_PROFILES.get(roleLabel);
+        if (profile == null) {
+            return false;
+        }
+        if (matchesRoleAuthority(authentication, roleLabel)) {
             return true;
         }
         if (authentication == null || authentication.getName() == null) {
             return false;
         }
         String username = authentication.getName().trim().toLowerCase(Locale.ROOT);
-        if ("receptionist@gmail.com".equals(username)) {
+        if (profile.loginEmail().equals(username)) {
             return true;
         }
-        return "Receptionist".equalsIgnoreCase(roleSidebarMenuService.resolveRoleLabel(authentication));
+        return roleLabel.equalsIgnoreCase(roleSidebarMenuService.resolveRoleLabel(authentication));
+    }
+
+    private boolean matchesRoleAuthority(Authentication authentication, String roleLabel) {
+        if (authentication == null) {
+            return false;
+        }
+        return switch (roleLabel) {
+            case "Receptionist" -> roleSidebarMenuService.isReceptionist(authentication);
+            case "Librarian" -> roleSidebarMenuService.isLibrarian(authentication);
+            case "Teacher" -> roleSidebarMenuService.isTeacher(authentication);
+            case "Accountant" -> roleSidebarMenuService.isAccountant(authentication);
+            default -> false;
+        };
     }
 
     public void applyDirectoryPermissions(List<Map<String, Object>> staff, Authentication authentication) {
@@ -135,10 +193,20 @@ public class StaffSessionService {
             return;
         }
 
-        boolean restricted = isReceptionistStaffDirectoryRestricted(authentication);
-        Optional<Long> ownId = restricted ? resolveLinkedStaffMemberId(authentication) : Optional.empty();
-        if (restricted && ownId.isEmpty()) {
-            ownId = resolveFallbackReceptionistStaffId();
+        Optional<String> restrictedRole = resolveStaffDirectoryRestrictedRole(authentication);
+        if (restrictedRole.isEmpty()) {
+            for (int i = 0; i < staff.size(); i++) {
+                Map<String, Object> row = new LinkedHashMap<>(staff.get(i));
+                row.put("canView", true);
+                row.put("canEdit", true);
+                staff.set(i, row);
+            }
+            return;
+        }
+
+        Optional<Long> ownId = resolveLinkedStaffMemberId(authentication);
+        if (ownId.isEmpty()) {
+            ownId = resolveFallbackStaffIdForRole(restrictedRole.get());
         }
         String loginEmail = authentication != null && authentication.getName() != null
                 ? authentication.getName().trim().toLowerCase(Locale.ROOT)
@@ -146,35 +214,59 @@ public class StaffSessionService {
 
         for (int i = 0; i < staff.size(); i++) {
             Map<String, Object> row = new LinkedHashMap<>(staff.get(i));
-            if (restricted) {
-                boolean isOwn = matchesOwnStaffRecord(row, ownId, loginEmail);
-                row.put("canView", isOwn);
-                row.put("canEdit", false);
-            } else {
-                row.put("canView", true);
-                row.put("canEdit", true);
-            }
+            boolean isOwn = matchesOwnStaffRecord(row, ownId, loginEmail, restrictedRole.get());
+            row.put("canView", isOwn);
+            row.put("canEdit", false);
             staff.set(i, row);
         }
     }
 
-    private Optional<Long> resolveFallbackReceptionistStaffId() {
-        List<StaffMember> receptionists = staffMemberRepository.search("Receptionist", null);
-        if (receptionists.isEmpty()) {
+    private Optional<Long> resolveFallbackStaffIdForRole(String role) {
+        StaffDirectoryRoleProfile profile = STAFF_DIRECTORY_ROLE_PROFILES.get(role);
+        if (profile == null) {
             return Optional.empty();
         }
-        if (receptionists.size() == 1) {
-            return Optional.of(receptionists.get(0).getId());
+
+        Optional<Long> byStaffId = staffMemberRepository.findByStaffId(profile.demoStaffId()).map(StaffMember::getId);
+        if (byStaffId.isPresent()) {
+            return byStaffId;
         }
-        return receptionists.stream()
-                .filter(member -> "Receptionist User".equalsIgnoreCase(
-                        (member.getFirstName() + " " + (member.getLastName() == null ? "" : member.getLastName())).trim()))
+
+        Optional<Long> byLoginEmail = staffMemberRepository.findByEmail(profile.loginEmail()).map(StaffMember::getId);
+        if (byLoginEmail.isPresent()) {
+            return byLoginEmail;
+        }
+
+        if (profile.preferredFullName() != null) {
+            Optional<Long> byPreferredName = staffMemberRepository.search(profile.searchRole(), null).stream()
+                    .filter(member -> profile.preferredFullName().equalsIgnoreCase(formatFullName(member)))
+                    .findFirst()
+                    .map(StaffMember::getId);
+            if (byPreferredName.isPresent()) {
+                return byPreferredName;
+            }
+        }
+
+        List<StaffMember> matches = staffMemberRepository.search(profile.searchRole(), null);
+        if (matches.isEmpty()) {
+            return Optional.empty();
+        }
+        if (matches.size() == 1) {
+            return Optional.of(matches.get(0).getId());
+        }
+
+        return matches.stream()
+                .filter(member -> profile.demoStaffId().equals(member.getStaffId()))
                 .findFirst()
-                .map(StaffMember::getId)
-                .or(() -> receptionists.stream().findFirst().map(StaffMember::getId));
+                .map(StaffMember::getId);
     }
 
-    private boolean matchesOwnStaffRecord(Map<String, Object> row, Optional<Long> ownId, String loginEmail) {
+    private boolean matchesOwnStaffRecord(Map<String, Object> row, Optional<Long> ownId, String loginEmail, String restrictedRole) {
+        StaffDirectoryRoleProfile profile = STAFF_DIRECTORY_ROLE_PROFILES.get(restrictedRole);
+        if (profile == null) {
+            return false;
+        }
+
         if (ownId.isPresent()) {
             Long rowId = toLong(row.get("id"));
             if (rowId != null && ownId.get().equals(rowId)) {
@@ -189,30 +281,54 @@ public class StaffSessionService {
         }
 
         Object staffId = row.get("staffId");
-        if ("9006".equals(String.valueOf(staffId))) {
+        if (profile.demoStaffId().equals(String.valueOf(staffId))) {
             return true;
         }
 
         Object fullName = row.get("fullName");
-        if (fullName != null && "Receptionist User".equalsIgnoreCase(String.valueOf(fullName).trim())) {
+        if (profile.preferredFullName() != null && fullName != null
+                && profile.preferredFullName().equalsIgnoreCase(String.valueOf(fullName).trim())) {
             return true;
         }
 
-        Object role = row.get("role");
-        Object roles = row.get("roles");
-        boolean receptionistRole = (role != null && "Receptionist".equalsIgnoreCase(String.valueOf(role).trim()))
-                || (roles instanceof Iterable<?> iterable && containsReceptionistRole(iterable));
-        return receptionistRole && fullName != null
-                && String.valueOf(fullName).toLowerCase(Locale.ROOT).contains("receptionist");
+        if (rowHasRole(row, profile.searchRole()) && fullName != null
+                && String.valueOf(fullName).toLowerCase(Locale.ROOT).contains(profile.searchRole().toLowerCase(Locale.ROOT))) {
+            return profile.preferredFullName() != null;
+        }
+
+        return false;
     }
 
-    private boolean containsReceptionistRole(Iterable<?> roles) {
-        for (Object value : roles) {
-            if (value != null && "Receptionist".equalsIgnoreCase(String.valueOf(value).trim())) {
-                return true;
+    private boolean rowHasRole(Map<String, Object> row, String expectedRole) {
+        Object role = row.get("role");
+        if (role != null && roleContains(expectedRole, String.valueOf(role))) {
+            return true;
+        }
+        Object roles = row.get("roles");
+        if (roles instanceof Iterable<?> iterable) {
+            for (Object value : iterable) {
+                if (value != null && roleContains(expectedRole, String.valueOf(value))) {
+                    return true;
+                }
             }
         }
         return false;
+    }
+
+    private boolean roleContains(String expectedRole, String actualRole) {
+        if (expectedRole == null || actualRole == null) {
+            return false;
+        }
+        for (String part : actualRole.split(",")) {
+            if (expectedRole.equalsIgnoreCase(part.trim())) {
+                return true;
+            }
+        }
+        return expectedRole.equalsIgnoreCase(actualRole.trim());
+    }
+
+    private String formatFullName(StaffMember member) {
+        return (member.getFirstName() + " " + (member.getLastName() == null ? "" : member.getLastName())).trim();
     }
 
     private Long toLong(Object value) {

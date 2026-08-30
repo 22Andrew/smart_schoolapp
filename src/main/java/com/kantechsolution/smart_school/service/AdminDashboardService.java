@@ -7,7 +7,11 @@ import com.kantechsolution.smart_school.model.FeeMaster;
 import com.kantechsolution.smart_school.model.FeePayment;
 import com.kantechsolution.smart_school.model.Income;
 import com.kantechsolution.smart_school.model.StaffAttendanceEntry;
+import com.kantechsolution.smart_school.model.Library;
+import com.kantechsolution.smart_school.model.LibraryBookIssue;
+import com.kantechsolution.smart_school.model.StaffLeaveRequest;
 import com.kantechsolution.smart_school.model.StaffMember;
+import com.kantechsolution.smart_school.model.StudentLeaveRequest;
 import com.kantechsolution.smart_school.model.StudentAdmission;
 import com.kantechsolution.smart_school.model.StudentAttendanceEntry;
 import com.kantechsolution.smart_school.repository.AdmissionEnquiryRepository;
@@ -16,11 +20,15 @@ import com.kantechsolution.smart_school.repository.FeeGroupAssignmentRepository;
 import com.kantechsolution.smart_school.repository.FeeMasterRepository;
 import com.kantechsolution.smart_school.repository.FeePaymentRepository;
 import com.kantechsolution.smart_school.repository.IncomeRepository;
+import com.kantechsolution.smart_school.repository.LibraryBookIssueRepository;
+import com.kantechsolution.smart_school.repository.LibraryRepository;
 import com.kantechsolution.smart_school.repository.NoticeBoardRepository;
 import com.kantechsolution.smart_school.repository.StaffAttendanceEntryRepository;
+import com.kantechsolution.smart_school.repository.StaffLeaveRequestRepository;
 import com.kantechsolution.smart_school.repository.StaffMemberRepository;
 import com.kantechsolution.smart_school.repository.StudentAdmissionRepository;
 import com.kantechsolution.smart_school.repository.StudentAttendanceEntryRepository;
+import com.kantechsolution.smart_school.repository.StudentLeaveRequestRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,6 +74,10 @@ public class AdminDashboardService {
     private final ExpenseRepository expenseRepository;
     private final AdmissionEnquiryRepository admissionEnquiryRepository;
     private final AppCurrencyService appCurrencyService;
+    private final StaffLeaveRequestRepository staffLeaveRequestRepository;
+    private final StudentLeaveRequestRepository studentLeaveRequestRepository;
+    private final LibraryBookIssueRepository libraryBookIssueRepository;
+    private final LibraryRepository libraryRepository;
 
     public AdminDashboardService(LoginPageService loginPageService,
                                  AcademicSessionService academicSessionService,
@@ -81,7 +93,11 @@ public class AdminDashboardService {
                                  IncomeRepository incomeRepository,
                                  ExpenseRepository expenseRepository,
                                  AdmissionEnquiryRepository admissionEnquiryRepository,
-                                 AppCurrencyService appCurrencyService) {
+                                 AppCurrencyService appCurrencyService,
+                                 StaffLeaveRequestRepository staffLeaveRequestRepository,
+                                 StudentLeaveRequestRepository studentLeaveRequestRepository,
+                                 LibraryBookIssueRepository libraryBookIssueRepository,
+                                 LibraryRepository libraryRepository) {
         this.loginPageService = loginPageService;
         this.academicSessionService = academicSessionService;
         this.roleSidebarMenuService = roleSidebarMenuService;
@@ -97,6 +113,10 @@ public class AdminDashboardService {
         this.expenseRepository = expenseRepository;
         this.admissionEnquiryRepository = admissionEnquiryRepository;
         this.appCurrencyService = appCurrencyService;
+        this.staffLeaveRequestRepository = staffLeaveRequestRepository;
+        this.studentLeaveRequestRepository = studentLeaveRequestRepository;
+        this.libraryBookIssueRepository = libraryBookIssueRepository;
+        this.libraryRepository = libraryRepository;
     }
 
     @Transactional(readOnly = true)
@@ -108,7 +128,8 @@ public class AdminDashboardService {
 
         LocalDate today = LocalDate.now();
         List<StudentAdmission> activeStudents = studentAdmissionRepository.findByDisabledFalseOrderByFirstNameAscLastNameAsc();
-        long totalStudents = activeStudents.size();
+        long studentHeadCount = activeStudents.size();
+        long totalStudents = studentAdmissionRepository.count();
         List<Long> studentIds = activeStudents.stream().map(StudentAdmission::getId).toList();
 
         List<StudentAttendanceEntry> todayEntries = studentIds.isEmpty()
@@ -121,11 +142,12 @@ public class AdminDashboardService {
         long halfDayCount = countStudentStatus(todayEntries, "Half Day");
 
         model.addAttribute("totalStudents", totalStudents);
+        model.addAttribute("studentHeadCount", studentHeadCount);
         model.addAttribute("studentPresentToday", presentCount);
-        model.addAttribute("studentPresentTodayLabel", presentCount + "/" + totalStudents);
-        model.addAttribute("studentPresentTodayPercent", formatPercent(percent(presentCount, totalStudents)));
+        model.addAttribute("studentPresentTodayLabel", presentCount + "/" + studentHeadCount);
+        model.addAttribute("studentPresentTodayPercent", formatPercent(percent(presentCount, studentHeadCount)));
         model.addAttribute("studentTodayAttendance", buildAttendanceRows(
-                totalStudents, presentCount, lateCount, absentCount, halfDayCount));
+                studentHeadCount, presentCount, lateCount, absentCount, halfDayCount));
 
         List<StaffMember> activeStaff = staffMemberRepository.findByDisabledFalseOrderByFirstNameAscLastNameAsc();
         long totalStaff = activeStaff.size();
@@ -145,19 +167,93 @@ public class AdminDashboardService {
         boolean teacherLayout = authentication != null && roleSidebarMenuService.isTeacher(authentication);
         boolean receptionistLayout = authentication != null && roleSidebarMenuService.isReceptionist(authentication);
         boolean accountantLayout = authentication != null && roleSidebarMenuService.isAccountant(authentication);
+        boolean librarianLayout = authentication != null && roleSidebarMenuService.isLibrarian(authentication);
+        boolean adminLayout = authentication != null && roleSidebarMenuService.isAdminDashboardUser(authentication);
 
         if (teacherLayout) {
             model.addAttribute("dashboardLayout", "teacher");
         } else if (receptionistLayout) {
             model.addAttribute("dashboardLayout", "receptionist");
             populateReceptionistDashboard(model);
+        } else if (librarianLayout) {
+            model.addAttribute("dashboardLayout", "librarian");
+            populateLibrarianDashboard(model, today);
         } else if (accountantLayout) {
             model.addAttribute("dashboardLayout", "accountant");
-            populateAccountantCharts(model, today, activeStaff, totalStudents);
+            populateAccountantCharts(model, today, activeStaff, studentHeadCount);
+        } else if (adminLayout) {
+            model.addAttribute("dashboardLayout", "admin");
+            populateAdminDashboard(model, today, activeStaff, studentHeadCount);
         } else {
-            model.addAttribute("dashboardLayout", "accountant");
-            populateAccountantCharts(model, today, activeStaff, totalStudents);
+            model.addAttribute("dashboardLayout", "admin");
+            populateAdminDashboard(model, today, activeStaff, studentHeadCount);
         }
+    }
+
+    private void populateAdminDashboard(Model model, LocalDate today, List<StaffMember> activeStaff, long studentHeadCount) {
+        populateAccountantCharts(model, today, activeStaff, studentHeadCount);
+        populateReceptionistDashboard(model);
+
+        List<StaffLeaveRequest> staffLeaves = staffLeaveRequestRepository.findAllByOrderByApplyDateDescIdDesc();
+        long staffApprovedLeave = staffLeaves.stream()
+                .filter(request -> isStatus(request.getStatus(), "Approved"))
+                .count();
+        long staffLeaveTotal = staffLeaves.size();
+        model.addAttribute("staffApprovedLeaveLabel", staffApprovedLeave + "/" + Math.max(staffLeaveTotal, staffApprovedLeave));
+        model.addAttribute("staffApprovedLeavePercent", formatPercent(percent(staffApprovedLeave, Math.max(staffLeaveTotal, 1))));
+
+        List<StudentLeaveRequest> studentLeaves = studentLeaveRequestRepository.findAll();
+        long studentApprovedLeave = studentLeaves.stream()
+                .filter(request -> isStatus(request.getStatus(), "Approved"))
+                .count();
+        long studentLeaveTotal = studentLeaves.size();
+        model.addAttribute("studentApprovedLeaveLabel", studentApprovedLeave + "/" + Math.max(studentLeaveTotal, studentApprovedLeave));
+        model.addAttribute("studentApprovedLeavePercent", formatPercent(percent(studentApprovedLeave, Math.max(studentLeaveTotal, 1))));
+
+        model.addAttribute("libraryOverview", buildLibraryOverviewRows(today));
+    }
+
+    private List<Map<String, Object>> buildLibraryOverviewRows(LocalDate today) {
+        List<LibraryBookIssue> issues = libraryBookIssueRepository.findAll();
+        long dueForReturn = issues.stream()
+                .filter(issue -> issue.getReturnDate() == null)
+                .count();
+        long returned = issues.stream()
+                .filter(issue -> issue.getReturnDate() != null)
+                .count();
+
+        List<Library> books = libraryRepository.findAll();
+        int totalCopies = books.stream()
+                .mapToInt(book -> book.getTotalCopies() == null ? 0 : book.getTotalCopies())
+                .sum();
+        int availableCopies = books.stream()
+                .mapToInt(book -> book.getAvailableCopies() == null ? 0 : book.getAvailableCopies())
+                .sum();
+        int issuedCopies = Math.max(0, totalCopies - availableCopies);
+        double issuedPercent = percent(issuedCopies, Math.max(totalCopies, 1));
+        double availablePercent = percent(availableCopies, Math.max(totalCopies, 1));
+
+        List<Map<String, Object>> rows = new ArrayList<>();
+        rows.add(libraryOverviewRow("DUE FOR RETURN", dueForReturn, null, false));
+        rows.add(libraryOverviewRow("RETURNED", returned, null, false));
+        rows.add(libraryOverviewRow("ISSUED OUT OF", issuedCopies, issuedPercent, true));
+        rows.add(libraryOverviewRow("AVAILABLE OUT OF", availableCopies, availablePercent, true));
+        return rows;
+    }
+
+    private Map<String, Object> libraryOverviewRow(String label, long count, Double percentValue, boolean showPercent) {
+        Map<String, Object> row = new LinkedHashMap<>();
+        row.put("label", label);
+        row.put("count", count);
+        row.put("showPercent", showPercent);
+        if (showPercent && percentValue != null) {
+            row.put("percent", formatPercent(percentValue));
+            row.put("percentValue", percentValue);
+        } else {
+            row.put("percent", null);
+            row.put("percentValue", 0.0);
+        }
+        return row;
     }
 
     private void populateReceptionistDashboard(Model model) {
@@ -170,6 +266,10 @@ public class AdminDashboardService {
         model.addAttribute("convertedLeadsLabel", convertedLeads + "/" + totalEnquiries);
         model.addAttribute("convertedLeadsPercent", formatPercent(percent(convertedLeads, totalEnquiries)));
         model.addAttribute("enquiryOverview", buildEnquiryOverviewRows(enquiries));
+    }
+
+    private void populateLibrarianDashboard(Model model, LocalDate today) {
+        model.addAttribute("libraryOverview", buildLibraryOverviewRows(today));
     }
 
     private List<Map<String, Object>> buildEnquiryOverviewRows(List<AdmissionEnquiry> enquiries) {

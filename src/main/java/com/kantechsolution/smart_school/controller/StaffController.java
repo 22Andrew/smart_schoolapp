@@ -35,7 +35,7 @@ public class StaffController {
 
     @GetMapping("/staff/add")
     public String showAddStaffPage(Authentication authentication, Model model) {
-        if (staffSessionService.isReceptionistStaffDirectoryRestricted(authentication)) {
+        if (staffSessionService.isStaffDirectoryRestricted(authentication)) {
             return "redirect:/staff";
         }
         bindStaffDirectoryContext(authentication, model);
@@ -44,7 +44,7 @@ public class StaffController {
 
     @GetMapping("/staff/edit/{id}")
     public String showEditStaffPage(@PathVariable Long id, Authentication authentication, Model model) {
-        if (staffSessionService.isReceptionistStaffDirectoryRestricted(authentication)) {
+        if (staffSessionService.isStaffDirectoryRestricted(authentication)) {
             return "redirect:/staff";
         }
         bindStaffDirectoryContext(authentication, model);
@@ -98,8 +98,10 @@ public class StaffController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getStaffDirectoryContext(Authentication authentication) {
         Map<String, Object> context = new LinkedHashMap<>();
-        boolean restricted = staffSessionService.isReceptionistStaffDirectoryRestricted(authentication);
+        boolean restricted = staffSessionService.isStaffDirectoryRestricted(authentication);
         context.put("restricted", restricted);
+        staffSessionService.resolveStaffDirectoryRestrictedRole(authentication)
+                .ifPresent(role -> context.put("restrictedRole", role));
         context.put("currentStaffMemberId",
                 staffSessionService.resolveLinkedStaffMemberId(authentication).orElse(null));
         if (authentication != null && authentication.getName() != null) {
@@ -131,7 +133,7 @@ public class StaffController {
     @GetMapping("/api/staff/{id}")
     @ResponseBody
     public ResponseEntity<?> getStaffById(@PathVariable Long id, Authentication authentication) {
-        if (isReceptionistViewingOtherStaff(authentication, id)) {
+        if (isRestrictedUserViewingOtherStaff(authentication, id)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         return staffMemberService.getById(id)
@@ -149,8 +151,8 @@ public class StaffController {
             @RequestPart(value = "joiningLetter", required = false) MultipartFile joiningLetter,
             @RequestPart(value = "resignationLetter", required = false) MultipartFile resignationLetter,
             @RequestPart(value = "otherDocument", required = false) MultipartFile otherDocument) {
-        if (staffSessionService.isReceptionistStaffDirectoryRestricted(authentication)) {
-            return receptionistForbiddenResponse();
+        if (staffSessionService.isStaffDirectoryRestricted(authentication)) {
+            return staffDirectoryForbiddenResponse();
         }
 
         Map<String, Object> response = new HashMap<>();
@@ -183,8 +185,8 @@ public class StaffController {
             @RequestPart(value = "joiningLetter", required = false) MultipartFile joiningLetter,
             @RequestPart(value = "resignationLetter", required = false) MultipartFile resignationLetter,
             @RequestPart(value = "otherDocument", required = false) MultipartFile otherDocument) {
-        if (staffSessionService.isReceptionistStaffDirectoryRestricted(authentication)) {
-            return receptionistForbiddenResponse();
+        if (staffSessionService.isStaffDirectoryRestricted(authentication)) {
+            return staffDirectoryForbiddenResponse();
         }
 
         Map<String, Object> response = new HashMap<>();
@@ -209,8 +211,8 @@ public class StaffController {
     @DeleteMapping("/api/staff/{id}")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> deleteStaff(@PathVariable Long id, Authentication authentication) {
-        if (staffSessionService.isReceptionistStaffDirectoryRestricted(authentication)) {
-            return receptionistForbiddenResponse();
+        if (staffSessionService.isStaffDirectoryRestricted(authentication)) {
+            return staffDirectoryForbiddenResponse();
         }
 
         Map<String, Object> response = new HashMap<>();
@@ -231,21 +233,23 @@ public class StaffController {
     }
 
     private void bindStaffDirectoryContext(Authentication authentication, Model model) {
-        boolean restricted = staffSessionService.isReceptionistStaffDirectoryRestricted(authentication);
+        boolean restricted = staffSessionService.isStaffDirectoryRestricted(authentication);
         model.addAttribute("staffDirectoryRestricted", restricted);
+        staffSessionService.resolveStaffDirectoryRestrictedRole(authentication)
+                .ifPresent(role -> model.addAttribute("staffDirectoryRole", role));
         model.addAttribute("currentStaffMemberId",
                 staffSessionService.resolveLinkedStaffMemberId(authentication).orElse(null));
     }
 
-    private boolean isReceptionistViewingOtherStaff(Authentication authentication, Long staffMemberId) {
-        if (!staffSessionService.isReceptionistStaffDirectoryRestricted(authentication)) {
+    private boolean isRestrictedUserViewingOtherStaff(Authentication authentication, Long staffMemberId) {
+        if (!staffSessionService.isStaffDirectoryRestricted(authentication)) {
             return false;
         }
         Optional<Long> ownId = staffSessionService.resolveLinkedStaffMemberId(authentication);
         return ownId.isEmpty() || !ownId.get().equals(staffMemberId);
     }
 
-    private ResponseEntity<Map<String, Object>> receptionistForbiddenResponse() {
+    private ResponseEntity<Map<String, Object>> staffDirectoryForbiddenResponse() {
         Map<String, Object> response = new HashMap<>();
         response.put("success", false);
         response.put("message", "You do not have permission to perform this action.");

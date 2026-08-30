@@ -64,6 +64,7 @@
 
     let staffDirectoryContext = {
         restricted: false,
+        restrictedRole: null,
         currentStaffMemberId: null,
         currentStaffLoginEmail: null
     };
@@ -138,31 +139,116 @@
         }
 
         staffDirectoryContext.restricted = data.restricted === true;
+        if (data.restrictedRole) {
+            staffDirectoryContext.restrictedRole = data.restrictedRole;
+        }
         staffDirectoryContext.currentStaffMemberId = data.currentStaffMemberId != null && data.currentStaffMemberId !== 'null'
             ? String(data.currentStaffMemberId)
             : null;
         staffDirectoryContext.currentStaffLoginEmail = data.loginEmail || staffDirectoryContext.currentStaffLoginEmail || null;
 
         if (staffDirectoryContext.restricted) {
-            document.documentElement.setAttribute('data-receptionist-staff-directory', 'true');
-            if (document.body) {
-                document.body.classList.add('receptionist-staff-directory-mode');
-            }
+            markRestrictedStaffDirectoryMode();
         }
+    }
+
+    function markRestrictedStaffDirectoryMode() {
+        document.documentElement.setAttribute('data-restricted-staff-directory', 'true');
+        document.documentElement.setAttribute('data-receptionist-staff-directory', 'true');
+        if (document.body) {
+            document.body.classList.add('restricted-staff-directory-mode', 'receptionist-staff-directory-mode');
+        }
+    }
+
+    const RESTRICTED_ROLE_PROFILES = {
+        librarian: {
+            loginEmail: 'librarian@gmail.com',
+            staffId: '9004',
+            fullName: 'librarian user',
+            roleKeyword: 'librarian'
+        },
+        receptionist: {
+            loginEmail: 'receptionist@gmail.com',
+            staffId: '9006',
+            fullName: 'receptionist user',
+            roleKeyword: 'receptionist'
+        },
+        teacher: {
+            loginEmail: 'teacher@gmail.com',
+            staffId: '9002',
+            fullName: null,
+            roleKeyword: 'teacher'
+        },
+        accountant: {
+            loginEmail: 'accountant@gmail.com',
+            staffId: '9005',
+            fullName: null,
+            roleKeyword: 'accountant'
+        }
+    };
+
+    function normalizeRestrictedRoleKey(role) {
+        const value = String(role || '').trim().toLowerCase();
+        if (value.includes('librarian')) {
+            return 'librarian';
+        }
+        if (value.includes('receptionist')) {
+            return 'receptionist';
+        }
+        if (value.includes('teacher')) {
+            return 'teacher';
+        }
+        if (value.includes('accountant')) {
+            return 'accountant';
+        }
+        return value;
+    }
+
+    function getRestrictedRoleProfile() {
+        const roleKey = normalizeRestrictedRoleKey(
+            staffDirectoryContext.restrictedRole
+            || (document.body && document.body.dataset.restrictedRole)
+            || inferRestrictedRoleFromSession()
+            || ''
+        );
+        return RESTRICTED_ROLE_PROFILES[roleKey] || RESTRICTED_ROLE_PROFILES.receptionist;
+    }
+
+    function inferRestrictedRoleFromSession() {
+        const sessionEl = document.getElementById('staffSessionContext');
+        const sessionRole = sessionEl ? String(sessionEl.dataset.role || '').trim() : '';
+        if (/librarian/i.test(sessionRole)) {
+            return 'Librarian';
+        }
+        if (/receptionist/i.test(sessionRole)) {
+            return 'Receptionist';
+        }
+        if (/teacher/i.test(sessionRole)) {
+            return 'Teacher';
+        }
+        if (/accountant/i.test(sessionRole)) {
+            return 'Accountant';
+        }
+        const bodyRole = document.body ? String(document.body.dataset.restrictedRole || '').trim() : '';
+        if (bodyRole) {
+            return bodyRole;
+        }
+        return null;
     }
 
     function readStaffDirectoryContext() {
         const body = document.body;
         if (body) {
-            const receptionistFlag = body.dataset.receptionistStaff;
-            if (receptionistFlag === 'true' || receptionistFlag === true) {
-                document.documentElement.setAttribute('data-receptionist-staff-directory', 'true');
-                body.classList.add('receptionist-staff-directory-mode');
+            const restrictedFlag = body.dataset.restrictedStaff ?? body.dataset.receptionistStaff;
+            if (restrictedFlag === 'true' || restrictedFlag === true) {
+                markRestrictedStaffDirectoryMode();
                 const memberId = body.dataset.staffMemberId;
+                const restrictedRole = body.dataset.restrictedRole || inferRestrictedRoleFromSession();
                 return {
                     restricted: true,
+                    restrictedRole: restrictedRole,
                     currentStaffMemberId: memberId && memberId !== 'null' ? String(memberId) : null,
-                    loginEmail: body.dataset.loginEmail || 'receptionist@gmail.com'
+                    loginEmail: body.dataset.loginEmail || getRestrictedRoleProfile().loginEmail
                 };
             }
         }
@@ -172,13 +258,11 @@
             const currentStaffMemberId = fromWindow.currentStaffMemberId;
             const restricted = fromWindow.restricted === true;
             if (restricted) {
-                document.documentElement.setAttribute('data-receptionist-staff-directory', 'true');
-                if (document.body) {
-                    document.body.classList.add('receptionist-staff-directory-mode');
-                }
+                markRestrictedStaffDirectoryMode();
             }
             return {
                 restricted: restricted,
+                restrictedRole: fromWindow.restrictedRole || inferRestrictedRoleFromSession(),
                 currentStaffMemberId: currentStaffMemberId != null && currentStaffMemberId !== 'null'
                     ? String(currentStaffMemberId)
                     : null,
@@ -187,25 +271,28 @@
         }
 
         const sessionEl = document.getElementById('staffSessionContext');
-        if (sessionEl && /receptionist/i.test(sessionEl.dataset.role || '')) {
-            document.documentElement.setAttribute('data-receptionist-staff-directory', 'true');
-            if (document.body) {
-                document.body.classList.add('receptionist-staff-directory-mode');
-            }
+        if (sessionEl && /receptionist|librarian|teacher|accountant/i.test(sessionEl.dataset.role || '')) {
+            const restrictedRole = inferRestrictedRoleFromSession();
+            markRestrictedStaffDirectoryMode();
             return {
                 restricted: true,
+                restrictedRole: restrictedRole,
                 currentStaffMemberId: null,
-                loginEmail: 'receptionist@gmail.com'
+                loginEmail: body && body.dataset.loginEmail
+                    ? body.dataset.loginEmail
+                    : getRestrictedRoleProfile().loginEmail
             };
         }
 
-        return { restricted: false, currentStaffMemberId: null, loginEmail: null };
+        return { restricted: false, restrictedRole: null, currentStaffMemberId: null, loginEmail: null };
     }
 
     function resolveOwnStaffFromRecords() {
         if (!staffRecords.length) {
             return null;
         }
+
+        const profile = getRestrictedRoleProfile();
 
         if (staffDirectoryContext.currentStaffMemberId) {
             const byId = staffRecords.find((staff) => String(staff.id) === String(staffDirectoryContext.currentStaffMemberId));
@@ -214,31 +301,33 @@
             }
         }
 
-        const loginEmail = (staffDirectoryContext.currentStaffLoginEmail || 'receptionist@gmail.com').trim().toLowerCase();
+        const loginEmail = (staffDirectoryContext.currentStaffLoginEmail || profile.loginEmail).trim().toLowerCase();
         const byEmail = staffRecords.find((staff) => staff.email && staff.email.trim().toLowerCase() === loginEmail);
         if (byEmail) {
             return byEmail;
         }
 
-        const byStaffId = staffRecords.find((staff) => String(staff.staffId) === '9006');
+        const byStaffId = staffRecords.find((staff) => String(staff.staffId) === profile.staffId);
         if (byStaffId) {
             return byStaffId;
         }
 
-        const byName = staffRecords.find((staff) => (staff.fullName || '').trim().toLowerCase() === 'receptionist user');
+        const byName = profile.fullName
+            ? staffRecords.find((staff) => (staff.fullName || '').trim().toLowerCase() === profile.fullName)
+            : null;
         if (byName) {
             return byName;
         }
 
-        const receptionists = staffRecords.filter((staff) => {
+        const roleMatches = staffRecords.filter((staff) => {
             const roles = Array.isArray(staff.roles) ? staff.roles : (staff.role ? [staff.role] : []);
-            return roles.some((role) => /^receptionist$/i.test(String(role || '').trim()));
+            return roles.some((role) => new RegExp('^' + profile.roleKeyword + '$', 'i').test(String(role || '').trim()));
         });
-        if (receptionists.length === 1) {
-            return receptionists[0];
+        if (roleMatches.length === 1) {
+            return roleMatches[0];
         }
 
-        return receptionists.find((staff) => (staff.fullName || '').toLowerCase().includes('receptionist')) || null;
+        return roleMatches.find((staff) => (staff.fullName || '').toLowerCase().includes(profile.roleKeyword)) || null;
     }
 
     function isOwnStaffRecord(staff) {
@@ -246,7 +335,7 @@
             return false;
         }
 
-        if (!isReceptionistStaffDirectoryMode()) {
+        if (!isRestrictedStaffDirectoryMode()) {
             return staff.canView === true && staff.canEdit === false;
         }
 
@@ -260,19 +349,24 @@
             return true;
         }
 
+        const profile = getRestrictedRoleProfile();
         if (staffDirectoryContext.currentStaffLoginEmail && staff.email) {
             return staff.email.trim().toLowerCase() === staffDirectoryContext.currentStaffLoginEmail.trim().toLowerCase();
         }
 
-        if (String(staff.staffId) === '9006') {
+        if (String(staff.staffId) === profile.staffId) {
             return true;
         }
 
-        return (staff.fullName || '').trim().toLowerCase() === 'receptionist user';
+        if (profile.fullName) {
+            return (staff.fullName || '').trim().toLowerCase() === profile.fullName;
+        }
+
+        return false;
     }
 
     function getStaffActionPermissions(staff) {
-        if (isReceptionistStaffDirectoryMode()) {
+        if (isRestrictedStaffDirectoryMode()) {
             const isSelf = isOwnStaffRecord(staff);
             return { view: isSelf, edit: false };
         }
@@ -287,22 +381,32 @@
         return { view: true, edit: true };
     }
 
-    function isReceptionistStaffDirectoryMode() {
+    function isRestrictedStaffDirectoryMode() {
         if (staffDirectoryContext.restricted) {
             return true;
         }
+        if (document.documentElement.getAttribute('data-restricted-staff-directory') === 'true') {
+            return true;
+        }
         if (document.documentElement.getAttribute('data-receptionist-staff-directory') === 'true') {
+            return true;
+        }
+        if (document.body && document.body.classList.contains('restricted-staff-directory-mode')) {
             return true;
         }
         if (document.body && document.body.classList.contains('receptionist-staff-directory-mode')) {
             return true;
         }
         const sessionEl = document.getElementById('staffSessionContext');
-        return !!(sessionEl && /receptionist/i.test(sessionEl.dataset.role || ''));
+        return !!(sessionEl && /receptionist|librarian|teacher|accountant/i.test(sessionEl.dataset.role || ''));
+    }
+
+    function isReceptionistStaffDirectoryMode() {
+        return isRestrictedStaffDirectoryMode();
     }
 
     function applyStaffDirectoryRestrictions() {
-        if (!isReceptionistStaffDirectoryMode() || !addStaffBtn) {
+        if (!isRestrictedStaffDirectoryMode() || !addStaffBtn) {
             return;
         }
         addStaffBtn.hidden = true;
@@ -1424,25 +1528,25 @@
         }
     }
 
-    function syncReceptionistModeFromStaffRecords() {
-        if (!isReceptionistStaffDirectoryMode()) {
+    function syncRestrictedModeFromStaffRecords() {
+        if (!isRestrictedStaffDirectoryMode()) {
             return;
         }
 
         staffDirectoryContext.restricted = true;
+        if (!staffDirectoryContext.restrictedRole) {
+            staffDirectoryContext.restrictedRole = inferRestrictedRoleFromSession();
+        }
         const ownRecord = resolveOwnStaffFromRecords();
         if (ownRecord && ownRecord.id != null) {
             staffDirectoryContext.currentStaffMemberId = String(ownRecord.id);
         }
 
-        document.documentElement.setAttribute('data-receptionist-staff-directory', 'true');
-        if (document.body) {
-            document.body.classList.add('receptionist-staff-directory-mode');
-        }
+        markRestrictedStaffDirectoryMode();
     }
 
-    function enforceReceptionistStaffActions() {
-        if (!isReceptionistStaffDirectoryMode()) {
+    function enforceRestrictedStaffActions() {
+        if (!isRestrictedStaffDirectoryMode()) {
             return;
         }
 
@@ -1499,7 +1603,7 @@
                 throw new Error('Invalid staff directory response');
             }
             staffRecords = payload;
-            syncReceptionistModeFromStaffRecords();
+            syncRestrictedModeFromStaffRecords();
             listCurrentPage = 1;
             renderStaff();
         } catch (error) {
@@ -1552,7 +1656,7 @@
             renderStaffList();
         }
 
-        enforceReceptionistStaffActions();
+        enforceRestrictedStaffActions();
     }
 
     function getRoleText(staff) {
