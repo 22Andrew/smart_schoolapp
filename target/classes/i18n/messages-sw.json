@@ -1,9 +1,0 @@
-{
-  "? Add new record or search with different criteria.": "? Ongeza rekodi mpya au utafute kwa vigezo tofauti.",
-  ". All rights reserved.": ". Haki zote zimehifadhiwa.",
-  "' + (enquiry.name || '') + '": "' + (inquiry.name || '') +'",
-  "' + (enquiry.phone || '') + '": "' + (enquiry.phone || '') +'",
-  "' + (item.note ? '": "' + (item.note ?'",
-  "' + buildActionButtons(enquiry.id, enquiry.phone) + '": "' + buildActionButtons(inquiry.id, enquiry.phone) +'",
-  "' + clockIcon + '": "' + clockIcon +'"
-}

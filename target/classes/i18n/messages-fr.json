@@ -1,9 +1,0 @@
-{
-  "? Add new record or search with different criteria.": "? Ajoutez un nouvel enregistrement ou effectuez une recherche avec des critères différents.",
-  ". All rights reserved.": ". Tous droits réservés.",
-  "' + (enquiry.name || '') + '": "' + (demande.nom || '') + '",
-  "' + (enquiry.phone || '') + '": "' + (demande.téléphone || '') + '",
-  "' + (item.note ? '": "' + (article.note ? '",
-  "' + buildActionButtons(enquiry.id, enquiry.phone) + '": "' + buildActionButtons (enquiry.id, enquiry.phone) + '",
-  "' + clockIcon + '": "' + Icône horloge + '"
-}

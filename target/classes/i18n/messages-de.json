@@ -1,7 +1,0 @@
-{
-  "? Add new record or search with different criteria.": "? Fügen Sie einen neuen Datensatz hinzu oder suchen Sie mit anderen Kriterien.",
-  ". All rights reserved.": ". Alle Rechte vorbehalten.",
-  "' + (enquiry.name || '') + '": "' + (Anfragename || '') + '",
-  "' + (enquiry.phone || '') + '": "' + (Anfrage.Telefon || '') + '",
-  "' + (item.note ? '": "Produkt Notiz"
-}

@@ -1,7 +1,0 @@
-{
-  "? Add new record or search with different criteria.": "? Voeg een nieuw record toe of zoek met andere criteria.",
-  ". All rights reserved.": ". Alle rechten voorbehouden.",
-  "' + (enquiry.name || '') + '": "' + (aanvraagnaam || '') + '",
-  "' + (enquiry.phone || '') + '": "' + (onderzoek.telefoon || '') + '",
-  "' + (item.note ? '": "' + (item.opmerking ? '"
-}
