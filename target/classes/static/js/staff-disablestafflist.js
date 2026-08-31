@@ -1,18 +1,19 @@
 (function () {
     'use strict';
 
-    const roleFilter = document.getElementById('roleFilter');
-    const keywordFilter = document.getElementById('keywordFilter');
-    const roleSearchBtn = document.getElementById('roleSearchBtn');
-    const keywordSearchBtn = document.getElementById('keywordSearchBtn');
-    const cardViewBtn = document.getElementById('cardViewBtn');
-    const listViewBtn = document.getElementById('listViewBtn');
-    const staffCardGrid = document.getElementById('staffCardGrid');
-    const staffListWrap = document.getElementById('staffListWrap');
-    const staffListBody = document.getElementById('staffListBody');
-    const staffNoRecord = document.getElementById('staffNoRecord');
+    let roleFilter;
+    let keywordFilter;
+    let roleSearchBtn;
+    let keywordSearchBtn;
+    let cardViewBtn;
+    let listViewBtn;
+    let staffCardGrid;
+    let staffListWrap;
+    let staffListBody;
+    let staffNoRecord;
 
     let currentView = 'card';
+    let allDisabledStaff = [];
     let staffRecords = [];
     let listCurrentPage = 1;
     let listPageSize = 50;
@@ -21,13 +22,39 @@
     document.addEventListener('DOMContentLoaded', init);
 
     function init() {
+        roleFilter = document.getElementById('roleFilter');
+        keywordFilter = document.getElementById('keywordFilter');
+        roleSearchBtn = document.getElementById('roleSearchBtn');
+        keywordSearchBtn = document.getElementById('keywordSearchBtn');
+        cardViewBtn = document.getElementById('cardViewBtn');
+        listViewBtn = document.getElementById('listViewBtn');
+        staffCardGrid = document.getElementById('staffCardGrid');
+        staffListWrap = document.getElementById('staffListWrap');
+        staffListBody = document.getElementById('staffListBody');
+        staffNoRecord = document.getElementById('staffNoRecord');
+
         bindEvents();
-        loadFormOptions().then(() => loadDisabledStaff());
+        bootstrapPage();
+    }
+
+    async function bootstrapPage() {
+        try {
+            await loadFormOptions();
+        } catch (error) {
+            console.warn('Failed to load staff form options', error);
+        }
+        await loadAllDisabledStaff();
     }
 
     function bindEvents() {
-        roleSearchBtn?.addEventListener('click', () => searchStaff('role'));
-        keywordSearchBtn?.addEventListener('click', () => searchStaff('keyword'));
+        roleSearchBtn?.addEventListener('click', (event) => {
+            event.preventDefault();
+            searchStaff('role');
+        });
+        keywordSearchBtn?.addEventListener('click', (event) => {
+            event.preventDefault();
+            searchStaff('keyword');
+        });
         keywordFilter?.addEventListener('keydown', (event) => {
             if (event.key === 'Enter') {
                 event.preventDefault();
@@ -60,6 +87,12 @@
             if (!enableBtn) return;
             enableStaff(enableBtn.getAttribute('data-id'));
         });
+
+        staffCardGrid?.addEventListener('click', (event) => {
+            const enableBtn = event.target.closest('.btn-enable-staff-card');
+            if (!enableBtn) return;
+            enableStaff(enableBtn.getAttribute('data-id'));
+        });
     }
 
     async function loadFormOptions() {
@@ -84,18 +117,26 @@
         });
     }
 
-    async function loadDisabledStaff(role, keyword) {
+    async function loadAllDisabledStaff() {
         try {
-            const params = new URLSearchParams();
-            if (role) params.set('role', role);
-            if (keyword) params.set('keyword', keyword);
-            const query = params.toString();
-            const response = await fetch('/api/staff/disabled' + (query ? '?' + query : ''));
+            const response = await fetch('/api/staff/disabled');
             if (!response.ok) throw new Error('Failed to load disabled staff');
-            staffRecords = await response.json();
+            const contentType = response.headers.get('content-type') || '';
+            if (!contentType.includes('application/json')) {
+                throw new Error('Failed to load disabled staff');
+            }
+            const payload = await response.json();
+            if (!Array.isArray(payload)) {
+                throw new Error('Invalid disabled staff response');
+            }
+            allDisabledStaff = payload;
+            staffRecords = [...allDisabledStaff];
             listCurrentPage = 1;
             renderStaff();
         } catch (error) {
+            allDisabledStaff = [];
+            staffRecords = [];
+            renderStaff();
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
@@ -106,11 +147,69 @@
     }
 
     function searchStaff(type) {
+        listTableSearch = '';
+        const tableSearch = document.getElementById('staffTableSearch');
+        if (tableSearch) tableSearch.value = '';
+
         if (type === 'role') {
-            loadDisabledStaff(roleFilter.value, '');
-            return;
+            const role = roleFilter?.value.trim() || '';
+            if (!role) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Select Role',
+                    text: 'Please select a role before searching.',
+                    confirmButtonColor: getThemeColor()
+                });
+                return;
+            }
+            if (keywordFilter) keywordFilter.value = '';
+            staffRecords = allDisabledStaff.filter((staff) => staffMatchesRole(staff, role));
+        } else {
+            const keyword = keywordFilter?.value.trim() || '';
+            if (roleFilter) roleFilter.value = '';
+            if (!keyword) {
+                staffRecords = [...allDisabledStaff];
+            } else {
+                staffRecords = allDisabledStaff.filter((staff) => staffMatchesKeyword(staff, keyword));
+            }
         }
-        loadDisabledStaff('', keywordFilter.value.trim());
+
+        listCurrentPage = 1;
+        renderStaff();
+    }
+
+    function staffMatchesRole(staff, role) {
+        const target = role.trim().toLowerCase();
+        if (!target) return true;
+        const roles = Array.isArray(staff.roles) ? staff.roles : [];
+        if (roles.some((item) => String(item).trim().toLowerCase() === target)) {
+            return true;
+        }
+        const roleText = getRoleText(staff).toLowerCase();
+        return roleText.includes(target);
+    }
+
+    function staffMatchesKeyword(staff, keyword) {
+        const target = keyword.trim().toLowerCase();
+        if (!target) return true;
+        const haystack = [
+            staff.staffId,
+            staff.fullName,
+            staff.firstName,
+            staff.lastName,
+            getRoleText(staff),
+            staff.department,
+            staff.designation,
+            staff.phone,
+            staff.panNumber,
+            staff.email,
+            staff.location
+        ].join(' ').toLowerCase();
+        return haystack.includes(target);
+    }
+
+    function getThemeColor() {
+        return getComputedStyle(document.documentElement).getPropertyValue('--theme-primary').trim() || '#8b5cf6';
     }
 
     function setViewMode(mode) {
@@ -150,18 +249,7 @@
     function getFilteredListRecords() {
         let rows = [...staffRecords];
         if (listTableSearch) {
-            rows = rows.filter((staff) => {
-                const haystack = [
-                    staff.staffId,
-                    staff.fullName,
-                    getRoleText(staff),
-                    staff.department,
-                    staff.designation,
-                    staff.phone,
-                    staff.panNumber
-                ].join(' ').toLowerCase();
-                return haystack.includes(listTableSearch);
-            });
+            rows = rows.filter((staff) => staffMatchesKeyword(staff, listTableSearch));
         }
         return rows;
     }
@@ -229,19 +317,29 @@
         const roleTags = roles.map((role) => `<span class="staff-role-tag">${escapeHtml(role)}</span>`).join('');
         const photo = staff.photoPath
             ? `<img src="${escapeHtml(staff.photoPath)}" alt="${escapeHtml(staff.fullName)}">`
-            : `<div class="staff-no-photo">NO IMAGE<br>AVAILABLE</div>`;
+            : `<div class="staff-no-photo">
+                    <svg class="staff-no-photo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    NO IMAGE<br>AVAILABLE
+               </div>`;
+        const locationLine = staff.location || staff.department || '-';
 
         return `
-            <article class="staff-card">
+            <article class="staff-card" data-staff-id="${escapeHtml(staff.id)}">
                 <div class="staff-card-photo">${photo}</div>
                 <div class="staff-card-body">
                     <h3 class="staff-card-name">${escapeHtml(staff.fullName || '')}</h3>
                     <div class="staff-card-meta">
                         <div>${escapeHtml(staff.staffId || '')}</div>
                         <div>${escapeHtml(staff.phone || '')}</div>
-                        <div>${escapeHtml(staff.location || staff.department || '-')}</div>
+                        <div>${escapeHtml(locationLine)}</div>
                     </div>
                     <div class="staff-role-tags">${roleTags}</div>
+                </div>
+                <div class="staff-card-actions">
+                    <button type="button" class="btn-enable-staff-card" data-id="${escapeHtml(staff.id)}" title="Enable Staff">Enable</button>
                 </div>
             </article>
         `;
@@ -253,7 +351,7 @@
             title: 'Enable staff member?',
             text: 'This will restore the staff member to the active directory.',
             showCancelButton: true,
-            confirmButtonColor: '#8b5cf6',
+            confirmButtonColor: getThemeColor(),
             confirmButtonText: 'Enable'
         });
         if (!confirm.isConfirmed) return;
@@ -262,7 +360,7 @@
             const response = await fetch(`/api/staff/${id}/enable`, { method: 'POST' });
             const data = await response.json();
             if (!response.ok || !data.success) throw new Error(data.message || 'Failed to enable staff member');
-            await loadDisabledStaff(roleFilter?.value || '', keywordFilter?.value.trim() || '');
+            await loadAllDisabledStaff();
             Swal.fire({ icon: 'success', title: 'Enabled', timer: 1500, showConfirmButton: false });
         } catch (error) {
             Swal.fire({ icon: 'error', title: 'Error', text: error.message, confirmButtonColor: '#ef4444' });
@@ -321,7 +419,7 @@
             head: [['Staff ID', 'Name', 'Role', 'Department', 'Designation', 'Mobile Number', 'PAN Number']],
             body,
             theme: 'grid',
-            headStyles: { fillColor: [139, 92, 246] },
+            headStyles: { fillColor: hexToRgb(getThemeColor()) },
             styles: { fontSize: 8 }
         });
         doc.save('disabled_staff.pdf');
@@ -332,5 +430,15 @@
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    }
+
+    function hexToRgb(hex) {
+        const cleaned = (hex || '#8b5cf6').replace('#', '');
+        if (cleaned.length !== 6) return [139, 92, 246];
+        return [
+            parseInt(cleaned.slice(0, 2), 16),
+            parseInt(cleaned.slice(2, 4), 16),
+            parseInt(cleaned.slice(4, 6), 16)
+        ];
     }
 })();

@@ -52,6 +52,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/schsettings/login-background").permitAll()
                 .requestMatchers("/api/schsettings/backend-theme").permitAll()
                 .requestMatchers("/api/currencies/active").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/languages/**").permitAll()
                 .requestMatchers("/api/**").authenticated()
                 .anyRequest().authenticated()
             )

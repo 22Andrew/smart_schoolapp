@@ -117,8 +117,11 @@ if (typeof window.applyAppBranding !== 'function') {
 
 // Initialize Dashboard Charts
 document.addEventListener('DOMContentLoaded', function() {
-    applyStaffSessionContext();
-    applyCompactAdminNavbar();
+    if (window.initLanguagePicker) {
+        window.initLanguagePicker();
+    } else {
+        ensureLanguagePickerLoaded();
+    }
 
     // Chart.js default configuration (only if Chart.js is loaded)
     if (typeof Chart !== 'undefined') {
@@ -1731,13 +1734,33 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        if (!navIcons.querySelector('.icon-btn-flag')) {
+        if (!navIcons.querySelector('.language-picker-wrap')) {
+            const wrap = document.createElement('div');
+            wrap.className = 'language-picker-wrap';
             const flagBtn = document.createElement('button');
             flagBtn.type = 'button';
-            flagBtn.className = 'icon-btn icon-btn-flag';
+            flagBtn.className = 'icon-btn icon-btn-flag language-picker-trigger';
             flagBtn.title = 'Language';
-            flagBtn.innerHTML = '<img src="https://flagcdn.com/w20/us.png" alt="English" width="20" height="14">';
-            navIcons.insertBefore(flagBtn, navIcons.firstChild);
+            flagBtn.setAttribute('aria-haspopup', 'true');
+            flagBtn.setAttribute('aria-expanded', 'false');
+            flagBtn.innerHTML = '<img src="https://flagcdn.com/w20/us.png" alt="United States" width="20" height="14">';
+            const dropdown = document.createElement('div');
+            dropdown.className = 'language-picker-dropdown';
+            const menu = document.createElement('div');
+            menu.className = 'language-picker-list';
+            menu.setAttribute('role', 'menu');
+            const templateMenu = document.querySelector('.language-picker-list');
+            if (templateMenu && templateMenu.innerHTML.trim()) {
+                menu.innerHTML = templateMenu.innerHTML;
+            }
+            dropdown.appendChild(menu);
+            wrap.appendChild(flagBtn);
+            wrap.appendChild(dropdown);
+            navIcons.insertBefore(wrap, navIcons.firstChild);
+        }
+
+        if (window.initLanguagePicker) {
+            window.initLanguagePicker();
         }
 
         if (!navIcons.querySelector('.icon-btn-whatsapp')) {
@@ -1797,7 +1820,67 @@ document.addEventListener('DOMContentLoaded', function() {
 
     initCurrentSessionModal();
     initQuickLinksModal();
+    applyAccountantProgressBars();
+    applyStaffSessionContext();
+    applyCompactAdminNavbar();
+    ensureLanguageI18nLoaded();
 });
+
+function ensureLanguageI18nLoaded() {
+    if (window.loadUiLanguage) {
+        window.loadUiLanguage();
+        return;
+    }
+    if (document.querySelector('script[data-language-i18n="true"]')) {
+        return;
+    }
+    var script = document.createElement('script');
+    script.src = '/js/language-i18n.js?v=20260831-2';
+    script.dataset.languageI18n = 'true';
+    script.onload = function () {
+        if (window.loadUiLanguage) {
+            window.loadUiLanguage();
+        }
+    };
+    document.body.appendChild(script);
+}
+
+function ensureLanguagePickerLoaded() {
+    if (window.initLanguagePicker) {
+        window.initLanguagePicker();
+        return;
+    }
+    var existing = document.querySelector('script[data-language-picker="true"]');
+    if (existing) {
+        return;
+    }
+    var script = document.createElement('script');
+    script.src = '/js/language-picker.js?v=20260831-4';
+    script.dataset.languagePicker = 'true';
+    script.onload = function () {
+        if (window.initLanguagePicker) {
+            window.initLanguagePicker();
+        }
+    };
+    document.body.appendChild(script);
+}
+
+function applyAccountantProgressBars() {
+    document.querySelectorAll('.accountant-dashboard-main .accountant-progress-fill').forEach(function (fill) {
+        var percent = parseFloat(fill.getAttribute('data-progress-percent'));
+        if (Number.isNaN(percent)) {
+            var inlineWidth = (fill.getAttribute('style') || '').match(/width:\s*([\d.]+)%/);
+            percent = inlineWidth ? parseFloat(inlineWidth[1]) : 0;
+        }
+        percent = Math.max(0, Math.min(100, percent));
+        var color = fill.getAttribute('data-progress-color') || '#337ab7';
+        fill.style.setProperty('width', percent + '%', 'important');
+        fill.style.setProperty('background-color', color, 'important');
+        fill.style.setProperty('display', 'block', 'important');
+        fill.style.setProperty('height', '100%', 'important');
+        fill.style.setProperty('min-height', '6px', 'important');
+    });
+}
 
 function initQuickLinksModal() {
     let modal = document.getElementById('quickLinksModal');

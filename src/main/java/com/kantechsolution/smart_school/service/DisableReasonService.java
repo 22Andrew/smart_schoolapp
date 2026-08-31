@@ -3,6 +3,9 @@ package com.kantechsolution.smart_school.service;
 import com.kantechsolution.smart_school.model.DisableReason;
 import com.kantechsolution.smart_school.repository.DisableReasonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,10 +16,21 @@ import java.util.Optional;
  * Service for disable reason persistence
  */
 @Service
-public class DisableReasonService {
+@Order(5)
+public class DisableReasonService implements ApplicationRunner {
 
     @Autowired
     private DisableReasonRepository disableReasonRepository;
+
+    @Override
+    @Transactional
+    public void run(ApplicationArguments args) {
+        if (disableReasonRepository.count() > 0) {
+            return;
+        }
+        List.of("Left School", "Terminated", "Transferred", "Other")
+                .forEach(reason -> disableReasonRepository.save(new DisableReason(reason)));
+    }
 
     public List<DisableReason> getAllReasons() {
         return disableReasonRepository.findAllByOrderByIdAsc();

@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <body>
 <aside class="sidebar" th:fragment="sidebar">
+            <div th:replace="~{fragments/language-i18n-init :: language-i18n-init}"></div>
             <div id="staffSessionContext" hidden
                  th:attr="data-role=${staffRole},data-name=${staffUserName},data-dashboard=${staffDashboardUrl},data-role-sidebar=${roleBasedSidebar},data-school-name=${schoolName}"></div>
             <script th:if="${roleBasedSidebar}" th:inline="javascript">

@@ -67,6 +67,31 @@ public class StaffController {
         return ResponseEntity.ok(staffMemberService.searchDisabled(role, keyword));
     }
 
+    @PostMapping("/api/staff/{id}/disable")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> disableStaff(
+            @PathVariable Long id,
+            @RequestBody(required = false) Map<String, Object> payload) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            String reason = payload == null || payload.get("disableReason") == null
+                    ? null : String.valueOf(payload.get("disableReason"));
+            Map<String, Object> disabled = staffMemberService.disableStaff(id, reason);
+            response.put("success", true);
+            response.put("message", "Staff member disabled successfully!");
+            response.put("data", disabled);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Failed to disable staff member: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
     @PostMapping("/api/staff/{id}/enable")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> enableStaff(@PathVariable Long id) {
@@ -130,7 +155,7 @@ public class StaffController {
         return ResponseEntity.ok(staff);
     }
 
-    @GetMapping("/api/staff/{id}")
+    @GetMapping("/api/staff/{id:\\d+}")
     @ResponseBody
     public ResponseEntity<?> getStaffById(@PathVariable Long id, Authentication authentication) {
         if (isRestrictedUserViewingOtherStaff(authentication, id)) {

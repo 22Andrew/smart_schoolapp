@@ -284,6 +284,53 @@ html.theme-dark main.main-content.accountant-dashboard-main {
     white-space: nowrap;
 }
 
+.accountant-dashboard-main .accountant-mini-stat .admin-progress-track {
+    width: 100%;
+    height: 6px !important;
+    min-height: 6px !important;
+    background: var(--admin-demo-track) !important;
+    background-color: var(--admin-demo-track) !important;
+    background-image: none !important;
+    border-radius: 0 !important;
+    overflow: hidden;
+    display: block;
+}
+
+.accountant-dashboard-main .accountant-mini-stat .admin-progress-fill,
+.accountant-dashboard-main .accountant-mini-stat .accountant-progress-fill {
+    height: 100% !important;
+    min-height: 6px !important;
+    min-width: 0;
+    border-radius: 0 !important;
+    display: block !important;
+    transition: width 0.3s ease;
+    background-image: none !important;
+}
+
+html.theme-light .accountant-dashboard-main .accountant-mini-stat .admin-progress-track.admin-progress-blue > .admin-progress-fill,
+html.theme-dark .accountant-dashboard-main .accountant-mini-stat .admin-progress-track.admin-progress-blue > .admin-progress-fill,
+html.theme-light .accountant-dashboard-main .accountant-mini-stat .admin-progress-track.admin-progress-blue > .accountant-progress-fill,
+html.theme-dark .accountant-dashboard-main .accountant-mini-stat .admin-progress-track.admin-progress-blue > .accountant-progress-fill {
+    background: var(--admin-demo-blue) !important;
+    background-color: var(--admin-demo-blue) !important;
+}
+
+html.theme-light .accountant-dashboard-main .accountant-mini-stat .admin-progress-track.admin-progress-orange > .admin-progress-fill,
+html.theme-dark .accountant-dashboard-main .accountant-mini-stat .admin-progress-track.admin-progress-orange > .admin-progress-fill,
+html.theme-light .accountant-dashboard-main .accountant-mini-stat .admin-progress-track.admin-progress-orange > .accountant-progress-fill,
+html.theme-dark .accountant-dashboard-main .accountant-mini-stat .admin-progress-track.admin-progress-orange > .accountant-progress-fill {
+    background: var(--admin-demo-gold) !important;
+    background-color: var(--admin-demo-gold) !important;
+}
+
+html.theme-light .accountant-dashboard-main .accountant-mini-stat .admin-progress-track.admin-progress-red > .admin-progress-fill,
+html.theme-dark .accountant-dashboard-main .accountant-mini-stat .admin-progress-track.admin-progress-red > .admin-progress-fill,
+html.theme-light .accountant-dashboard-main .accountant-mini-stat .admin-progress-track.admin-progress-red > .accountant-progress-fill,
+html.theme-dark .accountant-dashboard-main .accountant-mini-stat .admin-progress-track.admin-progress-red > .accountant-progress-fill {
+    background: #dd4b39 !important;
+    background-color: #dd4b39 !important;
+}
+
 .accountant-dashboard-main .charts-grid {
     gap: 10px;
     margin-bottom: 10px;

@@ -1,0 +1,1 @@
+  tr stopped at "' + formatDisplayDate(enquiry.date) + '": MyMemory returned source text

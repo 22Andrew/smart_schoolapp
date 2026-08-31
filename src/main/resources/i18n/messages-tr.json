@@ -1,0 +1,11 @@
+{
+  "? Add new record or search with different criteria.": "? Yeni kayıt ekleyin veya farklı kriterlerle arama yapın.",
+  ". All rights reserved.": ". Her hakkı saklıdır.",
+  "' + (enquiry.name || '') + '": "' + (soruşturma.adı || '') + '",
+  "' + (enquiry.phone || '') + '": "' + (soruşturma.telefon || '') + '",
+  "' + (item.note ? '": "' + (öğe.not ?'",
+  "' + buildActionButtons(enquiry.id, enquiry.phone) + '": "' + buildActionButtons(sorgulama.id, sorgulama.telefon) + '",
+  "' + clockIcon + '": "' + saat Simgesi + '",
+  "' + displayValue(item.createdBy) + '": "'+ displayValue(item.createdBy )+'",
+  "' + displayValue(item.response) + '": "'+ displayValue(item.response )+'"
+}

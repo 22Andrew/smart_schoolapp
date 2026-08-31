@@ -40,6 +40,7 @@ body {
     z-index: 1000;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     flex-wrap: nowrap;
+    overflow: visible;
 }
 
 #topQuickLinksBtn {
@@ -67,9 +68,99 @@ body {
 
 .top-navbar .icon-btn-flag img,
 .librarian-dashboard-page .icon-btn-flag img,
-.accountant-dashboard-page .icon-btn-flag img {
+.accountant-dashboard-page .icon-btn-flag img,
+.language-picker-trigger img,
+.user-flag-btn img {
     display: block;
     border-radius: 2px;
+}
+
+.language-picker-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    z-index: 1201;
+}
+
+.language-picker-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    min-width: 176px;
+    display: none;
+    background: #ffffff;
+    border: none;
+    border-radius: 2px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+    z-index: 10050;
+    padding: 4px 0;
+}
+
+.language-picker-dropdown.active {
+    display: block !important;
+}
+
+.top-navbar,
+.top-navbar .nav-right,
+.top-navbar .nav-icons,
+.user-top-navbar,
+.user-top-navbar .nav-right,
+.user-top-navbar .nav-icons,
+.language-picker-wrap {
+    overflow: visible !important;
+}
+
+.language-picker-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.language-picker-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    border: none;
+    background: transparent;
+    padding: 7px 14px;
+    cursor: pointer;
+    font-family: 'Source Sans Pro', 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: #aaaaaa;
+    text-align: left;
+    line-height: 1.25;
+}
+
+.language-picker-item span {
+    color: inherit;
+}
+
+.language-picker-item:hover {
+    background: #f5f5f5;
+    color: #616161;
+}
+
+.language-picker-item.is-active {
+    background: #f0f0f0;
+    color: #333333;
+    font-weight: 600;
+}
+
+.language-picker-item img {
+    width: 22px;
+    height: 15px;
+    border-radius: 1px;
+    flex-shrink: 0;
+    object-fit: cover;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.top-navbar .nav-icons,
+.top-navbar .nav-right,
+.user-top-navbar .nav-icons,
+.user-top-navbar .nav-right {
+    overflow: visible;
 }
 
 .top-navbar .icon-btn-whatsapp,
@@ -172,6 +263,7 @@ body {
     gap: 1.5rem;
     min-width: 0;
     flex-wrap: nowrap;
+    overflow: visible;
 }
 
 .search-container {

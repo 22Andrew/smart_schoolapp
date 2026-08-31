@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Disabled Staff - Smart School</title>
-    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
-    <link rel="stylesheet" th:href="@{/css/staff.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css(v=20260831-2)}">
+    <link rel="stylesheet" th:href="@{/css/staff-disablestafflist.css}">
     <link rel="stylesheet" th:href="@{/css/app-theme.css}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- SweetAlert2 -->
@@ -27,7 +27,7 @@
         <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
 
         <!-- Main Content -->
-        <main class="main-content staff-directory-page">
+        <main class="main-content staff-disabled-page">
             <div id="staffDirectoryView">
                 <div class="staff-criteria-panel">
                     <div class="staff-criteria-header">
@@ -360,7 +360,8 @@
         </div>
     </div>
 
-    <script th:src="@{/js/dashboard.js}"></script>
+    <script th:src="@{/js/language-picker.js(v=20260831-4)}"></script>
+    <script th:src="@{/js/dashboard.js(v=20260831-3)}"></script>
     <script th:src="@{/js/staff-disablestafflist.js}"></script>
 </body>
 </html>

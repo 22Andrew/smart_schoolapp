@@ -87,6 +87,9 @@ public class StaffMember extends BaseEntity {
     @Builder.Default
     private Boolean disabled = false;
 
+    @Column(name = "disable_reason", length = 300)
+    private String disableReason;
+
     @Column(name = "epf_no", length = 50)
     private String epfNo;
 

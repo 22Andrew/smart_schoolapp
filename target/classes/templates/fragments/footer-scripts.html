@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<body>
+    <th:block th:fragment="footer-scripts">
+        <div th:replace="~{fragments/language-i18n-init :: language-i18n-init}"></div>
+        <script th:src="@{/js/language-picker.js(v=20260831-4)}"></script>
+    </th:block>
+</body>
+</html>

@@ -100,9 +100,37 @@ public class AppLanguageService implements ApplicationRunner {
     @Override
     @Transactional
     public void run(ApplicationArguments args) {
-        if (repository.count() > 0) {
-            return;
+        if (repository.count() == 0) {
+            seedDefaultLanguages();
         }
+        repository.findByShortCodeIgnoreCase("en").ifPresent(language -> {
+            if (!"us".equalsIgnoreCase(language.getCountryCode())) {
+                language.setCountryCode("us");
+                repository.save(language);
+            }
+        });
+        ensureHeaderLanguagesEnabled();
+    }
+
+    private void ensureHeaderLanguagesEnabled() {
+        for (String code : List.of("en", "hi", "ar", "sw", "fr", "tr", "ru", "de", "nl")) {
+            repository.findByShortCodeIgnoreCase(code).ifPresent(language -> {
+                if (!Boolean.TRUE.equals(language.getIsEnabled())) {
+                    language.setIsEnabled(true);
+                    repository.save(language);
+                }
+            });
+        }
+        if (repository.findFirstByIsDefaultTrue().isEmpty()) {
+            repository.findByShortCodeIgnoreCase("en").ifPresent(language -> {
+                language.setIsDefault(true);
+                language.setIsEnabled(true);
+                repository.save(language);
+            });
+        }
+    }
+
+    private void seedDefaultLanguages() {
         for (String[] row : DEFAULTS) {
             boolean english = "en".equals(row[1]);
             AppLanguage language = AppLanguage.builder()
@@ -116,6 +144,76 @@ public class AppLanguageService implements ApplicationRunner {
             language.setIsActive(true);
             repository.save(language);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<Map<String, Object>> listHeaderLanguages() {
+        List<String> headerOrder = List.of("en", "hi", "ar", "sw", "fr", "tr", "ru", "de", "nl");
+        Map<String, Map<String, Object>> byCode = listAll().stream()
+                .filter(language -> Boolean.TRUE.equals(language.get("isEnabled")))
+                .collect(java.util.stream.Collectors.toMap(
+                        language -> String.valueOf(language.get("shortCode")).toLowerCase(),
+                        language -> language,
+                        (left, right) -> left,
+                        LinkedHashMap::new
+                ));
+        List<Map<String, Object>> ordered = new java.util.ArrayList<>();
+        for (String code : headerOrder) {
+            Map<String, Object> language = byCode.get(code);
+            if (language != null) {
+                ordered.add(enrichHeaderLanguage(language));
+            }
+        }
+        if (ordered.isEmpty()) {
+            return listAll().stream()
+                    .filter(language -> Boolean.TRUE.equals(language.get("isEnabled")))
+                    .limit(9)
+                    .map(this::enrichHeaderLanguage)
+                    .toList();
+        }
+        return ordered;
+    }
+
+    @Transactional(readOnly = true)
+    public Map<String, Object> getActiveLanguageMap() {
+        AppLanguage language = repository.findFirstByIsDefaultTrue()
+                .or(() -> repository.findByShortCodeIgnoreCase("en"))
+                .orElse(null);
+        if (language == null) {
+            Map<String, Object> fallback = new LinkedHashMap<>();
+            fallback.put("id", null);
+            fallback.put("name", "English");
+            fallback.put("shortCode", "en");
+            fallback.put("countryCode", "us");
+            fallback.put("isRtl", false);
+            fallback.put("isEnabled", true);
+            fallback.put("isDefault", true);
+            return enrichHeaderLanguage(fallback);
+        }
+        return enrichHeaderLanguage(toMap(language));
+    }
+
+    private Map<String, Object> enrichHeaderLanguage(Map<String, Object> language) {
+        Map<String, Object> enriched = new LinkedHashMap<>(language);
+        String shortCode = String.valueOf(language.getOrDefault("shortCode", "en")).toLowerCase();
+        String countryCode = String.valueOf(language.getOrDefault("countryCode", "us")).toLowerCase();
+        enriched.put("listFlagCode", listFlagCode(shortCode, countryCode));
+        enriched.put("headerFlagCode", headerFlagCode(shortCode, countryCode));
+        return enriched;
+    }
+
+    private static String listFlagCode(String shortCode, String countryCode) {
+        if ("en".equalsIgnoreCase(shortCode)) {
+            return "us";
+        }
+        return countryCode == null || countryCode.isBlank() ? "sl" : countryCode.toLowerCase();
+    }
+
+    private static String headerFlagCode(String shortCode, String countryCode) {
+        if ("en".equalsIgnoreCase(shortCode)) {
+            return "us";
+        }
+        return countryCode == null || countryCode.isBlank() ? "us" : countryCode.toLowerCase();
     }
 
     @Transactional(readOnly = true)
@@ -186,7 +284,7 @@ public class AppLanguageService implements ApplicationRunner {
         });
         language.setIsDefault(true);
         language.setIsEnabled(true);
-        return toMap(repository.save(language));
+        return enrichHeaderLanguage(toMap(repository.save(language)));
     }
 
     private AppLanguage requireLanguage(Long id) {

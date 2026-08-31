@@ -23,6 +23,8 @@
         </main>
     </div>
 
+    <div th:replace="~{fragments/language-i18n-init :: language-i18n-init}"></div>
+    <script th:src="@{/js/language-picker.js(v=20260831-4)}"></script>
     <script th:src="@{/js/user-dashboard.js(v=20260830-7)}"></script>
 </body>
 </html>

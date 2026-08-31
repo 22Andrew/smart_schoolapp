@@ -589,7 +589,7 @@
             keyBtn.addEventListener('click', () => showAlert('info', 'Login credentials feature coming soon.'));
         }
         if (disableBtn) {
-            disableBtn.addEventListener('click', () => showAlert('info', 'Disable staff feature coming soon.'));
+            disableBtn.addEventListener('click', () => disableActiveStaffMember());
         }
 
         document.addEventListener('keydown', (event) => {
@@ -1987,6 +1987,77 @@
             profileDialog.classList.remove('documents-tab-active');
             profileDialog.classList.remove('timeline-tab-active');
         }
+    }
+
+    async function disableActiveStaffMember() {
+        if (!activeProfileStaff?.id) {
+            showAlert('error', 'Staff member not found.');
+            return;
+        }
+        if (staffDirectoryContext.restricted) {
+            showAlert('error', 'You do not have permission to disable staff members.');
+            return;
+        }
+
+        let reasons = [];
+        try {
+            const response = await fetch('/api/disable-reasons');
+            if (response.ok) {
+                reasons = await response.json();
+            }
+        } catch (error) {
+            // Continue with empty reasons; user can still type if needed.
+        }
+
+        const optionsHtml = ['<option value="">Select</option>']
+            .concat(reasons.map((item) => `<option value="${escapeHtml(item.reason)}">${escapeHtml(item.reason)}</option>`))
+            .join('');
+
+        const result = await Swal.fire({
+            icon: 'warning',
+            title: 'Disable Staff',
+            html: `
+                <p style="margin:0 0 12px;color:#64748b;font-size:14px;">Select a reason to disable this staff member.</p>
+                <label for="swal-disable-reason" style="display:block;text-align:left;font-size:13px;font-weight:600;margin-bottom:6px;">Disable Reason <span style="color:#ef4444">*</span></label>
+                <select id="swal-disable-reason" class="swal2-input" style="width:100%;margin:0;">${optionsHtml}</select>
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'Disable',
+            confirmButtonColor: getThemePrimaryColor(),
+            focusConfirm: false,
+            preConfirm: () => {
+                const select = document.getElementById('swal-disable-reason');
+                const value = select ? select.value.trim() : '';
+                if (!value) {
+                    Swal.showValidationMessage('Please select a disable reason');
+                    return false;
+                }
+                return value;
+            }
+        });
+
+        if (!result.isConfirmed || !result.value) return;
+
+        try {
+            const response = await fetch(`/api/staff/${activeProfileStaff.id}/disable`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ disableReason: result.value })
+            });
+            const data = await response.json();
+            if (!response.ok || !data.success) {
+                throw new Error(data.message || 'Failed to disable staff member');
+            }
+            closeStaffProfileModal();
+            await loadStaff(roleFilter?.value || '', keywordFilter?.value.trim() || '');
+            showAlert('success', 'Staff member disabled successfully.');
+        } catch (error) {
+            showAlert('error', error.message || 'Failed to disable staff member.');
+        }
+    }
+
+    function getThemePrimaryColor() {
+        return getComputedStyle(document.documentElement).getPropertyValue('--theme-primary').trim() || '#8b5cf6';
     }
 
     function switchProfileTab(tabName) {

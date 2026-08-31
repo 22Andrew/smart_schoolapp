@@ -34,9 +34,26 @@
 
     <div class="nav-right">
         <div class="nav-icons user-nav-icons">
-            <button class="icon-btn user-flag-btn" type="button" title="Language">
-                <img src="https://flagcdn.com/w20/us.png" alt="US" width="20" height="14">
-            </button>
+            <div class="language-picker-wrap">
+                <button class="icon-btn user-flag-btn language-picker-trigger" type="button" title="Language" aria-haspopup="true" aria-expanded="false">
+                    <img th:src="'https://flagcdn.com/w20/' + ${activeLanguage != null ? activeLanguage.headerFlagCode : 'us'} + '.png'"
+                         th:alt="${activeLanguage != null ? activeLanguage.name : 'Language'}"
+                         width="20" height="14">
+                </button>
+                <div class="language-picker-dropdown">
+                    <div class="language-picker-list" role="menu">
+                        <button type="button"
+                                class="language-picker-item"
+                                th:each="lang : ${headerLanguages}"
+                                th:classappend="${lang.isDefault} ? ' is-active' : ''"
+                                th:attr="data-language-id=${lang.id},data-language-code=${lang.shortCode},data-country-code=${lang.countryCode},data-language-name=${lang.name},data-is-rtl=${lang.isRtl}"
+                                role="menuitem">
+                            <img th:src="'https://flagcdn.com/w20/' + ${lang.listFlagCode} + '.png'" alt="" width="20" height="14">
+                            <span th:text="${lang.name}">English</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
             <span class="user-currency-label">USD</span>
             <button class="icon-btn" type="button" title="Currency">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

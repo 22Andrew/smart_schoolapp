@@ -191,5 +191,8 @@
         initProfileDropdown();
         initProfileTabs();
         initActiveSubmenu();
+        if (window.initLanguagePicker) {
+            window.initLanguagePicker();
+        }
     });
 })();

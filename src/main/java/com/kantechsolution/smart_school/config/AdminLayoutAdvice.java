@@ -3,6 +3,8 @@ package com.kantechsolution.smart_school.config;
 import com.kantechsolution.smart_school.repository.NoticeBoardRepository;
 import com.kantechsolution.smart_school.service.AcademicSessionService;
 import com.kantechsolution.smart_school.service.AppBrandingService;
+import com.kantechsolution.smart_school.service.AppLanguageService;
+import com.kantechsolution.smart_school.service.AppLanguageTranslationService;
 import com.kantechsolution.smart_school.service.RoleSidebarMenuService;
 import com.kantechsolution.smart_school.service.StaffSessionService;
 import jakarta.servlet.http.HttpSession;
@@ -24,6 +26,23 @@ public class AdminLayoutAdvice {
     private final NoticeBoardRepository noticeBoardRepository;
     private final StaffSessionService staffSessionService;
     private final AppBrandingService appBrandingService;
+    private final AppLanguageService appLanguageService;
+    private final AppLanguageTranslationService appLanguageTranslationService;
+
+    @ModelAttribute("headerLanguages")
+    public List<Map<String, Object>> headerLanguages() {
+        return appLanguageService.listHeaderLanguages();
+    }
+
+    @ModelAttribute("activeLanguage")
+    public Map<String, Object> activeLanguage() {
+        return appLanguageService.getActiveLanguageMap();
+    }
+
+    @ModelAttribute("phraseCatalogVersion")
+    public int phraseCatalogVersion() {
+        return appLanguageTranslationService.getPhraseCount();
+    }
 
     @ModelAttribute
     public void bindStaffSession(Authentication authentication, HttpSession session) {

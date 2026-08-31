@@ -50,10 +50,11 @@ public class StaffMemberService implements ApplicationRunner {
     @Override
     @Transactional
     public void run(ApplicationArguments args) {
-        if (repository.count() > 0) {
-            return;
+        if (repository.count() == 0) {
+            seedSampleStaff();
+        } else {
+            ensureDisabledStaffSamples();
         }
-        seedSampleStaff();
     }
 
     public Map<String, Object> formOptions() {
@@ -93,6 +94,22 @@ public class StaffMemberService implements ApplicationRunner {
             throw new IllegalArgumentException("Staff member is already active");
         }
         member.setDisabled(false);
+        member.setDisableReason(null);
+        return toMap(repository.save(member));
+    }
+
+    @Transactional
+    public Map<String, Object> disableStaff(Long id, String disableReason) {
+        StaffMember member = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Staff member not found"));
+        if (Boolean.TRUE.equals(member.getDisabled())) {
+            throw new IllegalArgumentException("Staff member is already disabled");
+        }
+        if (disableReason == null || disableReason.trim().isEmpty()) {
+            throw new IllegalArgumentException("Disable reason is required");
+        }
+        member.setDisabled(true);
+        member.setDisableReason(disableReason.trim());
         return toMap(repository.save(member));
     }
 
@@ -266,6 +283,7 @@ public class StaffMemberService implements ApplicationRunner {
         map.put("resignationLetterPath", member.getResignationLetterPath());
         map.put("otherDocumentPath", member.getOtherDocumentPath());
         map.put("disabled", member.getDisabled());
+        map.put("disableReason", member.getDisableReason());
         return map;
     }
 
@@ -365,10 +383,11 @@ public class StaffMemberService implements ApplicationRunner {
                         "9876543217", "1st Floor, Academic", "ABCDE1241F"),
                 disabledSample("54545454", "Teacher,Faculty", "Faculty", "Academic",
                         "Albert", "Thomas", "albert.thomas@school.com", "Male",
-                        "9522389875", "Mumbai, Maths", "ABCDE1242F"),
+                        "9522369875", "Mumbai, Maths", "ABCDE1242F",
+                        "/uploads/staff/739d7727-2717-45d5-9741-ee9bdc071706.jpg"),
                 disabledSample("6332", "Teacher,Faculty", "Faculty", "Academic",
                         "Jonathan", "Wood", "jonathan.wood@school.com", "Male",
-                        "", "Academic", "ABCDE1243F")
+                        "", "Academic", "ABCDE1243F", null)
         );
         repository.saveAll(samples);
     }
@@ -397,11 +416,56 @@ public class StaffMemberService implements ApplicationRunner {
 
     private StaffMember disabledSample(String staffId, String roles, String designation, String department,
                                        String firstName, String lastName, String email, String gender,
-                                       String phone, String location, String pan) {
+                                       String phone, String location, String pan, String photoPath) {
         StaffMember member = sample(staffId, roles, designation, department,
                 firstName, lastName, email, gender, phone, location, pan);
         member.setDisabled(true);
+        if (photoPath != null && !photoPath.isBlank()) {
+            member.setPhotoPath(photoPath);
+        }
         return member;
+    }
+
+    private void ensureDisabledStaffSamples() {
+        upsertDisabledStaff("54545454", "Teacher,Faculty", "Faculty", "Academic",
+                "Albert", "Thomas", "albert.thomas@school.com", "Male",
+                "9522369875", "Mumbai, Maths", "ABCDE1242F",
+                "/uploads/staff/739d7727-2717-45d5-9741-ee9bdc071706.jpg");
+        upsertDisabledStaff("6332", "Teacher,Faculty", "Faculty", "Academic",
+                "Jonathan", "Wood", "jonathan.wood@school.com", "Male",
+                "", "Academic", "ABCDE1243F", null);
+    }
+
+    private void upsertDisabledStaff(String staffId, String roles, String designation, String department,
+                                     String firstName, String lastName, String email, String gender,
+                                     String phone, String location, String pan, String photoPath) {
+        StaffMember member = repository.findByStaffId(staffId).orElse(null);
+        if (member == null) {
+            member = disabledSample(staffId, roles, designation, department,
+                    firstName, lastName, email, gender, phone, location, pan, photoPath);
+            repository.save(member);
+            return;
+        }
+        member.setDisabled(true);
+        member.setRoles(roles);
+        member.setDesignation(designation);
+        member.setDepartment(department);
+        member.setFirstName(firstName);
+        member.setLastName(lastName);
+        if (member.getEmail() == null || member.getEmail().isBlank()) {
+            member.setEmail(email);
+        }
+        member.setGender(gender);
+        member.setPhone(phone);
+        member.setLocation(location);
+        if (member.getPanNumber() == null || member.getPanNumber().isBlank()) {
+            member.setPanNumber(pan);
+        }
+        if (photoPath != null && !photoPath.isBlank()
+                && (member.getPhotoPath() == null || member.getPhotoPath().isBlank())) {
+            member.setPhotoPath(photoPath);
+        }
+        repository.save(member);
     }
 
     private String requiredText(Object value) {

@@ -1,0 +1,1 @@
+  sw stopped at "' + displayValue(item.createdBy) + '": MyMemory returned source text
