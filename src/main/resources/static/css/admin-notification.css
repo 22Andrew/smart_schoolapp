@@ -52,6 +52,9 @@
     color: #ffffff;
     background: var(--theme-primary, #8b5cf6);
     transition: background 0.2s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
 }
 
 .btn-post-message:hover,
@@ -564,6 +567,99 @@
 
 .btn-compose-send:hover {
     background: var(--theme-primary-dark, #7c3aed);
+}
+
+/* Full-page compose - /admin/notification/add */
+.notice-compose-page {
+    padding: 20px;
+    background-color: #e8edf2;
+    min-height: calc(100vh - 80px);
+}
+
+.notice-compose-box {
+    max-width: 100%;
+    width: 100%;
+    min-height: calc(100vh - 140px);
+    margin: 0 auto;
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.notice-compose-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #334155;
+}
+
+.notice-compose-title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #f8fafc;
+}
+
+.compose-page-layout {
+    display: flex;
+    gap: 0;
+    min-height: 520px;
+}
+
+.compose-page-layout .compose-main {
+    flex: 1 1 72%;
+    padding: 1.25rem 1.5rem;
+    border-right: 1px solid #334155;
+    overflow-y: auto;
+    max-height: none;
+}
+
+.compose-page-layout .compose-sidebar {
+    flex: 0 0 240px;
+    padding: 1.25rem 1rem;
+    background: rgba(15, 23, 42, 0.35);
+    overflow-y: auto;
+    max-height: none;
+}
+
+.compose-page-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0.85rem 1.5rem 1.25rem;
+    border-top: 1px solid #334155;
+}
+
+html.theme-light .notice-compose-page {
+    background: #f5f6fa;
+}
+
+html.theme-light .notice-compose-box {
+    background: #ffffff;
+    border-color: #e5e7eb;
+}
+
+html.theme-light .notice-compose-header,
+html.theme-light .compose-page-layout .compose-main,
+html.theme-light .compose-page-footer {
+    border-color: #e5e7eb;
+}
+
+html.theme-light .notice-compose-title {
+    color: #111827;
+}
+
+@media (max-width: 992px) {
+    .compose-page-layout {
+        flex-direction: column;
+    }
+
+    .compose-page-layout .compose-main {
+        border-right: none;
+        border-bottom: 1px solid #334155;
+    }
+
+    html.theme-light .compose-page-layout .compose-main {
+        border-color: #e5e7eb;
+    }
 }
 
 .compose-main .form-group,

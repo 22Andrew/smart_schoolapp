@@ -109,6 +109,14 @@ public class OnlineCourseController {
                 && !roleSidebarMenuService.isAccountantOnlineCourseReportAllowed(reportKey)) {
             return "redirect:/onlinecourse/coursereport/coursepurchase";
         }
+        if (roleSidebarMenuService.isLibrarian(authentication)
+                && !roleSidebarMenuService.isLibrarianOnlineCourseReportAllowed(reportKey)) {
+            return "redirect:/onlinecourse/coursereport/courserating";
+        }
+        if (roleSidebarMenuService.isReceptionist(authentication)
+                && !roleSidebarMenuService.isReceptionistOnlineCourseReportAllowed(reportKey)) {
+            return "redirect:/onlinecourse/coursereport/guestreport";
+        }
         model.addAttribute("reportKey", reportKey);
         model.addAttribute("reportTitle", resolveReportTitle(reportKey));
         return "onlinecourse-coursepurchase";

@@ -1,7 +1,5 @@
 let notices = [];
-let editingId = null;
 let viewingNoticeId = null;
-let quillEditor = null;
 
 const MESSAGE_TO_ROLES = [
     'Student', 'Parent', 'Admin', 'Teacher',
@@ -9,78 +7,11 @@ const MESSAGE_TO_ROLES = [
 ];
 
 document.addEventListener('DOMContentLoaded', function() {
-    initQuillEditor();
-    initAttachmentDropzone();
-
-    document.getElementById('postNewMessageBtn')?.addEventListener('click', openCreateModal);
     document.getElementById('deleteNoticeBoardBtn')?.addEventListener('click', deleteAllNotices);
-    document.getElementById('noticeModalClose')?.addEventListener('click', closeModal);
-    document.getElementById('noticeModalOverlay')?.addEventListener('click', closeModal);
-    document.getElementById('noticeForm')?.addEventListener('submit', saveNotice);
     document.getElementById('noticeDetailCloseBtn')?.addEventListener('click', closeDetailDrawer);
     document.getElementById('noticeDetailBackBtn')?.addEventListener('click', closeDetailDrawer);
     loadNotices();
 });
-
-function initQuillEditor() {
-    const editorEl = document.getElementById('noticeMessageEditor');
-    if (!editorEl || typeof Quill === 'undefined') return;
-
-    quillEditor = new Quill(editorEl, {
-        theme: 'snow',
-        placeholder: 'Type your message here...',
-        modules: {
-            toolbar: [
-                [{ header: [1, 2, 3, false] }],
-                ['bold', 'italic', 'underline'],
-                [{ size: ['small', false, 'large'] }],
-                ['blockquote'],
-                [{ list: 'ordered' }, { list: 'bullet' }],
-                [{ indent: '-1' }, { indent: '+1' }],
-                ['link', 'image']
-            ]
-        }
-    });
-}
-
-function initAttachmentDropzone() {
-    const dropzone = document.getElementById('attachmentDropzone');
-    const fileInput = document.getElementById('noticeAttachment');
-    if (!dropzone || !fileInput) return;
-
-    dropzone.addEventListener('click', () => fileInput.click());
-
-    fileInput.addEventListener('change', () => {
-        updateAttachmentLabel(fileInput.files[0]);
-    });
-
-    ['dragenter', 'dragover'].forEach(eventName => {
-        dropzone.addEventListener(eventName, event => {
-            event.preventDefault();
-            dropzone.classList.add('dragover');
-        });
-    });
-
-    ['dragleave', 'drop'].forEach(eventName => {
-        dropzone.addEventListener(eventName, event => {
-            event.preventDefault();
-            dropzone.classList.remove('dragover');
-        });
-    });
-
-    dropzone.addEventListener('drop', event => {
-        const file = event.dataTransfer?.files?.[0];
-        if (!file) return;
-        fileInput.files = event.dataTransfer.files;
-        updateAttachmentLabel(file);
-    });
-}
-
-function updateAttachmentLabel(file) {
-    const label = document.getElementById('attachmentFileName');
-    if (!label) return;
-    label.textContent = file ? file.name : '';
-}
 
 async function loadNotices() {
     try {
@@ -136,7 +67,7 @@ function renderNoticeList() {
         item.querySelector('.notice-board-edit-btn').addEventListener('click', (event) => {
             event.stopPropagation();
             closeDetailDrawer();
-            openEditModal(notice.id);
+            window.location.href = `/admin/notification/add?id=${notice.id}`;
         });
         item.querySelector('.notice-board-delete-btn').addEventListener('click', (event) => {
             event.stopPropagation();
@@ -144,35 +75,6 @@ function renderNoticeList() {
         });
         list.appendChild(item);
     });
-}
-
-function resetComposeForm() {
-    document.getElementById('noticeForm')?.reset();
-    const today = new Date().toISOString().slice(0, 10);
-    document.getElementById('noticeDate').value = today;
-    document.getElementById('publishOn').value = today;
-
-    document.querySelectorAll('#messageToList input[name="messageTo"]').forEach(input => {
-        input.checked = input.value === 'Super Admin';
-    });
-    document.getElementById('sendByEmail').checked = false;
-    document.getElementById('sendBySms').checked = false;
-
-    const fileInput = document.getElementById('noticeAttachment');
-    if (fileInput) fileInput.value = '';
-    updateAttachmentLabel(null);
-
-    if (quillEditor) {
-        quillEditor.setContents([]);
-    }
-}
-
-function openCreateModal() {
-    closeDetailDrawer();
-    editingId = null;
-    document.getElementById('noticeModalTitle').textContent = 'Compose New Message';
-    resetComposeForm();
-    openModal();
 }
 
 function openDetailDrawer(id) {
@@ -245,122 +147,10 @@ function renderRecipientTags(notice) {
     `).join('');
 }
 
-function openEditModal(id) {
-    const notice = notices.find(item => item.id === id);
-    if (!notice) return;
-
-    editingId = id;
-    document.getElementById('noticeModalTitle').textContent = 'Compose New Message';
-    resetComposeForm();
-
-    document.getElementById('noticeTitle').value = notice.title || '';
-    document.getElementById('noticeDate').value = notice.noticeDate || '';
-    document.getElementById('publishOn').value = notice.publishOn || notice.noticeDate || '';
-
-    const roles = parseMessageTo(notice.messageTo || notice.publishTo);
-    document.querySelectorAll('#messageToList input[name="messageTo"]').forEach(input => {
-        input.checked = roles.includes(input.value);
-    });
-
-    document.getElementById('sendByEmail').checked = !!notice.sendByEmail;
-    document.getElementById('sendBySms').checked = !!notice.sendBySms;
-
-    if (notice.attachmentPath) {
-        const fileName = notice.attachmentPath.split('/').pop();
-        updateAttachmentLabel({ name: fileName + ' (saved)' });
-    }
-
-    if (quillEditor) {
-        if (notice.message && notice.message.includes('<')) {
-            quillEditor.root.innerHTML = notice.message;
-        } else {
-            quillEditor.setText(notice.message || '');
-        }
-    }
-
-    openModal();
-}
-
 function parseMessageTo(value) {
     if (!value) return [];
     if (value === 'Multiple') return MESSAGE_TO_ROLES.slice();
     return value.split(',').map(item => item.trim()).filter(Boolean);
-}
-
-function getSelectedMessageTo() {
-    return Array.from(document.querySelectorAll('#messageToList input[name="messageTo"]:checked'))
-        .map(input => input.value);
-}
-
-function openModal() {
-    document.getElementById('noticeModal')?.classList.add('active');
-}
-
-function closeModal() {
-    document.getElementById('noticeModal')?.classList.remove('active');
-    editingId = null;
-}
-
-async function saveNotice(event) {
-    event.preventDefault();
-
-    const title = document.getElementById('noticeTitle').value.trim();
-    const noticeDate = document.getElementById('noticeDate').value;
-    const publishOn = document.getElementById('publishOn').value;
-    const messageTo = getSelectedMessageTo();
-    const messageHtml = quillEditor ? quillEditor.root.innerHTML : '';
-    const messageText = quillEditor ? quillEditor.getText().trim() : '';
-
-    if (!title) {
-        Swal.fire({ icon: 'warning', title: 'Required', text: 'Title is required.' });
-        return;
-    }
-    if (!noticeDate || !publishOn) {
-        Swal.fire({ icon: 'warning', title: 'Required', text: 'Notice date and publish on are required.' });
-        return;
-    }
-    if (!messageText) {
-        Swal.fire({ icon: 'warning', title: 'Required', text: 'Message is required.' });
-        return;
-    }
-    if (!messageTo.length) {
-        Swal.fire({ icon: 'warning', title: 'Required', text: 'Select at least one recipient under Message To.' });
-        return;
-    }
-
-    const formData = new FormData();
-    formData.append('title', title);
-    formData.append('noticeDate', noticeDate);
-    formData.append('publishOn', publishOn);
-    formData.append('message', messageHtml);
-    formData.append('messageTo', messageTo.join(', '));
-    formData.append('sendByEmail', document.getElementById('sendByEmail').checked);
-    formData.append('sendBySms', document.getElementById('sendBySms').checked);
-
-    const attachment = document.getElementById('noticeAttachment')?.files?.[0];
-    if (attachment) {
-        formData.append('attachment', attachment);
-    }
-
-    const url = editingId ? `/api/communicate/notices/${editingId}` : '/api/communicate/notices';
-    const method = editingId ? 'PUT' : 'POST';
-
-    try {
-        const response = await fetch(url, { method, body: formData });
-        const result = await response.json();
-        if (!result.success) throw new Error(result.message);
-        Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: result.message || 'Message saved successfully!',
-            timer: 2000,
-            showConfirmButton: false
-        });
-        closeModal();
-        loadNotices();
-    } catch (error) {
-        Swal.fire({ icon: 'error', title: 'Error', text: error.message || 'Failed to save notice' });
-    }
 }
 
 async function deleteNotice(id) {
@@ -384,7 +174,6 @@ async function deleteNotice(id) {
         const result = await response.json();
         if (!result.success) throw new Error(result.message);
         Swal.fire({ icon: 'success', title: 'Deleted', text: result.message, timer: 2000, showConfirmButton: false });
-        if (editingId === id) closeModal();
         if (viewingNoticeId === id) closeDetailDrawer();
         loadNotices();
     } catch (error) {
@@ -415,7 +204,6 @@ async function deleteAllNotices() {
         const result = await response.json();
         if (!result.success) throw new Error(result.message);
         Swal.fire({ icon: 'success', title: 'Deleted', text: result.message, timer: 2000, showConfirmButton: false });
-        closeModal();
         closeDetailDrawer();
         loadNotices();
     } catch (error) {

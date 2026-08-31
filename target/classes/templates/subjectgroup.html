@@ -7,6 +7,7 @@
     <title>Subject Group - Smart School</title>
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
     <link rel="stylesheet" th:href="@{/css/subjectgroup.css}">
+    <link rel="stylesheet" th:href="@{/css/receptionist-academics.css}">
     <link rel="stylesheet" th:href="@{/css/app-theme.css}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- SweetAlert2 -->
@@ -19,129 +20,7 @@
 </head>
 <body>
     <!-- Top Navigation Bar -->
-    <nav class="top-navbar">
-        <div class="nav-left">
-            <div class="logo-container">
-                <a href="/dashboard" class="brand-badge" style="text-decoration: none;">Smart School</a>
-                <div class="logo-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="35" height="35">
-                        <defs>
-                            <linearGradient id="bookGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#f6c544;stop-opacity:1" />
-                                <stop offset="100%" style="stop-color:#f39c12;stop-opacity:1" />
-                            </linearGradient>
-                        </defs>
-                        <rect x="8" y="10" width="34" height="32" fill="url(#bookGradient)" rx="2"/>
-                        <rect x="10" y="12" width="30" height="28" fill="#f39c12" rx="1"/>
-                        <path d="M 25 12 L 25 40" stroke="#f6c544" stroke-width="2"/>
-                        <polygon points="15,20 35,20 25,15" fill="#2d3748"/>
-                        <rect x="24" y="20" width="2" height="8" fill="#2d3748"/>
-                        <circle cx="26" cy="29" r="1.5" fill="#e74c3c"/>
-                    </svg>
-                </div>
-                <button class="hamburger-btn" type="button" aria-label="Toggle sidebar">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="3" y1="12" x2="21" y2="12"></line>
-                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                        <line x1="3" y1="18" x2="21" y2="18"></line>
-                    </svg>
-                </button>
-                <span class="school-name">Smart School</span>
-            </div>
-            <div class="session-info">
-                <span class="session-label">Current Session:</span>
-                <span class="session-value">2023-24</span>
-            </div>
-        </div>
-
-        <div class="nav-right">
-            <div class="search-container">
-                <input type="text" placeholder="Search By Student Name..." class="search-input">
-                <button class="search-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <path d="m21 21-4.35-4.35"></path>
-                    </svg>
-                </button>
-            </div>
-
-            <div class="nav-icons">
-                <button class="icon-btn" title="Currency">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
-                </button>
-                <button class="icon-btn" title="Messages">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                    </svg>
-                </button>
-                <button class="icon-btn" title="Calendar">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                        <line x1="16" y1="2" x2="16" y2="6"></line>
-                        <line x1="8" y1="2" x2="8" y2="6"></line>
-                        <line x1="3" y1="10" x2="21" y2="10"></line>
-                    </svg>
-                </button>
-                <button class="icon-btn" title="Tasks">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="9 11 12 14 22 4"></polyline>
-                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-                    </svg>
-                </button>
-                <button class="icon-btn" title="Notifications">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                    </svg>
-                </button>
-                <div class="profile-dropdown-container">
-                    <button class="icon-btn user-btn" id="profileBtn" title="Profile">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                    </button>
-
-                    <!-- Profile Dropdown -->
-                    <div class="profile-dropdown" id="profileDropdown">
-                        <div class="profile-dropdown-header">
-                            <div class="profile-avatar">
-                                <img src="https://ui-avatars.com/api/?name=Alhaji+Mohamed+Kanu&background=3182ce&color=fff&size=80" alt="Profile Picture">
-                            </div>
-                            <div class="profile-info">
-                                <div class="profile-name" th:text="${session.user != null ? session.user.name : 'Alhaji Mohamed Kanu'}">Alhaji Mohamed Kanu</div>
-                                <div class="profile-role" th:text="${session.user != null ? session.user.role : 'Super Admin'}">Super Admin</div>
-                            </div>
-                        </div>
-                        <div class="profile-dropdown-body">
-                            <a href="#" class="profile-dropdown-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                                </svg>
-                                <span>Password</span>
-                            </a>
-                        </div>
-                        <div class="profile-dropdown-footer">
-                            <form th:action="@{/logout}" method="post" id="logoutForm" style="display: inline;">
-                                <button type="submit" class="profile-footer-link logout-btn">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                                        <polyline points="16 17 21 12 16 7"></polyline>
-                                        <line x1="21" y1="12" x2="9" y2="12"></line>
-                                    </svg>
-                                    <span>Logout</span>
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
+    <nav th:replace="~{fragments/top-navbar :: top-navbar}"></nav>
 
     <!-- Main Container -->
     <div class="main-container">
@@ -149,10 +28,10 @@
         <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
 
         <!-- Main Content -->
-        <main class="main-content subjectgroup-page">
+        <main class="main-content subjectgroup-page" th:classappend="${receptionistSidebar} ? ' receptionist-list-view-only' : ''">
             <div class="subjectgroup-container">
                 <!-- Left: Add Subject Group -->
-                <div class="add-group-panel">
+                <div class="add-group-panel" th:classappend="${receptionistSidebar} ? ' receptionist-hidden-panel' : ''">
                     <h2 class="panel-title">Add Subject Group</h2>
                     <form id="subjectGroupForm">
                         <input type="hidden" id="groupId" value="">
@@ -400,6 +279,9 @@
         </div>
     </div>
 
+    <script th:inline="javascript">
+        window.academicsListReadOnly = /*[[${receptionistSidebar}]]*/ false;
+    </script>
     <script th:src="@{/js/dashboard.js}"></script>
     <script th:src="@{/js/subjectgroup.js}"></script>
 </body>

@@ -3,7 +3,7 @@
 <body>
 <aside class="sidebar" th:fragment="sidebar">
             <div id="staffSessionContext" hidden
-                 th:attr="data-role=${staffRole},data-name=${staffUserName},data-dashboard=${staffDashboardUrl},data-role-sidebar=${roleBasedSidebar}"></div>
+                 th:attr="data-role=${staffRole},data-name=${staffUserName},data-dashboard=${staffDashboardUrl},data-role-sidebar=${roleBasedSidebar},data-school-name=${schoolName}"></div>
             <script th:if="${roleBasedSidebar}" th:inline="javascript">
                 document.documentElement.setAttribute('data-role-sidebar', 'true');
             </script>

@@ -330,7 +330,7 @@ document.addEventListener('DOMContentLoaded', function () {
         renderTemplates();
     }
 
-    document.getElementById('addTemplateBtn').addEventListener('click', function () {
+    document.getElementById('addTemplateBtn')?.addEventListener('click', function () {
         resetTemplateForm(null);
         openModal(document.getElementById('templateFormModal'));
     });

@@ -383,6 +383,52 @@ html.theme-light .individual-selected {
     border-color: #d1d5db;
 }
 
+.send-through-group {
+    margin-bottom: 20px;
+}
+
+.send-through-row {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+}
+
+.send-through-label {
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: #cbd5e1;
+    white-space: nowrap;
+}
+
+.send-through-options {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+}
+
+.send-through-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    color: #cbd5e1;
+    cursor: pointer;
+}
+
+.send-through-option input {
+    accent-color: #8b5cf6;
+}
+
+html.theme-light .send-through-label,
+html.theme-light .send-through-option {
+    color: #374151;
+}
+
 .sms-message-editor {
     min-height: 280px;
     resize: vertical;

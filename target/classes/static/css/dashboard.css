@@ -42,6 +42,42 @@ body {
     flex-wrap: nowrap;
 }
 
+#topQuickLinksBtn {
+    display: none !important;
+}
+
+/* Compact admin header (librarian-style) across all pages */
+.top-navbar.admin-compact-header .nav-right .search-container,
+.top-navbar .nav-right .search-container {
+    display: none !important;
+}
+
+.top-navbar .nav-icons .icon-btn[title="Currency"],
+.top-navbar .nav-icons a.icon-btn[title="Currency"],
+.top-navbar .nav-icons .icon-btn[title="Messages"],
+.top-navbar .nav-icons a.icon-btn[title="Messages"] {
+    display: none !important;
+}
+
+.top-navbar.admin-compact-header .nav-right,
+.librarian-dashboard-page .nav-right,
+.accountant-dashboard-page .nav-right {
+    gap: 0.75rem;
+}
+
+.top-navbar .icon-btn-flag img,
+.librarian-dashboard-page .icon-btn-flag img,
+.accountant-dashboard-page .icon-btn-flag img {
+    display: block;
+    border-radius: 2px;
+}
+
+.top-navbar .icon-btn-whatsapp,
+.librarian-dashboard-page .icon-btn-whatsapp,
+.accountant-dashboard-page .icon-btn-whatsapp {
+    padding: 0.35rem;
+}
+
 .nav-left {
     display: flex;
     align-items: center;

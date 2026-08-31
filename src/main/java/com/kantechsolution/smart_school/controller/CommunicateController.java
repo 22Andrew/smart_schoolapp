@@ -24,6 +24,11 @@ public class CommunicateController {
         return "admin-notification";
     }
 
+    @GetMapping("/admin/notification/add")
+    public String noticeBoardAddPage() {
+        return "admin-notification-add";
+    }
+
     @GetMapping("/communicate/noticeboard")
     public String noticeBoardLegacyRedirect() {
         return "redirect:/admin/notification";

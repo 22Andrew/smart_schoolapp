@@ -257,6 +257,16 @@ public class RoleSidebarMenuService {
             "coursepurchase", "courserating", "guestreport"
     );
 
+    /** Online course report tabs visible to librarians on the report page. */
+    private static final Set<String> LIBRARIAN_ONLINE_COURSE_REPORTS = Set.of(
+            "courserating", "guestreport"
+    );
+
+    /** Online course report tabs visible to receptionists on the report page. */
+    private static final Set<String> RECEPTIONIST_ONLINE_COURSE_REPORTS = Set.of(
+            "guestreport"
+    );
+
     /** Main menus hidden for Admin (Super Admin still sees all menus). */
     private static final List<String> ADMIN_HIDDEN_MENU_SLUGS = List.of(
             "qr-code-attendance"
@@ -291,7 +301,7 @@ public class RoleSidebarMenuService {
                     "course-category", "online-course-report")),
 
             Map.entry("gmeet-live-classes", Set.of(
-                    "live-meeting", "live-meeting-report", "setting")),
+                    "live-classes", "live-meeting", "setting")),
 
             Map.entry("zoom-live-classes", Set.of(
                     "live-meeting", "live-classes", "live-classes-report", "setting")),
@@ -341,7 +351,7 @@ public class RoleSidebarMenuService {
                     "live-meeting", "live-classes", "live-classes-report", "setting")),
 
             Map.entry("cbse-examination", Set.of(
-                    "exam", "template", "setting")),
+                    "exam", "template")),
 
             Map.entry("human-resource", Set.of(
                     "staff-directory")),
@@ -517,9 +527,45 @@ public class RoleSidebarMenuService {
 
     }
 
+    public boolean isLibrarianOnlineCourseReportAllowed(String reportKey) {
+
+        if (reportKey == null || reportKey.isBlank()) {
+
+            return false;
+
+        }
+
+        return LIBRARIAN_ONLINE_COURSE_REPORTS.contains(reportKey.toLowerCase(Locale.ROOT));
+
+    }
+
+    public boolean isReceptionistOnlineCourseReportAllowed(String reportKey) {
+
+        if (reportKey == null || reportKey.isBlank()) {
+
+            return false;
+
+        }
+
+        return RECEPTIONIST_ONLINE_COURSE_REPORTS.contains(reportKey.toLowerCase(Locale.ROOT));
+
+    }
+
     public Set<String> getAccountantOnlineCourseReports() {
 
         return ACCOUNTANT_ONLINE_COURSE_REPORTS;
+
+    }
+
+    public Set<String> getLibrarianOnlineCourseReports() {
+
+        return LIBRARIAN_ONLINE_COURSE_REPORTS;
+
+    }
+
+    public Set<String> getReceptionistOnlineCourseReports() {
+
+        return RECEPTIONIST_ONLINE_COURSE_REPORTS;
 
     }
 

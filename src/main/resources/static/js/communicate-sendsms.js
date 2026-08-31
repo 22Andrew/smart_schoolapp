@@ -362,9 +362,16 @@ async function handleSubmit(event) {
     const sendMode = document.querySelector('input[name="sendMode"]:checked')?.value || 'NOW';
     const scheduledAt = document.getElementById('scheduledAt')?.value;
     const smsTemplateId = document.getElementById('smsTemplateSelect')?.value;
+    const sendThrough = Array.from(document.querySelectorAll('input[name="sendThrough"]:checked'))
+        .map((input) => input.value);
+    const smsGatewayTemplateId = document.getElementById('smsGatewayTemplateId')?.value.trim();
 
     if (!title) {
         Swal.fire({ icon: 'warning', title: 'Required', text: 'Title is required.' });
+        return;
+    }
+    if (sendThrough.length === 0) {
+        Swal.fire({ icon: 'warning', title: 'Required', text: 'Select at least one Send Through option.' });
         return;
     }
     if (!message) {
@@ -392,7 +399,9 @@ async function handleSubmit(event) {
         recipientDetails: recipientPayload.recipientDetails,
         sendMode,
         scheduledAt: sendMode === 'SCHEDULE' ? scheduledAt : null,
-        smsTemplateId: smsTemplateId || null
+        smsTemplateId: smsTemplateId || null,
+        sendThrough,
+        smsGatewayTemplateId: smsGatewayTemplateId || null
     };
 
     try {

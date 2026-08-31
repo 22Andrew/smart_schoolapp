@@ -2,6 +2,7 @@ package com.kantechsolution.smart_school.config;
 
 import com.kantechsolution.smart_school.repository.NoticeBoardRepository;
 import com.kantechsolution.smart_school.service.AcademicSessionService;
+import com.kantechsolution.smart_school.service.AppBrandingService;
 import com.kantechsolution.smart_school.service.RoleSidebarMenuService;
 import com.kantechsolution.smart_school.service.StaffSessionService;
 import jakarta.servlet.http.HttpSession;
@@ -22,6 +23,7 @@ public class AdminLayoutAdvice {
     private final AcademicSessionService academicSessionService;
     private final NoticeBoardRepository noticeBoardRepository;
     private final StaffSessionService staffSessionService;
+    private final AppBrandingService appBrandingService;
 
     @ModelAttribute
     public void bindStaffSession(Authentication authentication, HttpSession session) {
@@ -54,6 +56,12 @@ public class AdminLayoutAdvice {
     @ModelAttribute("currentSession")
     public String currentSession() {
         return academicSessionService.getCurrentSessionName();
+    }
+
+    @ModelAttribute("schoolName")
+    public String schoolName() {
+        Object value = appBrandingService.getBranding().get("schoolName");
+        return value != null && !String.valueOf(value).isBlank() ? String.valueOf(value) : "Smart School";
     }
 
     @ModelAttribute("noticeCount")

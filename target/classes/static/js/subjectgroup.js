@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
+    const readOnly = window.academicsListReadOnly === true;
     const table = document.getElementById('groupTable');
     const tableBody = document.getElementById('groupTableBody');
     const form = document.getElementById('subjectGroupForm');
@@ -21,6 +22,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function createActionButtonsHtml() {
+        if (readOnly) {
+            return '';
+        }
         return ''
             + '<button type="button" class="btn-action btn-edit" title="Edit">'
             + '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'
