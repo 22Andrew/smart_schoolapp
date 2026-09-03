@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.kantechsolution.smart_school.student.StudentIntegrationTest
--------------------------------------------------------------------------------
-Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.820 s -- in com.kantechsolution.smart_school.student.StudentIntegrationTest

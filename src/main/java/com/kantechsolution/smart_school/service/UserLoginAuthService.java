@@ -1,5 +1,6 @@
 package com.kantechsolution.smart_school.service;
 
+import com.kantechsolution.smart_school.config.AppDemoAuthProperties;
 import com.kantechsolution.smart_school.model.AppUserAccount;
 import com.kantechsolution.smart_school.model.StaffMember;
 import com.kantechsolution.smart_school.model.StudentAdmission;
@@ -33,26 +34,8 @@ public class UserLoginAuthService implements ApplicationRunner {
     public static final String TYPE_STAFF = "STAFF";
     private static final String DEMO_STUDENT_USERNAME = "std1";
     private static final String DEMO_PARENT_USERNAME = "parent1";
-    private static final String DEMO_PASSWORD = "110001";
 
-    private static final Map<String, String> DEMO_STAFF_LOGIN_IDS = Map.of(
-            "superadmin@gmail.com", "9000",
-            "admin@gmail.com", "9001",
-            "teacher@gmail.com", "9002",
-            "accountant@gmail.com", "9005",
-            "receptionist@gmail.com", "9006",
-            "librarian@gmail.com", "9004"
-    );
-
-    private static final Map<String, String> DEMO_STAFF_LOGIN_PASSWORDS = Map.of(
-            "superadmin@gmail.com", "Superadmin1",
-            "admin@gmail.com", "Admin123",
-            "teacher@gmail.com", "Teacher123",
-            "accountant@gmail.com", "Accountant123",
-            "receptionist@gmail.com", "Receptionist123",
-            "librarian@gmail.com", "Librarian123"
-    );
-
+    private final AppDemoAuthProperties demoAuthProperties;
     private final AppUserAccountRepository appUserAccountRepository;
     private final StudentAdmissionRepository studentAdmissionRepository;
     private final StaffMemberRepository staffMemberRepository;
@@ -243,8 +226,8 @@ public class UserLoginAuthService implements ApplicationRunner {
     }
 
     private void seedDemoAccounts() {
-        ensureStandaloneAccount(DEMO_STUDENT_USERNAME, TYPE_STUDENT, DEMO_PASSWORD);
-        ensureStandaloneAccount(DEMO_PARENT_USERNAME, TYPE_PARENT, DEMO_PASSWORD);
+        ensureStandaloneAccount(DEMO_STUDENT_USERNAME, TYPE_STUDENT, demoAuthProperties.getStudentPassword());
+        ensureStandaloneAccount(DEMO_PARENT_USERNAME, TYPE_PARENT, demoAuthProperties.getParentPassword());
     }
 
     private void reconcileDemoAccountLinks() {
@@ -273,7 +256,7 @@ public class UserLoginAuthService implements ApplicationRunner {
         account.setSourceId(sourceId);
         account.setLoginEnabled(true);
         account.setIsActive(true);
-        account.setPasswordHash(passwordEncoder.encode(DEMO_PASSWORD));
+        account.setPasswordHash(passwordEncoder.encode(demoAuthProperties.getStudentPassword()));
         appUserAccountRepository.save(account);
     }
 
@@ -313,7 +296,9 @@ public class UserLoginAuthService implements ApplicationRunner {
 
         if (DEMO_STUDENT_USERNAME.equalsIgnoreCase(account.getUsername())
                 || DEMO_PARENT_USERNAME.equalsIgnoreCase(account.getUsername())) {
-            return DEMO_PASSWORD;
+            return DEMO_STUDENT_USERNAME.equalsIgnoreCase(account.getUsername())
+                    ? demoAuthProperties.getStudentPassword()
+                    : demoAuthProperties.getParentPassword();
         }
 
         if (account.getSourceId() != null) {
@@ -321,15 +306,15 @@ public class UserLoginAuthService implements ApplicationRunner {
                     .map(student -> TYPE_PARENT.equals(account.getUserType())
                             ? defaultParentPassword(student)
                             : defaultStudentPassword(student))
-                    .orElse(DEMO_PASSWORD);
+                    .orElse(demoAuthProperties.getStudentPassword());
         }
 
-        return DEMO_PASSWORD;
+        return demoAuthProperties.getStudentPassword();
     }
 
     private void seedDemoStaffAccounts() {
         try {
-            DEMO_STAFF_LOGIN_IDS.forEach((loginEmail, staffId) ->
+            demoAuthProperties.staffLoginIds().forEach((loginEmail, staffId) ->
                     staffMemberRepository.findByStaffId(staffId).ifPresent(staff -> {
                         AppUserAccount account = appUserAccountRepository.findByUsernameIgnoreCase(loginEmail)
                                 .orElseGet(() -> AppUserAccount.builder()
@@ -340,7 +325,7 @@ public class UserLoginAuthService implements ApplicationRunner {
                         account.setSourceId(staff.getId());
                         account.setUsername(loginEmail);
                         account.setPasswordHash(passwordEncoder.encode(
-                                DEMO_STAFF_LOGIN_PASSWORDS.getOrDefault(loginEmail, DEMO_PASSWORD)));
+                                demoAuthProperties.staffPasswordFor(loginEmail)));
                         account.setLoginEnabled(!Boolean.TRUE.equals(staff.getDisabled()));
                         account.setIsActive(!Boolean.TRUE.equals(staff.getDisabled()));
                         appUserAccountRepository.save(account);
@@ -377,34 +362,34 @@ public class UserLoginAuthService implements ApplicationRunner {
         if (staffId == null || staffId.isBlank()) {
             return Optional.empty();
         }
-        return DEMO_STAFF_LOGIN_IDS.entrySet().stream()
+        return demoAuthProperties.staffLoginIds().entrySet().stream()
                 .filter(entry -> staffId.equals(entry.getValue()))
                 .map(Map.Entry::getKey)
                 .findFirst();
     }
 
     private String defaultStaffPassword(StaffMember staff, String username) {
-        String demoPassword = DEMO_STAFF_LOGIN_PASSWORDS.get(username == null ? "" : username.toLowerCase(Locale.ROOT));
-        if (demoPassword != null) {
+        String demoPassword = demoAuthProperties.staffPasswordFor(username);
+        if (demoAuthProperties.staffLoginIds().containsKey(username == null ? "" : username.toLowerCase(Locale.ROOT))) {
             return demoPassword;
         }
         if (staff.getStaffId() != null && !staff.getStaffId().isBlank()) {
             return staff.getStaffId().trim();
         }
-        return DEMO_PASSWORD;
+        return demoAuthProperties.getStudentPassword();
     }
 
     private String resolveRawPasswordForStaffAccount(AppUserAccount account) {
-        String demoPassword = DEMO_STAFF_LOGIN_PASSWORDS.get(account.getUsername().toLowerCase(Locale.ROOT));
-        if (demoPassword != null) {
+        String demoPassword = demoAuthProperties.staffPasswordFor(account.getUsername());
+        if (demoAuthProperties.staffLoginIds().containsKey(account.getUsername().toLowerCase(Locale.ROOT))) {
             return demoPassword;
         }
         if (account.getSourceId() != null) {
             return staffMemberRepository.findById(account.getSourceId())
                     .map(staff -> defaultStaffPassword(staff, account.getUsername()))
-                    .orElse(DEMO_PASSWORD);
+                    .orElse(demoAuthProperties.getStudentPassword());
         }
-        return DEMO_PASSWORD;
+        return demoAuthProperties.getStudentPassword();
     }
 
     private void ensureStandaloneAccount(String username, String userType, String rawPassword) {
@@ -443,22 +428,22 @@ public class UserLoginAuthService implements ApplicationRunner {
 
     private String defaultStudentPassword(StudentAdmission student) {
         if (Long.valueOf(1L).equals(student.getId())) {
-            return DEMO_PASSWORD;
+            return demoAuthProperties.getStudentPassword();
         }
         if (student.getAdmissionNo() != null && !student.getAdmissionNo().isBlank()) {
             return student.getAdmissionNo().trim();
         }
-        return DEMO_PASSWORD;
+        return demoAuthProperties.getStudentPassword();
     }
 
     private String defaultParentPassword(StudentAdmission student) {
         if (Long.valueOf(1L).equals(student.getId())) {
-            return DEMO_PASSWORD;
+            return demoAuthProperties.getParentPassword();
         }
         if (student.getAdmissionNo() != null && !student.getAdmissionNo().isBlank()) {
             return student.getAdmissionNo().trim();
         }
-        return DEMO_PASSWORD;
+        return demoAuthProperties.getParentPassword();
     }
 
     public String roleAuthority(String userType) {

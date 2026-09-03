@@ -1,5 +1,6 @@
 package com.kantechsolution.smart_school.auth;
 
+import com.kantechsolution.smart_school.config.AppDemoAuthProperties;
 import com.kantechsolution.smart_school.model.AppUserAccount;
 import com.kantechsolution.smart_school.repository.AppUserAccountRepository;
 import com.kantechsolution.smart_school.repository.StaffMemberRepository;
@@ -38,6 +39,9 @@ class UserLoginAuthServiceTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private AppDemoAuthProperties demoAuthProperties;
 
     @InjectMocks
     private UserLoginAuthService userLoginAuthService;

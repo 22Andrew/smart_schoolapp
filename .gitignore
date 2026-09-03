@@ -1,0 +1,20 @@
+# Local secrets and build output
+.env
+application-local.properties
+src/main/resources/application-local.properties
+
+# Maven
+target/
+
+# Uploads (local dev)
+uploads/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

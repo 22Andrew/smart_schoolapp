@@ -70,16 +70,23 @@ Create a MySQL database (e.g. `smart_schoolapp`) and set credentials in `src/mai
 
 Open `http://localhost:8080` — login at `/login` or `/site/login`.
 
-### Default staff logins (seeded in SecurityConfig)
+### Demo logins
 
-| Role | Email | Password |
-|------|-------|----------|
-| Super Admin | superadmin@gmail.com | Superadmin1 |
-| Admin | admin@gmail.com | Admin123 |
-| Teacher | teacher@gmail.com | Teacher123 |
-| Accountant | accountant@gmail.com | Accountant123 |
-| Receptionist | receptionist@gmail.com | Receptionist123 |
-| Librarian | librarian@gmail.com | Librarian123 |
+Demo **usernames** are fixed (e.g. `admin@gmail.com`, `std1`). **Passwords** are configured via environment variables — see `.env.example` and `docs/RAILWAY-DEPLOY.md`. For local dev, copy `application-local.properties.example` to `application-local.properties`.
+
+| Role | Username (staff panel) |
+|------|------------------------|
+| Super Admin | superadmin@gmail.com |
+| Admin | admin@gmail.com |
+| Teacher | teacher@gmail.com |
+| Student panel | std1 |
+| Parent panel | parent1 |
+
+Do not commit real passwords to Git.
+
+## Deploy to Railway (online demo)
+
+See **[docs/RAILWAY-DEPLOY.md](docs/RAILWAY-DEPLOY.md)** for step-by-step hosting with MySQL and secrets in Railway environment variables.
 
 ## Language / i18n
 
