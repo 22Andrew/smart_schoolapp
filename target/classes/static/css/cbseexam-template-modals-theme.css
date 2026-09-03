@@ -1,0 +1,197 @@
+/* CBSE Examination → Template – white modal content + theme header
+   Only linked on cbseexam-template.html */
+
+.cbse-modal-dialog {
+    background: #ffffff !important;
+    border-color: #e5e7eb !important;
+}
+
+.cbse-modal-header {
+    background: var(--theme-primary, #8b5cf6) !important;
+}
+
+.cbse-modal-header h3 {
+    color: #ffffff !important;
+}
+
+.cbse-modal-close {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.12) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-radius: 4px !important;
+    width: 32px !important;
+    height: 32px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1.35rem !important;
+    line-height: 1 !important;
+    padding: 0 !important;
+}
+
+.cbse-modal-close:hover {
+    background: rgba(255, 255, 255, 0.24) !important;
+    color: #ffffff !important;
+}
+
+.cbse-modal-body,
+.cbse-modal form {
+    background: #ffffff !important;
+}
+
+.cbse-modal-footer {
+    background: #ffffff !important;
+    border-top-color: #e5e7eb !important;
+}
+
+.cbse-modal .table-responsive,
+.cbse-modal .link-exam-table-wrap {
+    background: #ffffff !important;
+}
+
+/* Labels & text */
+.cbse-modal .form-group label,
+.cbse-modal .template-form-grid .form-group label,
+.cbse-modal .upload-field > label {
+    color: #374151 !important;
+}
+
+.cbse-modal .radio-group,
+.cbse-modal .radio-group label {
+    color: #374151 !important;
+}
+
+.cbse-modal .radio-group input {
+    accent-color: var(--theme-primary, #8b5cf6) !important;
+}
+
+.cbse-modal .toggle-row {
+    color: #374151 !important;
+}
+
+.cbse-modal .toggle-switch input:checked + .toggle-slider {
+    background: var(--theme-primary, #8b5cf6) !important;
+}
+
+/* Inputs */
+.cbse-modal .form-control,
+.cbse-modal .form-textarea,
+.cbse-modal .footer-editor,
+.cbse-modal select.form-control {
+    background: #ffffff !important;
+    border: 1px solid #d1d5db !important;
+    color: #111827 !important;
+}
+
+.cbse-modal .form-control:focus,
+.cbse-modal .form-textarea:focus,
+.cbse-modal select.form-control:focus {
+    border-color: var(--theme-primary, #8b5cf6) !important;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--theme-primary, #8b5cf6) 18%, transparent) !important;
+    color: #111827 !important;
+    background: #ffffff !important;
+}
+
+/* File upload zones */
+.cbse-modal .file-drop-zone {
+    background: #ffffff !important;
+    border-color: #d1d5db !important;
+}
+
+.cbse-modal .file-drop-zone.dragover {
+    border-color: var(--theme-primary, #8b5cf6) !important;
+    background: color-mix(in srgb, var(--theme-primary, #8b5cf6) 8%, #ffffff) !important;
+}
+
+.cbse-modal .file-drop-text {
+    color: #64748b !important;
+}
+
+.cbse-modal .file-drop-name {
+    color: #374151 !important;
+}
+
+/* Buttons */
+.cbse-modal .btn-save {
+    background: var(--theme-primary, #8b5cf6) !important;
+    color: #ffffff !important;
+    border-color: var(--theme-primary, #8b5cf6) !important;
+}
+
+.cbse-modal .btn-save:hover {
+    background: var(--theme-primary-dark, #7c3aed) !important;
+    border-color: var(--theme-primary-dark, #7c3aed) !important;
+}
+
+/* Link Exam modal */
+.cbse-modal .link-exam-table-wrap {
+    border-color: #e5e7eb !important;
+}
+
+.cbse-modal .link-exam-table thead th {
+    background: #ffffff !important;
+    color: #475569 !important;
+    border-bottom-color: #e5e7eb !important;
+}
+
+.cbse-modal .link-exam-table tbody td {
+    background: #ffffff !important;
+    color: #334155 !important;
+    border-bottom-color: #f1f5f9 !important;
+}
+
+.cbse-modal .link-exam-table .term-cell {
+    background: #ffffff !important;
+    color: #111827 !important;
+}
+
+.cbse-modal .link-exam-option {
+    color: #374151 !important;
+}
+
+.cbse-modal .link-exam-option input[type="radio"] {
+    accent-color: var(--theme-primary, #8b5cf6) !important;
+}
+
+/* Generate Rank modal */
+.cbse-modal .rank-alert {
+    background: #ffffff !important;
+    color: #374151 !important;
+    border: 1px solid #e5e7eb !important;
+}
+
+.cbse-modal .rank-table thead th,
+.cbse-modal .data-table thead th {
+    background: #ffffff !important;
+    color: #475569 !important;
+    border-bottom-color: #e5e7eb !important;
+}
+
+.cbse-modal .rank-table tbody td,
+.cbse-modal .data-table tbody td {
+    background: #ffffff !important;
+    color: #334155 !important;
+    border-bottom-color: #f1f5f9 !important;
+}
+
+.cbse-modal .rank-table tbody tr:hover td,
+.cbse-modal .data-table tbody tr:hover td {
+    background: #f8fafc !important;
+}
+
+.cbse-modal .rank-table .student-link {
+    color: var(--theme-primary, #8b5cf6) !important;
+}
+
+.cbse-modal .rank-table .student-link:hover {
+    color: var(--theme-primary-dark, #7c3aed) !important;
+}
+
+.cbse-modal .template-form-body,
+.cbse-modal .generate-rank-body {
+    background: #ffffff !important;
+}
+
+.cbse-modal .template-toggle-grid {
+    background: #ffffff !important;
+}

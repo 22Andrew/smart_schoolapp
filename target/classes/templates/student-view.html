@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <script th:src="@{/js/theme-init.js}"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile - Smart School</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/student-view.css}">
+    <link rel="stylesheet" th:href="@{/css/app-theme.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav th:replace="~{fragments/top-navbar :: top-navbar}"></nav>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar (Same as visitors page) -->
+        <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+
+        <!-- Main Content -->
+        <main class="main-content student-view-page">
+            <div class="student-view-layout" id="studentViewRoot" th:attr="data-student-id=${studentId}">
+                <aside class="student-summary-panel">
+                    <div class="summary-profile">
+                        <div class="summary-avatar" id="summaryAvatar" aria-hidden="true">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="72" height="72">
+                                <circle cx="40" cy="28" r="14" fill="#9aa5b1"/>
+                                <path d="M16 72c4-18 14-26 24-26s20 8 24 26" fill="#9aa5b1"/>
+                            </svg>
+                        </div>
+                        <div class="summary-identity">
+                            <h1 class="summary-name" id="summaryName">-</h1>
+                            <p class="summary-admission"><span>Admission No</span> <strong id="summaryAdmissionNo">-</strong></p>
+                            <p class="summary-roll">Roll Number <strong id="summaryRollNo">-</strong></p>
+                        </div>
+                    </div>
+
+                    <div class="summary-actions">
+                        <button type="button" class="summary-action-btn" title="Print" id="viewPrintBtn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                        </button>
+                        <button type="button" class="summary-action-btn" title="Edit" id="viewEditBtn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                        </button>
+                        <button type="button" class="summary-action-btn" title="Fees" id="viewFeesBtn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                        </button>
+                        <button type="button" class="summary-action-btn" title="Login Details" id="viewKeyBtn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path></svg>
+                        </button>
+                        <button type="button" class="summary-action-btn" title="Disable" id="viewDisableBtn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"></path></svg>
+                        </button>
+                        <button type="button" class="summary-action-btn" title="Info" id="viewInfoBtn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                            </button>
+                        </div>
+
+                    <div class="summary-meta">
+                        <div class="meta-row"><span>Class</span><strong id="summaryClass">-</strong></div>
+                        <div class="meta-row"><span>Section</span><strong id="summarySection">-</strong></div>
+                        <div class="meta-row"><span>Gender</span><strong id="summaryGender">-</strong></div>
+                        <div class="meta-row"><span>RTE</span><strong id="summaryRte">-</strong></div>
+                        <div class="meta-row barcode-row">
+                            <span>Barcode</span>
+                            <div class="barcode-wrap">
+                                <svg id="admissionBarcode"></svg>
+                        </div>
+                        </div>
+                        <div class="meta-row qr-row">
+                            <span>QR Code</span>
+                            <div class="qr-wrap" id="admissionQr"></div>
+                    </div>
+                        <div class="meta-row"><span>Behaviour Score</span><strong id="summaryBehaviour">35</strong></div>
+                    </div>
+
+                    <div class="summary-siblings" id="siblingSection" hidden>
+                        <h3 class="summary-siblings-title">Sibling</h3>
+                        <div class="sibling-cards" id="siblingCards"></div>
+                    </div>
+                </aside>
+
+                <section class="student-detail-panel">
+                    <div class="profile-tabs-bar">
+                        <div class="profile-tabs">
+                            <button type="button" class="profile-tab active" data-tab="profile">Profile</button>
+                            <button type="button" class="profile-tab" data-tab="fees">Fees</button>
+                            <button type="button" class="profile-tab" data-tab="exam">Exam</button>
+                            <button type="button" class="profile-tab" data-tab="cbse">CBSE Examination</button>
+                            <button type="button" class="profile-tab" data-tab="attendance">Attendance</button>
+                            <button type="button" class="profile-tab" data-tab="documents">Documents</button>
+                            <button type="button" class="profile-tab" data-tab="timeline">Timeline</button>
+                            <button type="button" class="profile-tab" data-tab="behaviour">Student Behaviour</button>
+                        </div>
+                        <button type="button" class="profile-print-btn" id="examPrintBtn" title="Print" aria-label="Print">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                                <rect x="6" y="14" width="12" height="8"></rect>
+                        </svg>
+                    </button>
+                </div>
+
+                    <div class="profile-tab-panel active" id="tab-profile">
+                        <div class="profile-section">
+                            <div class="profile-rows" id="generalDetailsRows"></div>
+                        </div>
+
+                        <div class="profile-section">
+                            <h3 class="profile-section-title">Address</h3>
+                            <div class="profile-rows" id="addressRows"></div>
+                        </div>
+
+                        <div class="profile-section">
+                            <h3 class="profile-section-title">Parent Guardian Detail</h3>
+                            <div class="guardian-layout">
+                                <div class="profile-rows" id="guardianRows"></div>
+                                <div class="guardian-photos">
+                                    <div class="guardian-photo-card"><div class="no-image">NO IMAGE</div><span>Father</span></div>
+                                    <div class="guardian-photo-card"><div class="no-image">NO IMAGE</div><span>Mother</span></div>
+                                    <div class="guardian-photo-card"><div class="no-image">NO IMAGE</div><span>Guardian</span></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="profile-section">
+                            <h3 class="profile-section-title">Route Details</h3>
+                            <div class="profile-rows" id="routeRows"></div>
+                        </div>
+                    </div>
+
+                    <div class="profile-tab-panel" id="tab-fees">
+                        <div class="fees-table-wrap">
+                            <table class="fees-table" id="studentFeesTable">
+                                <thead>
+                                    <tr>
+                                        <th>Fees</th>
+                                        <th>Due Date</th>
+                                        <th>Status</th>
+                                        <th>Amount ($)</th>
+                                        <th>Payment ID</th>
+                                        <th>Mode</th>
+                                        <th>Date</th>
+                                        <th>Discount ($)</th>
+                                        <th>Fine ($)</th>
+                                        <th>Paid ($)</th>
+                                        <th>Balance ($)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="studentFeesBody"></tbody>
+                                <tfoot id="studentFeesFoot"></tfoot>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="profile-tab-panel" id="tab-exam">
+                        <div class="exam-panels" id="examPanels"></div>
+                    </div>
+                    <div class="profile-tab-panel" id="tab-cbse">
+                        <div class="exam-panels" id="cbsePanels"></div>
+                    </div>
+                    <div class="profile-tab-panel" id="tab-attendance">
+                        <div class="attendance-panel">
+                            <div class="attendance-stats" id="attendanceStats"></div>
+                            <div class="attendance-toolbar">
+                                <div class="attendance-legend">
+                                    <span><em class="att-code present">P</em> Present</span>
+                                    <span><em class="att-code late">L</em> Late</span>
+                                    <span><em class="att-code absent">A</em> Absent</span>
+                                    <span><em class="att-code holiday">H</em> Holiday</span>
+                                    <span><em class="att-code half">F</em> Half Day</span>
+                                </div>
+                                <div class="attendance-actions">
+                                    <button type="button" class="icon-action-btn" title="Copy" id="attCopyBtn">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            </button>
+                                    <button type="button" class="icon-action-btn" title="CSV" id="attCsvBtn">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                            </button>
+                                    <button type="button" class="icon-action-btn" title="Excel" id="attExcelBtn">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                                    </button>
+                                    <button type="button" class="icon-action-btn" title="PDF" id="attPdfBtn">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                                    </button>
+                                    <button type="button" class="icon-action-btn" title="Print" id="attPrintBtn">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="attendance-table-wrap">
+                                <table class="attendance-table" id="attendanceTable">
+                                    <thead id="attendanceHead"></thead>
+                                    <tbody id="attendanceBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="profile-tab-panel" id="tab-documents">
+                        <div class="documents-panel">
+                            <div class="documents-toolbar">
+                                <button type="button" class="btn-upload" id="uploadDocumentsBtn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="17 8 12 3 7 8"></polyline>
+                                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                                </svg>
+                                    Upload Documents
+                            </button>
+                                <button type="button" class="btn-upload" id="uploadGoogleDriveBtn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="17 8 12 3 7 8"></polyline>
+                                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                                </svg>
+                                    Upload through Google Drive
+                            </button>
+                                <input type="file" id="documentFileInput" multiple hidden>
+                        </div>
+                            <div class="documents-table-wrap">
+                                <table class="documents-table" id="documentsTable">
+                            <thead>
+                                <tr>
+                                            <th>Title</th>
+                                            <th>File Name</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                                    <tbody id="documentsTableBody">
+                                        <tr class="documents-empty-row">
+                                            <td colspan="3">No Record Found</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="profile-tab-panel" id="tab-timeline">
+                        <div class="timeline-panel">
+                            <div class="timeline-toolbar">
+                                <button type="button" class="btn-timeline-add" id="timelineAddBtn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                                </svg>
+                                    Add
+                                </button>
+                                            </div>
+                            <div class="timeline-track" id="timelineTrack"></div>
+                                        </div>
+                    </div>
+                    <div class="profile-tab-panel" id="tab-behaviour">
+                        <div class="behaviour-panel">
+                            <div class="behaviour-toolbar">
+                                <button type="button" class="icon-action-btn" title="Copy" id="behaviourCopyBtn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                </button>
+                                <button type="button" class="icon-action-btn" title="Excel" id="behaviourExcelBtn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                                </button>
+                                <button type="button" class="icon-action-btn" title="CSV" id="behaviourCsvBtn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                                </button>
+                                <button type="button" class="icon-action-btn" title="PDF" id="behaviourPdfBtn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                                </button>
+                                <button type="button" class="icon-action-btn" title="Print" id="behaviourPrintBtn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                                </button>
+                                <button type="button" class="icon-action-btn" title="Columns" id="behaviourColumnsBtn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                                </button>
+                            </div>
+                            <div class="behaviour-table-wrap">
+                                <table class="behaviour-table" id="behaviourTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Point</th>
+                                            <th>Date</th>
+                                            <th>Description</th>
+                                            <th>Assign</th>
+                                            <th class="behaviour-action-col">Action</th>
+                                </tr>
+                                    </thead>
+                                    <tbody id="behaviourTableBody"></tbody>
+                        </table>
+                    </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+                </div>
+
+    <!-- Login Details Modal -->
+    <div class="login-details-modal" id="loginDetailsModal" aria-hidden="true">
+        <div class="login-details-overlay" id="loginDetailsOverlay"></div>
+        <div class="login-details-dialog" role="dialog" aria-modal="true" aria-labelledby="loginDetailsTitle">
+            <div class="login-details-header">
+                <h2 class="login-details-title" id="loginDetailsTitle">Login Details</h2>
+                <button type="button" class="login-details-close" id="loginDetailsClose" aria-label="Close">&times;</button>
+            </div>
+            <div class="login-details-body">
+                <h3 class="login-details-name" id="loginDetailsName">-</h3>
+                <table class="login-details-table">
+                    <thead>
+                        <tr>
+                            <th>User Type</th>
+                            <th>Username</th>
+                            <th>Password</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Parent</td>
+                            <td id="loginDetailsParentUser">-</td>
+                            <td id="loginDetailsParentPass">-</td>
+                        </tr>
+                        <tr>
+                            <td>Student</td>
+                            <td id="loginDetailsStudentUser">-</td>
+                            <td id="loginDetailsStudentPass">-</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="login-details-url-row">
+                    <span>Login Url:</span>
+                    <a id="loginDetailsUrl" href="/site/login">/site/login</a>
+                </p>
+            </div>
+            <div class="login-details-footer">
+                <button type="button" class="login-details-cancel" id="loginDetailsCancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add / Edit Timeline Modal -->
+    <div class="timeline-modal" id="timelineModal" aria-hidden="true">
+        <div class="timeline-modal-overlay" id="timelineModalOverlay"></div>
+        <div class="timeline-modal-content" role="dialog" aria-modal="true" aria-labelledby="timelineModalTitle">
+            <div class="timeline-modal-header">
+                <h2 class="timeline-modal-title" id="timelineModalTitle">Add Timeline</h2>
+                <button type="button" class="timeline-modal-close" id="timelineModalClose" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                </button>
+                        </div>
+            <form class="timeline-modal-body" id="timelineForm">
+                <input type="hidden" id="timelineEditId" value="">
+                <div class="timeline-field">
+                    <label for="timelineTitleInput">Title <span class="required">*</span></label>
+                    <input type="text" id="timelineTitleInput" class="timeline-input" required>
+                    </div>
+                <div class="timeline-field">
+                    <label for="timelineDateInput">Date <span class="required">*</span></label>
+                    <input type="text" id="timelineDateInput" class="timeline-input" placeholder="MM/DD/YYYY" required>
+                </div>
+                <div class="timeline-field">
+                    <label for="timelineDescInput">Description</label>
+                    <textarea id="timelineDescInput" class="timeline-textarea" rows="4"></textarea>
+            </div>
+                <div class="timeline-field">
+                    <label>Attach Document</label>
+                    <div class="timeline-dropzone" id="timelineDropzone">
+                        <input type="file" id="timelineFileInput" hidden>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                            <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
+                            <polyline points="16 12 12 8 8 12"></polyline>
+                            <line x1="12" y1="8" x2="12" y2="18"></line>
+                        </svg>
+                        <span id="timelineDropzoneText">Drag and drop a file here or click</span>
+                    </div>
+                </div>
+                <div class="timeline-visible-row">
+                    <label for="timelineVisibleCheck">Visible to this person</label>
+                    <input type="checkbox" id="timelineVisibleCheck" checked>
+                </div>
+            </form>
+            <div class="timeline-modal-footer">
+                <button type="button" class="btn-timeline-save" id="timelineSaveBtn">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Links Modal -->
+    <div class="quick-links-modal" id="quickLinksModal">
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Quick Links</h2>
+                <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="quick-links-grid">
+                <!-- Communicate -->
+                <div class="quick-link-category">
+                    <div class="category-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        <h3>Communicate</h3>
+                    </div>
+                    <ul class="category-links">
+                        <li><a href="#">Notice Board</a></li>
+                        <li><a href="#">Send Email</a></li>
+                        <li><a href="#">Send SMS</a></li>
+                        <li><a href="#">Email / SMS Log</a></li>
+                        <li><a href="#">Schedule Email SMS Log</a></li>
+                        <li><a href="#">Login Credentials Send</a></li>
+                        <li><a href="#">Email Template</a></li>
+                        <li><a href="#">SMS Template</a></li>
+                    </ul>
+                </div>
+
+                <!-- Front Office -->
+                <div class="quick-link-category">
+                    <div class="category-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                        <h3>Front Office</h3>
+                    </div>
+                    <ul class="category-links">
+                        <li><a href="/admission-enquiry">Admission Enquiry</a></li>
+                        <li><a href="/visitors">Visitor Book</a></li>
+                        <li><a href="/phone-call-log">Phone Call Log</a></li>
+                        <li><a href="/dispatch">Postal Dispatch</a></li>
+                        <li><a href="/receive">Postal Receive</a></li>
+                        <li><a href="/complain">Complain</a></li>
+                        <li><a href="/visitorspurpose">Setup Front Office</a></li>
+                    </ul>
+                </div>
+
+                <!-- Library -->
+                <div class="quick-link-category">
+                    <div class="category-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg>
+                        <h3>Library</h3>
+                    </div>
+                    <ul class="category-links">
+                        <li><a href="/dailyassignment/admin/book/getall">Book List</a></li>
+                        <li><a href="/dailyassignment/admin/member">Issue - Return</a></li>
+                        <li><a href="/dailyassignment/admin/member/student">Add Student</a></li>
+                        <li><a href="/dailyassignment/admin/member/teacher">Add Staff Member</a></li>
+                    </ul>
+                </div>
+
+                <!-- Student Information -->
+                <div class="quick-link-category">
+                    <div class="category-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <h3>Student Information</h3>
+                    </div>
+                    <ul class="category-links">
+                        <li><a href="/student/search">Student Details</a></li>
+                        <li><a href="/student/create">Student Admission</a></li>
+                        <li><a href="/student/onlinestudent">Online Admission</a></li>
+                        <li><a href="/student/disablestudentslist">Disabled Students</a></li>
+                        <li><a href="/student/multiclass">Multi Class Student</a></li>
+                        <li><a href="/student/bulkdelete">Bulk Delete</a></li>
+                        <li><a href="/category">Student Categories</a></li>
+                        <li><a href="/schoolhouse">Student House</a></li>
+                        <li><a href="/disablereason">Disable Reason</a></li>
+                    </ul>
+                </div>
+
+                <!-- Multi Branch -->
+                <div class="quick-link-category">
+                    <div class="category-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="2" y1="12" x2="22" y2="12"></line>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                        </svg>
+                        <h3>Multi Branch</h3>
+                    </div>
+                    <ul class="category-links">
+                        <li><a href="/multibranch/branch/overview">Overview</a></li>
+                        <li><a href="/multibranch/finance/dailycollectionreport">Report</a></li>
+                        <li><a href="/multibranch/branch">Setting</a></li>
+                    </ul>
+                </div>
+
+                <!-- Online Course -->
+                <div class="quick-link-category">
+                    <div class="category-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            <line x1="8" y1="21" x2="16" y2="21"></line>
+                            <line x1="12" y1="17" x2="12" y2="21"></line>
+                        </svg>
+                        <h3>Online Course</h3>
+                    </div>
+                    <ul class="category-links">
+                        <li><a href="/onlinecourse/course/index">Online Course</a></li>
+                        <li><a href="/onlinecourse/courseexamquestion/index">Question Bank</a></li>
+                        <li><a href="/onlinecourse/offlinepayment/payment">Offline Payment</a></li>
+                        <li><a href="/onlinecourse/coursecategory/categoryadd">Course Category</a></li>
+                        <li><a href="/onlinecourse/coursecertificate/templatelist">Certificate Template</a></li>
+                        <li><a href="/onlinecourse/coursereport/coursepurchase">Online Course Report</a></li>
+                        <li><a href="/onlinecourse/course/setting">Setting</a></li>
+                    </ul>
+                </div>
+
+                <!-- System Setting -->
+                <div class="quick-link-category">
+                    <div class="category-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M12 1v6m0 6v6M5.6 5.6l4.2 4.2m4.2 4.2l4.2 4.2M1 12h6m6 0h6M5.6 18.4l4.2-4.2m4.2-4.2l4.2-4.2"></path>
+                        </svg>
+                        <h3>System Setting</h3>
+                    </div>
+                    <ul class="category-links">
+                        <li><a href="/schsettings">General Setting</a></li>
+                        <li><a href="/sessions">Session Setting</a></li>
+                        <li><a href="/admin/notification/setting">Notification Setting</a></li>
+                        <li><a href="#">SMS Setting</a></li>
+                        <li><a href="#">Email Setting</a></li>
+                        <li><a href="#">Payment Methods</a></li>
+                        <li><a href="#">Roles Permissions</a></li>
+                        <li><a href="#">Backup Restore</a></li>
+                    </ul>
+                </div>
+
+                <!-- Alumni -->
+                <div class="quick-link-category">
+                    <div class="category-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        <h3>Alumni</h3>
+                    </div>
+                    <ul class="category-links">
+                        <li><a href="#">Manage Alumni</a></li>
+                        <li><a href="#">Events</a></li>
+                    </ul>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/dashboard.js}"></script>
+    <script th:src="@{/js/student-view.js}"></script>
+</body>
+</html>
+
+

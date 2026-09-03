@@ -5,10 +5,8 @@ import com.kantechsolution.smart_school.model.AppUserAccount;
 import com.kantechsolution.smart_school.repository.AppUserAccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -18,7 +16,6 @@ import org.springframework.util.StringUtils;
 public class ChangePasswordService {
 
     private final CompositeUserDetailsService compositeUserDetailsService;
-    private final InMemoryUserDetailsManager adminUserDetailsManager;
     private final UserLoginAuthService userLoginAuthService;
     private final AppUserAccountRepository appUserAccountRepository;
     private final PasswordEncoder passwordEncoder;
@@ -57,21 +54,9 @@ public class ChangePasswordService {
             throw new IllegalArgumentException("New password must be different from your current password.");
         }
 
-        String encoded = passwordEncoder.encode(newPassword);
-
-        var account = userLoginAuthService.findEnabledAccount(username);
-        if (account.isPresent()) {
-            AppUserAccount row = account.get();
-            row.setPasswordHash(encoded);
-            appUserAccountRepository.save(row);
-            return;
-        }
-
-        UserDetails updated = User.withUsername(userDetails.getUsername())
-                .password(encoded)
-                .authorities(userDetails.getAuthorities())
-                .disabled(!userDetails.isEnabled())
-                .build();
-        adminUserDetailsManager.updateUser(updated);
+        AppUserAccount account = userLoginAuthService.findAccount(username)
+                .orElseThrow(() -> new IllegalArgumentException("Account not found."));
+        account.setPasswordHash(passwordEncoder.encode(newPassword));
+        appUserAccountRepository.save(account);
     }
 }

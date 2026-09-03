@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+      th:replace="~{fragments/user-layout :: layout(~{::title}, ~{::#user-dailyassignment-page})}">
+<head>
+    <title th:text="|${schoolName} - Daily Assignment|">Mount Carmel School - Daily Assignment</title>
+</head>
+<body>
+<div id="user-dailyassignment-page" class="uhw-page ugm-page">
+    <link rel="stylesheet" th:href="@{/css/user-gmeet.css}">
+    <link rel="stylesheet" th:href="@{/css/user-homework.css}">
+
+    <div class="ugm-card">
+        <div class="uhw-header">
+            <h1 class="ugm-title">Daily Assignment</h1>
+            <a th:href="@{/user/homework}" class="uhw-daily-btn">Homework</a>
+        </div>
+
+        <div class="ugm-toolbar">
+            <div class="ugm-search">
+                <input type="text" id="udaSearchInput" class="ugm-search-input" placeholder="Search" autocomplete="off">
+            </div>
+            <div class="ugm-toolbar-right">
+                <select class="ugm-entries-select" id="udaEntriesSelect" aria-label="Rows per page">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50" selected>50</option>
+                    <option value="100">100</option>
+                </select>
+                <div class="ugm-actions table-actions">
+                    <button type="button" class="icon-action-btn" id="udaCopyBtn" title="Copy">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    </button>
+                    <button type="button" class="icon-action-btn" id="udaExcelBtn" title="Excel">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                    </button>
+                    <button type="button" class="icon-action-btn" id="udaCsvBtn" title="CSV">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                    </button>
+                    <button type="button" class="icon-action-btn" id="udaPdfBtn" title="PDF">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M10 12h4"></path><path d="M10 16h4"></path></svg>
+                    </button>
+                    <button type="button" class="icon-action-btn" id="udaPrintBtn" title="Print">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                    </button>
+                    <div class="column-visibility-wrap ugm-colvis-wrap">
+                        <button type="button" class="icon-action-btn" id="udaColumnsBtn" title="Column Visibility">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                        </button>
+                        <div class="column-visibility-dropdown" id="udaColumnsDropdown">
+                            <div class="dropdown-header"><span>Toggle Columns</span></div>
+                            <div class="dropdown-content">
+                                <label class="column-toggle-item"><input type="checkbox" class="uda-column-toggle" data-column="0" checked><span>Subject</span></label>
+                                <label class="column-toggle-item"><input type="checkbox" class="uda-column-toggle" data-column="1" checked><span>Title</span></label>
+                                <label class="column-toggle-item"><input type="checkbox" class="uda-column-toggle" data-column="2" checked><span>Date</span></label>
+                                <label class="column-toggle-item"><input type="checkbox" class="uda-column-toggle" data-column="3" checked><span>Submission Date</span></label>
+                                <label class="column-toggle-item"><input type="checkbox" class="uda-column-toggle" data-column="4" checked><span>Evaluation Date</span></label>
+                                <label class="column-toggle-item"><input type="checkbox" class="uda-column-toggle" data-column="5" checked><span>Evaluated By</span></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ugm-table-wrap">
+            <table class="ugm-table data-table" id="udaTable">
+                <thead>
+                    <tr>
+                        <th data-sort="subject">Subject <span class="sort-icon">↕</span></th>
+                        <th data-sort="title">Title <span class="sort-icon">↕</span></th>
+                        <th data-sort="assignmentDate">Date <span class="sort-icon">↕</span></th>
+                        <th data-sort="submissionDate">Submission Date <span class="sort-icon">↕</span></th>
+                        <th data-sort="evaluationDate">Evaluation Date <span class="sort-icon">↕</span></th>
+                        <th data-sort="evaluatedBy">Evaluated By <span class="sort-icon">↕</span></th>
+                    </tr>
+                </thead>
+                <tbody id="udaTableBody">
+                    <tr class="ugm-empty-row">
+                        <td colspan="6">Loading daily assignments...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="ugm-footer">
+            <div class="ugm-showing" id="udaShowingInfo">Showing 0 to 0 of 0 entries</div>
+            <div class="ugm-pagination" id="udaPagination"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script th:src="@{/js/user-dailyassignment.js}"></script>
+</div>
+</body>
+</html>

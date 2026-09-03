@@ -1,0 +1,170 @@
+/* QR Code Attendance Setting Page */
+.qrsetting-page {
+    background: #e8edf2;
+    padding: 20px;
+    min-height: calc(100vh - 80px);
+}
+
+.qrsetting-page .setting-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem 1.5rem;
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.qrsetting-page .setting-card-title {
+    margin: 0 0 1.1rem;
+    color: #f8fafc;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid #334155;
+}
+
+.qrsetting-page .setting-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-bottom: 0.5rem;
+}
+
+.qrsetting-page .setting-field {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    align-items: center;
+    gap: 1rem;
+}
+
+.qrsetting-page .setting-field label.field-label {
+    color: #e2e8f0;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.qrsetting-page .setting-field .required {
+    color: #ef4444;
+}
+
+.qrsetting-page .toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 24px;
+    cursor: pointer;
+}
+
+.qrsetting-page .toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.qrsetting-page .toggle-slider {
+    position: absolute;
+    inset: 0;
+    background: #475569;
+    border-radius: 999px;
+    transition: 0.2s;
+}
+
+.qrsetting-page .toggle-slider::before {
+    content: "";
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    left: 3px;
+    top: 3px;
+    background: #fff;
+    border-radius: 50%;
+    transition: 0.2s;
+}
+
+.qrsetting-page .toggle-switch input:checked + .toggle-slider {
+    background: #8b5cf6;
+}
+
+.qrsetting-page .toggle-switch input:checked + .toggle-slider::before {
+    transform: translateX(22px);
+}
+
+.qrsetting-page .checkbox-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.qrsetting-page .checkbox-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: #e2e8f0;
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin: 0;
+    user-select: none;
+}
+
+.qrsetting-page .checkbox-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #8b5cf6;
+    cursor: pointer;
+}
+
+.qrsetting-page .radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+}
+
+.qrsetting-page .radio-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: #e2e8f0;
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin: 0;
+}
+
+.qrsetting-page .radio-option input[type="radio"] {
+    accent-color: #8b5cf6;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.qrsetting-page .setting-card-footer {
+    border-top: 1px solid #334155;
+    padding-top: 0.9rem;
+    margin-top: 0.25rem;
+    display: flex;
+    justify-content: center;
+}
+
+.qrsetting-page .btn-setting-save {
+    border: none;
+    border-radius: 4px;
+    background: #8b5cf6;
+    color: #fff;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.88rem;
+    padding: 0.5rem 1.2rem;
+    cursor: pointer;
+}
+
+.qrsetting-page .btn-setting-save:hover {
+    background: #7c3aed;
+}
+
+@media (max-width: 768px) {
+    .qrsetting-page .setting-field {
+        grid-template-columns: 1fr;
+        align-items: start;
+    }
+}

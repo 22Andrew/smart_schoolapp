@@ -77,7 +77,7 @@ public class UserDashboardService {
         model.addAttribute("teachers", resolveTeachers(authentication));
         model.addAttribute("visitors", resolveVisitors());
         model.addAttribute("libraryIssues", resolveLibraryIssues(student));
-        model.addAttribute("profileImageUrl", contextService.resolveProfileImage(studentName));
+        model.addAttribute("profileImageUrl", contextService.resolveProfileImage(student));
     }
 
     private String resolveAttendancePercent(Authentication authentication) {

@@ -1,0 +1,236 @@
+.library-members-page {
+    background: #e8edf2;
+}
+
+main.main-content.library-members-page {
+    align-self: flex-start;
+    width: 100%;
+    min-width: 0;
+    min-height: calc(100vh - 56px);
+    overflow: visible;
+}
+
+.library-members-page .table-section {
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 0;
+    border: 1px solid #e5e7eb;
+}
+
+.library-members-page .section-title {
+    color: #111827;
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+.library-members-page .table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.library-members-page .table-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.library-members-page .table-search-input,
+.library-members-page .entries-select {
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    color: #111827;
+    padding: 0.55rem 0.75rem;
+    border-radius: 4px;
+}
+
+.library-members-page .table-actions {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.library-members-page .icon-action-btn {
+    width: 36px;
+    height: 36px;
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    color: var(--theme-primary, #8b5cf6);
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.library-members-page .table-responsive {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.library-members-page .data-table {
+    width: 100%;
+    min-width: 820px;
+    border-collapse: collapse;
+    background: #ffffff;
+}
+
+.library-members-page .data-table thead {
+    background: #f3f4f6;
+}
+
+.library-members-page .data-table th,
+.library-members-page .data-table td {
+    padding: 0.75rem 0.9rem;
+    text-align: left;
+    font-size: 0.85rem;
+    color: #374151;
+    border-bottom: 1px solid #e5e7eb;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.library-members-page .data-table th {
+    font-weight: 600;
+    color: #111827;
+}
+
+.library-members-page .data-table tbody tr:nth-child(even) {
+    background: #f9fafb;
+}
+
+.library-members-page .data-table th:last-child,
+.library-members-page .data-table td:last-child {
+    width: 1%;
+    text-align: center;
+}
+
+.library-members-page .empty-state-cell {
+    text-align: center;
+    padding: 1.5rem 1rem !important;
+    white-space: normal !important;
+}
+
+.library-members-page .empty-message {
+    color: #ef4444;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+}
+
+.library-members-page .empty-hint {
+    color: #10b981;
+    font-size: 0.9rem;
+}
+
+.library-members-page .empty-illustration {
+    margin: 1rem 0;
+    opacity: 0.45;
+    color: #93c5fd;
+}
+
+.library-members-page .table-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.library-members-page .showing-info {
+    color: #6b7280;
+    font-size: 0.85rem;
+}
+
+.library-members-page .pagination {
+    display: flex;
+    gap: 0.35rem;
+}
+
+.library-members-page .pagination-btn {
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    color: #374151;
+    padding: 0.35rem 0.75rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.library-members-page .pagination-btn.active {
+    background: var(--theme-primary, #8b5cf6);
+    border-color: var(--theme-primary, #8b5cf6);
+    color: #ffffff;
+}
+
+.library-members-page .pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.library-members-page .btn-issue {
+    width: 32px;
+    height: 28px;
+    border: none;
+    border-radius: 4px;
+    background: var(--theme-primary, #8b5cf6);
+    color: #ffffff;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.library-members-page .btn-issue:hover {
+    background: var(--theme-primary-dark, #7c3aed);
+}
+
+.library-members-page .column-visibility-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 0.5rem;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
+    z-index: 40;
+    min-width: 200px;
+    display: none;
+}
+
+.library-members-page .column-visibility-dropdown.active {
+    display: block;
+}
+
+.library-members-page .dropdown-header {
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    background: #f9fafb;
+    color: #111827;
+    font-weight: 600;
+    font-size: 0.88rem;
+}
+
+.library-members-page .column-toggle-item {
+    display: flex;
+    align-items: center;
+    padding: 0.45rem 1rem;
+    cursor: pointer;
+    color: #374151;
+    font-size: 0.85rem;
+}
+
+.library-members-page .column-toggle-item:hover {
+    background: #f3f4f6;
+}
+
+.library-members-page .column-toggle-item input[type="checkbox"] {
+    margin-right: 0.7rem;
+    accent-color: var(--theme-primary, #8b5cf6);
+}

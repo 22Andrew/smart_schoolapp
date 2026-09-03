@@ -1,0 +1,546 @@
+/* Online Course – light modal theme + selected theme color on headers/buttons/icons */
+
+/* ── Dialog shells ── */
+.course-modal-dialog,
+.preview-modal-dialog,
+.section-modal-dialog,
+.order-modal-dialog,
+.lesson-modal-dialog,
+.manage-modal-dialog,
+.cert-modal-dialog,
+.fees-modal-dialog,
+.qb-modal-dialog,
+.tag-manage-dialog {
+    background: #ffffff !important;
+    border-color: #e5e7eb !important;
+}
+
+/* ── Headers / top bars ── */
+.course-modal-header,
+.preview-modal-topbar,
+.section-modal-header,
+.order-modal-header,
+.lesson-modal-header,
+.manage-modal-topbar,
+.fees-modal-header,
+.qb-modal-header,
+.tag-manage-header,
+.cert-modal-top {
+    background: var(--theme-primary, #8b5cf6) !important;
+    border-bottom-color: transparent !important;
+}
+
+.course-modal-header h3,
+.section-modal-header h3,
+.order-modal-header h3,
+.lesson-modal-header h3,
+.fees-modal-header h3,
+.qb-modal-header h3,
+.cert-modal-top h3 {
+    color: #ffffff !important;
+}
+
+.course-modal-close,
+.section-modal-close,
+.order-modal-close,
+.lesson-modal-close,
+.fees-modal-close,
+.qb-modal-close,
+.cert-modal-close {
+    color: #ffffff !important;
+}
+
+.preview-modal-close,
+.manage-modal-close {
+    background: rgba(255, 255, 255, 0.18) !important;
+    color: #ffffff !important;
+}
+
+.preview-modal-close:hover,
+.manage-modal-close:hover {
+    background: rgba(255, 255, 255, 0.28) !important;
+}
+
+/* ── Bodies & footers ── */
+.course-modal-body,
+.section-modal-body,
+.order-modal-body,
+.lesson-modal-body,
+.fees-modal-body,
+.qb-modal-body,
+.cert-modal-body {
+    background: #ffffff !important;
+}
+
+.course-modal-footer,
+.section-modal-footer,
+.lesson-modal-footer,
+.qb-modal-footer,
+.fees-modal-footer {
+    background: #f8fafc !important;
+    border-top-color: #e5e7eb !important;
+}
+
+/* ── Labels & text inside modals ── */
+.course-modal .form-group label,
+.section-modal .form-group label,
+.lesson-modal .form-group label,
+.fees-form-row > label,
+.fees-course-name,
+.fees-total-row,
+.cert-modal label,
+.qb-modal-body .form-group label,
+.question-manage-dialog .qb-modal-body .form-group label,
+.question-manage-dialog .form-row-3 .form-group label,
+.question-editor-label-row label,
+.tag-add-panel .form-group label,
+.view-field,
+.view-field strong,
+.view-question-text {
+    color: #374151 !important;
+}
+
+.view-field strong {
+    color: #111827 !important;
+}
+
+/* ── Inputs ── */
+.course-modal .form-control,
+.section-modal .form-control,
+.lesson-modal .form-control,
+.fees-modal .form-control,
+.cert-modal .form-control,
+.qb-modal-body .form-control,
+.question-manage-dialog .qb-modal-body .form-control,
+.question-manage-dialog .form-row-3 .form-control,
+.tag-add-panel .form-control {
+    background: #ffffff !important;
+    border: 1px solid #d1d5db !important;
+    color: #111827 !important;
+}
+
+.course-modal .form-control:focus,
+.section-modal .form-control:focus,
+.lesson-modal .form-control:focus,
+.fees-modal .form-control:focus,
+.cert-modal .form-control:focus,
+.qb-modal-body .form-control:focus,
+.question-manage-dialog .qb-modal-body .form-control:focus,
+.question-manage-dialog .form-row-3 .form-control:focus,
+.tag-add-panel .form-control:focus {
+    border-color: var(--theme-primary, #8b5cf6) !important;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--theme-primary, #8b5cf6) 18%, transparent) !important;
+}
+
+.course-modal select.form-control option,
+.lesson-modal select.form-control option,
+.question-manage-dialog .qb-modal-body select.form-control option {
+    background: #ffffff !important;
+    color: #111827 !important;
+}
+
+.mode-option {
+    color: #374151 !important;
+}
+
+.checkbox-label {
+    color: #374151 !important;
+}
+
+/* ── Course modal extras ── */
+.outcome-item {
+    background: #f8fafc !important;
+    border-color: #e5e7eb !important;
+    color: #334155 !important;
+}
+
+.editor-toolbar {
+    background: #f8fafc !important;
+    border-color: #e5e7eb !important;
+}
+
+.editor-toolbar button,
+.editor-select {
+    background: #ffffff !important;
+    border-color: #d1d5db !important;
+    color: #374151 !important;
+}
+
+.rich-editor {
+    background: #ffffff !important;
+    border-color: #e5e7eb !important;
+    color: #111827 !important;
+}
+
+.upload-dropzone,
+.import-dropzone {
+    background: #f8fafc !important;
+    border-color: #cbd5e1 !important;
+}
+
+.upload-dropzone.dragover,
+.import-dropzone.dragover {
+    border-color: var(--theme-primary, #8b5cf6) !important;
+    background: color-mix(in srgb, var(--theme-primary, #8b5cf6) 8%, #ffffff) !important;
+}
+
+.upload-placeholder,
+.import-dropzone-content {
+    color: #64748b !important;
+}
+
+.import-dropzone-content svg {
+    stroke: #64748b !important;
+}
+
+.import-file-name {
+    color: #334155 !important;
+}
+
+/* ── Primary modal buttons ── */
+.btn-save-course,
+.btn-save-section,
+.btn-save-lesson,
+.btn-save-cert,
+.btn-fees-pay,
+.btn-outcome-add,
+.qb-modal .btn-purple,
+.qb-modal-footer .btn-purple,
+.tag-add-panel .btn-purple,
+.btn-add-image {
+    background: var(--theme-primary, #8b5cf6) !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+.btn-save-course:hover,
+.btn-save-section:hover,
+.btn-save-lesson:hover,
+.btn-save-cert:hover,
+.btn-fees-pay:hover,
+.btn-outcome-add:hover,
+.qb-modal .btn-purple:hover,
+.qb-modal-footer .btn-purple:hover,
+.tag-add-panel .btn-purple:hover,
+.btn-add-image:hover {
+    background: var(--theme-primary-dark, #7c3aed) !important;
+}
+
+.btn-download-template {
+    background: var(--theme-primary-dark, #7c3aed) !important;
+    border-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+.btn-download-template:hover {
+    background: color-mix(in srgb, var(--theme-primary-dark, #7c3aed) 85%, #000) !important;
+}
+
+/* ── Certificate modal ── */
+.cert-accordion {
+    background: #ffffff !important;
+    border-color: #e5e7eb !important;
+}
+
+.cert-accordion-header {
+    background: #f8fafc !important;
+    color: #111827 !important;
+}
+
+.cert-accordion-header:hover {
+    background: #f1f5f9 !important;
+}
+
+.cert-accordion-body {
+    border-top-color: #e5e7eb !important;
+    background: #ffffff !important;
+}
+
+.help-icon {
+    background: var(--theme-primary, #8b5cf6) !important;
+}
+
+.tag-btn {
+    color: var(--theme-primary, #8b5cf6) !important;
+}
+
+.tag-btn:hover {
+    color: var(--theme-primary-dark, #7c3aed) !important;
+}
+
+/* ── Question bank tag modal ── */
+.tag-manage-layout {
+    background: #f8fafc !important;
+}
+
+.tag-add-panel,
+.tag-list-panel {
+    background: #ffffff !important;
+    border-color: #e5e7eb !important;
+}
+
+.tag-add-panel .panel-title,
+.tag-list-panel .panel-title {
+    color: #111827 !important;
+    border-bottom-color: #e5e7eb !important;
+}
+
+.tag-list-panel .icon-action-btn,
+.tag-list-panel .btn-action {
+    background: var(--theme-primary, #8b5cf6) !important;
+    border-color: var(--theme-primary, #8b5cf6) !important;
+    color: #ffffff !important;
+}
+
+.tag-list-panel .icon-action-btn:hover,
+.tag-list-panel .btn-action:hover {
+    background: var(--theme-primary-dark, #7c3aed) !important;
+    border-color: var(--theme-primary-dark, #7c3aed) !important;
+}
+
+.tag-list-panel .entries-select {
+    background: #ffffff !important;
+    border-color: #d1d5db !important;
+    color: #111827 !important;
+}
+
+.tag-list-panel .data-table thead th {
+    background: #f8fafc !important;
+    color: #475569 !important;
+    border-color: #e5e7eb !important;
+}
+
+.tag-list-panel .data-table tbody td {
+    color: #334155 !important;
+    border-color: #f1f5f9 !important;
+}
+
+.column-visibility-dropdown {
+    background: #ffffff !important;
+    border-color: #e5e7eb !important;
+}
+
+.dropdown-header {
+    background: #f8fafc !important;
+    border-bottom-color: #e5e7eb !important;
+    color: #111827 !important;
+}
+
+.column-toggle-item {
+    color: #374151 !important;
+}
+
+.column-toggle-item:hover {
+    background: #f1f5f9 !important;
+}
+
+.column-toggle-item input {
+    accent-color: var(--theme-primary, #8b5cf6) !important;
+}
+
+/* ── Order modal ── */
+.order-section-item,
+.order-content-item {
+    background: #ffffff !important;
+    border-color: #e5e7eb !important;
+}
+
+.order-section-row,
+.order-content-item {
+    color: #111827 !important;
+}
+
+.order-drag-handle {
+    color: #64748b !important;
+}
+
+.order-empty {
+    color: #64748b !important;
+}
+
+/* ── Preview modal (light content) ── */
+.preview-modal-body {
+    background: #ffffff !important;
+}
+
+.preview-summary,
+.preview-description-box {
+    background: #ffffff !important;
+    border-color: #e5e7eb !important;
+}
+
+.preview-instructor-name,
+.preview-course-title,
+.preview-section-title,
+.preview-meta-list strong,
+.preview-learn-list .check {
+    color: #111827 !important;
+}
+
+.preview-instructor-updated,
+.preview-meta-list li,
+.preview-description,
+.preview-learn-list li {
+    color: #475569 !important;
+}
+
+.preview-instructor {
+    border-bottom-color: #e5e7eb !important;
+}
+
+.preview-instructor-avatar {
+    background: var(--theme-primary, #8b5cf6) !important;
+}
+
+.preview-curriculum {
+    border-color: #e5e7eb !important;
+}
+
+.curriculum-section-header {
+    background: #f8fafc !important;
+    color: #111827 !important;
+}
+
+.curriculum-section-header .toggle {
+    background: #e2e8f0 !important;
+    color: #475569 !important;
+}
+
+.curriculum-section-header .right {
+    color: #64748b !important;
+}
+
+.curriculum-lessons {
+    background: #ffffff !important;
+}
+
+.curriculum-lesson {
+    color: #475569 !important;
+    border-top-color: #f1f5f9 !important;
+}
+
+/* ── Manage modal (light content) ── */
+.manage-detail-pane {
+    background: #f8fafc !important;
+    border-right-color: #e5e7eb !important;
+}
+
+.manage-curriculum-pane {
+    background: #ffffff !important;
+}
+
+.manage-pane-header h3 {
+    color: #111827 !important;
+}
+
+.manage-detail-row {
+    border-bottom-color: #e5e7eb !important;
+}
+
+.manage-detail-row .label {
+    color: #111827 !important;
+}
+
+.manage-detail-row .value {
+    color: #475569 !important;
+}
+
+.manage-modal .icon-btn,
+.course-modal .icon-btn,
+.section-modal .icon-btn,
+.lesson-modal .icon-btn,
+.order-modal .icon-btn,
+.qb-modal .icon-btn {
+    background: #ffffff !important;
+    border-color: #d1d5db !important;
+    color: #475569 !important;
+}
+
+.manage-modal .icon-btn:hover,
+.course-modal .icon-btn:hover,
+.section-modal .icon-btn:hover,
+.lesson-modal .icon-btn:hover,
+.order-modal .icon-btn:hover,
+.qb-modal .icon-btn:hover {
+    background: color-mix(in srgb, var(--theme-primary, #8b5cf6) 10%, #ffffff) !important;
+    border-color: var(--theme-primary, #8b5cf6) !important;
+    color: var(--theme-primary, #8b5cf6) !important;
+}
+
+.btn-add-section,
+.btn-order-section {
+    background: var(--theme-primary, #8b5cf6) !important;
+}
+
+.btn-add-section:hover,
+.btn-order-section:hover {
+    background: var(--theme-primary-dark, #7c3aed) !important;
+}
+
+.manage-section-header {
+    background: var(--theme-primary, #8b5cf6) !important;
+}
+
+.manage-section-body {
+    background: #f8fafc !important;
+}
+
+.manage-content-card {
+    background: #ffffff !important;
+    border-color: #e5e7eb !important;
+}
+
+.manage-content-header {
+    background: #f1f5f9 !important;
+    border-bottom-color: #e5e7eb !important;
+}
+
+.manage-content-header.quiz {
+    background: color-mix(in srgb, var(--theme-primary, #8b5cf6) 12%, #ffffff) !important;
+}
+
+.manage-content-header .left {
+    color: #111827 !important;
+}
+
+.manage-content-header .meta {
+    color: #64748b !important;
+}
+
+.manage-content-header .icon-btn {
+    background: rgba(255, 255, 255, 0.85) !important;
+}
+
+.manage-content-body,
+.manage-lesson-summary {
+    color: #475569 !important;
+}
+
+.manage-meta-grid .item .k {
+    color: #64748b !important;
+}
+
+.manage-meta-grid .item .v {
+    color: #111827 !important;
+}
+
+.manage-empty {
+    color: #64748b !important;
+}
+
+.manage-section-header .icon-btn {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-color: rgba(255, 255, 255, 0.25) !important;
+    color: #ffffff !important;
+}
+
+.manage-section-header .icon-btn:hover {
+    background: rgba(255, 255, 255, 0.22) !important;
+    color: #ffffff !important;
+}
+
+/* ── Checkboxes / radios in modals ── */
+.course-modal input[type="checkbox"],
+.fees-modal input[type="radio"],
+.qb-modal input[type="checkbox"] {
+    accent-color: var(--theme-primary, #8b5cf6) !important;
+}

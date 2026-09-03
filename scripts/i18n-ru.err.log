@@ -1,1 +1,13 @@
-  ru stopped at "' + buildActionButtons(enquiry.id, enqui": MyMemory returned source text
+  ru skip "[assign_teacher]": MyMemory returned source text
+  ru skip "&nbsp;": MyMemory returned source text
+  ru skip "B+": MyMemory returned source text
+  ru skip "CCAvenue": MyMemory returned source text
+  ru skip "col-md-": MyMemory returned source text
+  ru skip "document.documentElement.setAttribute('data-role-s": MyMemory returned source text
+  ru skip "DPO Pay": MyMemory returned source text
+  ru skip "MSG91": MyMemory returned source text
+  ru skip "Payfast": MyMemory returned source text
+  ru skip "PayU": MyMemory returned source text
+  ru skip "SDA0009998": MyMemory returned source text
+  ru skip "SSLCommerz": HTTP 429
+  ru skip "WhatsApp": HTTP 429

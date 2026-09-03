@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+      th:replace="~{fragments/user-layout :: layout(~{::title}, ~{::#user-homework-page})}">
+<head>
+    <title th:text="|${schoolName} - Homework|">Mount Carmel School - Homework</title>
+</head>
+<body>
+<div id="user-homework-page" class="uhw-page ugm-page">
+    <link rel="stylesheet" th:href="@{/css/user-gmeet.css}">
+    <link rel="stylesheet" th:href="@{/css/user-homework.css}">
+
+    <div class="ugm-card">
+        <div class="uhw-header">
+            <h1 class="ugm-title">Homework</h1>
+            <a th:href="@{/user/dailyassignment}" class="uhw-daily-btn">Daily Assignment</a>
+        </div>
+
+        <div class="uhw-tabs">
+            <button type="button" class="uhw-tab active" data-tab="upcoming">Upcoming Homework</button>
+            <button type="button" class="uhw-tab" data-tab="closed">Closed Homework</button>
+        </div>
+
+        <div class="ugm-toolbar">
+            <div class="ugm-search">
+                <input type="text" id="uhwSearchInput" class="ugm-search-input" placeholder="Search" autocomplete="off">
+            </div>
+            <div class="ugm-toolbar-right">
+                <select class="ugm-entries-select" id="uhwEntriesSelect" aria-label="Rows per page">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50" selected>50</option>
+                    <option value="100">100</option>
+                </select>
+                <div class="ugm-actions table-actions">
+                    <button type="button" class="icon-action-btn" data-export="copy" title="Copy">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    </button>
+                    <button type="button" class="icon-action-btn" data-export="excel" title="Excel">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                    </button>
+                    <button type="button" class="icon-action-btn" data-export="csv" title="CSV">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                    </button>
+                    <button type="button" class="icon-action-btn" data-export="pdf" title="PDF">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M10 12h4"></path><path d="M10 16h4"></path></svg>
+                    </button>
+                    <button type="button" class="icon-action-btn" data-export="print" title="Print">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                    </button>
+                    <div class="column-visibility-wrap ugm-colvis-wrap">
+                        <button type="button" class="icon-action-btn" id="uhwColumnsBtn" title="Column Visibility">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                        </button>
+                        <div class="column-visibility-dropdown" id="uhwColumnsDropdown">
+                            <div class="dropdown-header"><span>Toggle Columns</span></div>
+                            <div class="dropdown-content">
+                                <label class="column-toggle-item"><input type="checkbox" class="uhw-column-toggle" data-column="0" checked><span>Class</span></label>
+                                <label class="column-toggle-item"><input type="checkbox" class="uhw-column-toggle" data-column="1" checked><span>Section</span></label>
+                                <label class="column-toggle-item"><input type="checkbox" class="uhw-column-toggle" data-column="2" checked><span>Subject</span></label>
+                                <label class="column-toggle-item"><input type="checkbox" class="uhw-column-toggle" data-column="3" checked><span>Homework Date</span></label>
+                                <label class="column-toggle-item"><input type="checkbox" class="uhw-column-toggle" data-column="4" checked><span>Submission Date</span></label>
+                                <label class="column-toggle-item"><input type="checkbox" class="uhw-column-toggle" data-column="5" checked><span>Evaluation Date</span></label>
+                                <label class="column-toggle-item"><input type="checkbox" class="uhw-column-toggle" data-column="6" checked><span>Max Marks</span></label>
+                                <label class="column-toggle-item"><input type="checkbox" class="uhw-column-toggle" data-column="7" checked><span>Marks Obtained</span></label>
+                                <label class="column-toggle-item"><input type="checkbox" class="uhw-column-toggle" data-column="8" checked><span>Note</span></label>
+                                <label class="column-toggle-item"><input type="checkbox" class="uhw-column-toggle" data-column="9" checked><span>Status</span></label>
+                                <label class="column-toggle-item"><input type="checkbox" class="uhw-column-toggle" data-column="10" checked><span>Action</span></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ugm-table-wrap">
+            <table class="ugm-table data-table uhw-table" id="uhwTable">
+                <thead>
+                    <tr>
+                        <th data-sort="className">Class <span class="sort-icon">↕</span></th>
+                        <th data-sort="section">Section <span class="sort-icon">↕</span></th>
+                        <th data-sort="subject">Subject <span class="sort-icon">↕</span></th>
+                        <th data-sort="homeworkDate">Homework Date <span class="sort-icon">↕</span></th>
+                        <th data-sort="submissionDate">Submission Date <span class="sort-icon">↕</span></th>
+                        <th data-sort="evaluationDate">Evaluation Date <span class="sort-icon">↕</span></th>
+                        <th data-sort="maxMarks">Max Marks <span class="sort-icon">↕</span></th>
+                        <th data-sort="marksObtained">Marks Obtained <span class="sort-icon">↕</span></th>
+                        <th data-sort="note">Note <span class="sort-icon">↕</span></th>
+                        <th data-sort="status">Status <span class="sort-icon">↕</span></th>
+                        <th class="ugm-col-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="uhwTableBody">
+                    <tr class="ugm-empty-row">
+                        <td colspan="11">Loading homework...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="ugm-footer">
+            <div class="ugm-showing" id="uhwShowingInfo">Showing 0 to 0 of 0 entries</div>
+            <div class="ugm-pagination" id="uhwPagination"></div>
+        </div>
+    </div>
+
+    <div class="uhw-modal" id="uhwModal" hidden>
+        <div class="uhw-modal-overlay" id="uhwModalOverlay"></div>
+        <div class="uhw-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="uhwModalTitle">
+            <div class="uhw-modal-header">
+                <h2 id="uhwModalTitle">Homework Details</h2>
+                <button type="button" class="uhw-modal-close" id="uhwModalClose" aria-label="Close">&times;</button>
+            </div>
+            <form class="uhw-modal-body" id="uhwSubmitForm">
+                <div class="uhw-modal-main">
+                    <div class="uhw-field">
+                        <label>Description</label>
+                        <div class="uhw-description" id="uhwDescription">all</div>
+                    </div>
+                    <div class="uhw-field">
+                        <label for="uhwMessage">Message <span class="required">*</span></label>
+                        <textarea id="uhwMessage" class="uhw-textarea" rows="5" required></textarea>
+                    </div>
+                    <div class="uhw-field">
+                        <label>Attach Document</label>
+                        <label class="uhw-dropzone" id="uhwDropzone" for="uhwDocument">
+                            <input type="file" id="uhwDocument" class="uhw-file-input">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="16 16 12 12 8 16"></polyline>
+                                <line x1="12" y1="12" x2="12" y2="21"></line>
+                                <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"></path>
+                            </svg>
+                            <span id="uhwDropzoneText">Drag and drop a file here or click</span>
+                        </label>
+                    </div>
+                    <button type="submit" class="uhw-save-btn" id="uhwSaveBtn">Save</button>
+                </div>
+                <aside class="uhw-summary">
+                    <h3>Summary</h3>
+                    <div class="uhw-summary-row">
+                        <span class="uhw-summary-label">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                            Homework Date
+                        </span>
+                        <span id="uhwSummaryHomeworkDate"></span>
+                    </div>
+                    <div class="uhw-summary-row">
+                        <span class="uhw-summary-label">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                            Submission Date
+                        </span>
+                        <span id="uhwSummarySubmissionDate"></span>
+                    </div>
+                    <div class="uhw-summary-row">
+                        <span class="uhw-summary-label">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                            Evaluation Date
+                        </span>
+                        <span id="uhwSummaryEvaluationDate"></span>
+                    </div>
+                    <div class="uhw-summary-row">
+                        <span class="uhw-summary-label">Created By</span>
+                        <span id="uhwSummaryCreatedBy"></span>
+                    </div>
+                    <div class="uhw-summary-row">
+                        <span class="uhw-summary-label">Evaluated By</span>
+                        <span id="uhwSummaryEvaluatedBy"></span>
+                    </div>
+                    <div class="uhw-summary-row">
+                        <span class="uhw-summary-label">Class</span>
+                        <span id="uhwSummaryClass"></span>
+                    </div>
+                    <div class="uhw-summary-row">
+                        <span class="uhw-summary-label">Section</span>
+                        <span id="uhwSummarySection"></span>
+                    </div>
+                    <div class="uhw-summary-row">
+                        <span class="uhw-summary-label">Subject</span>
+                        <span id="uhwSummarySubject"></span>
+                    </div>
+                    <div class="uhw-summary-row">
+                        <span class="uhw-summary-label">Status:</span>
+                        <span class="uhw-status pending" id="uhwSummaryStatus">Pending</span>
+                    </div>
+                </aside>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script th:src="@{/js/user-homework.js}"></script>
+</div>
+</body>
+</html>

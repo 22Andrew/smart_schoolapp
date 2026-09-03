@@ -95,7 +95,7 @@ public class UserPanelPageService {
                 ? student.getCategory().getCategoryName()
                 : "";
 
-        model.addAttribute("profileImageUrl", contextService.resolveProfileImage(studentName));
+        model.addAttribute("profileImageUrl", contextService.resolveProfileImage(student));
         model.addAttribute("studentName", studentName);
         model.addAttribute("admissionNo", admissionNo);
         model.addAttribute("rollNumber", rollNumber);

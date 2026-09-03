@@ -45,6 +45,11 @@ public class StudentFeeController {
         return "studentfee-searchpayment";
     }
 
+    @GetMapping("/studentfee/quickfees")
+    public String showQuickFeesPage() {
+        return "studentfee-quickfees";
+    }
+
     @GetMapping("/api/fee-payments/search")
     @ResponseBody
     public ResponseEntity<?> searchPayments(@RequestParam String paymentId) {

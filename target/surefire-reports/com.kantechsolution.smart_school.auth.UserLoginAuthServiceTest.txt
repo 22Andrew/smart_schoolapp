@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.kantechsolution.smart_school.auth.UserLoginAuthServiceTest
+-------------------------------------------------------------------------------
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.186 s -- in com.kantechsolution.smart_school.auth.UserLoginAuthServiceTest

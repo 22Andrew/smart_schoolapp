@@ -354,7 +354,7 @@ public class CommunicateController {
     @PostMapping("/api/communicate/login-credentials/send")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> sendLoginCredentials(@RequestBody Map<String, Object> payload) {
-        return saveResponse(() -> communicateService.sendLoginCredentials(payload), "Login credentials send recorded successfully!");
+        return saveResponse(() -> communicateService.sendLoginCredentials(payload), "Login credentials sent successfully!");
     }
 
     @DeleteMapping("/api/communicate/login-credentials/{id}")

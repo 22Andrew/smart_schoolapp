@@ -1,0 +1,129 @@
+.system-update-page {
+    padding: 20px;
+    background-color: #ecf0f5;
+    min-height: calc(100vh - 80px);
+}
+
+.system-update-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+    gap: 20px;
+    max-width: 1600px;
+    margin: 0 auto;
+    align-items: start;
+}
+
+.system-info-panel,
+.update-steps-panel,
+.update-notes-panel {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px 22px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.system-update-side {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.system-update-page .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.system-update-page .panel-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 16px;
+}
+
+.system-update-page .panel-header .panel-title {
+    margin: 0;
+}
+
+.btn-refresh {
+    background: #8b5cf6;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 0.45rem 0.95rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.btn-refresh:hover {
+    background: #7c3aed;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px 24px;
+    margin: 0;
+}
+
+.info-item dt {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #6b7280;
+    margin-bottom: 0.25rem;
+}
+
+.info-item dd {
+    margin: 0;
+    color: #111827;
+    font-size: 0.95rem;
+    word-break: break-word;
+}
+
+.update-steps {
+    margin: 0 0 1.25rem 1.1rem;
+    padding: 0;
+    color: #374151;
+    line-height: 1.55;
+}
+
+.update-steps li + li {
+    margin-top: 0.65rem;
+}
+
+.btn-backup-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #111827;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    padding: 0.55rem 1rem;
+    font-size: 0.9rem;
+}
+
+.btn-backup-link:hover {
+    background: #1f2937;
+}
+
+.update-note {
+    margin: 0 0 0.85rem;
+    color: #4b5563;
+    line-height: 1.55;
+    font-size: 0.92rem;
+}
+
+@media (max-width: 960px) {
+    .system-update-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+}

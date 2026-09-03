@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+      th:replace="~{fragments/user-layout :: layout(~{::title}, ~{::#user-route-page})}">
+<head>
+    <title th:text="|${schoolName} - Transport Routes|">Mount Carmel School - Transport Routes</title>
+</head>
+<body>
+<div id="user-route-page" class="ugm-page utrans-page">
+    <link rel="stylesheet" th:href="@{/css/user-gmeet.css}">
+    <link rel="stylesheet" th:href="@{/css/user-route.css}">
+
+    <div class="ugm-card">
+        <div class="ugm-header">
+            <h1 class="ugm-title">Transport Routes</h1>
+        </div>
+
+        <div class="utrans-content" id="utransContent">
+            <div class="utrans-loading">Loading transport route...</div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/user-route.js}"></script>
+</div>
+</body>
+</html>

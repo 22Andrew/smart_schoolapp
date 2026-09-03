@@ -1,1 +1,63 @@
-  nl stopped at "' + buildActionButtons(enquiry.id, enqui": MyMemory returned source text
+  nl skip "<p>": MyMemory returned source text
+  nl skip "AB-": MyMemory returned source text
+  nl skip "56 Main Street, Suite 3, Brooklyn, NY 11210-0000": MyMemory returned source text
+  nl skip "A-": MyMemory returned source text
+  nl skip "AB+": MyMemory returned source text
+  nl skip "Alumni": MyMemory returned source text
+  nl skip "Aman": MyMemory returned source text
+  nl skip "AWS SES": MyMemory returned source text
+  nl skip "B-": MyMemory returned source text
+  nl skip "B+": MyMemory returned source text
+  nl skip "Billplz": MyMemory returned source text
+  nl skip "Browser": MyMemory returned source text
+  nl skip "Code": MyMemory returned source text
+  nl skip "col-md-": MyMemory returned source text
+  nl skip "Compact": MyMemory returned source text
+  nl skip "David": MyMemory returned source text
+  nl skip "DD": MyMemory returned source text
+  nl skip "December": MyMemory returned source text
+  nl skip "Details": MyMemory returned source text
+  nl skip "Document": MyMemory returned source text
+  nl skip "Excel": MyMemory returned source text
+  nl skip "document.documentElement.setAttribute('data-restri": MyMemory returned source text
+  nl skip "Favicon (32px X 32px)": MyMemory returned source text
+  nl skip "Filter": MyMemory returned source text
+  nl skip "G1": MyMemory returned source text
+  nl skip "Hindi": MyMemory returned source text
+  nl skip "Google Analytics": MyMemory returned source text
+  nl skip "Info": MyMemory returned source text
+  nl skip "Interview": MyMemory returned source text
+  nl skip "InstaMojo": MyMemory returned source text
+  nl skip "Jasper": MyMemory returned source text
+  nl skip "Java": MyMemory returned source text
+  nl skip "JazzCash": MyMemory returned source text
+  nl skip "Logo": MyMemory returned source text
+  nl skip "Link": MyMemory returned source text
+  nl skip "Logo (369px X 76px)": MyMemory returned source text
+  nl skip "Midtrans": MyMemory returned source text
+  nl skip "MC": MyMemory returned source text
+  nl skip "Marketing": MyMemory returned source text
+  nl skip "Modules": MyMemory returned source text
+  nl skip "Mollie": MyMemory returned source text
+  nl skip "Nexmo": MyMemory returned source text
+  nl skip "MSG91": MyMemory returned source text
+  nl skip "November": MyMemory returned source text
+  nl skip "Offline": MyMemory returned source text
+  nl skip "OK": MyMemory returned source text
+  nl skip "Olivier Thomas": MyMemory returned source text
+  nl skip "Online": MyMemory returned source text
+  nl skip "Parameter": MyMemory returned source text
+  nl skip "Pdf": MyMemory returned source text
+  nl skip "Paypal": MyMemory returned source text
+  nl skip "Percentage": MyMemory returned source text
+  nl skip "Percentage (%)": MyMemory returned source text
+  nl skip "Platform": MyMemory returned source text
+  nl skip "Pesapal": MyMemory returned source text
+  nl skip "Quiz": MyMemory returned source text
+  nl skip "Route": MyMemory returned source text
+  nl skip "SDA0009998": MyMemory returned source text
+  nl skip "sdsdsds": MyMemory returned source text
+  nl skip "Shivam Verma": MyMemory returned source text
+  nl skip "SSLCommerz": MyMemory returned source text
+  nl skip "Status:": MyMemory returned source text
+  nl skip "Status": MyMemory returned source text

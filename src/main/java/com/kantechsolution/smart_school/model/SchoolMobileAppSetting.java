@@ -26,4 +26,7 @@ public class SchoolMobileAppSetting extends BaseEntity {
 
     @Column(name = "envato_email", length = 255)
     private String envatoEmail;
+
+    @Column(name = "fcm_server_key", length = 500)
+    private String fcmServerKey;
 }

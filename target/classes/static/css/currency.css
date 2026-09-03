@@ -1,0 +1,133 @@
+/* Currencies page */
+.currency-page {
+    padding: 20px;
+    background-color: #ecf0f5;
+    min-height: calc(100vh - 80px);
+}
+
+.currency-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px 22px 8px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.currency-page .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.currency-page .panel-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0;
+}
+
+.currency-page .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.currency-page .data-table th,
+.currency-page .data-table td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #e5e7eb;
+    color: #374151;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.currency-page .data-table thead th {
+    font-weight: 600;
+    color: #111827;
+    background: #f8fafc;
+    white-space: nowrap;
+}
+
+.currency-input {
+    width: 90px;
+    padding: 6px 8px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #111827;
+    background: #fff;
+}
+
+.currency-input.rate {
+    width: 80px;
+}
+
+.currency-input:focus {
+    outline: none;
+    border-color: var(--theme-primary, #8b5cf6);
+}
+
+.currency-page input[type="radio"] {
+    accent-color: var(--theme-primary, #8b5cf6);
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.status-badge {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: #22c55e;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    vertical-align: middle;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 22px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background: #d1d5db;
+    border-radius: 22px;
+    transition: background 0.2s;
+}
+
+.toggle-slider::before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 2px;
+    bottom: 2px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-switch input:checked + .toggle-slider {
+    background: var(--theme-primary, #8b5cf6);
+}
+
+.toggle-switch input:checked + .toggle-slider::before {
+    transform: translateX(22px);
+}

@@ -1,1 +1,44 @@
-  tr stopped at "' + formatDisplayDate(enquiry.date) + '": MyMemory returned source text
+  tr skip "&nbsp;": MyMemory returned source text
+  tr skip "A-": MyMemory returned source text
+  tr skip "A+": MyMemory returned source text
+  tr skip "Aman": MyMemory returned source text
+  tr skip "Arial": MyMemory returned source text
+  tr skip "B-": MyMemory returned source text
+  tr skip "AWS SES": MyMemory returned source text
+  tr skip "B+": MyMemory returned source text
+  tr skip "Billplz": MyMemory returned source text
+  tr skip "Caroline Thomas": MyMemory returned source text
+  tr skip "EPF No.": MyMemory returned source text
+  tr skip "G1": MyMemory returned source text
+  tr skip "Google Analytics": MyMemory returned source text
+  tr skip "InstaMojo": MyMemory returned source text
+  tr skip "Logo": MyMemory returned source text
+  tr skip "Logo (369px X 76px)": MyMemory returned source text
+  tr skip "MC": MyMemory returned source text
+  tr skip "Mollie": MyMemory returned source text
+  tr skip "MSG91": MyMemory returned source text
+  tr skip "Nexmo": MyMemory returned source text
+  tr skip "Normal": MyMemory returned source text
+  tr skip "O-": MyMemory returned source text
+  tr skip "Olivier Thomas": MyMemory returned source text
+  tr skip "PayU": MyMemory returned source text
+  tr skip "Pesapal": MyMemory returned source text
+  tr skip "Razorpay": HTTP 429
+  tr skip "SDA0009998": HTTP 429
+  tr skip "sdsdsds": HTTP 429
+  tr skip "SH": HTTP 429
+  tr skip "Skrill": HTTP 429
+  tr skip "SSLCommerz": HTTP 429
+  tr skip "std": HTTP 429
+  tr skip "Times New Roman": HTTP 429
+  tr skip "ToyyibPay": HTTP 429
+  tr skip "Twilio": HTTP 429
+  tr skip "Tx": HTTP 429
+  tr skip "Unicode": HTTP 429
+  tr skip "Verdana": HTTP 429
+  tr skip "VH4584": HTTP 429
+  tr skip "Video": HTTP 429
+  tr skip "Vimeo": HTTP 429
+  tr skip "WhatsApp": HTTP 429
+  tr skip "X₂": HTTP 429
+  tr skip "X²": HTTP 429

@@ -1,0 +1,191 @@
+/* Marks Grade page */
+.marks-grade-page {
+    background: #e8edf2;
+    padding: 20px;
+    min-height: calc(100vh - 80px);
+    max-width: 1800px;
+    margin: 0 auto;
+}
+
+.grade-layout {
+    display: grid;
+    grid-template-columns: minmax(320px, 380px) minmax(0, 1fr);
+    gap: 1rem;
+    align-items: start;
+}
+
+.grade-form-panel,
+.grade-list-panel {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.grade-form-panel {
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+}
+
+.panel-title {
+    margin: 0 0 1rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid #334155;
+    color: #f8fafc;
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+.grade-form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+}
+
+.grade-form-grid label {
+    display: block;
+    color: #e2e8f0;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 0.4rem;
+}
+
+.form-control {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.55rem 0.75rem;
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 4px;
+    color: #f1f5f9;
+    font-size: 0.88rem;
+    font-family: inherit;
+}
+
+.form-control:not(.textarea-control) {
+    height: 40px;
+}
+
+.textarea-control {
+    min-height: 96px;
+    resize: vertical;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #334155;
+}
+
+.btn-save-template {
+    border: none;
+    border-radius: 4px;
+    background: #8b5cf6;
+    color: #fff;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.88rem;
+    padding: 0.55rem 1.25rem;
+    cursor: pointer;
+}
+
+.btn-save-template:hover {
+    background: #7c3aed;
+}
+
+.grade-list-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+}
+
+.grade-list-table th,
+.grade-list-table td {
+    padding: 0.65rem 0.75rem;
+    border: 1px solid #334155;
+    color: #e2e8f0;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.grade-list-table thead th {
+    background: #0f172a;
+    color: #f8fafc;
+    font-weight: 600;
+}
+
+.grade-list-table tbody tr:nth-child(even) {
+    background: rgba(15, 23, 42, 0.35);
+}
+
+.grade-list-table tbody tr:hover {
+    background: rgba(139, 92, 246, 0.08);
+}
+
+.grade-list-table .exam-type-cell {
+    vertical-align: top;
+    font-weight: 500;
+    color: #f8fafc;
+    background: rgba(15, 23, 42, 0.45);
+}
+
+.action-btns {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.action-btn {
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 4px;
+    background: #8b5cf6;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.action-btn:hover {
+    background: #7c3aed;
+}
+
+.action-btn.delete-btn {
+    background: #ef4444;
+}
+
+.action-btn.delete-btn:hover {
+    background: #dc2626;
+}
+
+.empty-cell,
+.loading-cell {
+    text-align: center;
+    padding: 2rem;
+    color: #94a3b8;
+}
+
+body.swal2-shown > .swal2-container,
+.swal2-container {
+    z-index: 9999 !important;
+}
+
+@media (max-width: 1100px) {
+    .grade-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .grade-form-panel {
+        max-height: none;
+    }
+}

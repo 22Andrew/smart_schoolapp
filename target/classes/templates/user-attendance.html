@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+      th:replace="~{fragments/user-layout :: layout(~{::title}, ~{::#user-attendance-page})}">
+<head>
+    <title th:text="|${schoolName} - Attendance|">Mount Carmel School - Attendance</title>
+</head>
+<body>
+<div id="user-attendance-page" class="ugm-page uat-page">
+    <link rel="stylesheet" th:href="@{/css/user-gmeet.css}">
+    <link rel="stylesheet" th:href="@{/css/user-attendance.css}">
+
+    <div class="ugm-card uat-card">
+        <div class="ugm-header">
+            <h1 class="ugm-title">Attendance</h1>
+        </div>
+
+        <div class="uat-nav">
+            <div class="uat-nav-buttons">
+                <button type="button" class="uat-nav-btn" id="uatPrevBtn" aria-label="Previous month">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
+                <button type="button" class="uat-nav-btn" id="uatNextBtn" aria-label="Next month">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
+            </div>
+            <h2 class="uat-month" id="uatMonthLabel">Loading...</h2>
+        </div>
+
+        <div class="uat-calendar" id="uatCalendar">
+            <div class="uat-weekdays">
+                <span>Mon</span>
+                <span>Tue</span>
+                <span>Wed</span>
+                <span>Thu</span>
+                <span>Fri</span>
+                <span>Sat</span>
+                <span>Sun</span>
+            </div>
+            <div class="uat-days" id="uatDays">
+                <div class="uat-empty">Loading attendance...</div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/user-attendance.js}"></script>
+</div>
+</body>
+</html>

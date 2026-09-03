@@ -1,0 +1,254 @@
+/* Audit Trail Report */
+.at-page {
+    background: #eef1f5;
+    padding: 20px;
+    min-height: calc(100vh - 80px);
+    max-height: calc(100vh - 56px);
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+.at-card {
+    background: #fff;
+    border: 1px solid #d9dee7;
+    border-radius: 4px;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.at-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.at-title {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.at-clear-btn {
+    border: none;
+    background: var(--theme-primary, #8b5cf6);
+    color: #fff;
+    padding: 0.55rem 1rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.at-clear-btn:hover {
+    filter: brightness(0.95);
+}
+
+.at-page .table-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.at-page .table-search {
+    flex: 1;
+    min-width: 220px;
+}
+
+.at-page .table-search-input {
+    width: 100%;
+    max-width: 280px;
+    height: 38px;
+    padding: 0.5rem 0.85rem;
+    border: 1px solid #cbd5e0;
+    border-radius: 4px;
+    font-size: 0.88rem;
+    color: #2d3748;
+    background: #fff;
+    font-family: inherit;
+}
+
+.at-page .table-search-input:focus {
+    outline: none;
+    border-color: var(--theme-primary, #8b5cf6);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+}
+
+.at-page .table-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.at-page .entries-select {
+    height: 36px;
+    padding: 0 0.65rem;
+    border: 1px solid #cbd5e0;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    background: #fff;
+}
+
+.at-page .icon-action-btn {
+    width: 34px;
+    height: 34px;
+    border: 1px solid #cbd5e0;
+    border-radius: 4px;
+    background: #fff;
+    color: #4a5568;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.at-page .icon-action-btn:hover {
+    border-color: var(--theme-primary, #8b5cf6);
+    color: var(--theme-primary, #8b5cf6);
+}
+
+.at-page .table-responsive {
+    overflow: auto;
+    max-height: calc(100vh - 300px);
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+}
+
+.at-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+.at-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: #f8fafc;
+}
+
+.at-table th,
+.at-table td {
+    padding: 0.75rem 0.85rem;
+    border-bottom: 1px solid #edf2f7;
+    text-align: left;
+    color: #2d3748;
+    vertical-align: top;
+}
+
+.at-table th {
+    font-weight: 600;
+    color: #4a5568;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+}
+
+.at-table th .sort-icon {
+    margin-left: 0.25rem;
+    color: #a0aec0;
+    font-size: 0.75rem;
+}
+
+.at-table tbody tr:hover {
+    background: #fafafa;
+}
+
+.at-table .loading-cell {
+    text-align: center;
+    padding: 2.5rem 1rem;
+    color: #718096;
+}
+
+.at-table .empty-state {
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+.at-table .empty-message {
+    margin: 0 0 1rem;
+    color: #e53e3e;
+    font-weight: 500;
+}
+
+.at-table .empty-illustration {
+    color: #cbd5e0;
+    margin-bottom: 0.75rem;
+}
+
+.at-table .empty-hint {
+    margin: 0;
+    color: #38a169;
+    font-size: 0.85rem;
+}
+
+.at-page .table-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 0.85rem;
+    flex-wrap: wrap;
+}
+
+.at-page .showing-info {
+    font-size: 0.82rem;
+    color: #718096;
+}
+
+.at-page .pagination {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.at-page .pagination-btn {
+    min-width: 32px;
+    height: 32px;
+    border: 1px solid #cbd5e0;
+    border-radius: 4px;
+    background: #fff;
+    color: #4a5568;
+    cursor: pointer;
+    font-size: 0.82rem;
+}
+
+.at-page .pagination-btn.active {
+    background: var(--theme-primary, #8b5cf6);
+    border-color: var(--theme-primary, #8b5cf6);
+    color: #fff;
+}
+
+.at-page .pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@media print {
+    .at-clear-btn,
+    .table-controls,
+    .table-footer,
+    .top-navbar,
+    .sidebar {
+        display: none !important;
+    }
+
+    .at-page {
+        padding: 0;
+        background: #fff;
+    }
+
+    .at-page .table-responsive {
+        max-height: none;
+        overflow: visible;
+        border: none;
+    }
+}

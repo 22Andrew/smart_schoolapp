@@ -58,6 +58,10 @@ public interface StudentAdmissionRepository extends JpaRepository<StudentAdmissi
             """)
     List<String> findAdmissionNosByPrefix(@Param("prefix") String prefix);
 
+    List<StudentAdmission> findByEmailIgnoreCase(String email);
+
+    List<StudentAdmission> findByGuardianEmailIgnoreCase(String guardianEmail);
+
     @Query("""
             SELECT s FROM StudentAdmission s
             WHERE s.disabled = false

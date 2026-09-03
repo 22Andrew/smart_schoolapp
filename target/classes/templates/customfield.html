@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <script th:src="@{/js/theme-init.js}"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Fields - Smart School</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/customfield.css}">
+    <link rel="stylesheet" th:href="@{/css/app-theme.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav th:replace="~{fragments/top-navbar :: top-navbar}"></nav>
+
+    <div class="main-container">
+        <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+
+        <main class="main-content customfield-page">
+            <div class="customfield-container">
+                <div class="customfield-form-panel">
+                    <h2 class="panel-title" id="formTitle">Add Custom Field</h2>
+                    <form id="customFieldForm">
+                        <input type="hidden" id="fieldId">
+
+                        <div class="form-group">
+                            <label for="belongTo">Field Belongs To <span class="required">*</span></label>
+                            <select id="belongTo" class="form-control" required>
+                                <option value="">Select</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fieldType">Field Type <span class="required">*</span></label>
+                            <select id="fieldType" class="form-control" required>
+                                <option value="">Select</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fieldName">Field Name <span class="required">*</span></label>
+                            <input type="text" id="fieldName" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="bsColumn">Grid (Bootstrap Column eg. 6) - Max is 12</label>
+                            <div class="grid-input-group">
+                                <span class="grid-prefix">col-md-</span>
+                                <input type="number" id="bsColumn" class="form-control" min="1" max="12" value="12" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fieldValues">Field Values (Separate By Comma)</label>
+                            <input type="text" id="fieldValues" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="section-label">Validation</label>
+                            <label class="checkbox-row">
+                                <input type="checkbox" id="requiredField">
+                                <span>Required</span>
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="section-label">Visibility</label>
+                            <label class="checkbox-row">
+                                <input type="checkbox" id="visibleOnTable">
+                                <span>On Table</span>
+                            </label>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn-cancel" id="cancelEditBtn" hidden>Cancel</button>
+                            <button type="submit" class="btn-save-primary" id="saveBtn">Save</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="customfield-list-panel">
+                    <h2 class="panel-title">Custom Field List</h2>
+                    <div class="customfield-accordion" id="customFieldAccordion">
+                        <p class="loading-text">Loading custom fields...</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script th:src="@{/js/dashboard.js}"></script>
+    <script th:src="@{/js/customfield.js}"></script>
+</body>
+</html>

@@ -46,6 +46,7 @@ public class StaffMemberService implements ApplicationRunner {
     private final DepartmentService departmentService;
     private final DesignationService designationService;
     private final SchoolIdAutoGenerationSettingService idAutoGenerationSettingService;
+    private final UserLoginAuthService userLoginAuthService;
 
     @Override
     @Transactional
@@ -95,7 +96,10 @@ public class StaffMemberService implements ApplicationRunner {
         }
         member.setDisabled(false);
         member.setDisableReason(null);
-        return toMap(repository.save(member));
+        StaffMember saved = repository.save(member);
+        userLoginAuthService.setStaffLoginEnabled(saved.getId(), true);
+        userLoginAuthService.ensureStaffAccount(saved);
+        return toMap(saved);
     }
 
     @Transactional
@@ -110,7 +114,9 @@ public class StaffMemberService implements ApplicationRunner {
         }
         member.setDisabled(true);
         member.setDisableReason(disableReason.trim());
-        return toMap(repository.save(member));
+        StaffMember saved = repository.save(member);
+        userLoginAuthService.setStaffLoginEnabled(saved.getId(), false);
+        return toMap(saved);
     }
 
     public List<Map<String, Object>> getAllActive() {
@@ -131,7 +137,9 @@ public class StaffMemberService implements ApplicationRunner {
             member.setPhotoPath(storePhoto(photo));
         }
         applyDocuments(member, documents);
-        return toMap(repository.save(member));
+        StaffMember saved = repository.save(member);
+        userLoginAuthService.ensureStaffAccount(saved);
+        return toMap(saved);
     }
 
     @Transactional
@@ -143,7 +151,9 @@ public class StaffMemberService implements ApplicationRunner {
             member.setPhotoPath(storePhoto(photo));
         }
         applyDocuments(member, documents);
-        return toMap(repository.save(member));
+        StaffMember saved = repository.save(member);
+        userLoginAuthService.ensureStaffAccount(saved);
+        return toMap(saved);
     }
 
     @Transactional
@@ -151,6 +161,7 @@ public class StaffMemberService implements ApplicationRunner {
         if (!repository.existsById(id)) {
             throw new IllegalArgumentException("Staff member not found");
         }
+        userLoginAuthService.deleteStaffAccount(id);
         repository.deleteById(id);
     }
 

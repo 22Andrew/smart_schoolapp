@@ -33,6 +33,38 @@ public class SchoolWhatsappSettingService implements ApplicationRunner {
         return toMap(requireSettings());
     }
 
+    @Transactional(readOnly = true)
+    public String getAdminPanelWhatsappUrl() {
+        SchoolWhatsappSetting settings = requireSettings();
+        return resolveWhatsappUrl(settings.getAdminPanelWhatsappLinkEnabled(), settings.getAdminPanelMobileNo());
+    }
+
+    @Transactional(readOnly = true)
+    public String getStudentGuardianPanelWhatsappUrl() {
+        SchoolWhatsappSetting settings = requireSettings();
+        return resolveWhatsappUrl(
+                settings.getStudentGuardianPanelWhatsappLinkEnabled(),
+                settings.getStudentGuardianPanelMobileNo());
+    }
+
+    public String resolveWhatsappUrl(Boolean enabled, String mobileNo) {
+        if (!Boolean.TRUE.equals(enabled)) {
+            return null;
+        }
+        return buildWhatsappUrl(mobileNo);
+    }
+
+    public static String buildWhatsappUrl(String mobileNo) {
+        if (mobileNo == null || mobileNo.isBlank()) {
+            return null;
+        }
+        String digits = mobileNo.replaceAll("\\D", "");
+        if (digits.isBlank()) {
+            return null;
+        }
+        return "https://wa.me/" + digits;
+    }
+
     @Transactional
     public Map<String, Object> saveSettings(Map<String, Object> payload) {
         SchoolWhatsappSetting settings = requireSettings();

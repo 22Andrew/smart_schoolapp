@@ -1,0 +1,119 @@
+/* Gmeet Setting Page */
+.gmeet-index-page {
+    background: #e8edf2;
+    padding: 20px;
+    min-height: calc(100vh - 80px);
+}
+
+.gmeet-index-page .setting-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem 1.5rem;
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.gmeet-index-page .setting-card-title {
+    margin: 0 0 1.1rem;
+    color: #f8fafc;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid #334155;
+}
+
+.gmeet-index-page .setting-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-bottom: 0.5rem;
+}
+
+.gmeet-index-page .setting-field {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    align-items: center;
+    gap: 1rem;
+}
+
+.gmeet-index-page .setting-field label {
+    color: #e2e8f0;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.gmeet-index-page .setting-field .required {
+    color: #ef4444;
+}
+
+.gmeet-index-page .setting-input {
+    width: 100%;
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 4px;
+    color: #e2e8f0;
+    padding: 0.65rem 0.75rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+    height: 40px;
+}
+
+.gmeet-index-page .setting-input:focus {
+    outline: none;
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.25);
+}
+
+.gmeet-index-page .radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+}
+
+.gmeet-index-page .radio-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: #e2e8f0;
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin: 0;
+}
+
+.gmeet-index-page .radio-option input[type="radio"] {
+    accent-color: #8b5cf6;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.gmeet-index-page .setting-card-footer {
+    border-top: 1px solid #334155;
+    padding-top: 0.9rem;
+    margin-top: 0.25rem;
+}
+
+.gmeet-index-page .btn-setting-save {
+    border: none;
+    border-radius: 4px;
+    background: #8b5cf6;
+    color: #fff;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.88rem;
+    padding: 0.5rem 1.2rem;
+    cursor: pointer;
+}
+
+.gmeet-index-page .btn-setting-save:hover {
+    background: #7c3aed;
+}
+
+@media (max-width: 768px) {
+    .gmeet-index-page .setting-field {
+        grid-template-columns: 1fr;
+        align-items: start;
+    }
+}

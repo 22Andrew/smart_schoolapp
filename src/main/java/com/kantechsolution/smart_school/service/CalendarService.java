@@ -79,6 +79,11 @@ public class CalendarService implements ApplicationRunner {
         return response;
     }
 
+    @Transactional(readOnly = true)
+    public long countPendingTasksForToday() {
+        return calendarTodoRepository.countByCompletedFalseAndDueDateLessThanEqual(LocalDate.now());
+    }
+
     @Transactional
     public Map<String, Object> saveTodo(Map<String, Object> payload) {
         Long id = parseLong(payload.get("id"));

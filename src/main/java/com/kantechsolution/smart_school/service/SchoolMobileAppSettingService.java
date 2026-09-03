@@ -37,6 +37,9 @@ public class SchoolMobileAppSettingService implements ApplicationRunner {
         settings.setApiUrl(requiredText(payload.get("apiUrl"), "User Mobile App API URL"));
         settings.setPrimaryColor(requiredColor(payload.get("primaryColor"), "User Mobile App Primary Color Code"));
         settings.setSecondaryColor(requiredColor(payload.get("secondaryColor"), "User Mobile App Secondary Color Code"));
+        if (payload.containsKey("fcmServerKey")) {
+            settings.setFcmServerKey(text(payload.get("fcmServerKey")));
+        }
         return toMap(repository.save(settings));
     }
 
@@ -73,6 +76,7 @@ public class SchoolMobileAppSettingService implements ApplicationRunner {
         map.put("secondaryColor", settings.getSecondaryColor());
         map.put("envatoPurchaseCode", blank(settings.getEnvatoPurchaseCode()));
         map.put("envatoEmail", blank(settings.getEnvatoEmail()));
+        map.put("fcmServerKey", blank(settings.getFcmServerKey()));
         return map;
     }
 

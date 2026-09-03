@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<body>
+    <th:block th:fragment="categoryListBody">
+        <h2 class="panel-title">Category List</h2>
+
+        <div class="table-controls">
+            <div class="table-search">
+                <input type="text" id="categorySearchInput" class="table-search-input" placeholder="Search">
+            </div>
+            <div class="table-actions">
+                <select class="entries-select" id="categoryEntriesSelect">
+                    <option value="50" selected>50</option>
+                    <option value="100">100</option>
+                    <option value="250">250</option>
+                    <option value="500">500</option>
+                </select>
+                <button type="button" class="icon-action-btn" id="categoryCopyBtn" title="Copy">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                </button>
+                <button type="button" class="icon-action-btn" id="categoryExcelBtn" title="Excel">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                    </svg>
+                </button>
+                <button type="button" class="icon-action-btn" id="categoryCsvBtn" title="CSV">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                    </svg>
+                </button>
+                <button type="button" class="icon-action-btn" id="categoryPdfBtn" title="PDF">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                    </svg>
+                </button>
+                <button type="button" class="icon-action-btn" id="categoryPrintBtn" title="Print">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                        <rect x="6" y="14" width="12" height="8"></rect>
+                    </svg>
+                </button>
+                <button type="button" class="icon-action-btn" id="categoryColumnBtn" title="Column Visibility">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                </button>
+                <div class="column-visibility-dropdown" id="categoryColumnDropdown">
+                    <div class="dropdown-header"><span>Toggle Columns</span></div>
+                    <div class="dropdown-content">
+                        <label class="column-toggle-item">
+                            <input type="checkbox" class="column-toggle" data-column="0" checked>
+                            <span>Category Name</span>
+                        </label>
+                        <label class="column-toggle-item">
+                            <input type="checkbox" class="column-toggle" data-column="1" checked>
+                            <span>Action</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="data-table" id="categoryTable">
+                <thead>
+                    <tr>
+                        <th class="sortable-th">
+                            <span>Category Name</span>
+                            <span class="th-sort-icons" aria-hidden="true">&#8645;</span>
+                        </th>
+                        <th class="action-th">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="categoryTableBody">
+                    <tr><td colspan="2" class="loading-cell">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-footer">
+            <div class="showing-info">Showing 0 to 0 of 0 entries</div>
+            <div class="pagination">
+                <button type="button" class="pagination-btn" disabled>&lt;</button>
+                <button type="button" class="pagination-btn active">1</button>
+                <button type="button" class="pagination-btn" disabled>&gt;</button>
+            </div>
+        </div>
+    </th:block>
+</body>
+</html>
