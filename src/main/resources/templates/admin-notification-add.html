@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <script th:src="@{/js/theme-init.js}"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compose New Message - Smart School</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/admin-notification.css}">
+    <link rel="stylesheet" th:href="@{/css/app-theme.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav th:replace="~{fragments/top-navbar :: top-navbar}"></nav>
+
+    <div class="main-container">
+        <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+
+        <main class="main-content admin-notification-page notice-compose-page">
+            <div class="notice-compose-box">
+                <div class="notice-compose-header">
+                    <h2 class="notice-compose-title" id="noticeComposeTitle">Compose New Message</h2>
+                </div>
+                <form id="noticeForm">
+                    <div class="compose-page-layout">
+                        <div class="compose-main">
+                            <div class="form-group">
+                                <label for="noticeTitle">Title <span class="required">*</span></label>
+                                <input type="text" id="noticeTitle" class="form-control" required>
+                            </div>
+                            <div class="compose-date-row">
+                                <div class="form-group">
+                                    <label for="noticeDate">Notice Date <span class="required">*</span></label>
+                                    <input type="date" id="noticeDate" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="publishOn">Publish On <span class="required">*</span></label>
+                                    <input type="date" id="publishOn" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Attachment</label>
+                                <div class="attachment-dropzone" id="attachmentDropzone">
+                                    <input type="file" id="noticeAttachment" class="attachment-input" hidden>
+                                    <div class="attachment-dropzone-inner">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                            <polyline points="17 8 12 3 7 8"></polyline>
+                                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                                        </svg>
+                                        <p class="attachment-dropzone-text">Drag and drop a file here or click</p>
+                                        <p class="attachment-file-name" id="attachmentFileName"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Message <span class="required">*</span></label>
+                                <div id="noticeMessageEditor" class="notice-quill-editor"></div>
+                            </div>
+                        </div>
+                        <aside class="compose-sidebar">
+                            <div class="compose-sidebar-section">
+                                <h4 class="compose-sidebar-title">Message To</h4>
+                                <div class="compose-checkbox-list" id="messageToList">
+                                    <label class="compose-checkbox-item"><input type="checkbox" name="messageTo" value="Student"> Student</label>
+                                    <label class="compose-checkbox-item"><input type="checkbox" name="messageTo" value="Parent"> Parent</label>
+                                    <label class="compose-checkbox-item"><input type="checkbox" name="messageTo" value="Admin"> Admin</label>
+                                    <label class="compose-checkbox-item"><input type="checkbox" name="messageTo" value="Teacher"> Teacher</label>
+                                    <label class="compose-checkbox-item"><input type="checkbox" name="messageTo" value="Accountant"> Accountant</label>
+                                    <label class="compose-checkbox-item"><input type="checkbox" name="messageTo" value="Librarian"> Librarian</label>
+                                    <label class="compose-checkbox-item"><input type="checkbox" name="messageTo" value="Receptionist"> Receptionist</label>
+                                    <label class="compose-checkbox-item"><input type="checkbox" name="messageTo" value="Super Admin" checked> Super Admin</label>
+                                </div>
+                            </div>
+                            <div class="compose-sidebar-section">
+                                <h4 class="compose-sidebar-title">Send By</h4>
+                                <div class="compose-checkbox-list">
+                                    <label class="compose-checkbox-item"><input type="checkbox" id="sendByEmail" name="sendBy"> Email</label>
+                                    <label class="compose-checkbox-item"><input type="checkbox" id="sendBySms" name="sendBy"> SMS</label>
+                                </div>
+                            </div>
+                        </aside>
+                    </div>
+                    <div class="compose-page-footer">
+                        <button type="submit" class="btn-compose-send" id="noticeSendBtn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                            Send
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+    <script th:src="@{/js/dashboard.js}"></script>
+    <script th:src="@{/js/admin-notification-add.js}"></script>
+</body>
+</html>

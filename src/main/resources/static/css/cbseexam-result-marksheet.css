@@ -1,0 +1,143 @@
+/* CBSE Print Marksheet page */
+.cbse-marksheet-page {
+    background: #e8edf2;
+    padding: 20px;
+    min-height: calc(100vh - 80px);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.marksheet-panel {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.panel-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid #334155;
+}
+
+.panel-header-row .section-title {
+    margin: 0;
+    padding: 0;
+    border: none;
+    color: #f8fafc;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.btn-bulk-download {
+    border: none;
+    border-radius: 4px;
+    background: #8b5cf6;
+    color: #fff;
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 600;
+    padding: 0.55rem 1rem;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.btn-bulk-download:hover {
+    background: #7c3aed;
+}
+
+.marksheet-filter-form {
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.marksheet-filter-form .form-group {
+    flex: 1 1 220px;
+    max-width: 320px;
+}
+
+.marksheet-filter-form label {
+    display: block;
+    color: #e2e8f0;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 0.45rem;
+}
+
+.marksheet-student-table .col-check {
+    width: 42px;
+    text-align: center;
+}
+
+.marksheet-student-table .col-action {
+    width: 90px;
+    text-align: center;
+}
+
+.marksheet-student-table .student-link {
+    color: #60a5fa;
+    text-decoration: none;
+}
+
+.marksheet-student-table .student-link:hover {
+    text-decoration: underline;
+}
+
+.student-list-panel[hidden] {
+    display: none !important;
+}
+
+.marksheet-student-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+}
+
+.marksheet-student-table th,
+.marksheet-student-table td {
+    padding: 0.65rem 0.75rem;
+    border: 1px solid #334155;
+    color: #e2e8f0;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.marksheet-student-table thead th {
+    background: #0f172a;
+    color: #f8fafc;
+    font-weight: 600;
+}
+
+.marksheet-student-table tbody tr:nth-child(even) {
+    background: rgba(15, 23, 42, 0.35);
+}
+
+.marksheet-student-table tbody tr:hover {
+    background: rgba(139, 92, 246, 0.08);
+}
+
+.marksheet-action-btns {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+}
+
+.marksheet-action-btns .icon-action-btn {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}

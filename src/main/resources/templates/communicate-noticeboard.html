@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <script th:src="@{/js/theme-init.js}"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notice Board - Smart School</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/communicate.css}">
+    <link rel="stylesheet" th:href="@{/css/app-theme.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Export Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav th:replace="~{fragments/top-navbar :: top-navbar}"></nav>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+
+        <!-- Main Content -->
+        <main class="main-content communicate-page">
+            <div class="communicate-container">
+                <div class="communicate-form-panel">
+                    <h2 class="panel-title" id="formTitle">Add Notice</h2>
+                    <form id="recordForm">
+                        <div class="form-group"><label for="noticeTitle">Title <span class="required">*</span></label><input type="text" id="noticeTitle" class="form-control" required></div>
+                        <div class="form-group"><label for="noticeDate">Date <span class="required">*</span></label><input type="date" id="noticeDate" class="form-control" required></div>
+                        <div class="form-group"><label for="publishTo">Publish To <span class="required">*</span></label><select id="publishTo" class="form-control" required><option value="">Select</option>
+                                <option value="Student">Student</option>
+                                <option value="Guardian">Guardian</option>
+                                <option value="Staff">Staff</option>
+                                <option value="Class">Class</option>
+                                <option value="Individual">Individual</option>
+                                <option value="All">All</option></select></div>
+                        <div class="form-group"><label><input type="checkbox" id="showOnWebsite"> Show on Website</label></div>
+                        <div class="form-group"><label for="noticeMessage">Message <span class="required">*</span></label><textarea id="noticeMessage" class="form-control" rows="5" required></textarea></div>
+                        <div class="form-actions"><button type="submit" class="btn-save-primary">Save</button></div>
+                    </form>
+                </div>
+                <div class="communicate-list-panel">
+                    <h2 class="panel-title">Notice List</h2>
+                                        <div class="table-controls">
+                        <div class="table-search">
+                            <input type="text" class="table-search-input" id="searchInput" placeholder="Search">
+                        </div>
+                        <div class="table-actions">
+                            <select class="entries-select" id="entriesSelect">
+                                <option value="50" selected>50</option>
+                                <option value="100">100</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="table-responsive"><table class="data-table"><thead><tr><th>Title</th><th>Date</th><th>Publish To</th><th>Website</th><th>Message</th><th>Action</th></tr></thead><tbody id="recordTableBody"></tbody></table></div>
+                                        <div class="table-footer">
+                        <div class="showing-info">Showing <span id="showingStart">0</span> to <span id="showingEnd">0</span> of <span id="totalEntries">0</span> entries</div>
+                        <div class="pagination" id="pagination"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Quick Links Modal -->
+    <div class="quick-links-modal" id="quickLinksModal">
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Quick Links</h2>
+                <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="quick-links-grid">
+                    <!-- Academics -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                                <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                            </svg>
+                            <h3>Academics</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/classreport">Class Timetable</a></li>
+                            <li><a href="/timetable/mytimetable">Teachers Timetable</a></li>
+                            <li><a href="/teacher/assignclassteacher">Assign Class Teacher</a></li>
+                            <li><a href="/promotetransfer">Promote Students</a></li>
+                            <li><a href="/subjectgroup">Subject Group</a></li>
+                            <li><a href="/subject">Subjects</a></li>
+                            <li><a href="/classes">Class</a></li>
+                            <li><a href="/sections">Sections</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Communicate -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                            <h3>Communicate</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="#">Notice Board</a></li>
+                            <li><a href="#">Send Email</a></li>
+                            <li><a href="#">Send SMS</a></li>
+                            <li><a href="#">Email / SMS Log</a></li>
+                            <li><a href="#">Schedule Email SMS Log</a></li>
+                            <li><a href="#">Login Credentials Send</a></li>
+                            <li><a href="#">Email Template</a></li>
+                            <li><a href="#">SMS Template</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Front Office -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                            </svg>
+                            <h3>Front Office</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/admission-enquiry">Admission Enquiry</a></li>
+                            <li><a href="/visitors">Visitor Book</a></li>
+                            <li><a href="/phone-call-log">Phone Call Log</a></li>
+                            <li><a href="/dispatch">Postal Dispatch</a></li>
+                            <li><a href="/receive">Postal Receive</a></li>
+                            <li><a href="/complain">Complain</a></li>
+                            <li><a href="/visitorspurpose">Setup Front Office</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Library -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </svg>
+                            <h3>Library</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/dailyassignment/admin/book/getall">Book List</a></li>
+                            <li><a href="/dailyassignment/admin/member">Issue - Return</a></li>
+                            <li><a href="/dailyassignment/admin/member/student">Add Student</a></li>
+                            <li><a href="/dailyassignment/admin/member/teacher">Add Staff Member</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Student Information -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            <h3>Student Information</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/student/search">Student Details</a></li>
+                            <li><a href="/student/create">Student Admission</a></li>
+                            <li><a href="/student/onlinestudent">Online Admission</a></li>
+                            <li><a href="/student/disablestudentslist">Disabled Students</a></li>
+                            <li><a href="/student/multiclass">Multi Class Student</a></li>
+                            <li><a href="/student/bulkdelete">Bulk Delete</a></li>
+                            <li><a href="/category">Student Categories</a></li>
+                            <li><a href="/schoolhouse">Student House</a></li>
+                            <li><a href="/disablereason">Disable Reason</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Multi Branch -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="2" y1="12" x2="22" y2="12"></line>
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                            </svg>
+                            <h3>Multi Branch</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/multibranch/branch/overview">Overview</a></li>
+                            <li><a href="/multibranch/finance/dailycollectionreport">Report</a></li>
+                            <li><a href="/multibranch/branch">Setting</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Online Course -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                            <h3>Online Course</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/onlinecourse/course/index">Online Course</a></li>
+                            <li><a href="/onlinecourse/courseexamquestion/index">Question Bank</a></li>
+                            <li><a href="/onlinecourse/offlinepayment/payment">Offline Payment</a></li>
+                            <li><a href="/onlinecourse/coursecategory/categoryadd">Course Category</a></li>
+                            <li><a href="/onlinecourse/coursecertificate/templatelist">Certificate Template</a></li>
+                            <li><a href="/onlinecourse/coursereport/coursepurchase">Online Course Report</a></li>
+                            <li><a href="/onlinecourse/course/setting">Setting</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- System Setting -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M12 1v6m0 6v6M5.6 5.6l4.2 4.2m4.2 4.2l4.2 4.2M1 12h6m6 0h6M5.6 18.4l4.2-4.2m4.2-4.2l4.2-4.2"></path>
+                            </svg>
+                            <h3>System Setting</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/schsettings">General Setting</a></li>
+                            <li><a href="/sessions">Session Setting</a></li>
+                            <li><a href="/admin/notification/setting">Notification Setting</a></li>
+                            <li><a href="#">SMS Setting</a></li>
+                            <li><a href="#">Email Setting</a></li>
+                            <li><a href="#">Payment Methods</a></li>
+                            <li><a href="#">Roles Permissions</a></li>
+                            <li><a href="#">Backup Restore</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Alumni -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                            <h3>Alumni</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="#">Manage Alumni</a></li>
+                            <li><a href="#">Events</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/dashboard.js}"></script>
+    <script th:src="@{/js/communicate-noticeboard.js}"></script>
+</body>
+</html>
+

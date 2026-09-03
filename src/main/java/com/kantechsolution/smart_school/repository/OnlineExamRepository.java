@@ -1,0 +1,19 @@
+package com.kantechsolution.smart_school.repository;
+
+import com.kantechsolution.smart_school.model.OnlineExam;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+public interface OnlineExamRepository extends JpaRepository<OnlineExam, Long> {
+
+    List<OnlineExam> findByExamToGreaterThanEqualOrderByExamFromAsc(LocalDateTime now);
+
+    List<OnlineExam> findByExamToLessThanOrderByExamToDesc(LocalDateTime now);
+
+    Optional<OnlineExam> findFirstByTitleIgnoreCase(String title);
+}

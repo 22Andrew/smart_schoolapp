@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+      th:replace="~{fragments/user-layout :: layout(~{::title}, ~{::#user-onlineexam-page})}">
+<head>
+    <title th:text="|${schoolName} - Online Exam|">Mount Carmel School - Online Exam</title>
+</head>
+<body>
+<div id="user-onlineexam-page" class="uoe-page ugm-page">
+    <link rel="stylesheet" th:href="@{/css/user-gmeet.css}">
+    <link rel="stylesheet" th:href="@{/css/user-homework.css}">
+    <link rel="stylesheet" th:href="@{/css/user-onlineexam.css}">
+
+    <div class="ugm-card" id="uoeListCard">
+        <div class="ugm-header">
+            <h1 class="ugm-title">Online Exam</h1>
+        </div>
+
+        <div class="uhw-tabs">
+            <button type="button" class="uhw-tab active" data-tab="upcoming">Upcoming Exams</button>
+            <button type="button" class="uhw-tab" data-tab="closed">Closed Exam</button>
+        </div>
+
+        <div class="ugm-toolbar">
+            <div class="ugm-search">
+                <input type="text" id="uoeSearchInput" class="ugm-search-input" placeholder="Search" autocomplete="off">
+            </div>
+            <div class="ugm-toolbar-right">
+                <select class="ugm-entries-select" id="uoeEntriesSelect" aria-label="Rows per page">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50" selected>50</option>
+                    <option value="100">100</option>
+                </select>
+                <div class="ugm-actions table-actions">
+                    <button type="button" class="icon-action-btn" id="uoeExcelBtn" title="Excel">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                    </button>
+                    <button type="button" class="icon-action-btn" id="uoePdfBtn" title="PDF">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M10 12h4"></path><path d="M10 16h4"></path></svg>
+                    </button>
+                    <button type="button" class="icon-action-btn" id="uoeCsvBtn" title="CSV">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                    </button>
+                    <button type="button" class="icon-action-btn" id="uoePrintBtn" title="Print">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="ugm-table-wrap">
+            <table class="ugm-table data-table" id="uoeTable">
+                <thead>
+                    <tr>
+                        <th data-sort="title">Exam <span class="sort-icon">↕</span></th>
+                        <th data-sort="quiz" class="ugm-col-center">Quiz <span class="sort-icon">↕</span></th>
+                        <th data-sort="examFrom">Date From <span class="sort-icon">↕</span></th>
+                        <th data-sort="examTo">Date To <span class="sort-icon">↕</span></th>
+                        <th data-sort="duration">Duration <span class="sort-icon">↕</span></th>
+                        <th data-sort="totalAttempt" class="ugm-col-center">Total Attempt <span class="sort-icon">↕</span></th>
+                        <th data-sort="attempted" class="ugm-col-center">Attempted <span class="sort-icon">↕</span></th>
+                        <th data-sort="status">Status <span class="sort-icon">↕</span></th>
+                        <th class="ugm-col-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="uoeTableBody">
+                    <tr class="ugm-empty-row">
+                        <td colspan="9">Loading online exams...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="ugm-footer">
+            <div class="ugm-showing" id="uoeShowingInfo">Showing 0 to 0 of 0 entries</div>
+            <div class="ugm-pagination" id="uoePagination"></div>
+        </div>
+    </div>
+
+    <div class="uoe-modal" id="uoeDetailModal" hidden>
+        <div class="uoe-modal-overlay" id="uoeDetailOverlay"></div>
+        <div class="uoe-detail-card" role="dialog" aria-modal="true" aria-labelledby="uoeDetailTitle">
+            <div class="uoe-detail-top">
+                <h2 id="uoeDetailTitle">Online Exam</h2>
+                <button type="button" class="uoe-detail-close" id="uoeDetailClose" aria-label="Close">&times;</button>
+            </div>
+            <div class="uoe-detail-toolbar">
+                <button type="button" class="uoe-print-btn" id="uoeDetailPrint" title="Print">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                        <rect x="6" y="14" width="12" height="8"></rect>
+                    </svg>
+                </button>
+            </div>
+            <h3 class="uoe-exam-title" id="uoeExamTitle"></h3>
+            <div class="uoe-detail-grid" id="uoeDetailGrid"></div>
+            <p class="uoe-description" id="uoeDescription"></p>
+            <button type="button" class="uoe-start-btn" id="uoeStartBtn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 11l19-7-7 19-2.5-6.5L3 11z"></path>
+                </svg>
+                Start Exam
+            </button>
+        </div>
+    </div>
+
+    <div class="uoe-exam-overlay" id="uoeExamOverlay" hidden>
+        <div class="uoe-exam-shell">
+            <header class="uoe-exam-header">
+                <div class="uoe-exam-brand">
+                    <span class="brand-badge" th:text="${schoolName}">Smart School</span>
+                    <div class="logo-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="32" height="32">
+                            <rect x="8" y="10" width="34" height="32" fill="#f6c544" rx="2"/>
+                            <rect x="10" y="12" width="30" height="28" fill="#f39c12" rx="1"/>
+                            <path d="M 25 12 L 25 40" stroke="#f6c544" stroke-width="2"/>
+                            <polygon points="15,20 35,20 25,15" fill="#2d3748"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="uoe-exam-header-right">
+                    <div class="uoe-timer" id="uoeTimer">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        <span id="uoeTimerValue">00:00:00</span>
+                    </div>
+                    <button type="button" class="uoe-submit-btn" id="uoeSubmitBtn">Submit</button>
+                    <button type="button" class="uoe-exam-close" id="uoeExamClose" aria-label="Close">&times;</button>
+                </div>
+            </header>
+            <div class="uoe-exam-titlebar" id="uoeExamBarTitle"></div>
+            <div class="uoe-exam-body">
+                <div class="uoe-question-pane">
+                    <h2 id="uoeQuestionHeading"></h2>
+                    <p class="uoe-question-text" id="uoeQuestionText"></p>
+                    <div class="uoe-options" id="uoeOptions"></div>
+                </div>
+                <aside class="uoe-map-pane">
+                    <h2>Question Map</h2>
+                    <div class="uoe-question-map" id="uoeQuestionMap"></div>
+                </aside>
+            </div>
+            <footer class="uoe-exam-footer">
+                <button type="button" class="uoe-next-btn" id="uoeNextBtn">Next</button>
+            </footer>
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script th:src="@{/js/user-onlineexam.js}"></script>
+</div>
+</body>
+</html>

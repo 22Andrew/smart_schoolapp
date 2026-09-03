@@ -1,0 +1,2328 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <script th:src="@{/js/theme-init.js}"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admission Enquiry - Smart School</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/admission-enquiry.css}">
+    <link rel="stylesheet" th:href="@{/css/app-theme.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Export Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav th:replace="~{fragments/top-navbar :: top-navbar}"></nav>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+
+
+        <!-- Main Content -->
+        <main class="main-content admission-enquiry-page">
+            <!-- Select Criteria Section -->
+            <div class="criteria-section">
+                <h2 class="section-title">Select Criteria</h2>
+                <form class="criteria-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="class">Class</label>
+                            <select id="class" class="form-select">
+                                <option value="">Select</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="source">Source</label>
+                            <select id="source" class="form-select">
+                                <option value="">Select</option>
+                                <option value="advertisement">Advertisement</option>
+                                <option value="google">Google Ads</option>
+                                <option value="frontoffice">Front Office</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="enquiryFromDate">Enquiry From Date</label>
+                            <input type="date" id="enquiryFromDate" class="form-input">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="enquiryToDate">Enquiry To Date</label>
+                            <input type="date" id="enquiryToDate" class="form-input">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="status">Status</label>
+                            <select id="status" class="form-select">
+                                <option value="active" selected>Active</option>
+                                <option value="won">Won</option>
+                                <option value="passive">Passive</option>
+                                <option value="lost">Lost</option>
+                                <option value="dead">Dead</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group form-submit">
+                            <button type="submit" class="btn-search">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <path d="m21 21-4.35-4.35"></path>
+                                </svg>
+                                Search
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Admission Enquiry Table Section -->
+            <div class="table-section">
+                <div class="table-header">
+                    <h2 class="section-title">Admission Enquiry</h2>
+                    <button class="btn-add" id="addEnquiryBtn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Add
+                    </button>
+                </div>
+
+                <div class="table-controls">
+                    <div class="table-search">
+                        <input type="text" placeholder="Search" class="table-search-input">
+                    </div>
+                    <div class="table-actions">
+                        <select class="entries-select">
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                            <option value="200">200</option>
+                        </select>
+                        <button class="icon-action-btn" id="copyBtn" title="Copy">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                        </button>
+                        <button class="icon-action-btn" id="excelBtn" title="Excel">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="9" y1="15" x2="15" y2="15"></line>
+                            </svg>
+                        </button>
+                        <button class="icon-action-btn" id="csvBtn" title="CSV">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                            </svg>
+                        </button>
+                        <button class="icon-action-btn" id="pdfBtn" title="PDF">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                            </svg>
+                        </button>
+                        <button class="icon-action-btn" id="printBtn" title="Print">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                                <rect x="6" y="14" width="12" height="8"></rect>
+                            </svg>
+                        </button>
+                        <button class="icon-action-btn" id="columnVisibilityBtn" title="Column Visibility">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
+                            </svg>
+                        </button>
+                        
+                        <!-- Column Visibility Dropdown -->
+                        <div class="column-visibility-dropdown" id="columnVisibilityDropdown">
+                            <div class="dropdown-header">
+                                <span>Toggle Columns</span>
+                            </div>
+                            <div class="dropdown-content">
+                                <label class="column-toggle-item">
+                                    <input type="checkbox" class="column-toggle" data-column="0" checked>
+                                    <span>Name</span>
+                                </label>
+                                <label class="column-toggle-item">
+                                    <input type="checkbox" class="column-toggle" data-column="1" checked>
+                                    <span>Phone</span>
+                                </label>
+                                <label class="column-toggle-item">
+                                    <input type="checkbox" class="column-toggle" data-column="2" checked>
+                                    <span>Source</span>
+                                </label>
+                                <label class="column-toggle-item">
+                                    <input type="checkbox" class="column-toggle" data-column="3" checked>
+                                    <span>Enquiry Date</span>
+                                </label>
+                                <label class="column-toggle-item">
+                                    <input type="checkbox" class="column-toggle" data-column="4" checked>
+                                    <span>Next Follow Up Date</span>
+                                </label>
+                                <label class="column-toggle-item">
+                                    <input type="checkbox" class="column-toggle" data-column="5" checked>
+                                    <span>Status</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Source</th>
+                                <th>Enquiry Date</th>
+                                <th>Next Follow Up Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="enquiryTableBody">
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-footer">
+                    <div class="showing-info">Showing 1 to 6 of 6 entries</div>
+                    <div class="pagination">
+                        <button class="pagination-btn" disabled>â€¹</button>
+                        <button class="pagination-btn active">1</button>
+                        <button class="pagination-btn" disabled>â€º</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Admission Enquiry Modal -->
+    <div class="admission-modal" id="admissionEnquiryModal">
+        <div class="modal-overlay" id="admissionModalOverlay"></div>
+        <div class="modal-content admission-modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="admissionModalTitle">Admission Enquiry</h2>
+                <button type="button" class="modal-close-btn" id="admissionModalCloseBtn" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <form class="admission-form" id="admissionEnquiryForm">
+                <input type="hidden" id="enquiryStatus" name="status" value="ACTIVE">
+                <div class="modal-body">
+                    <div class="form-row-modal three-col">
+                        <div class="form-group-modal">
+                            <label for="enquiryName">Name <span class="required">*</span></label>
+                            <input type="text" id="enquiryName" name="name" class="form-input-modal" required>
+                        </div>
+                        <div class="form-group-modal">
+                            <label for="enquiryPhone">Phone <span class="required">*</span></label>
+                            <input type="tel" id="enquiryPhone" name="phone" class="form-input-modal" required>
+                        </div>
+                        <div class="form-group-modal">
+                            <label for="enquiryEmail">Email</label>
+                            <input type="email" id="enquiryEmail" name="email" class="form-input-modal">
+                        </div>
+                    </div>
+
+                    <div class="form-row-modal three-col">
+                        <div class="form-group-modal">
+                            <label for="enquiryAddress">Address</label>
+                            <input type="text" id="enquiryAddress" name="address" class="form-input-modal">
+                        </div>
+                        <div class="form-group-modal">
+                            <label for="enquiryDescription">Description</label>
+                            <input type="text" id="enquiryDescription" name="description" class="form-input-modal">
+                        </div>
+                        <div class="form-group-modal">
+                            <label for="enquiryNote">Note</label>
+                            <input type="text" id="enquiryNote" name="note" class="form-input-modal">
+                        </div>
+                    </div>
+
+                    <div class="form-row-modal three-col">
+                        <div class="form-group-modal">
+                            <label for="enquiryDate">Date <span class="required">*</span></label>
+                            <input type="date" id="enquiryDate" name="date" class="form-input-modal" required>
+                        </div>
+                        <div class="form-group-modal">
+                            <label for="enquiryFollowUpDate">Next Follow Up Date <span class="required">*</span></label>
+                            <input type="date" id="enquiryFollowUpDate" name="followUpDate" class="form-input-modal" required>
+                        </div>
+                        <div class="form-group-modal">
+                            <label for="enquiryAssigned">Assigned</label>
+                            <select id="enquiryAssigned" name="assigned" class="form-select-modal">
+                                <option value="">Select</option>
+                                <option value="Joe Black (9000)">Joe Black (9000)</option>
+                                <option value="Admin 1">Admin 1</option>
+                                <option value="Admin 2">Admin 2</option>
+                                <option value="Staff 1">Staff 1</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row-modal four-col">
+                        <div class="form-group-modal">
+                            <label for="enquiryReference">Reference</label>
+                            <select id="enquiryReference" name="reference" class="form-select-modal">
+                                <option value="">Select</option>
+                                <option value="Staff">Staff</option>
+                                <option value="Parent">Parent</option>
+                                <option value="Student">Student</option>
+                                <option value="Self">Self</option>
+                                <option value="Partner School">Partner School</option>
+                            </select>
+                        </div>
+                        <div class="form-group-modal">
+                            <label for="enquirySource">Source <span class="required">*</span></label>
+                            <select id="enquirySource" name="source" class="form-select-modal" required>
+                                <option value="">Select</option>
+                                <option value="Advertisement">Advertisement</option>
+                                <option value="Google Ads">Google Ads</option>
+                                <option value="Front Office">Front Office</option>
+                                <option value="Admission Campaign">Admission Campaign</option>
+                            </select>
+                        </div>
+                        <div class="form-group-modal">
+                            <label for="enquiryClass">Class</label>
+                            <select id="enquiryClass" name="className" class="form-select-modal">
+                                <option value="">Select</option>
+                            </select>
+                        </div>
+                        <div class="form-group-modal">
+                            <label for="enquiryChildCount">Number Of Child</label>
+                            <input type="number" id="enquiryChildCount" name="childCount" class="form-input-modal" min="0">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn-submit" id="saveButton">
+                        <span class="btn-text">Save</span>
+                        <span class="btn-spinner" style="display: none;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <style>
+                                    .spinner { transform-origin: center; animation: spinner-rotate 0.75s infinite linear; }
+                                    @keyframes spinner-rotate { 100% { transform: rotate(360deg); } }
+                                </style>
+                                <path class="spinner" d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,19a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z" opacity=".25" fill="currentColor"/>
+                                <path class="spinner" d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z" fill="currentColor"/>
+                            </svg>
+                        </span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Follow Up Admission Enquiry Modal -->
+    <div class="followup-modal" id="followUpModal" hidden>
+        <div class="followup-modal-overlay" id="followUpModalOverlay"></div>
+        <div class="followup-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="followUpModalTitle">
+            <div class="followup-modal-header">
+                <h2 class="followup-modal-title" id="followUpModalTitle">Follow Up Admission Enquiry</h2>
+                <button type="button" class="followup-modal-close" id="followUpModalCloseBtn" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="followup-modal-body">
+                <div class="followup-main">
+                    <form id="followUpForm">
+                        <input type="hidden" id="followUpEnquiryId">
+                        <div class="followup-form-row">
+                            <div class="followup-form-group">
+                                <label for="followUpDate">Follow Up Date <span class="required">*</span></label>
+                                <input type="date" id="followUpDate" class="followup-input" required>
+                            </div>
+                            <div class="followup-form-group">
+                                <label for="followUpNextDate">Next Follow Up Date <span class="required">*</span></label>
+                                <input type="date" id="followUpNextDate" class="followup-input" required>
+                            </div>
+                        </div>
+                        <div class="followup-form-row">
+                            <div class="followup-form-group">
+                                <label for="followUpResponse">Response <span class="required">*</span></label>
+                                <textarea id="followUpResponse" class="followup-textarea" rows="3" required></textarea>
+                            </div>
+                            <div class="followup-form-group">
+                                <label for="followUpNote">Note</label>
+                                <textarea id="followUpNote" class="followup-textarea" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="followup-form-actions">
+                            <button type="submit" class="btn-followup-save" id="followUpSaveBtn">Save</button>
+                        </div>
+                    </form>
+
+                    <div class="followup-history">
+                        <h3 class="followup-history-title" id="followUpHistoryTitle">Follow Up</h3>
+                        <div class="followup-timeline" id="followUpTimeline"></div>
+                    </div>
+                </div>
+
+                <aside class="followup-summary">
+                    <div class="followup-summary-header">
+                        <span class="followup-summary-label">Summary</span>
+                        <div class="followup-status-wrap">
+                            <label for="followUpStatus">Status</label>
+                            <select id="followUpStatus" class="followup-select">
+                                <option value="ACTIVE">Active</option>
+                                <option value="WON">Won</option>
+                                <option value="PASSIVE">Passive</option>
+                                <option value="LOST">Lost</option>
+                                <option value="DEAD">Dead</option>
+                            </select>
+                        </div>
+                    </div>
+                    <p class="followup-assigned" id="summaryAssigned">Assigned: -</p>
+                    <div class="followup-summary-dates">
+                        <p><span class="summary-icon">📅</span> Enquiry Date: <strong id="summaryEnquiryDate">-</strong></p>
+                        <p><span class="summary-icon">📅</span> Last Follow Up Date: <strong id="summaryLastFollowUpDate">-</strong></p>
+                        <p><span class="summary-icon">📅</span> Next Follow Up Date: <strong id="summaryNextFollowUpDate">-</strong></p>
+                    </div>
+                    <div class="followup-summary-details">
+                        <p><strong>Phone:</strong> <span id="summaryPhone">-</span></p>
+                        <p><strong>Reference:</strong> <span id="summaryReference">-</span></p>
+                        <p><strong>Source:</strong> <span id="summarySource">-</span></p>
+                        <p><strong>Email:</strong> <span id="summaryEmail">-</span></p>
+                        <p><strong>Address:</strong> <span id="summaryAddress">-</span></p>
+                        <p><strong>Class:</strong> <span id="summaryClass">-</span></p>
+                        <p><strong>Number Of Child:</strong> <span id="summaryChildCount">-</span></p>
+                        <p><strong>Description:</strong> <span id="summaryDescription">-</span></p>
+                        <p><strong>Note:</strong> <span id="summaryNote">-</span></p>
+                        <p><strong>Created By:</strong> <span id="summaryCreatedBy">-</span></p>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Links Modal -->
+    <div class="quick-links-modal" id="quickLinksModal">
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Quick Links</h2>
+                <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="quick-links-grid">
+                    <!-- Academics -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                                <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                            </svg>
+                            <h3>Academics</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/classreport">Class Timetable</a></li>
+                            <li><a href="/timetable/mytimetable">Teachers Timetable</a></li>
+                            <li><a href="/teacher/assignclassteacher">Assign Class Teacher</a></li>
+                            <li><a href="/promotetransfer">Promote Students</a></li>
+                            <li><a href="/subjectgroup">Subject Group</a></li>
+                            <li><a href="/subject">Subjects</a></li>
+                            <li><a href="/classes">Class</a></li>
+                            <li><a href="/sections">Sections</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Communicate -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                            <h3>Communicate</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="#">Notice Board</a></li>
+                            <li><a href="#">Send Email</a></li>
+                            <li><a href="#">Send SMS</a></li>
+                            <li><a href="#">Email / SMS Log</a></li>
+                            <li><a href="#">Schedule Email SMS Log</a></li>
+                            <li><a href="#">Login Credentials Send</a></li>
+                            <li><a href="#">Email Template</a></li>
+                            <li><a href="#">SMS Template</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Front Office -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                            </svg>
+                            <h3>Front Office</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/admission-enquiry">Admission Enquiry</a></li>
+                            <li><a href="/visitors">Visitor Book</a></li>
+                            <li><a href="/phone-call-log">Phone Call Log</a></li>
+                            <li><a href="/dispatch">Postal Dispatch</a></li>
+                            <li><a href="/receive">Postal Receive</a></li>
+                            <li><a href="/complain">Complain</a></li>
+                            <li><a href="/visitorspurpose">Setup Front Office</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Library -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </svg>
+                            <h3>Library</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/dailyassignment/admin/book/getall">Book List</a></li>
+                            <li><a href="/dailyassignment/admin/member">Issue - Return</a></li>
+                            <li><a href="/dailyassignment/admin/member/student">Add Student</a></li>
+                            <li><a href="/dailyassignment/admin/member/teacher">Add Staff Member</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Student Information -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            <h3>Student Information</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/student/search">Student Details</a></li>
+                            <li><a href="/student/create">Student Admission</a></li>
+                            <li><a href="/student/onlinestudent">Online Admission</a></li>
+                            <li><a href="/student/disablestudentslist">Disabled Students</a></li>
+                            <li><a href="/student/multiclass">Multi Class Student</a></li>
+                            <li><a href="/student/bulkdelete">Bulk Delete</a></li>
+                            <li><a href="/category">Student Categories</a></li>
+                            <li><a href="/schoolhouse">Student House</a></li>
+                            <li><a href="/disablereason">Disable Reason</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Multi Branch -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="2" y1="12" x2="22" y2="12"></line>
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                            </svg>
+                            <h3>Multi Branch</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/multibranch/branch/overview">Overview</a></li>
+                            <li><a href="/multibranch/finance/dailycollectionreport">Report</a></li>
+                            <li><a href="/multibranch/branch">Setting</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Online Course -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                            <h3>Online Course</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/onlinecourse/course/index">Online Course</a></li>
+                            <li><a href="/onlinecourse/courseexamquestion/index">Question Bank</a></li>
+                            <li><a href="/onlinecourse/offlinepayment/payment">Offline Payment</a></li>
+                            <li><a href="/onlinecourse/coursecategory/categoryadd">Course Category</a></li>
+                            <li><a href="/onlinecourse/coursecertificate/templatelist">Certificate Template</a></li>
+                            <li><a href="/onlinecourse/coursereport/coursepurchase">Online Course Report</a></li>
+                            <li><a href="/onlinecourse/course/setting">Setting</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- System Setting -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M12 1v6m0 6v6M5.6 5.6l4.2 4.2m4.2 4.2l4.2 4.2M1 12h6m6 0h6M5.6 18.4l4.2-4.2m4.2-4.2l4.2-4.2"></path>
+                            </svg>
+                            <h3>System Setting</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/schsettings">General Setting</a></li>
+                            <li><a href="/sessions">Session Setting</a></li>
+                            <li><a href="/admin/notification/setting">Notification Setting</a></li>
+                            <li><a href="/smsconfig">SMS Setting</a></li>
+                            <li><a href="/emailconfig">Email Setting</a></li>
+                            <li><a href="/admin/paymentsettings">Payment Methods</a></li>
+                            <li><a href="/admin/roles">Roles Permissions</a></li>
+                            <li><a href="/admin/backup">Backup Restore</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Alumni -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                            <h3>Alumni</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/admin/alumni/alumnilist">Manage Alumni</a></li>
+                            <li><a href="/admin/alumni/events">Events</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Annual Calendar -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            <h3>Annual Calendar</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="#">Annual Calendar</a></li>
+                            <li><a href="#">Holiday Type</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Attendance -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            <h3>Attendance</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/stuattendance/index">Student Attendance</a></li>
+                            <li><a href="/approveleave">Approve Leave</a></li>
+                            <li><a href="/stuattendence/attendencereport">Attendance By Date</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Behaviour Records -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="12" y1="18" x2="12" y2="12"></line>
+                                <line x1="9" y1="15" x2="15" y2="15"></line>
+                            </svg>
+                            <h3>Behaviour Records</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/behaviour/studentincidents">Assign Incident</a></li>
+                            <li><a href="/behaviour/incidents">Incidents</a></li>
+                            <li><a href="/behaviour/report/studentincidentreport">Reports</a></li>
+                            <li><a href="/behaviour/behavioursetting">Setting</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- CBSE Examination -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                            </svg>
+                            <h3>CBSE Examination</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/cbseexam/exam">Exam</a></li>
+                            <li><a href="#">Exam Schedule</a></li>
+                            <li><a href="/examresult/marksheet">Print Marksheet</a></li>
+                            <li><a href="#">Template</a></li>
+                            <li><a href="#">Assign Observation</a></li>
+                            <li><a href="#">Admit Card</a></li>
+                            <li><a href="#">Reports</a></li>
+                            <li><a href="/cbseexam/cbsecategory/index">Setting</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Certificate -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="8" r="7"></circle>
+                                <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+                            </svg>
+                            <h3>Certificate</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="#">Transfer Certificate</a></li>
+                            <li><a href="#">Student Certificate</a></li>
+                            <li><a href="#">Generate Certificate</a></li>
+                            <li><a href="#">Student ID Card</a></li>
+                            <li><a href="#">Generate ID Card</a></li>
+                            <li><a href="#">Staff ID Card</a></li>
+                            <li><a href="#">Generate Staff ID Card</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Download Center -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            <h3>Download Center</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="#">Upload/Share Content</a></li>
+                            <li><a href="#">Content Share List</a></li>
+                            <li><a href="#">Video Tutorial</a></li>
+                            <li><a href="#">Content Type</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Examinations -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
+                            <h3>Examinations</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/examgroup">Exam Group</a></li>
+                            <li><a href="/cbseexam/exam/examschedule">Exam Schedule</a></li>
+                            <li><a href="/cbseexam/examresult">Exam Result</a></li>
+                            <li><a href="#">Design Admit Card</a></li>
+                            <li><a href="#">Print Admit Card</a></li>
+                            <li><a href="/emarksheet">Design Marksheet</a></li>
+                            <li><a href="/examresult/marksheet">Print Marksheet</a></li>
+                            <li><a href="/grade">Marks Grade</a></li>
+                            <li><a href="/marksdivision">Marks Division</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Expenses -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="1" x2="12" y2="23"></line>
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                            </svg>
+                            <h3>Expenses</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/expense">Add Expense</a></li>
+                            <li><a href="/expense/searchexpense">Search Expense</a></li>
+                            <li><a href="/expense/expensehead">Expense Head</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Fees Collection -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                <line x1="1" y1="10" x2="23" y2="10"></line>
+                            </svg>
+                            <h3>Fees Collection</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/studentfee">Collect Fees</a></li>
+                            <li><a href="/offlinepayment">Offline Bank Payments</a></li>
+                            <li><a href="/studentfee/searchpayment">Search Fees Payment</a></li>
+                            <li><a href="#">Search Due Fees</a></li>
+                            <li><a href="/dailyassignment/admin/transport/feemaster">Fees Master</a></li>
+                            <li><a href="#">Quick Fees</a></li>
+                            <li><a href="/feegroup/index">Fees Group</a></li>
+                            <li><a href="#">Fees Type</a></li>
+                            <li><a href="#">Fees Discount</a></li>
+                            <li><a href="#">Fees Carry Forward</a></li>
+                            <li><a href="#">Fees Reminder</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Front CMS -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                            <h3>Front CMS</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/admin/front/events">Event</a></li>
+                            <li><a href="/admin/front/gallery">Gallery</a></li>
+                            <li><a href="/admin/front/news">News</a></li>
+                            <li><a href="/admin/front/media">Media Manager</a></li>
+                            <li><a href="/admin/front/pages">Pages</a></li>
+                            <li><a href="/admin/front/menus">Menus</a></li>
+                            <li><a href="/admin/front/banner">Banner Images</a></li>
+                            <li><a href="/admin/frontcms">Front CMS Setting</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Gmeet Live Classes -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                            </svg>
+                            <h3>Gmeet Live Classes</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/gmeet/timetable">Live Classes</a></li>
+                            <li><a href="/gmeet/meeting">Live Meeting</a></li>
+                            <li><a href="/gmeet/classreport">Live Classes Report</a></li>
+                            <li><a href="/gmeet/meetingreport">Live Meeting Report</a></li>
+                            <li><a href="/gmeet/index">Setting</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Homework -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                            </svg>
+                            <h3>Homework</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="#">Add Homework</a></li>
+                            <li><a href="#">Daily Assignment</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Hostel -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                            </svg>
+                            <h3>Hostel</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/hostelroom">Hostel Rooms</a></li>
+                            <li><a href="/roomtype">Room Type</a></li>
+                            <li><a href="/hostel">Hostel</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Human Resource -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                            <h3>Human Resource</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/staff">Staff Directory</a></li>
+                            <li><a href="/staffattendance/index">Staff Attendance</a></li>
+                            <li><a href="/payroll">Payroll</a></li>
+                            <li><a href="/leaverequest">Approve Leave Request</a></li>
+                            <li><a href="/staff/leaverequest">Apply Leave</a></li>
+                            <li><a href="#">Leave Type</a></li>
+                            <li><a href="/staff/rating">Teachers Rating</a></li>
+                            <li><a href="/department">Department</a></li>
+                            <li><a href="/designation">Designation</a></li>
+                            <li><a href="/staff/disablestafflist">Disabled Staff</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Income -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="1" x2="12" y2="23"></line>
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                            </svg>
+                            <h3>Income</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/income">Add Income</a></li>
+                            <li><a href="/income/incomesearch">Search Income</a></li>
+                            <li><a href="/income/incomehead">Income Head</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Inventory -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line>
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                            </svg>
+                            <h3>Inventory</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/dailyassignment/admin/issueitem">Issue Item</a></li>
+                            <li><a href="/dailyassignment/admin/itemstock">Add Item Stock</a></li>
+                            <li><a href="/dailyassignment/admin/item">Add Item</a></li>
+                            <li><a href="/dailyassignment/admin/itemcategory">Item Category</a></li>
+                            <li><a href="/dailyassignment/admin/itemstore">Item Store</a></li>
+                            <li><a href="/dailyassignment/admin/itemsupplier">Item Supplier</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Lesson Plan -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                            </svg>
+                            <h3>Lesson Plan</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/lessonplan/copylesson">Copy Old Lessons</a></li>
+                            <li><a href="#">Manage Lesson Plan</a></li>
+                            <li><a href="#">Manage Syllabus Status</a></li>
+                            <li><a href="#">Lesson</a></li>
+                            <li><a href="#">Topic</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Online Examinations -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                            <h3>Online Examinations</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/onlineexam">Online Exam</a></li>
+                            <li><a href="/question">Question Bank</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- QR Code Attendance -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
+                            </svg>
+                            <h3>QR Code Attendance</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="#">Attendance</a></li>
+                            <li><a href="#">Setting</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Quick Fees -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="1" x2="12" y2="23"></line>
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                            </svg>
+                            <h3>Quick Fees</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="#">Student Information</a></li>
+                            <li><a href="#">Finance</a></li>
+                            <li><a href="#">Attendance</a></li>
+                            <li><a href="#">Examinations</a></li>
+                            <li><a href="#">Online Examinations</a></li>
+                            <li><a href="#">Lesson Plan</a></li>
+                            <li><a href="#">Homework</a></li>
+                            <li><a href="#">Human Resource</a></li>
+                            <li><a href="#">Library</a></li>
+                            <li><a href="#">Inventory</a></li>
+                            <li><a href="#">Transport</a></li>
+                            <li><a href="/hostel">Hostel</a></li>
+                            <li><a href="#">Alumni</a></li>
+                            <li><a href="#">User Log</a></li>
+                            <li><a href="#">Audit Trail Report</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Reports -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
+                            <h3>Reports</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="#">Student Information</a></li>
+                            <li><a href="#">Finance</a></li>
+                            <li><a href="#">Attendance</a></li>
+                            <li><a href="#">Examinations</a></li>
+                            <li><a href="#">Online Examinations</a></li>
+                            <li><a href="#">Lesson Plan</a></li>
+                            <li><a href="#">Homework</a></li>
+                            <li><a href="#">Human Resource</a></li>
+                            <li><a href="#">Library</a></li>
+                            <li><a href="#">Inventory</a></li>
+                            <li><a href="#">Transport</a></li>
+                            <li><a href="/hostel">Hostel</a></li>
+                            <li><a href="#">Alumni</a></li>
+                            <li><a href="#">User Log</a></li>
+                            <li><a href="#">Audit Trail Report</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Student CV -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                            </svg>
+                            <h3>Student CV</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/admin/resume/index">Build CV</a></li>
+                            <li><a href="/admin/resume/download">Download CV</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- TFA -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                            <h3>TFA</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="#">Settings</a></li>
+                            <li><a href="#">Report</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Thermal Print -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                                <rect x="6" y="14" width="12" height="8"></rect>
+                            </svg>
+                            <h3>Thermal Print</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/admin/printheaderfooter">Print Header Footer</a></li>
+                            <li><a href="/admin/thermalprint/index">Thermal Print</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Transport -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="1" y="3" width="15" height="13"></rect>
+                                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                                <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                                <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                            </svg>
+                            <h3>Transport</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/dailyassignment/admin/transport/feemaster">Fees Master</a></li>
+                            <li><a href="/dailyassignment/admin/transport/pickuppoint">Pickup Point</a></li>
+                            <li><a href="/dailyassignment/admin/transport/route">Routes</a></li>
+                            <li><a href="/dailyassignment/admin/transport/vehicle">Vehicles</a></li>
+                            <li><a href="/dailyassignment/admin/transport/vehroute">Assign Vehicle</a></li>
+                            <li><a href="/dailyassignment/admin/transport/pickuppointassign">Route Pickup Point</a></li>
+                            <li><a href="/dailyassignment/admin/transport/studenttransportfees">Student Transport Fees</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Whatsapp Messaging -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                            </svg>
+                            <h3>Whatsapp Messaging</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/whatsappconfig/index">Settings</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Zoom Live Classes -->
+                    <div class="quick-link-category">
+                        <div class="category-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                            </svg>
+                            <h3>Zoom Live Classes</h3>
+                        </div>
+                        <ul class="category-links">
+                            <li><a href="/conference/meeting">Live Meeting</a></li>
+                            <li><a href="/conference/timetable">Live Classes</a></li>
+                            <li><a href="/conference/classreport">Live Classes Report</a></li>
+                            <li><a href="/conference/meetingreport">Live Meeting Report</a></li>
+                            <li><a href="/conference">Setting</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/dashboard.js}"></script>
+    <script th:inline="none">
+        // Admission Enquiry Modal Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const addEnquiryBtn = document.getElementById('addEnquiryBtn');
+            const admissionModal = document.getElementById('admissionEnquiryModal');
+            const admissionModalOverlay = document.getElementById('admissionModalOverlay');
+            const admissionModalCloseBtn = document.getElementById('admissionModalCloseBtn');
+            const admissionForm = document.getElementById('admissionEnquiryForm');
+
+            // Set today's date as default for date fields
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('enquiryDate').value = today;
+            document.getElementById('enquiryFollowUpDate').value = today;
+
+            // Open modal function
+            function openModal() {
+                admissionModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            // Open modal on button click
+            if (addEnquiryBtn) {
+                addEnquiryBtn.addEventListener('click', function () {
+                    editingEnquiryId = null;
+                    openModal();
+                });
+            }
+
+            // Close modal function
+            function closeModal() {
+                admissionModal.classList.remove('active');
+                document.body.style.overflow = '';
+                admissionForm.reset();
+                document.getElementById('enquiryDate').value = today;
+                document.getElementById('enquiryFollowUpDate').value = today;
+                document.getElementById('enquiryStatus').value = 'ACTIVE';
+            }
+
+            // Close modal on overlay click
+            if (admissionModalOverlay) {
+                admissionModalOverlay.addEventListener('click', closeModal);
+            }
+
+            // Close modal on close button click
+            if (admissionModalCloseBtn) {
+                admissionModalCloseBtn.addEventListener('click', closeModal);
+            }
+
+            let schoolClasses = [];
+
+            function populateClassSelect(selectEl, selectedValue) {
+                if (!selectEl) return;
+                selectEl.innerHTML = '<option value="">Select</option>';
+                schoolClasses.forEach(function (schoolClass) {
+                    const option = document.createElement('option');
+                    option.value = schoolClass.name;
+                    option.textContent = schoolClass.name;
+                    selectEl.appendChild(option);
+                });
+                if (selectedValue) {
+                    selectEl.value = selectedValue;
+                    if (selectEl.value !== selectedValue) {
+                        const fallback = document.createElement('option');
+                        fallback.value = selectedValue;
+                        fallback.textContent = selectedValue;
+                        selectEl.appendChild(fallback);
+                        selectEl.value = selectedValue;
+                    }
+                }
+            }
+
+            function loadClasses() {
+                return fetch('/api/classes')
+                    .then(function (response) {
+                        if (!response.ok) {
+                            throw new Error('Failed to load classes');
+                        }
+                        return response.json();
+                    })
+                    .then(function (classes) {
+                        schoolClasses = Array.isArray(classes) ? classes : [];
+                        populateClassSelect(document.getElementById('class'), '');
+                        populateClassSelect(document.getElementById('enquiryClass'), '');
+                    })
+                    .catch(function (error) {
+                        console.error('Error loading classes:', error);
+                    });
+            }
+
+            function formatEnquiryStatus(status) {
+                const labels = {
+                    ACTIVE: 'Active',
+                    WON: 'Won',
+                    PASSIVE: 'Passive',
+                    LOST: 'Lost',
+                    DEAD: 'Dead',
+                    INACTIVE: 'Passive'
+                };
+                return labels[status] || status || '';
+            }
+
+            function formatDisplayDate(dateString) {
+                if (!dateString) return '';
+                const date = new Date(dateString);
+                if (Number.isNaN(date.getTime())) return '';
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                const year = date.getFullYear();
+                return month + '/' + day + '/' + year;
+            }
+
+            function formatDateForInput(dateString) {
+                if (!dateString) return '';
+                const date = new Date(dateString);
+                if (Number.isNaN(date.getTime())) return '';
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return year + '-' + month + '-' + day;
+            }
+
+            function formatSourceLabel(source) {
+                if (!source) return '';
+                const map = {
+                    advertisement: 'Advertisement',
+                    google: 'Google Ads',
+                    frontoffice: 'Front Office',
+                    campaign: 'Admission Campaign'
+                };
+                return map[String(source).toLowerCase()] || source;
+            }
+
+            function buildActionButtons(id, phone) {
+                return ''
+                    + '<div class="action-buttons">'
+                    + '<button type="button" class="btn-action btn-phone" title="Follow Up" data-enquiry-id="' + id + '" data-phone="' + (phone || '') + '">'
+                    + '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'
+                    + '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>'
+                    + '</svg></button>'
+                    + '<button type="button" class="btn-action btn-edit" title="Edit">'
+                    + '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'
+                    + '<path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"></path>'
+                    + '</svg></button>'
+                    + '<button type="button" class="btn-action btn-delete" title="Delete">'
+                    + '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'
+                    + '<line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>'
+                    + '</svg></button></div>';
+            }
+
+            // Function to add new enquiry to the table
+            function addEnquiryToTable(enquiry) {
+                const tbody = document.getElementById('enquiryTableBody');
+                if (!tbody) return;
+
+                const newRow = document.createElement('tr');
+                newRow.setAttribute('data-id', enquiry.id);
+                newRow.innerHTML = ''
+                    + '<td>' + (enquiry.name || '') + '</td>'
+                    + '<td>' + (enquiry.phone || '') + '</td>'
+                    + '<td>' + formatSourceLabel(enquiry.source) + '</td>'
+                    + '<td>' + formatDisplayDate(enquiry.date) + '</td>'
+                    + '<td>' + formatDisplayDate(enquiry.followUpDate) + '</td>'
+                    + '<td>' + formatEnquiryStatus(enquiry.status) + '</td>'
+                    + '<td>' + buildActionButtons(enquiry.id, enquiry.phone) + '</td>';
+
+                tbody.insertBefore(newRow, tbody.firstChild);
+                updateShowingInfo();
+            }
+            
+            // Function to update the "Showing X to Y of Z entries" text
+            function updateShowingInfo() {
+                const tbody = document.getElementById('enquiryTableBody');
+                const showingInfo = document.querySelector('.showing-info');
+                if (tbody && showingInfo) {
+                    const totalRows = tbody.querySelectorAll('tr').length;
+                    showingInfo.textContent = totalRows
+                        ? 'Showing 1 to ' + totalRows + ' of ' + totalRows + ' entries'
+                        : 'Showing 0 to 0 of 0 entries';
+                }
+            }
+
+            // Variable to track if we're editing (stores the ID)
+            let editingEnquiryId = null;
+
+            // Handle form submission
+            if (admissionForm) {
+                admissionForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Get form data
+                    const formData = new FormData(admissionForm);
+                    const data = Object.fromEntries(formData);
+                    
+                    console.log('Form submitted:', data);
+                    
+                    // Get save button elements
+                    const saveButton = document.getElementById('saveButton');
+                    const btnText = saveButton.querySelector('.btn-text');
+                    const btnSpinner = saveButton.querySelector('.btn-spinner');
+                    
+                    // Show spinner and disable button
+                    btnText.style.display = 'none';
+                    btnSpinner.style.display = 'inline-block';
+                    saveButton.disabled = true;
+                    saveButton.style.cursor = 'not-allowed';
+                    saveButton.style.opacity = '0.7';
+                    
+                    // Determine if we're creating or updating
+                    const isEditing = editingEnquiryId !== null;
+                    const url = isEditing ? `/api/admission-enquiry/${editingEnquiryId}` : '/api/admission-enquiry';
+                    const method = isEditing ? 'PUT' : 'POST';
+                    
+                    // Send data to backend API
+                    fetch(url, {
+                        method: method,
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(result => {
+                        console.log('Success:', result);
+                        
+                        // Close modal first
+                        closeModal();
+                        
+                        // Hide spinner and enable button (for next use)
+                        btnText.style.display = 'inline-block';
+                        btnSpinner.style.display = 'none';
+                        saveButton.disabled = false;
+                        saveButton.style.cursor = 'pointer';
+                        saveButton.style.opacity = '1';
+                        
+                        if (isEditing) {
+                            // Update the existing row in the table
+                            updateEnquiryInTable(result.data);
+                        } else {
+                            // Add the new enquiry to the table
+                            addEnquiryToTable(result.data);
+                        }
+                        
+                        // Reset editing state
+                        editingEnquiryId = null;
+                        
+                        // Show success alert after modal is closed
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: result.message || (isEditing ? 'Admission enquiry updated successfully!' : 'Admission enquiry saved successfully!'),
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#10b981',
+                            timer: 3000,
+                            timerProgressBar: true
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        
+                        // Hide spinner and enable button
+                        btnText.style.display = 'inline-block';
+                        btnSpinner.style.display = 'none';
+                        saveButton.disabled = false;
+                        saveButton.style.cursor = 'pointer';
+                        saveButton.style.opacity = '1';
+                        
+                        // Show error alert
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: isEditing ? 'Failed to update admission enquiry. Please try again.' : 'Failed to save admission enquiry. Please try again.',
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#ef4444'
+                        });
+                    });
+                });
+            }
+
+            // Edit enquiry function
+            window.editEnquiry = function(id) {
+                console.log('Edit enquiry clicked for ID:', id);
+                
+                // Fetch the enquiry data from the server
+                fetch(`/api/admission-enquiry/${id}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to fetch enquiry data');
+                        }
+                        return response.json();
+                    })
+                    .then(enquiry => {
+                        console.log('Enquiry data fetched:', enquiry);
+                        
+                        // Set editing mode
+                        editingEnquiryId = id;
+
+                        document.getElementById('enquiryName').value = enquiry.name || '';
+                        document.getElementById('enquiryPhone').value = enquiry.phone || '';
+                        document.getElementById('enquiryEmail').value = enquiry.email || '';
+                        document.getElementById('enquiryAddress').value = enquiry.address || '';
+                        document.getElementById('enquiryDescription').value = enquiry.description || '';
+                        document.getElementById('enquiryNote').value = enquiry.note || '';
+                        document.getElementById('enquiryDate').value = formatDateForInput(enquiry.date);
+                        document.getElementById('enquiryFollowUpDate').value = formatDateForInput(enquiry.followUpDate);
+                        document.getElementById('enquiryStatus').value = enquiry.status || 'ACTIVE';
+                        document.getElementById('enquiryAssigned').value = enquiry.assigned || '';
+                        document.getElementById('enquiryReference').value = enquiry.reference || '';
+                        document.getElementById('enquirySource').value = formatSourceLabel(enquiry.source);
+                        populateClassSelect(document.getElementById('enquiryClass'), enquiry.className || '');
+                        document.getElementById('enquiryChildCount').value = enquiry.childCount != null ? enquiry.childCount : '';
+
+                        const modalTitle = document.getElementById('admissionModalTitle');
+                        if (modalTitle) {
+                            modalTitle.textContent = 'Edit Admission Enquiry';
+                        }
+
+                        const btnText = document.querySelector('#saveButton .btn-text');
+                        if (btnText) {
+                            btnText.textContent = 'Save';
+                        }
+
+                        openModal();
+                    })
+                    .catch(error => {
+                        console.error('Error fetching enquiry:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Failed to load enquiry data. Please try again.',
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#ef4444'
+                        });
+                    });
+            };
+
+            // Delete enquiry function
+            window.deleteEnquiry = function(id) {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#ef4444',
+                    cancelButtonColor: '#6b7280',
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Show loading
+                        Swal.fire({
+                            title: 'Deleting...',
+                            text: 'Please wait',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            showConfirmButton: false,
+                            willOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                        
+                        // Delete the enquiry
+                        fetch(`/api/admission-enquiry/${id}`, {
+                            method: 'DELETE'
+                        })
+                        .then(response => response.json())
+                        .then(result => {
+                            // Remove the row from table
+                            const row = document.querySelector(`tr[data-id="${id}"]`);
+                            if (row) {
+                                row.remove();
+                                updateShowingInfo();
+                            }
+                            
+                            // Show success message
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Deleted!',
+                                text: result.message || 'Admission enquiry has been deleted.',
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#10b981',
+                                timer: 3000,
+                                timerProgressBar: true
+                            });
+                        })
+                        .catch(error => {
+                            console.error('Error deleting enquiry:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Failed to delete admission enquiry. Please try again.',
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#ef4444'
+                            });
+                        });
+                    }
+                });
+            };
+
+            // Update enquiry in table function
+            function updateEnquiryInTable(enquiry) {
+                const row = document.querySelector('tr[data-id="' + enquiry.id + '"]');
+                if (!row) return;
+
+                row.innerHTML = ''
+                    + '<td>' + (enquiry.name || '') + '</td>'
+                    + '<td>' + (enquiry.phone || '') + '</td>'
+                    + '<td>' + formatSourceLabel(enquiry.source) + '</td>'
+                    + '<td>' + formatDisplayDate(enquiry.date) + '</td>'
+                    + '<td>' + formatDisplayDate(enquiry.followUpDate) + '</td>'
+                    + '<td>' + formatEnquiryStatus(enquiry.status) + '</td>'
+                    + '<td>' + buildActionButtons(enquiry.id, enquiry.phone) + '</td>';
+            }
+
+            function displayValue(value) {
+                if (value === null || value === undefined || value === '') return '-';
+                return value;
+            }
+
+            let activeFollowUpEnquiryId = null;
+
+            function openFollowUpModal() {
+                const modal = document.getElementById('followUpModal');
+                if (modal) modal.hidden = false;
+            }
+
+            function closeFollowUpModal() {
+                const modal = document.getElementById('followUpModal');
+                if (modal) modal.hidden = true;
+                activeFollowUpEnquiryId = null;
+            }
+
+            function populateFollowUpSummary(enquiry) {
+                document.getElementById('summaryAssigned').textContent = 'Assigned: ' + displayValue(enquiry.assigned);
+                document.getElementById('summaryEnquiryDate').textContent = formatDisplayDate(enquiry.date);
+                document.getElementById('summaryLastFollowUpDate').textContent = formatDisplayDate(enquiry.lastFollowUpDate);
+                document.getElementById('summaryNextFollowUpDate').textContent = formatDisplayDate(enquiry.followUpDate);
+                document.getElementById('summaryPhone').textContent = displayValue(enquiry.phone);
+                document.getElementById('summaryReference').textContent = displayValue(enquiry.reference);
+                document.getElementById('summarySource').textContent = formatSourceLabel(enquiry.source);
+                document.getElementById('summaryEmail').textContent = displayValue(enquiry.email);
+                document.getElementById('summaryAddress').textContent = displayValue(enquiry.address);
+                document.getElementById('summaryClass').textContent = displayValue(enquiry.className);
+                document.getElementById('summaryChildCount').textContent = enquiry.childCount != null ? enquiry.childCount : '-';
+                document.getElementById('summaryDescription').textContent = displayValue(enquiry.description);
+                document.getElementById('summaryNote').textContent = displayValue(enquiry.note);
+                document.getElementById('summaryCreatedBy').textContent = displayValue(enquiry.createdBy);
+                document.getElementById('followUpStatus').value = enquiry.status || 'ACTIVE';
+                document.getElementById('followUpHistoryTitle').textContent = 'Follow Up (' + (enquiry.name || '') + ')';
+            }
+
+            function renderFollowUpTimeline(followUps) {
+                const timeline = document.getElementById('followUpTimeline');
+                if (!timeline) return;
+
+                const clockIcon = ''
+                    + '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'
+                    + '<circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>'
+                    + '</svg>';
+
+                if (!followUps || !followUps.length) {
+                    timeline.innerHTML = ''
+                        + '<div class="followup-timeline-item followup-timeline-placeholder">'
+                        + '<div class="followup-timeline-icon">' + clockIcon + '</div>'
+                        + '<div class="followup-timeline-content"></div>'
+                        + '</div>';
+                    return;
+                }
+
+                timeline.innerHTML = followUps.map(function (item) {
+                    return ''
+                        + '<div class="followup-timeline-item">'
+                        + '<div class="followup-timeline-icon">' + clockIcon + '</div>'
+                        + '<div class="followup-timeline-content">'
+                        + '<div><strong>Date:</strong> ' + formatDisplayDate(item.followUpDate) + '</div>'
+                        + '<div><strong>Next Follow Up:</strong> ' + formatDisplayDate(item.nextFollowUpDate) + '</div>'
+                        + '<div><strong>Response:</strong> ' + displayValue(item.response) + '</div>'
+                        + (item.note ? '<div><strong>Note:</strong> ' + item.note + '</div>' : '')
+                        + '<div><strong>By:</strong> ' + displayValue(item.createdBy) + '</div>'
+                        + '</div></div>';
+                }).join('');
+            }
+
+            function loadFollowUpData(enquiryId) {
+                return Promise.all([
+                    fetch('/api/admission-enquiry/' + enquiryId).then(function (r) {
+                        if (!r.ok) throw new Error('Enquiry not found');
+                        return r.json();
+                    }),
+                    fetch('/api/admission-enquiry/' + enquiryId + '/follow-ups').then(function (r) {
+                        return r.ok ? r.json() : [];
+                    })
+                ]).then(function (results) {
+                    const enquiry = results[0];
+                    const followUps = results[1];
+                    populateFollowUpSummary(enquiry);
+                    renderFollowUpTimeline(followUps);
+                    return enquiry;
+                });
+            }
+
+            window.openFollowUpEnquiry = function (id) {
+                activeFollowUpEnquiryId = id;
+                document.getElementById('followUpEnquiryId').value = id;
+
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('followUpDate').value = today;
+                document.getElementById('followUpNextDate').value = '';
+                document.getElementById('followUpResponse').value = '';
+                document.getElementById('followUpNote').value = '';
+
+                loadFollowUpData(id)
+                    .then(function (enquiry) {
+                        if (enquiry.followUpDate) {
+                            document.getElementById('followUpNextDate').value = formatDateForInput(enquiry.followUpDate);
+                        }
+                        openFollowUpModal();
+                    })
+                    .catch(function (error) {
+                        console.error('Error loading follow up:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Failed to load enquiry details.',
+                            confirmButtonColor: '#ef4444'
+                        });
+                    });
+            };
+
+            const followUpModal = document.getElementById('followUpModal');
+            const followUpOverlay = document.getElementById('followUpModalOverlay');
+            const followUpCloseBtn = document.getElementById('followUpModalCloseBtn');
+            const followUpForm = document.getElementById('followUpForm');
+
+            if (followUpCloseBtn) followUpCloseBtn.addEventListener('click', closeFollowUpModal);
+            if (followUpOverlay) followUpOverlay.addEventListener('click', closeFollowUpModal);
+
+            if (followUpForm) {
+                followUpForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    if (!activeFollowUpEnquiryId) return;
+
+                    const saveBtn = document.getElementById('followUpSaveBtn');
+                    saveBtn.disabled = true;
+
+                    const payload = {
+                        followUpDate: document.getElementById('followUpDate').value,
+                        nextFollowUpDate: document.getElementById('followUpNextDate').value,
+                        response: document.getElementById('followUpResponse').value,
+                        note: document.getElementById('followUpNote').value,
+                        status: document.getElementById('followUpStatus').value
+                    };
+
+                    fetch('/api/admission-enquiry/' + activeFollowUpEnquiryId + '/follow-ups', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    })
+                    .then(function (response) {
+                        return response.json().then(function (result) {
+                            if (!response.ok || !result.success) {
+                                throw new Error(result.message || 'Save failed');
+                            }
+                            return result;
+                        });
+                    })
+                    .then(function (result) {
+                        saveBtn.disabled = false;
+                        if (result.enquiry) {
+                            updateEnquiryInTable(result.enquiry);
+                            populateFollowUpSummary(result.enquiry);
+                        }
+                        const today = new Date().toISOString().split('T')[0];
+                        document.getElementById('followUpDate').value = today;
+                        return loadFollowUpData(activeFollowUpEnquiryId).then(function () {
+                            document.getElementById('followUpResponse').value = '';
+                            document.getElementById('followUpNote').value = '';
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Saved!',
+                                text: result.message || 'Follow up saved successfully.',
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                        });
+                    })
+                    .catch(function (error) {
+                        saveBtn.disabled = false;
+                        console.error('Error saving follow up:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: error.message || 'Failed to save follow up.',
+                            confirmButtonColor: '#ef4444'
+                        });
+                    });
+                });
+            }
+
+            // Load existing enquiries from server
+            function loadEnquiries() {
+                fetch('/api/admission-enquiry')
+                    .then(response => response.json())
+                    .then(enquiries => {
+                        const tbody = document.getElementById('enquiryTableBody');
+                        if (!tbody) return;
+
+                        tbody.innerHTML = '';
+
+                        enquiries.forEach(function (enquiry) {
+                            addEnquiryToTable(enquiry);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error loading enquiries:', error);
+                    });
+            }
+
+            const enquiryTableBody = document.getElementById('enquiryTableBody');
+            if (enquiryTableBody) {
+                enquiryTableBody.addEventListener('click', function (event) {
+                    const row = event.target.closest('tr[data-id]');
+                    if (!row) return;
+                    const id = row.getAttribute('data-id');
+                    if (event.target.closest('.btn-edit')) {
+                        editEnquiry(id);
+                    } else if (event.target.closest('.btn-delete')) {
+                        deleteEnquiry(id);
+                    } else if (event.target.closest('.btn-phone')) {
+                        openFollowUpEnquiry(id);
+                    }
+                });
+            }
+
+            loadClasses().then(loadEnquiries);
+
+            // Enhance openModal to reset form for new entries
+            const originalOpenModal = openModal;
+            window.openModal = openModal = function() {
+                console.log('Enhanced openModal called, editingEnquiryId:', editingEnquiryId);
+                
+                // Call original openModal first
+                originalOpenModal();
+                
+                // Reset editing state when opening for new entry
+                if (editingEnquiryId === null) {
+                    console.log('Adding new entry - resetting form to Add mode');
+                    // Reset modal title
+                    const modalTitle = document.getElementById('admissionModalTitle');
+                    if (modalTitle) {
+                        modalTitle.textContent = 'Admission Enquiry';
+                    }
+                    
+                    // Reset button text
+                    const btnText = document.querySelector('#saveButton .btn-text');
+                    if (btnText) {
+                        btnText.textContent = 'Save';
+                    }
+                } else {
+                    console.log('Editing mode - keeping Edit state');
+                }
+            };
+
+            // Enhance closeModal to reset form and editing state
+            const originalCloseModal = closeModal;
+            window.closeModal = closeModal = function() {
+                // Reset editing state
+                editingEnquiryId = null;
+                
+                // Reset modal title
+                const modalTitle = document.getElementById('admissionModalTitle');
+                if (modalTitle) {
+                    modalTitle.textContent = 'Admission Enquiry';
+                }
+                
+                // Reset button text
+                const btnText = document.querySelector('#saveButton .btn-text');
+                if (btnText) {
+                    btnText.textContent = 'Save';
+                }
+                
+                // Call original closeModal
+                originalCloseModal();
+            };
+
+            // Close modal on Escape key press
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && admissionModal.classList.contains('active')) {
+                    closeModal();
+                }
+            });
+
+            // ===== SEARCH FUNCTIONALITY =====
+            
+            // 1. Criteria Form Search (Filter functionality)
+            const criteriaForm = document.querySelector('.criteria-form');
+            const classSelect = document.getElementById('class');
+            const sourceSelect = document.getElementById('source');
+            const enquiryFromDate = document.getElementById('enquiryFromDate');
+            const enquiryToDate = document.getElementById('enquiryToDate');
+            const statusSelect = document.getElementById('status');
+            
+            if (criteriaForm) {
+                criteriaForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Get filter values
+                    const classValue = classSelect.value.toLowerCase();
+                    const sourceValue = sourceSelect.value.toLowerCase();
+                    const fromDate = enquiryFromDate.value ? new Date(enquiryFromDate.value) : null;
+                    const toDate = enquiryToDate.value ? new Date(enquiryToDate.value) : null;
+                    const statusValue = statusSelect.value.toLowerCase();
+                    
+                    // Get all table rows
+                    const tableRows = document.querySelectorAll('.data-table tbody tr');
+                    let visibleCount = 0;
+                    
+                    tableRows.forEach(row => {
+                        let shouldShow = true;
+                        
+                        // Get row data
+                        const cells = row.querySelectorAll('td');
+                        if (cells.length < 6) return;
+                        
+                        const rowName = cells[0].textContent.trim();
+                        const rowPhone = cells[1].textContent.trim();
+                        const rowSource = cells[2].textContent.trim().toLowerCase();
+                        const rowDateStr = cells[3].textContent.trim();
+                        const rowStatus = cells[5].textContent.trim().toLowerCase();
+                        
+                        // Parse row date (format: MM/DD/YYYY)
+                        let rowDate = null;
+                        if (rowDateStr) {
+                            const dateParts = rowDateStr.split('/');
+                            if (dateParts.length === 3) {
+                                rowDate = new Date(dateParts[2], dateParts[0] - 1, dateParts[1]);
+                            }
+                        }
+                        
+                        // Apply filters
+                        // Note: Class filter would need class data in the table to work properly
+                        // Currently the table doesn't have a class column, so we skip class filtering
+                        
+                        // Filter by source
+                        if (sourceValue && !rowSource.includes(sourceValue)) {
+                            shouldShow = false;
+                        }
+                        
+                        // Filter by date range
+                        if (fromDate && rowDate && rowDate < fromDate) {
+                            shouldShow = false;
+                        }
+                        if (toDate && rowDate && rowDate > toDate) {
+                            shouldShow = false;
+                        }
+                        
+                        // Filter by status
+                        if (statusValue && statusValue !== rowStatus) {
+                            shouldShow = false;
+                        }
+                        
+                        // Show/hide row
+                        if (shouldShow) {
+                            row.style.display = '';
+                            visibleCount++;
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                    
+                    // Update showing info
+                    const showingInfo = document.querySelector('.showing-info');
+                    if (showingInfo) {
+                        const totalRows = tableRows.length;
+                        showingInfo.textContent = `Showing 1 to ${visibleCount} of ${totalRows} entries (filtered)`;
+                    }
+                });
+            }
+            
+            // 2. Table Search Input (Real-time search)
+            const tableSearchInput = document.querySelector('.table-search-input');
+            
+            if (tableSearchInput) {
+                tableSearchInput.addEventListener('input', function(e) {
+                    const searchTerm = e.target.value.toLowerCase().trim();
+                    const tableRows = document.querySelectorAll('.data-table tbody tr');
+                    let visibleCount = 0;
+                    
+                    tableRows.forEach(row => {
+                        // Get all cell text content
+                        const rowText = Array.from(row.querySelectorAll('td'))
+                            .map(cell => cell.textContent.trim().toLowerCase())
+                            .join(' ');
+                        
+                        // Check if search term is found in any cell
+                        if (rowText.includes(searchTerm)) {
+                            row.style.display = '';
+                            visibleCount++;
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                    
+                    // Update showing info
+                    const showingInfo = document.querySelector('.showing-info');
+                    if (showingInfo) {
+                        const totalRows = tableRows.length;
+                        if (searchTerm) {
+                            showingInfo.textContent = `Showing 1 to ${visibleCount} of ${totalRows} entries (filtered)`;
+                        } else {
+                            showingInfo.textContent = `Showing 1 to ${visibleCount} of ${totalRows} entries`;
+                        }
+                    }
+                });
+            }
+
+            // ===== EXPORT FUNCTIONALITY =====
+            
+            // Helper function to get visible table data (respects search/filter)
+            function getTableData() {
+                const table = document.querySelector('.data-table');
+                const headers = [];
+                const data = [];
+                
+                // Get headers (excluding Action column)
+                const headerCells = table.querySelectorAll('thead th');
+                headerCells.forEach((th, index) => {
+                    if (index < headerCells.length - 1) { // Skip last column (Action)
+                        headers.push(th.textContent.trim());
+                    }
+                });
+                
+                // Get visible rows data (excluding Action column)
+                const rows = table.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    // Only get data from visible rows
+                    if (row.style.display !== 'none') {
+                        const rowData = [];
+                        const cells = row.querySelectorAll('td');
+                        cells.forEach((cell, index) => {
+                            if (index < cells.length - 1) { // Skip last column (Action)
+                                rowData.push(cell.textContent.trim());
+                            }
+                        });
+                        data.push(rowData);
+                    }
+                });
+                
+                return { headers, data };
+            }
+            
+            // 1. Copy to Clipboard
+            const copyBtn = document.getElementById('copyBtn');
+            if (copyBtn) {
+                copyBtn.addEventListener('click', function() {
+                    const { headers, data } = getTableData();
+                    
+                    // Create text format
+                    let text = headers.join('\t') + '\n';
+                    data.forEach(row => {
+                        text += row.join('\t') + '\n';
+                    });
+                    
+                    // Copy to clipboard
+                    navigator.clipboard.writeText(text).then(() => {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Copied!',
+                            text: 'Table data copied to clipboard',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    }).catch(err => {
+                        console.error('Failed to copy:', err);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Failed to copy data to clipboard',
+                            confirmButtonColor: '#ef4444'
+                        });
+                    });
+                });
+            }
+            
+            // 2. Export to Excel
+            const excelBtn = document.getElementById('excelBtn');
+            if (excelBtn) {
+                excelBtn.addEventListener('click', function() {
+                    const { headers, data } = getTableData();
+                    
+                    // Create worksheet data
+                    const wsData = [headers, ...data];
+                    
+                    // Create workbook and worksheet
+                    const wb = XLSX.utils.book_new();
+                    const ws = XLSX.utils.aoa_to_sheet(wsData);
+                    
+                    // Set column widths
+                    ws['!cols'] = headers.map(() => ({ wch: 20 }));
+                    
+                    // Add worksheet to workbook
+                    XLSX.utils.book_append_sheet(wb, ws, 'Admission Enquiry');
+                    
+                    // Generate file name with timestamp
+                    const timestamp = new Date().toISOString().split('T')[0];
+                    const fileName = `Admission_Enquiry_${timestamp}.xlsx`;
+                    
+                    // Save file
+                    XLSX.writeFile(wb, fileName);
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Exported!',
+                        text: 'Excel file downloaded successfully',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                });
+            }
+            
+            // 3. Export to CSV
+            const csvBtn = document.getElementById('csvBtn');
+            if (csvBtn) {
+                csvBtn.addEventListener('click', function() {
+                    const { headers, data } = getTableData();
+                    
+                    // Create CSV content
+                    let csvContent = headers.join(',') + '\n';
+                    data.forEach(row => {
+                        // Escape commas and quotes in data
+                        const escapedRow = row.map(cell => {
+                            if (cell.includes(',') || cell.includes('"') || cell.includes('\n')) {
+                                return `"${cell.replace(/"/g, '""')}"`;
+                            }
+                            return cell;
+                        });
+                        csvContent += escapedRow.join(',') + '\n';
+                    });
+                    
+                    // Create blob and download
+                    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                    const link = document.createElement('a');
+                    const url = URL.createObjectURL(blob);
+                    
+                    const timestamp = new Date().toISOString().split('T')[0];
+                    const fileName = `Admission_Enquiry_${timestamp}.csv`;
+                    
+                    link.setAttribute('href', url);
+                    link.setAttribute('download', fileName);
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Exported!',
+                        text: 'CSV file downloaded successfully',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                });
+            }
+            
+            // 4. Export to PDF
+            const pdfBtn = document.getElementById('pdfBtn');
+            if (pdfBtn) {
+                pdfBtn.addEventListener('click', function() {
+                    const { headers, data } = getTableData();
+                    
+                    // Initialize jsPDF
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF();
+                    
+                    // Add title
+                    doc.setFontSize(16);
+                    doc.text('Admission Enquiry Report', 14, 15);
+                    
+                    // Add date
+                    doc.setFontSize(10);
+                    const currentDate = new Date().toLocaleDateString();
+                    doc.text(`Generated on: ${currentDate}`, 14, 22);
+                    
+                    // Add table
+                    doc.autoTable({
+                        head: [headers],
+                        body: data,
+                        startY: 28,
+                        theme: 'grid',
+                        headStyles: {
+                            fillColor: [44, 62, 80],
+                            textColor: [255, 255, 255],
+                            fontStyle: 'bold'
+                        },
+                        styles: {
+                            fontSize: 9,
+                            cellPadding: 3
+                        },
+                        columnStyles: {
+                            0: { cellWidth: 30 },
+                            1: { cellWidth: 25 },
+                            2: { cellWidth: 30 },
+                            3: { cellWidth: 25 },
+                            4: { cellWidth: 25 },
+                            5: { cellWidth: 20 }
+                        }
+                    });
+                    
+                    // Save PDF
+                    const timestamp = new Date().toISOString().split('T')[0];
+                    const fileName = `Admission_Enquiry_${timestamp}.pdf`;
+                    doc.save(fileName);
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Exported!',
+                        text: 'PDF file downloaded successfully',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                });
+            }
+            
+            // 5. Print Table
+            const printBtn = document.getElementById('printBtn');
+            if (printBtn) {
+                printBtn.addEventListener('click', function() {
+                    const { headers, data } = getTableData();
+                    
+                    // Create print window content
+                    let printContent = `
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <title>Admission Enquiry - Print</title>
+                            <style>
+                                @media print {
+                                    @page {
+                                        size: landscape;
+                                        margin: 1cm;
+                                    }
+                                }
+                                body {
+                                    font-family: Arial, sans-serif;
+                                    margin: 20px;
+                                }
+                                h1 {
+                                    color: #2c3e50;
+                                    margin-bottom: 10px;
+                                }
+                                .print-date {
+                                    color: #7f8c8d;
+                                    margin-bottom: 20px;
+                                    font-size: 14px;
+                                }
+                                table {
+                                    width: 100%;
+                                    border-collapse: collapse;
+                                    margin-top: 20px;
+                                }
+                                th, td {
+                                    border: 1px solid #ddd;
+                                    padding: 12px;
+                                    text-align: left;
+                                }
+                                th {
+                                    background-color: #2c3e50;
+                                    color: white;
+                                    font-weight: bold;
+                                }
+                                tr:nth-child(even) {
+                                    background-color: #f9f9f9;
+                                }
+                                tr:hover {
+                                    background-color: #f5f5f5;
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <h1>Admission Enquiry Report</h1>
+                            <div class="print-date">Generated on: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</div>
+                            <table>
+                                <thead>
+                                    <tr>
+                    `;
+                    
+                    // Add headers
+                    headers.forEach(header => {
+                        printContent += `<th>${header}</th>`;
+                    });
+                    
+                    printContent += `
+                                    </tr>
+                                </thead>
+                                <tbody>
+                    `;
+                    
+                    // Add data rows
+                    data.forEach(row => {
+                        printContent += '<tr>';
+                        row.forEach(cell => {
+                            printContent += `<td>${cell}</td>`;
+                        });
+                        printContent += '</tr>';
+                    });
+                    
+                    printContent += `
+                                </tbody>
+                            </table>
+                        </body>
+                        </html>
+                    `;
+                    
+                    // Open print window
+                    const printWindow = window.open('', '_blank');
+                    printWindow.document.write(printContent);
+                    printWindow.document.close();
+                    
+                    // Wait for content to load, then print
+                    printWindow.onload = function() {
+                        printWindow.print();
+                    };
+                });
+            }
+
+            // ===== COLUMN VISIBILITY FUNCTIONALITY =====
+            
+            const columnVisibilityBtn = document.getElementById('columnVisibilityBtn');
+            const columnVisibilityDropdown = document.getElementById('columnVisibilityDropdown');
+            const columnToggles = document.querySelectorAll('.column-toggle');
+            
+            // Toggle dropdown visibility
+            if (columnVisibilityBtn) {
+                columnVisibilityBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    columnVisibilityDropdown.classList.toggle('active');
+                });
+            }
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (columnVisibilityDropdown && !columnVisibilityDropdown.contains(e.target) && e.target !== columnVisibilityBtn) {
+                    columnVisibilityDropdown.classList.remove('active');
+                }
+            });
+            
+            // Prevent dropdown from closing when clicking inside it
+            if (columnVisibilityDropdown) {
+                columnVisibilityDropdown.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            }
+            
+            // Handle column visibility toggle
+            columnToggles.forEach(toggle => {
+                toggle.addEventListener('change', function() {
+                    const columnIndex = parseInt(this.getAttribute('data-column'));
+                    const isVisible = this.checked;
+                    
+                    // Get the table
+                    const table = document.querySelector('.data-table');
+                    
+                    // Toggle header cell
+                    const headerCells = table.querySelectorAll('thead th');
+                    if (headerCells[columnIndex]) {
+                        headerCells[columnIndex].style.display = isVisible ? '' : 'none';
+                    }
+                    
+                    // Toggle body cells in all rows
+                    const rows = table.querySelectorAll('tbody tr');
+                    rows.forEach(row => {
+                        const cells = row.querySelectorAll('td');
+                        if (cells[columnIndex]) {
+                            cells[columnIndex].style.display = isVisible ? '' : 'none';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+

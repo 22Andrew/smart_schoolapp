@@ -1,0 +1,393 @@
+/* Human Resource Report */
+.hr-report-page {
+    background: #eef1f5;
+    padding: 20px;
+    min-height: calc(100vh - 80px);
+}
+
+.hr-report-panel,
+.hr-results-panel {
+    background: #fff;
+    border: 1px solid #d9dee7;
+    border-radius: 4px;
+    max-width: 1600px;
+    margin: 0 auto 1rem;
+}
+
+.hr-report-panel {
+    padding: 0;
+    overflow: hidden;
+}
+
+.hr-report-header {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #e5e9f0;
+    background: #fafbfc;
+}
+
+.hr-report-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #4a5568;
+}
+
+.hr-report-nav-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+    border-bottom: 1px solid #e5e9f0;
+    background: #fff;
+    padding: 0.75rem 1rem 1rem;
+}
+
+.hr-report-nav-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.hr-report-nav-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.75rem 1rem;
+    color: #4a5568;
+    text-decoration: none;
+    font-size: 0.88rem;
+    border-radius: 0;
+    background: #fff;
+    transition: background 0.15s ease;
+}
+
+.hr-report-nav-item svg {
+    color: #718096;
+    flex-shrink: 0;
+}
+
+.hr-report-nav-item:hover {
+    background: #f7fafc;
+}
+
+.hr-report-nav-item.active {
+    background: #f1f3f5;
+    color: #2d3748;
+    font-weight: 600;
+}
+
+.hr-criteria-panel {
+    padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.criteria-heading,
+.results-heading {
+    margin: 0 0 1rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.hr-criteria-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.hr-criteria-grid--staff {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.hr-criteria-grid--three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.hr-criteria-grid--five {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.hr-criteria-grid.hidden {
+    display: none;
+}
+
+.hr-criteria-form .form-group label {
+    display: block;
+    color: #4a5568;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 0.45rem;
+}
+
+.hr-criteria-form .required {
+    color: #e53e3e;
+}
+
+.hr-criteria-form .form-select,
+.hr-criteria-form .form-input {
+    width: 100%;
+    height: 40px;
+    box-sizing: border-box;
+    padding: 0.55rem 0.75rem;
+    background: #fff;
+    border: 1px solid #cbd5e0;
+    border-radius: 4px;
+    color: #2d3748;
+    font-size: 0.88rem;
+    font-family: inherit;
+}
+
+.hr-criteria-form .form-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23718096' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    padding-right: 2rem;
+}
+
+.hr-criteria-form .form-select:focus,
+.hr-criteria-form .form-input:focus {
+    outline: none;
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+}
+
+.hr-criteria-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+
+.hr-criteria-form .btn-search {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: #8b5cf6;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    height: 40px;
+    padding: 0 1.1rem;
+    font-size: 0.88rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.hr-criteria-form .btn-search:hover {
+    background: #7c3aed;
+}
+
+.hr-results-panel {
+    padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.hr-report-page .table-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.hr-report-page .table-search {
+    flex: 1;
+    min-width: 180px;
+    max-width: 260px;
+}
+
+.hr-report-page .table-search-input {
+    width: 100%;
+    height: 36px;
+    padding: 0.55rem 0.75rem;
+    border: 1px solid #cbd5e0;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-family: inherit;
+    color: #2d3748;
+}
+
+.hr-report-page .table-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.hr-report-page .entries-select {
+    height: 36px;
+    padding: 0.45rem 0.6rem;
+    border: 1px solid #cbd5e0;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-family: inherit;
+    color: #2d3748;
+    background: #fff;
+}
+
+.hr-report-page .icon-action-btn {
+    background: transparent;
+    border: none;
+    color: #4a5568;
+    padding: 0.35rem;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hr-report-page .icon-action-btn:hover {
+    background: #edf2f7;
+    color: #2d3748;
+}
+
+.hr-report-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px;
+}
+
+.hr-report-table th,
+.hr-report-table td {
+    border: 1px solid #e2e8f0;
+    padding: 0.7rem 0.75rem;
+    text-align: left;
+    color: #2d3748;
+    font-size: 0.85rem;
+    vertical-align: middle;
+}
+
+.hr-report-table thead th {
+    background: #f8fafc;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.hr-report-table thead th .sort-icon {
+    color: #a0aec0;
+    font-size: 0.7rem;
+    margin-left: 0.25rem;
+}
+
+.hr-report-table tbody tr:nth-child(even) {
+    background: #fcfdfe;
+}
+
+.hr-report-table tbody tr:hover {
+    background: #f7fafc;
+}
+
+.hr-report-page .empty-state {
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+.hr-report-page .empty-message {
+    margin: 0 0 0.75rem;
+    color: #e53e3e;
+    font-weight: 500;
+}
+
+.hr-report-page .empty-illustration {
+    color: #cbd5e0;
+    margin-bottom: 0.75rem;
+}
+
+.hr-report-page .empty-hint {
+    margin: 0;
+    color: #38a169;
+    font-size: 0.88rem;
+}
+
+.hr-report-page .table-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.hr-report-page .showing-info {
+    color: #718096;
+    font-size: 0.85rem;
+}
+
+.hr-report-page .pagination {
+    display: flex;
+    gap: 0.35rem;
+}
+
+.hr-report-page .pagination-btn {
+    min-width: 32px;
+    height: 32px;
+    border: 1px solid #cbd5e0;
+    background: #fff;
+    color: #4a5568;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.hr-report-page .pagination-btn.active,
+.hr-report-page .pagination-btn:hover:not(:disabled) {
+    background: #8b5cf6;
+    border-color: #8b5cf6;
+    color: #fff;
+}
+
+.hr-report-page .pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
+}
+
+.status-badge--approved {
+    background: #5cb85c;
+}
+
+.status-badge--pending {
+    background: #f0ad4e;
+}
+
+.status-badge--disapproved {
+    background: #d9534f;
+}
+
+@media (max-width: 1200px) {
+    .hr-criteria-grid--staff,
+    .hr-criteria-grid--five {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 992px) {
+    .hr-report-nav-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hr-criteria-grid--staff,
+    .hr-criteria-grid--three,
+    .hr-criteria-grid--five {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .hr-report-page {
+        padding: 12px;
+    }
+
+    .hr-criteria-grid--staff,
+    .hr-criteria-grid--three,
+    .hr-criteria-grid--five {
+        grid-template-columns: 1fr;
+    }
+}

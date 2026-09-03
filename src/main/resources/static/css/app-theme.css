@@ -1,0 +1,2074 @@
+/* App-wide Light / Dark theme overrides */
+
+:root {
+    --theme-primary: #8b5cf6;
+    --theme-primary-dark: #7c3aed;
+    --theme-primary-soft: color-mix(in srgb, var(--theme-primary) 12%, #ffffff);
+    --theme-primary-border: color-mix(in srgb, var(--theme-primary) 40%, #d1d5db);
+    --theme-primary-sidebar-bg: color-mix(in srgb, var(--theme-primary) 14%, #ffffff);
+    --theme-primary-sidebar-text: var(--theme-primary);
+    --theme-primary-sidebar-border: var(--theme-primary);
+    --app-icon-size: 14px;
+    --app-action-btn-size: 22px;
+    --app-action-icon-size: 11px;
+}
+
+html.theme-light {
+    background-color: #ffffff;
+    color-scheme: light;
+}
+
+html.theme-dark {
+    background-color: #0f172a;
+    color-scheme: dark;
+}
+
+/* Primary color on native checkboxes and radio buttons across the app */
+input[type="checkbox"],
+input[type="radio"] {
+    accent-color: var(--theme-primary) !important;
+}
+
+/* Custom toggle switches used in settings and module pages */
+.toggle-switch input:checked + .toggle-slider,
+.sgp-toggle-switch input:checked + .sgp-toggle-slider {
+    background: var(--theme-primary) !important;
+}
+
+html.theme-light {
+    background: #ffffff !important;
+    color: #111827 !important;
+}
+
+html.theme-light body {
+    background: #ffffff !important;
+    color: #111827 !important;
+}
+
+html.theme-dark {
+    background: #0f172a !important;
+    color: #f8fafc !important;
+}
+
+html.theme-dark body {
+    background: #0f172a !important;
+    color: #f8fafc !important;
+}
+
+/* Layout shells */
+html.theme-light .main-content,
+html.theme-light .schsettings-page,
+html.theme-light main.main-content {
+    background: #ffffff !important;
+    color: #111827 !important;
+}
+
+html.theme-dark .main-content,
+html.theme-dark .schsettings-page,
+html.theme-dark main.main-content {
+    background: #1e293b !important;
+    color: #f8fafc !important;
+}
+
+/* Top navbar */
+html.theme-light .top-navbar {
+    background: #ffffff !important;
+    color: #111827 !important;
+    border-bottom: 1px solid #e5e7eb;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+}
+
+html.theme-light .top-navbar .hamburger-btn,
+html.theme-light .top-navbar .icon-btn,
+html.theme-light .top-navbar .session-label {
+    color: #374151 !important;
+}
+
+html.theme-light .top-navbar .school-name {
+    color: #047857 !important;
+}
+
+html.theme-light .top-navbar .session-value {
+    color: #111827 !important;
+}
+
+html.theme-dark .top-navbar {
+    background: #1e293b !important;
+    color: #f8fafc !important;
+}
+
+html.theme-dark .top-navbar .hamburger-btn,
+html.theme-dark .top-navbar .icon-btn,
+html.theme-dark .top-navbar .session-label,
+html.theme-dark .top-navbar .session-value {
+    color: #f8fafc !important;
+}
+
+/* Sidebar */
+html.theme-light .sidebar {
+    background: #ffffff !important;
+    color: #111827 !important;
+    border-right: 1px solid #e5e7eb;
+}
+
+html.theme-light .sidebar-top {
+    border-bottom-color: #e5e7eb !important;
+}
+
+html.theme-light .sidebar-session,
+html.theme-light .sidebar-session-label {
+    color: #6b7280 !important;
+}
+
+html.theme-light .sidebar-session-value,
+html.theme-light .sidebar-quick-links-title,
+html.theme-light .sidebar-quick-links-btn,
+html.theme-light .sidebar-session-edit-btn {
+    color: #111827 !important;
+}
+
+html.theme-light .menu-item {
+    color: #374151 !important;
+}
+
+html.theme-light .menu-item:hover {
+    background: #f3f4f6 !important;
+    color: #111827 !important;
+}
+
+html.theme-light .menu-item.active,
+html.theme-light .menu-item-expandable.active,
+html.theme-light .submenu-item-expandable.active {
+    background: var(--theme-primary-sidebar-bg, var(--theme-primary-soft)) !important;
+    color: var(--theme-primary-sidebar-text, var(--theme-primary)) !important;
+    border-left: 3px solid var(--theme-primary-sidebar-border, var(--theme-primary)) !important;
+}
+
+html.theme-light .submenu {
+    background: #f9fafb !important;
+}
+
+html.theme-light .submenu-item {
+    color: #4b5563 !important;
+}
+
+html.theme-light .submenu-item:hover {
+    background: #f3f4f6 !important;
+    color: #111827 !important;
+}
+
+html.theme-dark .sidebar {
+    background: #1e293b !important;
+    color: #f8fafc !important;
+}
+
+html.theme-dark .sidebar-session,
+html.theme-dark .sidebar-session-label {
+    color: #cbd5e1 !important;
+}
+
+html.theme-dark .sidebar-session-value,
+html.theme-dark .sidebar-quick-links-title,
+html.theme-dark .sidebar-quick-links-btn,
+html.theme-dark .sidebar-session-edit-btn,
+html.theme-dark .menu-item {
+    color: #e2e8f0 !important;
+}
+
+html.theme-dark .menu-item:hover,
+html.theme-dark .submenu-item:hover {
+    color: #ffffff !important;
+}
+
+html.theme-dark .menu-item.active,
+html.theme-dark .menu-item-expandable.active,
+html.theme-dark .submenu-item-expandable.active {
+    background: var(--theme-primary-sidebar-bg, color-mix(in srgb, var(--theme-primary) 22%, #1e293b)) !important;
+    color: var(--theme-primary-sidebar-text, var(--theme-primary)) !important;
+    border-left: 3px solid var(--theme-primary-sidebar-border, var(--theme-primary)) !important;
+}
+
+html.theme-dark .submenu {
+    background: rgba(0, 0, 0, 0.2) !important;
+}
+
+html.theme-dark .submenu-item {
+    color: #cbd5e1 !important;
+}
+
+/* Settings pages */
+html.theme-light .schsettings-sidebar,
+html.theme-light .schsettings-panel,
+html.theme-light .logo-setting-card,
+html.theme-light .theme-option-btn {
+    background: #ffffff !important;
+    color: #111827 !important;
+    border-color: #e5e7eb !important;
+}
+
+html.theme-light .schsettings-nav-item {
+    color: #374151 !important;
+}
+
+html.theme-light .schsettings-nav-item:hover {
+    background: #f3f4f6 !important;
+    color: #111827 !important;
+}
+
+html.theme-light .schsettings-panel-title,
+html.theme-light .backend-theme-label,
+html.theme-light .logo-setting-card-title {
+    color: #111827 !important;
+    border-bottom-color: #e5e7eb !important;
+}
+
+html.theme-light .backend-theme-label span,
+html.theme-light .logo-setting-dimensions,
+html.theme-light .schsettings-field label {
+    color: #6b7280 !important;
+}
+
+html.theme-light .backend-theme-row {
+    border-bottom-color: #e5e7eb !important;
+}
+
+html.theme-light .logo-setting-preview,
+html.theme-light .logo-placeholder {
+    background: #f9fafb !important;
+    color: #6b7280 !important;
+    border-color: #d1d5db !important;
+}
+
+html.theme-dark .schsettings-sidebar,
+html.theme-dark .schsettings-panel,
+html.theme-dark .logo-setting-card,
+html.theme-dark .theme-option-btn {
+    background: #1e293b !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+}
+
+html.theme-dark .schsettings-nav-item {
+    color: #cbd5e1 !important;
+}
+
+html.theme-dark .schsettings-panel-title,
+html.theme-dark .backend-theme-label,
+html.theme-dark .logo-setting-card-title,
+html.theme-dark .schsettings-field label {
+    color: #f1f5f9 !important;
+}
+
+html.theme-dark .backend-theme-label span,
+html.theme-dark .logo-setting-dimensions {
+    color: #94a3b8 !important;
+}
+
+html.theme-dark .backend-theme-row {
+    border-bottom-color: #334155 !important;
+}
+
+html.theme-dark .logo-setting-preview,
+html.theme-dark .logo-placeholder {
+    background: #0f172a !important;
+    color: #94a3b8 !important;
+    border-color: #334155 !important;
+}
+
+html.theme-light .schsettings-nav-item.active {
+    background: var(--theme-primary-sidebar-bg, var(--theme-primary-soft)) !important;
+    color: var(--theme-primary-sidebar-text, var(--theme-primary)) !important;
+    border-left: 3px solid var(--theme-primary-sidebar-border, var(--theme-primary)) !important;
+}
+
+html.theme-dark .schsettings-nav-item.active {
+    background: var(--theme-primary-sidebar-bg, color-mix(in srgb, var(--theme-primary) 22%, #1e293b)) !important;
+    color: var(--theme-primary-sidebar-text, var(--theme-primary)) !important;
+    border-left: 3px solid var(--theme-primary-sidebar-border, var(--theme-primary)) !important;
+}
+
+/* Forms & tables */
+html.theme-light input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="file"]),
+html.theme-light select,
+html.theme-light textarea,
+html.theme-light .form-control,
+html.theme-light .search-input {
+    background: #ffffff !important;
+    color: #111827 !important;
+    border-color: #d1d5db !important;
+}
+
+html.theme-light input::placeholder,
+html.theme-light textarea::placeholder {
+    color: #9ca3af !important;
+}
+
+html.theme-dark input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="file"]),
+html.theme-dark select,
+html.theme-dark textarea,
+html.theme-dark .form-control,
+html.theme-dark .search-input {
+    background: #0f172a !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+}
+
+html.theme-dark input::placeholder,
+html.theme-dark textarea::placeholder {
+    color: #94a3b8 !important;
+}
+
+/* Common page panels/cards/tables */
+html.theme-light .stat-card,
+html.theme-light .dashboard-card,
+html.theme-light .mini-stat,
+html.theme-light .panel,
+html.theme-light .card,
+html.theme-light .content-panel,
+html.theme-light .table-container,
+html.theme-light .data-table-wrapper,
+html.theme-light table,
+html.theme-light thead,
+html.theme-light tbody,
+html.theme-light tr,
+html.theme-light th,
+html.theme-light td {
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    border-color: #e5e7eb !important;
+}
+
+html.theme-light h1,
+html.theme-light h2,
+html.theme-light h3,
+html.theme-light h4,
+html.theme-light h5,
+html.theme-light h6,
+html.theme-light p,
+html.theme-light label,
+html.theme-light span,
+html.theme-light li,
+html.theme-light a:not(.btn):not(.menu-item):not(.submenu-item):not(.schsettings-nav-item) {
+    color: inherit;
+}
+
+html.theme-dark .stat-card,
+html.theme-dark .dashboard-card,
+html.theme-dark .mini-stat,
+html.theme-dark .panel,
+html.theme-dark .card,
+html.theme-dark .content-panel,
+html.theme-dark .table-container,
+html.theme-dark .data-table-wrapper,
+html.theme-dark table,
+html.theme-dark thead,
+html.theme-dark tbody,
+html.theme-dark tr,
+html.theme-dark th,
+html.theme-dark td {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+}
+
+/* Page-specific wrappers commonly used across modules */
+html.theme-light [class$="-page"],
+html.theme-light [class*="-page "] {
+    background: #f5f6fa !important;
+    color: #111827 !important;
+}
+
+html.theme-dark [class$="-page"],
+html.theme-dark [class*="-page "] {
+    background: #1e293b !important;
+    color: #f8fafc !important;
+}
+
+/* Modals */
+html.theme-light .modal-content,
+html.theme-light .quick-links-modal .modal-content {
+    background: #ffffff !important;
+    color: #111827 !important;
+}
+
+html.theme-dark .modal-content,
+html.theme-dark .quick-links-modal .modal-content {
+    background: #1e293b !important;
+    color: #f8fafc !important;
+}
+
+html.theme-light .modal-body,
+html.theme-light .category-header,
+html.theme-light .category-links a {
+    color: #111827 !important;
+}
+
+html.theme-dark .modal-body,
+html.theme-dark .category-header,
+html.theme-dark .category-links a {
+    color: #f8fafc !important;
+}
+
+/* Login page */
+html.theme-light .login-left,
+html.theme-light .login-form-wrapper {
+    background: #ffffff !important;
+    color: #111827 !important;
+}
+
+html.theme-light .login-title,
+html.theme-light .logo-text,
+html.theme-light .demo-note,
+html.theme-light .footer-link {
+    color: #111827 !important;
+}
+
+html.theme-light .news-overlay,
+html.theme-light .news-overlay h2,
+html.theme-light .news-overlay h3,
+html.theme-light .news-overlay p,
+html.theme-light .news-overlay a,
+html.theme-light .news-overlay .news-title,
+html.theme-light .news-overlay .news-item-title,
+html.theme-light .news-overlay .news-item-text,
+html.theme-light .news-overlay .news-read-more,
+html.theme-dark .news-overlay,
+html.theme-dark .news-overlay h2,
+html.theme-dark .news-overlay h3,
+html.theme-dark .news-overlay p,
+html.theme-dark .news-overlay a,
+html.theme-dark .news-overlay .news-title,
+html.theme-dark .news-overlay .news-item-title,
+html.theme-dark .news-overlay .news-item-text,
+html.theme-dark .news-overlay .news-read-more {
+    color: #ffffff !important;
+}
+
+html.theme-dark .login-left,
+html.theme-dark .login-form-wrapper {
+    background: #ffffff !important;
+    color: #111827 !important;
+}
+
+html.theme-light .theme-option-btn.active,
+html.theme-dark .theme-option-btn.active {
+    color: inherit !important;
+}
+
+/* Module pages — common dark panel/page patterns used across the app */
+html.theme-light [class$="-page"] {
+    background-color: #f5f6fa !important;
+    color: #111827 !important;
+}
+
+html.theme-light [class*="-panel"],
+html.theme-light [class*="-card"]:not(.stat-card-animate),
+html.theme-light [class*="header-bar"],
+html.theme-light [class*="-table-wrapper"],
+html.theme-light [class*="-list-panel"],
+html.theme-light [class*="-form-panel"],
+html.theme-light [class*="-left-panel"],
+html.theme-light [class*="-right-panel"] {
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    border-color: #e5e7eb !important;
+}
+
+html.theme-light [class*="title"]:not(.news-title):not(.news-item-title),
+html.theme-light [class*="label"],
+html.theme-light [class*="text"]:not(.news-item-text),
+html.theme-light th,
+html.theme-light td,
+html.theme-light .panel-title,
+html.theme-light .page-title {
+    color: #111827 !important;
+}
+
+html.theme-light [class*="subtitle"],
+html.theme-light [class*="hint"],
+html.theme-light [class*="note"] {
+    color: #4b5563 !important;
+}
+
+html.theme-dark [class$="-page"] {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+}
+
+html.theme-dark [class*="-panel"],
+html.theme-dark [class*="-card"]:not(.stat-card-animate),
+html.theme-dark [class*="header-bar"],
+html.theme-dark [class*="-table-wrapper"],
+html.theme-dark [class*="-list-panel"],
+html.theme-dark [class*="-form-panel"],
+html.theme-dark [class*="-left-panel"],
+html.theme-dark [class*="-right-panel"] {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+}
+
+html.theme-dark [class*="title"],
+html.theme-dark [class*="label"],
+html.theme-dark [class*="text"],
+html.theme-dark th,
+html.theme-dark td,
+html.theme-dark .panel-title,
+html.theme-dark .page-title {
+    color: #f8fafc !important;
+}
+
+html.theme-dark [class*="subtitle"],
+html.theme-dark [class*="hint"],
+html.theme-dark [class*="note"] {
+    color: #cbd5e1 !important;
+}
+
+/* --------------------------------------------------------------------------
+   Module pages — sections, forms, tables (Front Office, Student Info, etc.)
+   -------------------------------------------------------------------------- */
+html.theme-light [class*="-section"],
+html.theme-light .criteria-section,
+html.theme-light .table-section,
+html.theme-light .filter-section,
+html.theme-light .search-section,
+html.theme-light .content-section,
+html.theme-light .form-section,
+html.theme-light .report-section,
+html.theme-light .overview-section,
+html.theme-light .results-section,
+html.theme-light .assign-section,
+html.theme-light .profile-section,
+html.theme-light .detail-section {
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    border-color: #e5e7eb !important;
+}
+
+html.theme-light .section-title,
+html.theme-light .table-header,
+html.theme-light .panel-heading,
+html.theme-light .card-header,
+html.theme-light .box-title,
+html.theme-light .page-header h1,
+html.theme-light .page-header h2 {
+    color: #111827 !important;
+}
+
+html.theme-light .form-group label,
+html.theme-light .form-label,
+html.theme-light .field-label,
+html.theme-light .control-label {
+    color: #374151 !important;
+}
+
+html.theme-light .form-select,
+html.theme-light .form-input,
+html.theme-light .entries-select,
+html.theme-light .table-search-input,
+html.theme-light .filter-input,
+html.theme-light .search-box input {
+    background: #ffffff !important;
+    color: #111827 !important;
+    border-color: #d1d5db !important;
+}
+
+html.theme-light .form-select option,
+html.theme-light .entries-select option {
+    background: #ffffff !important;
+    color: #111827 !important;
+}
+
+html.theme-light input[type="date"]::-webkit-calendar-picker-indicator,
+html.theme-light .form-input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: none !important;
+}
+
+html.theme-light .table-search-input::placeholder,
+html.theme-light .form-input::placeholder {
+    color: #9ca3af !important;
+}
+
+html.theme-light .data-table,
+html.theme-light .data-table-wrapper,
+html.theme-light .table-responsive {
+    background-color: #ffffff !important;
+    border-color: #e5e7eb !important;
+}
+
+html.theme-light .data-table thead,
+html.theme-light .data-table th {
+    background-color: #f9fafb !important;
+    color: #374151 !important;
+    border-color: #e5e7eb !important;
+}
+
+html.theme-light .data-table tbody tr,
+html.theme-light .data-table td {
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    border-color: #e5e7eb !important;
+}
+
+html.theme-light .data-table tbody tr:hover,
+html.theme-light .data-table tbody tr:nth-child(even) {
+    background-color: #f9fafb !important;
+}
+
+html.theme-light .entries-info,
+html.theme-light .table-info,
+html.theme-light .pagination-info,
+html.theme-light .record-count,
+html.theme-light .showing-entries {
+    color: #6b7280 !important;
+}
+
+html.theme-light .column-visibility-dropdown,
+html.theme-light .dropdown-menu,
+html.theme-light .action-menu,
+html.theme-light .action-dropdown,
+html.theme-light .select-dropdown,
+html.theme-light .table-dropdown {
+    background: #ffffff !important;
+    color: #111827 !important;
+    border-color: #e5e7eb !important;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12) !important;
+}
+
+html.theme-light .column-visibility-dropdown label,
+html.theme-light .dropdown-menu a,
+html.theme-light .dropdown-menu button,
+html.theme-light .action-menu a,
+html.theme-light .action-menu button {
+    color: #374151 !important;
+}
+
+html.theme-light .column-visibility-dropdown label:hover,
+html.theme-light .dropdown-menu a:hover,
+html.theme-light .dropdown-menu button:hover {
+    background: #f3f4f6 !important;
+    color: #111827 !important;
+}
+
+html.theme-light .pagination-btn,
+html.theme-light .page-link {
+    background: #ffffff !important;
+    color: #374151 !important;
+    border-color: #d1d5db !important;
+}
+
+html.theme-light .tab-btn,
+html.theme-light .nav-tab {
+    color: #6b7280 !important;
+    border-color: #e5e7eb !important;
+}
+
+html.theme-light .tab-btn.active,
+html.theme-light .nav-tab.active,
+html.theme-light .tab-item.active,
+html.theme-dark .tab-btn.active,
+html.theme-dark .nav-tab.active,
+html.theme-dark .tab-item.active {
+    background: var(--theme-primary) !important;
+    color: #ffffff !important;
+    border-color: var(--theme-primary-dark) !important;
+}
+
+html.theme-light .tab-item.active {
+    border-left-color: var(--theme-primary-dark) !important;
+}
+
+html.theme-dark .tab-item.active {
+    border-left-color: var(--theme-primary-dark) !important;
+}
+
+html.theme-light .tab-item.active:hover,
+html.theme-dark .tab-item.active:hover {
+    background: var(--theme-primary-dark) !important;
+    color: #ffffff !important;
+}
+
+/* Student Details — List View / Details View tabs */
+html.theme-light .view-tab.active,
+html.theme-dark .view-tab.active {
+    background: var(--theme-primary) !important;
+    color: #ffffff !important;
+}
+
+html.theme-light .view-tab.active:hover,
+html.theme-dark .view-tab.active:hover {
+    background: var(--theme-primary-dark) !important;
+    color: #ffffff !important;
+}
+
+html.theme-light .view-tab.active svg,
+html.theme-dark .view-tab.active svg {
+    stroke: #ffffff !important;
+}
+
+html.theme-light .view-tab:hover:not(.active),
+html.theme-dark .view-tab:hover:not(.active) {
+    color: var(--theme-primary) !important;
+    background: color-mix(in srgb, var(--theme-primary) 10%, transparent) !important;
+}
+
+html.theme-light .student-search-page .detail-name,
+html.theme-dark .student-search-page .detail-name {
+    color: var(--theme-primary) !important;
+}
+
+html.theme-light .visitorspurpose-page .action-btn.btn-edit,
+html.theme-light .visitorspurpose-page .action-btn.btn-delete,
+html.theme-dark .visitorspurpose-page .action-btn.btn-edit,
+html.theme-dark .visitorspurpose-page .action-btn.btn-delete {
+    background-color: var(--theme-primary) !important;
+    border-color: var(--theme-primary) !important;
+    color: #ffffff !important;
+}
+
+html.theme-light .visitorspurpose-page .action-btn.btn-edit:hover,
+html.theme-light .visitorspurpose-page .action-btn.btn-delete:hover,
+html.theme-dark .visitorspurpose-page .action-btn.btn-edit:hover,
+html.theme-dark .visitorspurpose-page .action-btn.btn-delete:hover {
+    background-color: var(--theme-primary-dark) !important;
+    border-color: var(--theme-primary-dark) !important;
+}
+
+html.theme-light .empty-state,
+html.theme-light .no-data,
+html.theme-light .no-records {
+    color: #6b7280 !important;
+}
+
+html.theme-light .modal-overlay {
+    background: rgba(15, 23, 42, 0.45) !important;
+}
+
+html.theme-light .badge,
+html.theme-light .status-badge,
+html.theme-light .tag {
+    border-color: #e5e7eb !important;
+}
+
+/* Dark theme — module pages */
+html.theme-dark [class*="-section"],
+html.theme-dark .criteria-section,
+html.theme-dark .table-section,
+html.theme-dark .filter-section,
+html.theme-dark .search-section,
+html.theme-dark .content-section,
+html.theme-dark .form-section,
+html.theme-dark .report-section,
+html.theme-dark .overview-section,
+html.theme-dark .results-section,
+html.theme-dark .assign-section,
+html.theme-dark .profile-section,
+html.theme-dark .detail-section {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+}
+
+html.theme-dark .section-title,
+html.theme-dark .table-header,
+html.theme-dark .panel-heading,
+html.theme-dark .card-header,
+html.theme-dark .box-title,
+html.theme-dark .page-header h1,
+html.theme-dark .page-header h2 {
+    color: #f8fafc !important;
+}
+
+html.theme-dark .form-group label,
+html.theme-dark .form-label,
+html.theme-dark .field-label,
+html.theme-dark .control-label {
+    color: #e2e8f0 !important;
+}
+
+html.theme-dark .form-select,
+html.theme-dark .form-input,
+html.theme-dark .entries-select,
+html.theme-dark .table-search-input,
+html.theme-dark .filter-input,
+html.theme-dark .search-box input {
+    background: #0f172a !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+}
+
+html.theme-dark .form-select option,
+html.theme-dark .entries-select option {
+    background: #0f172a !important;
+    color: #f8fafc !important;
+}
+
+html.theme-dark input[type="date"]::-webkit-calendar-picker-indicator,
+html.theme-dark .form-input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) !important;
+}
+
+html.theme-dark .table-search-input::placeholder,
+html.theme-dark .form-input::placeholder {
+    color: #94a3b8 !important;
+}
+
+html.theme-dark .data-table thead,
+html.theme-dark .data-table th {
+    background-color: #0f172a !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+}
+
+html.theme-dark .data-table tbody tr,
+html.theme-dark .data-table td {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+}
+
+html.theme-dark .data-table tbody tr:hover,
+html.theme-dark .data-table tbody tr:nth-child(even) {
+    background-color: #334155 !important;
+}
+
+html.theme-dark .entries-info,
+html.theme-dark .table-info,
+html.theme-dark .pagination-info,
+html.theme-dark .record-count,
+html.theme-dark .showing-entries {
+    color: #94a3b8 !important;
+}
+
+html.theme-dark .column-visibility-dropdown,
+html.theme-dark .dropdown-menu,
+html.theme-dark .action-menu,
+html.theme-dark .action-dropdown,
+html.theme-dark .select-dropdown,
+html.theme-dark .table-dropdown {
+    background: #0f172a !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35) !important;
+}
+
+html.theme-dark .column-visibility-dropdown label,
+html.theme-dark .dropdown-menu a,
+html.theme-dark .dropdown-menu button,
+html.theme-dark .action-menu a,
+html.theme-dark .action-menu button {
+    color: #e2e8f0 !important;
+}
+
+html.theme-dark .column-visibility-dropdown label:hover,
+html.theme-dark .dropdown-menu a:hover,
+html.theme-dark .dropdown-menu button:hover {
+    background: #334155 !important;
+    color: #ffffff !important;
+}
+
+html.theme-dark .pagination-btn,
+html.theme-dark .page-link {
+    background: #1e293b !important;
+    color: #e2e8f0 !important;
+    border-color: #334155 !important;
+}
+
+html.theme-dark .tab-btn,
+html.theme-dark .nav-tab {
+    color: #94a3b8 !important;
+    border-color: #334155 !important;
+}
+
+html.theme-dark .tab-btn.active,
+html.theme-dark .nav-tab.active {
+    color: var(--theme-primary) !important;
+    border-color: var(--theme-primary) !important;
+    background: #1e293b !important;
+}
+
+html.theme-dark .empty-state,
+html.theme-dark .no-data,
+html.theme-dark .no-records {
+    color: #94a3b8 !important;
+}
+
+html.theme-dark .modal-overlay {
+    background: rgba(0, 0, 0, 0.65) !important;
+}
+
+/* Dashboard cards in dark mode */
+html.theme-dark .mini-stat,
+html.theme-dark .stat-card,
+html.theme-dark .dashboard-card,
+html.theme-dark .calendar-section,
+html.theme-dark .user-stats-section {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+}
+
+html.theme-dark .mini-stat-title,
+html.theme-dark .stat-label {
+    color: #94a3b8 !important;
+}
+
+html.theme-dark .mini-stat-value,
+html.theme-dark .stat-value,
+html.theme-dark .stat-number {
+    color: #f8fafc !important;
+}
+
+html.theme-light .mini-stat,
+html.theme-light .stat-card,
+html.theme-light .dashboard-card,
+html.theme-light .calendar-section,
+html.theme-light .user-stats-section {
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    border-color: #e5e7eb !important;
+}
+
+html.theme-light .mini-stat-title,
+html.theme-light .stat-label {
+    color: #6b7280 !important;
+}
+
+html.theme-light .mini-stat-value,
+html.theme-light .stat-value,
+html.theme-light .stat-number {
+    color: #111827 !important;
+}
+
+/* Notification Setting page */
+html.theme-light .notification-setting-page {
+    background-color: #ecf0f5 !important;
+}
+
+html.theme-light .notification-setting-box,
+html.theme-light .notification-setting-box-header,
+html.theme-light .notification-setting-box-footer {
+    background-color: #ffffff !important;
+    border-color: #d2d6de !important;
+}
+
+html.theme-light .notification-setting-title {
+    color: #444 !important;
+}
+
+html.theme-dark .notification-setting-page {
+    background-color: #1a2035 !important;
+}
+
+html.theme-dark .notification-setting-box,
+html.theme-dark .notification-setting-box-header,
+html.theme-dark .notification-setting-box-footer {
+    background-color: #1e2433 !important;
+    border-color: #2d3748 !important;
+}
+
+/* --------------------------------------------------------------------------
+   Light theme — apply Backend Theme primary color to interactive controls
+   -------------------------------------------------------------------------- */
+html.theme-light input[type="checkbox"],
+html.theme-light input[type="radio"] {
+    accent-color: var(--theme-primary) !important;
+}
+
+/* Primary / save / add buttons */
+html.theme-light .btn-schsettings-save,
+html.theme-light .btn-logo-update,
+html.theme-light .btn-notification-save,
+html.theme-light .btn-save,
+html.theme-light .btn-save-primary,
+html.theme-light .btn-save-template,
+html.theme-light .btn-save-attendance,
+html.theme-light .btn-add-primary,
+html.theme-light .btn-add,
+html.theme-light .btn-add-more,
+html.theme-light .btn-submit,
+html.theme-light .btn-search-primary,
+html.theme-light .btn-search,
+html.theme-light .btn-action,
+html.theme-light .btn-update,
+html.theme-light .btn-apply,
+html.theme-light .btn-filter,
+html.theme-light .btn-print-primary,
+html.theme-light [class*="btn-save"]:not([class*="cancel"]),
+html.theme-light [class*="btn-primary"],
+html.theme-light [class*="btn-add"]:not(.btn-add-student):not([class*="cancel"]),
+html.theme-light button[type="submit"]:not(.btn-cancel):not(.btn-secondary):not(.btn-reset):not(.profile-logout-link) {
+    background-color: var(--theme-primary) !important;
+    border-color: var(--theme-primary) !important;
+    color: #ffffff !important;
+}
+
+html.theme-light .btn-schsettings-save:hover,
+html.theme-light .btn-logo-update:hover,
+html.theme-light .btn-notification-save:hover,
+html.theme-light .btn-save:hover,
+html.theme-light .btn-save-primary:hover,
+html.theme-light .btn-save-template:hover,
+html.theme-light .btn-save-attendance:hover,
+html.theme-light .btn-add-primary:hover,
+html.theme-light .btn-add:hover,
+html.theme-light .btn-add-more:hover,
+html.theme-light .btn-submit:hover,
+html.theme-light .btn-search-primary:hover,
+html.theme-light .btn-search:hover,
+html.theme-light .btn-action:hover,
+html.theme-light .btn-update:hover,
+html.theme-light .btn-apply:hover,
+html.theme-light .btn-filter:hover,
+html.theme-light .btn-print-primary:hover,
+html.theme-light [class*="btn-save"]:not([class*="cancel"]):hover,
+html.theme-light [class*="btn-primary"]:hover,
+html.theme-light [class*="btn-add"]:not(.btn-add-student):not([class*="cancel"]):hover,
+html.theme-light button[type="submit"]:not(.btn-cancel):not(.btn-secondary):not(.btn-reset):not(.profile-logout-link):hover {
+    background-color: var(--theme-primary-dark) !important;
+    border-color: var(--theme-primary-dark) !important;
+    color: #ffffff !important;
+}
+
+/* Table toolbar icons: filled with selected theme color */
+html.theme-light .icon-action-btn,
+html.theme-light .staff-icon-action-btn,
+html.theme-light .staff-list-action-btn,
+html.theme-light .notification-icon-btn,
+html.theme-light .table-actions .icon-action-btn,
+html.theme-light .table-actions button,
+html.theme-light [class*="-table-controls"] .icon-action-btn,
+html.theme-light [class*="-table-controls"] .staff-icon-action-btn,
+html.theme-light [class*="toolbar"] .icon-action-btn {
+    color: #ffffff !important;
+    border-color: var(--theme-primary) !important;
+    background-color: var(--theme-primary) !important;
+}
+
+html.theme-light .icon-action-btn svg,
+html.theme-light .staff-icon-action-btn svg,
+html.theme-light .staff-list-action-btn svg,
+html.theme-light .notification-icon-btn svg,
+html.theme-light .table-actions .icon-action-btn svg,
+html.theme-light .table-actions button svg,
+html.theme-light [class*="-table-controls"] .icon-action-btn svg,
+html.theme-light [class*="-table-controls"] .staff-icon-action-btn svg,
+html.theme-light [class*="toolbar"] .icon-action-btn svg {
+    stroke: #ffffff !important;
+    color: #ffffff !important;
+}
+
+html.theme-light .icon-action-btn:hover,
+html.theme-light .staff-icon-action-btn:hover,
+html.theme-light .staff-list-action-btn:hover,
+html.theme-light .notification-icon-btn:hover,
+html.theme-light .table-actions .icon-action-btn:hover,
+html.theme-light .table-actions button:hover,
+html.theme-light [class*="-table-controls"] .icon-action-btn:hover,
+html.theme-light [class*="-table-controls"] .staff-icon-action-btn:hover,
+html.theme-light [class*="toolbar"] .icon-action-btn:hover {
+    background-color: var(--theme-primary-dark) !important;
+    border-color: var(--theme-primary-dark) !important;
+    color: #ffffff !important;
+}
+
+/* Pagination & active controls */
+html.theme-light .pagination-btn.active,
+html.theme-light .pagination-btn:hover:not(:disabled),
+html.theme-light .page-link.active,
+html.theme-light .page-item.active .page-link {
+    background-color: var(--theme-primary) !important;
+    border-color: var(--theme-primary) !important;
+    color: #ffffff !important;
+}
+
+/* Focus rings on form controls */
+html.theme-light input:not([type="checkbox"]):not([type="radio"]):focus,
+html.theme-light select:focus,
+html.theme-light textarea:focus,
+html.theme-light .form-control:focus,
+html.theme-light .table-search-input:focus {
+    border-color: var(--theme-primary) !important;
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--theme-primary) 20%, transparent) !important;
+}
+
+/* Keep cancel/secondary/reset buttons neutral in light theme */
+html.theme-light .btn-cancel,
+html.theme-light .btn-secondary,
+html.theme-light .btn-reset,
+html.theme-light .btn-secondary-action,
+html.theme-light [class*="btn-cancel"],
+html.theme-light [class*="btn-secondary"],
+html.theme-light [class*="btn-reset"] {
+    background-color: #f3f4f6 !important;
+    border-color: #d1d5db !important;
+    color: #374151 !important;
+}
+
+html.theme-light .btn-cancel:hover,
+html.theme-light .btn-secondary:hover,
+html.theme-light .btn-reset:hover,
+html.theme-light .btn-secondary-action:hover,
+html.theme-light [class*="btn-cancel"]:hover,
+html.theme-light [class*="btn-secondary"]:hover,
+html.theme-light [class*="btn-reset"]:hover {
+    background-color: #e5e7eb !important;
+    border-color: #cbd5e1 !important;
+    color: #111827 !important;
+}
+
+/* Dark theme — same primary color bindings for icons & primary buttons */
+html.theme-dark .icon-action-btn,
+html.theme-dark .staff-icon-action-btn,
+html.theme-dark .staff-list-action-btn,
+html.theme-dark .notification-icon-btn,
+html.theme-dark .table-actions .icon-action-btn,
+html.theme-dark .table-actions button,
+html.theme-dark [class*="-table-controls"] .icon-action-btn,
+html.theme-dark [class*="-table-controls"] .staff-icon-action-btn,
+html.theme-dark [class*="toolbar"] .icon-action-btn {
+    color: #ffffff !important;
+    border-color: var(--theme-primary) !important;
+    background-color: var(--theme-primary) !important;
+}
+
+html.theme-dark .icon-action-btn:hover,
+html.theme-dark .staff-icon-action-btn:hover,
+html.theme-dark .staff-list-action-btn:hover,
+html.theme-dark .notification-icon-btn:hover,
+html.theme-dark .table-actions .icon-action-btn:hover,
+html.theme-dark .table-actions button:hover,
+html.theme-dark [class*="-table-controls"] .icon-action-btn:hover,
+html.theme-dark [class*="-table-controls"] .staff-icon-action-btn:hover,
+html.theme-dark [class*="toolbar"] .icon-action-btn:hover {
+    background-color: var(--theme-primary-dark) !important;
+    border-color: var(--theme-primary-dark) !important;
+    color: #ffffff !important;
+}
+
+html.theme-dark .icon-action-btn svg,
+html.theme-dark .staff-icon-action-btn svg,
+html.theme-dark .staff-list-action-btn svg,
+html.theme-dark .notification-icon-btn svg,
+html.theme-dark .table-actions .icon-action-btn svg,
+html.theme-dark .table-actions button svg,
+html.theme-dark [class*="-table-controls"] .icon-action-btn svg,
+html.theme-dark [class*="-table-controls"] .staff-icon-action-btn svg,
+html.theme-dark [class*="toolbar"] .icon-action-btn svg {
+    stroke: #ffffff !important;
+    color: #ffffff !important;
+}
+
+html.theme-dark .btn-action,
+html.theme-dark .btn-search,
+html.theme-dark .btn-add,
+html.theme-dark [class*="btn-save"]:not([class*="cancel"]),
+html.theme-dark [class*="btn-primary"] {
+    background-color: var(--theme-primary) !important;
+    border-color: var(--theme-primary) !important;
+}
+
+html.theme-dark .btn-action:hover,
+html.theme-dark .btn-search:hover,
+html.theme-dark .btn-add:hover,
+html.theme-dark [class*="btn-save"]:not([class*="cancel"]):hover,
+html.theme-dark [class*="btn-primary"]:hover {
+    background-color: var(--theme-primary-dark) !important;
+    border-color: var(--theme-primary-dark) !important;
+}
+
+/* Table row action icons — view, edit, delete */
+html.theme-light .btn-view,
+html.theme-light .btn-edit,
+html.theme-light .btn-delete,
+html.theme-light .btn-info,
+html.theme-dark .btn-view,
+html.theme-dark .btn-edit,
+html.theme-dark .btn-delete,
+html.theme-dark .btn-info {
+    background-color: var(--theme-primary) !important;
+    border-color: var(--theme-primary) !important;
+    color: #ffffff !important;
+}
+
+html.theme-light .btn-view:hover,
+html.theme-light .btn-edit:hover,
+html.theme-light .btn-delete:hover,
+html.theme-light .btn-info:hover,
+html.theme-dark .btn-view:hover,
+html.theme-dark .btn-edit:hover,
+html.theme-dark .btn-delete:hover,
+html.theme-dark .btn-info:hover {
+    background-color: var(--theme-primary-dark) !important;
+    border-color: var(--theme-primary-dark) !important;
+}
+
+html.theme-light .btn-action svg,
+html.theme-light .btn-view svg,
+html.theme-light .btn-edit svg,
+html.theme-light .btn-delete svg,
+html.theme-light .btn-info svg,
+html.theme-dark .btn-action svg,
+html.theme-dark .btn-view svg,
+html.theme-dark .btn-edit svg,
+html.theme-dark .btn-delete svg,
+html.theme-dark .btn-info svg {
+    stroke: #ffffff !important;
+}
+
+/* Pagination tab buttons — active & hover (dark theme) */
+html.theme-dark .pagination-btn.active,
+html.theme-dark .pagination-btn:hover:not(:disabled),
+html.theme-dark .page-link.active,
+html.theme-dark .page-item.active .page-link {
+    background-color: var(--theme-primary) !important;
+    border-color: var(--theme-primary) !important;
+    color: #ffffff !important;
+}
+
+/* Table badge / tag chips (e.g. Complaint Type) */
+html.theme-light .data-table .badge,
+html.theme-light .data-table [class*="badge-"],
+html.theme-dark .data-table .badge,
+html.theme-dark .data-table [class*="badge-"] {
+    background-color: color-mix(in srgb, var(--theme-primary) 18%, transparent) !important;
+    color: var(--theme-primary) !important;
+    border: 1px solid color-mix(in srgb, var(--theme-primary) 35%, transparent) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Sidebar — active menu uses Primary Color from Backend Theme
+   -------------------------------------------------------------------------- */
+html.theme-light .submenu-item.active,
+html.theme-light .sub-submenu-item.active,
+html.theme-light .submenu-item-expandable.active {
+    background: var(--theme-primary-sidebar-bg, var(--theme-primary-soft)) !important;
+    color: var(--theme-primary-sidebar-text, var(--theme-primary)) !important;
+    border-left-color: var(--theme-primary-sidebar-border, var(--theme-primary)) !important;
+}
+
+html.theme-dark .submenu-item.active,
+html.theme-dark .sub-submenu-item.active,
+html.theme-dark .submenu-item-expandable.active {
+    background: var(--theme-primary-sidebar-bg, color-mix(in srgb, var(--theme-primary) 22%, #1e293b)) !important;
+    color: var(--theme-primary-sidebar-text, var(--theme-primary)) !important;
+    border-left-color: var(--theme-primary-sidebar-border, var(--theme-primary)) !important;
+}
+
+html.theme-light .sub-submenu-item.active {
+    color: var(--theme-primary-sidebar-text, var(--theme-primary)) !important;
+}
+
+html.theme-dark .sub-submenu-item.active {
+    color: var(--theme-primary-sidebar-text, var(--theme-primary)) !important;
+}
+
+html.theme-light .sub-submenu {
+    background: #f3f4f6 !important;
+}
+
+html.theme-light .sub-submenu-item {
+    color: #4b5563 !important;
+}
+
+html.theme-light .sub-submenu-item:hover {
+    background: #e5e7eb !important;
+    color: #111827 !important;
+}
+
+html.theme-dark .sub-submenu {
+    background: rgba(0, 0, 0, 0.25) !important;
+}
+
+html.theme-dark .sub-submenu-item {
+    color: #cbd5e1 !important;
+}
+
+/* Navbar search */
+html.theme-light .search-input {
+    background: #f9fafb !important;
+    color: #111827 !important;
+    border-color: #d1d5db !important;
+}
+
+html.theme-light .search-btn {
+    color: #374151 !important;
+}
+
+html.theme-dark .search-input {
+    background: rgba(15, 23, 42, 0.6) !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+}
+
+html.theme-dark .search-btn {
+    color: #e2e8f0 !important;
+}
+
+/* Profile dropdown — dark theme */
+html.theme-dark .profile-dropdown {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+}
+
+html.theme-dark .profile-dropdown::before {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+html.theme-dark .profile-dropdown-header,
+html.theme-dark .profile-dropdown-footer {
+    border-color: #334155 !important;
+}
+
+html.theme-dark .profile-name {
+    color: #f8fafc !important;
+}
+
+html.theme-dark .profile-role,
+html.theme-dark .profile-dropdown-item,
+html.theme-dark .profile-footer-link {
+    color: #cbd5e1 !important;
+}
+
+html.theme-dark .profile-dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #ffffff !important;
+}
+
+/* Communicate module */
+html.theme-light .communicate-page {
+    background-color: #f5f6fa !important;
+    color: #111827 !important;
+}
+
+html.theme-light .communicate-form-panel,
+html.theme-light .communicate-list-panel,
+html.theme-light .communicate-page .panel-title {
+    background: #ffffff !important;
+    color: #111827 !important;
+    border-color: #e5e7eb !important;
+}
+
+html.theme-light .communicate-page .form-group label {
+    color: #374151 !important;
+}
+
+html.theme-light .communicate-page .form-control {
+    background: #ffffff !important;
+    color: #111827 !important;
+    border-color: #d1d5db !important;
+}
+
+html.theme-dark .communicate-page {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+}
+
+html.theme-dark .communicate-form-panel,
+html.theme-dark .communicate-list-panel {
+    background: #1e293b !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+}
+
+html.theme-dark .communicate-page .panel-title,
+html.theme-dark .communicate-page .form-group label {
+    color: #f8fafc !important;
+}
+
+html.theme-dark .communicate-page .form-control {
+    background: #0f172a !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+}
+
+/* Communicate & module modals */
+html.theme-light .email-template-modal-content,
+html.theme-light .downloadcenter-modal-content,
+html.theme-light .communicate-modal-content {
+    background: #ffffff !important;
+    color: #111827 !important;
+}
+
+html.theme-light .email-template-modal-header,
+html.theme-light .email-template-modal-body,
+html.theme-light .email-template-modal-footer,
+html.theme-light .downloadcenter-modal-header,
+html.theme-light .downloadcenter-modal-body,
+html.theme-light .downloadcenter-modal-footer {
+    border-color: #e5e7eb !important;
+    color: #111827 !important;
+}
+
+html.theme-light .downloadcenter-modal .upload-tab {
+    background: #ffffff !important;
+    color: #374151 !important;
+    border-color: #d1d5db !important;
+}
+
+html.theme-light .downloadcenter-modal .selected-content-list {
+    background: #f9fafb !important;
+    border-color: #e5e7eb !important;
+}
+
+html.theme-light .downloadcenter-modal .selected-content-list li,
+html.theme-light .downloadcenter-modal .role-checkboxes label,
+html.theme-light .view-details-row .value {
+    color: #111827 !important;
+}
+
+html.theme-light .view-details-row .label {
+    color: #6b7280 !important;
+}
+
+html.theme-dark .email-template-modal-content,
+html.theme-dark .downloadcenter-modal-content,
+html.theme-dark .communicate-modal-content {
+    background: #1e293b !important;
+    color: #f8fafc !important;
+}
+
+html.theme-dark .email-template-modal-header,
+html.theme-dark .email-template-modal-body,
+html.theme-dark .email-template-modal-footer,
+html.theme-dark .downloadcenter-modal-header,
+html.theme-dark .downloadcenter-modal-body,
+html.theme-dark .downloadcenter-modal-footer {
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+}
+
+html.theme-dark .downloadcenter-modal .upload-tab {
+    color: #cbd5e1 !important;
+    border-color: #334155 !important;
+}
+
+html.theme-dark .downloadcenter-modal .selected-content-list li,
+html.theme-dark .downloadcenter-modal .role-checkboxes label,
+html.theme-dark .view-details-row .value {
+    color: #f8fafc !important;
+}
+
+html.theme-dark .view-details-row .label {
+    color: #94a3b8 !important;
+}
+
+html.theme-dark .downloadcenter-modal .modal-overlay {
+    background: rgba(0, 0, 0, 0.65) !important;
+}
+
+/* Download Center module */
+html.theme-light .downloadcenter-page .communicate-list-panel,
+html.theme-light .downloadcenter-page .communicate-form-panel,
+html.theme-light .downloadcenter-page .dc-upload-main,
+html.theme-light .downloadcenter-page .dc-summary-panel,
+html.theme-light .downloadcenter-page .content-file-card,
+html.theme-light .downloadcenter-page .video-filter-panel,
+html.theme-light .downloadcenter-page .video-card,
+html.theme-light .downloadcenter-page .video-card-title {
+    background: #ffffff !important;
+    color: #111827 !important;
+    border-color: #e5e7eb !important;
+}
+
+html.theme-light .downloadcenter-page .panel-title,
+html.theme-light .downloadcenter-page .dc-summary-stats div,
+html.theme-light .downloadcenter-page .selection-bar,
+html.theme-light .downloadcenter-page .table-footer {
+    color: #374151 !important;
+}
+
+html.theme-light .downloadcenter-page .dc-summary-stats span,
+html.theme-light .downloadcenter-page .content-file-title {
+    color: #111827 !important;
+}
+
+html.theme-light .downloadcenter-page .content-file-meta,
+html.theme-light .downloadcenter-page .dc-summary-icon {
+    color: #6b7280 !important;
+}
+
+html.theme-light .downloadcenter-page .dc-search-box,
+html.theme-light .downloadcenter-page .view-toggle-btn,
+html.theme-light .downloadcenter-page .table-search-input,
+html.theme-light .downloadcenter-page .entries-select,
+html.theme-light .downloadcenter-page .icon-action-btn,
+html.theme-light .downloadcenter-page .pagination-btn,
+html.theme-light .downloadcenter-page .video-filter-grid .form-control,
+html.theme-light .downloadcenter-page.type-page .form-control,
+html.theme-light .downloadcenter-page .dc-summary-stats {
+    background: #ffffff !important;
+    color: #111827 !important;
+    border-color: #d1d5db !important;
+}
+
+html.theme-light .downloadcenter-page .dc-search-box input {
+    color: #111827 !important;
+}
+
+html.theme-light .downloadcenter-page .content-file-thumb {
+    background: #f3f4f6 !important;
+    border-color: #e5e7eb !important;
+}
+
+html.theme-light .downloadcenter-page .video-card-thumb {
+    background: #e5e7eb !important;
+}
+
+html.theme-dark .downloadcenter-page .communicate-list-panel,
+html.theme-dark .downloadcenter-page .communicate-form-panel,
+html.theme-dark .downloadcenter-page .dc-upload-main,
+html.theme-dark .downloadcenter-page .dc-summary-panel,
+html.theme-dark .downloadcenter-page .content-file-card,
+html.theme-dark .downloadcenter-page .video-filter-panel,
+html.theme-dark .downloadcenter-page .video-card,
+html.theme-dark .downloadcenter-page .video-card-title {
+    background: rgba(26, 29, 36, 0.95) !important;
+    color: #f8fafc !important;
+    border-color: rgba(148, 163, 184, 0.12) !important;
+}
+
+html.theme-dark .downloadcenter-page .panel-title,
+html.theme-dark .downloadcenter-page .dc-summary-stats span,
+html.theme-dark .downloadcenter-page .content-file-title,
+html.theme-dark .downloadcenter-page .video-card-title {
+    color: #f8fafc !important;
+}
+
+html.theme-dark .downloadcenter-page .content-file-meta,
+html.theme-dark .downloadcenter-page .table-footer,
+html.theme-dark .downloadcenter-page .view-details-row .label {
+    color: #94a3b8 !important;
+}
+
+html.theme-dark .downloadcenter-page .dc-search-box,
+html.theme-dark .downloadcenter-page .view-toggle-btn,
+html.theme-dark .downloadcenter-page .table-search-input,
+html.theme-dark .downloadcenter-page .entries-select,
+html.theme-dark .downloadcenter-page .icon-action-btn,
+html.theme-dark .downloadcenter-page .pagination-btn,
+html.theme-dark .downloadcenter-page .video-filter-grid .form-control,
+html.theme-dark .downloadcenter-page.type-page .form-control {
+    background: rgba(15, 23, 42, 0.55) !important;
+    color: #e2e8f0 !important;
+    border-color: rgba(148, 163, 184, 0.25) !important;
+}
+
+html.theme-dark .downloadcenter-page .dc-search-box input {
+    color: #e2e8f0 !important;
+}
+
+/* SweetAlert2 dialogs */
+html.theme-light .swal2-popup {
+    background: #ffffff !important;
+    color: #111827 !important;
+}
+
+html.theme-light .swal2-title,
+html.theme-light .swal2-html-container {
+    color: #111827 !important;
+}
+
+html.theme-dark .swal2-popup {
+    background: #1e293b !important;
+    color: #f8fafc !important;
+}
+
+html.theme-dark .swal2-title,
+html.theme-dark .swal2-html-container {
+    color: #f8fafc !important;
+}
+
+/* --------------------------------------------------------------------------
+   App-wide consistent icon sizing
+   -------------------------------------------------------------------------- */
+
+/* Brand logo and large illustrations stay at their own sizes */
+.logo-icon svg,
+.logo-icon .navbar-logo-img,
+.logo-icon .login-logo-img {
+    width: 35px !important;
+    height: 35px !important;
+}
+
+svg[width="80"],
+svg[width="100"],
+svg[width="120"],
+svg[height="80"],
+svg[height="100"],
+svg[height="120"] {
+    width: auto !important;
+    height: auto !important;
+}
+
+/* Normalize inline SVGs that use common UI icon dimensions */
+svg[width="12"],
+svg[width="13"],
+svg[width="14"],
+svg[width="15"],
+svg[width="16"],
+svg[width="17"],
+svg[width="18"],
+svg[width="20"],
+svg[width="22"],
+svg[width="24"],
+svg[width="32"] {
+    width: var(--app-icon-size) !important;
+    height: var(--app-icon-size) !important;
+}
+
+/* Icon containers — sidebar, navbar, tables, buttons, settings */
+.top-navbar .icon-btn svg,
+.top-navbar .hamburger-btn svg,
+.top-navbar .search-btn svg,
+.sidebar .menu-item svg,
+.sidebar .submenu-item svg,
+.sidebar .menu-caret,
+.sidebar-session-edit-btn svg,
+.sidebar-quick-links-btn svg,
+.icon-btn svg,
+.hamburger-btn svg,
+.icon-action-btn svg,
+.staff-icon-action-btn svg,
+.staff-list-action-btn svg,
+.notification-icon-btn svg,
+[class*="-icon-btn"] svg,
+[class*="icon-action"] svg,
+.table-actions svg,
+[class*="-table-controls"] svg,
+[class*="toolbar"] svg,
+[class*="table-actions"] svg,
+.profile-dropdown-item svg,
+.profile-footer-link svg,
+.search-btn svg,
+.schsettings-nav-item svg,
+.calendar-nav-btn svg,
+.category-header svg,
+.quick-links-modal .category-links svg,
+.modal-close svg,
+.modal-header button svg,
+.action-cell svg,
+.data-table button svg,
+.btn svg,
+button svg,
+a.btn svg,
+.stat-icon svg {
+    width: var(--app-icon-size) !important;
+    height: var(--app-icon-size) !important;
+    flex-shrink: 0;
+}
+
+/* Profile dropdown — Smart School reference layout (overrides global submit/icon rules) */
+.profile-dropdown-container .profile-dropdown {
+    width: 250px;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    border: 1px solid #e8e8e8;
+    font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.profile-dropdown-container .profile-dropdown-header {
+    padding: 11px 12px 10px;
+    border-bottom: 1px solid #eeeeee;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile-dropdown-container .profile-info {
+    padding-top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+}
+
+.profile-dropdown-container .profile-avatar img,
+.profile-dropdown-container .profile-avatar-img {
+    width: 48px;
+    height: 48px;
+    border-radius: 2px;
+}
+
+.profile-dropdown-container .profile-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #444444;
+    margin: 0 0 1px;
+    line-height: 1.4;
+}
+
+.profile-dropdown-container .profile-role {
+    font-size: 13px;
+    font-weight: 400;
+    color: #888888;
+    margin: 0 0 10px;
+    line-height: 1.4;
+}
+
+.profile-dropdown-container .profile-password-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #888888;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+.profile-dropdown-container .profile-password-link span,
+.profile-dropdown-container .profile-password-link .profile-password-label {
+    color: inherit;
+    display: inline !important;
+    visibility: visible !important;
+    font-size: 13px !important;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+.profile-dropdown-container .profile-password-link:hover {
+    color: #666666;
+}
+
+.profile-dropdown-container .profile-password-link .profile-icon-key {
+    color: #444444;
+}
+
+.profile-dropdown-container .profile-dropdown-footer {
+    padding: 9px 12px;
+    border-top: 1px solid #eeeeee;
+    background: #ffffff;
+}
+
+.profile-dropdown-container .profile-footer-link {
+    color: #888888;
+    font-size: 13px;
+    font-weight: 400;
+    gap: 6px;
+    line-height: 1.4;
+    min-height: 0;
+    padding: 0;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.profile-dropdown-container .profile-footer-link span {
+    color: inherit;
+}
+
+.profile-dropdown-container .profile-footer-link:hover {
+    color: #666666;
+    background: transparent !important;
+}
+
+.profile-dropdown-container .profile-footer-link svg {
+    color: #666666;
+}
+
+.profile-dropdown-container .profile-logout-link,
+.profile-dropdown-container .profile-dropdown-footer button[type="submit"] {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: #888888 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    font-size: 13px !important;
+    font-weight: 400 !important;
+    line-height: 1.4 !important;
+}
+
+.profile-dropdown-container .profile-logout-link:hover,
+.profile-dropdown-container .profile-dropdown-footer button[type="submit"]:hover {
+    background: transparent !important;
+    color: #666666 !important;
+}
+
+.profile-dropdown-container .profile-icon-key {
+    width: 12px !important;
+    height: 12px !important;
+    flex-shrink: 0;
+}
+
+.profile-dropdown-container .profile-icon-globe,
+.profile-dropdown-container .profile-icon-logout {
+    width: 14px !important;
+    height: 14px !important;
+    flex-shrink: 0;
+}
+
+html.theme-dark .profile-dropdown-container .profile-name {
+    color: #f1f5f9 !important;
+}
+
+html.theme-dark .profile-dropdown-container .profile-role,
+html.theme-dark .profile-dropdown-container .profile-password-link,
+html.theme-dark .profile-dropdown-container .profile-footer-link,
+html.theme-dark .profile-dropdown-container .profile-logout-link {
+    color: #94a3b8 !important;
+}
+
+html.theme-dark .profile-dropdown-container .profile-logout-link:hover,
+html.theme-dark .profile-dropdown-container .profile-dropdown-footer button[type="submit"]:hover {
+    background: transparent !important;
+    color: #ffffff !important;
+}
+
+/* ===== Global themed modal headers (all modals app-wide) ===== */
+.modal-header,
+[class*="-modal"] > .modal-header,
+[class*="-modal"] .modal-header:first-child,
+[class*="-modal-header"],
+[class*="-modal"] [class*="-modal-header"] {
+    background: var(--theme-primary, #8b5cf6) !important;
+    border-bottom: none !important;
+    color: #ffffff !important;
+}
+
+.modal-header .modal-title,
+.modal-header h1,
+.modal-header h2,
+.modal-header h3,
+[class*="-modal-header"] h1,
+[class*="-modal-header"] h2,
+[class*="-modal-header"] h3,
+[class*="-modal-header"] .modal-title {
+    color: #ffffff !important;
+}
+
+.modal-header .modal-close-btn,
+.modal-header .close-btn,
+[class*="-modal-header"] .modal-close-btn,
+[class*="-modal-header"] .close {
+    color: #ffffff !important;
+    background: transparent !important;
+    border: none !important;
+}
+
+.modal-header .modal-close-btn:hover,
+[class*="-modal-header"] .modal-close-btn:hover,
+[class*="-modal-header"] .close:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
+}
+
+.modal-footer .btn-submit,
+.modal-footer .btn-save-modal,
+.modal-footer .btn-primary,
+[class*="-modal-footer"] .btn-submit,
+[class*="-modal-footer"] .btn-save-modal,
+[class*="-modal-footer"] .btn-primary,
+[class*="-modal"] .btn-submit,
+[class*="-modal"] .btn-save-modal {
+    background: var(--theme-primary, #8b5cf6) !important;
+    border-color: var(--theme-primary, #8b5cf6) !important;
+    color: #ffffff !important;
+}
+
+.modal-footer .btn-submit:hover,
+.modal-footer .btn-save-modal:hover,
+.modal-footer .btn-primary:hover,
+[class*="-modal-footer"] .btn-submit:hover,
+[class*="-modal-footer"] .btn-save-modal:hover,
+[class*="-modal-footer"] .btn-primary:hover,
+[class*="-modal"] .btn-submit:hover,
+[class*="-modal"] .btn-save-modal:hover {
+    background: var(--theme-primary-dark, #7c3aed) !important;
+    border-color: var(--theme-primary-dark, #7c3aed) !important;
+    color: #ffffff !important;
+}
+
+/* Student fee collect / add fee modals */
+.add-fee-header,
+.collect-selected-header {
+    background: var(--theme-primary, #8b5cf6) !important;
+}
+
+.btn-modal-cancel,
+.btn-modal-collect,
+.btn-collect-pay {
+    background: var(--theme-primary, #8b5cf6) !important;
+}
+
+.btn-modal-cancel:hover,
+.btn-modal-collect:hover,
+.btn-collect-pay:hover {
+    background: var(--theme-primary-dark, #7c3aed) !important;
+}
+
+.sf-collect-back,
+.sf-btn-print-selected {
+    background: var(--theme-primary, #8b5cf6) !important;
+}
+
+.sf-collect-back:hover,
+.sf-btn-print-selected:hover {
+    background: var(--theme-primary-dark, #7c3aed) !important;
+}
+
+/* ===== App-wide themed icon / action buttons (tables, modals, sub-pages) ===== */
+.btn-action,
+.btn-action-icon,
+.action-buttons .btn-action,
+.action-buttons button[class*="btn-"],
+.action-cell .btn-action,
+.action-cell button,
+.data-table .btn-action,
+.data-table button.btn-action,
+[class*="-modal"] .btn-action,
+[class*="-modal"] .btn-action-icon,
+.cbse-modal .btn-action,
+.exam-list-table .btn-action,
+.assigned-table .btn-action,
+.tag-list-panel .btn-action,
+.template-action-grid .btn-action,
+.btn-view,
+.btn-edit,
+.btn-delete,
+.btn-info,
+.btn-assign,
+.btn-download,
+.btn-print,
+.btn-remove-row,
+.btn-marks-entry,
+html.theme-light .icon-action-btn,
+html.theme-light .staff-icon-action-btn,
+html.theme-light .staff-list-action-btn,
+html.theme-light .notification-icon-btn,
+html.theme-dark .icon-action-btn,
+html.theme-dark .staff-icon-action-btn,
+html.theme-dark .staff-list-action-btn,
+html.theme-dark .notification-icon-btn,
+html.theme-light .table-actions .icon-action-btn,
+html.theme-dark .table-actions .icon-action-btn,
+html.theme-light [class*="-table-controls"] .icon-action-btn,
+html.theme-dark [class*="-table-controls"] .icon-action-btn,
+html.theme-light [class*="toolbar"] .icon-action-btn,
+html.theme-dark [class*="toolbar"] .icon-action-btn {
+    background-color: var(--theme-primary) !important;
+    background: var(--theme-primary) !important;
+    border-color: var(--theme-primary) !important;
+    color: #ffffff !important;
+}
+
+.btn-action:hover,
+.btn-action-icon:hover,
+.action-buttons .btn-action:hover,
+.action-buttons button[class*="btn-"]:hover,
+.action-cell .btn-action:hover,
+.action-cell button:hover,
+.data-table .btn-action:hover,
+.data-table button.btn-action:hover,
+[class*="-modal"] .btn-action:hover,
+[class*="-modal"] .btn-action-icon:hover,
+.cbse-modal .btn-action:hover,
+.exam-list-table .btn-action:hover,
+.assigned-table .btn-action:hover,
+.tag-list-panel .btn-action:hover,
+.template-action-grid .btn-action:hover,
+.btn-view:hover,
+.btn-edit:hover,
+.btn-delete:hover,
+.btn-info:hover,
+.btn-assign:hover,
+.btn-download:hover,
+.btn-print:hover,
+.btn-remove-row:hover,
+.btn-marks-entry:hover,
+html.theme-light .icon-action-btn:hover,
+html.theme-light .staff-icon-action-btn:hover,
+html.theme-light .staff-list-action-btn:hover,
+html.theme-light .notification-icon-btn:hover,
+html.theme-dark .icon-action-btn:hover,
+html.theme-dark .staff-icon-action-btn:hover,
+html.theme-dark .staff-list-action-btn:hover,
+html.theme-dark .notification-icon-btn:hover,
+html.theme-light .table-actions .icon-action-btn:hover,
+html.theme-dark .table-actions .icon-action-btn:hover,
+html.theme-light [class*="-table-controls"] .icon-action-btn:hover,
+html.theme-dark [class*="-table-controls"] .icon-action-btn:hover,
+html.theme-light [class*="toolbar"] .icon-action-btn:hover,
+html.theme-dark [class*="toolbar"] .icon-action-btn:hover {
+    background-color: var(--theme-primary-dark) !important;
+    background: var(--theme-primary-dark) !important;
+    border-color: var(--theme-primary-dark) !important;
+    color: #ffffff !important;
+}
+
+.btn-action svg,
+.btn-action-icon svg,
+.action-buttons .btn-action svg,
+.action-cell .btn-action svg,
+.action-cell button svg,
+.data-table .btn-action svg,
+[class*="-modal"] .btn-action svg,
+[class*="-modal"] .btn-action-icon svg,
+.cbse-modal .btn-action svg,
+.exam-list-table .btn-action svg,
+.assigned-table .btn-action svg,
+.tag-list-panel .btn-action svg,
+.template-action-grid .btn-action svg,
+.btn-view svg,
+.btn-edit svg,
+.btn-delete svg,
+.btn-info svg,
+.btn-assign svg,
+.btn-download svg,
+.btn-print svg,
+.btn-remove-row svg,
+.btn-marks-entry svg,
+html.theme-light .icon-action-btn svg,
+html.theme-light .staff-icon-action-btn svg,
+html.theme-light .staff-list-action-btn svg,
+html.theme-light .notification-icon-btn svg,
+html.theme-dark .icon-action-btn svg,
+html.theme-dark .staff-icon-action-btn svg,
+html.theme-dark .staff-list-action-btn svg,
+html.theme-dark .notification-icon-btn svg,
+html.theme-light .table-actions .icon-action-btn svg,
+html.theme-dark .table-actions .icon-action-btn svg,
+html.theme-light [class*="-table-controls"] .icon-action-btn svg,
+html.theme-dark [class*="-table-controls"] .icon-action-btn svg,
+html.theme-light [class*="toolbar"] .icon-action-btn svg,
+html.theme-dark [class*="toolbar"] .icon-action-btn svg {
+    stroke: #ffffff !important;
+    color: #ffffff !important;
+}
+
+/* Modals / sub-pages loaded after app-theme.css */
+.assign-modal .icon-action-btn,
+.assign-modal .assigned-table .btn-action,
+.sf-icon-action-btn,
+.tag-list-panel .icon-action-btn,
+.tag-list-panel .btn-action,
+.onlineexam-page .btn-action-icon {
+    background-color: var(--theme-primary) !important;
+    background: var(--theme-primary) !important;
+    border-color: var(--theme-primary) !important;
+    color: #ffffff !important;
+}
+
+.assign-modal .icon-action-btn:hover,
+.assign-modal .assigned-table .btn-action:hover,
+.sf-icon-action-btn:hover,
+.tag-list-panel .icon-action-btn:hover,
+.tag-list-panel .btn-action:hover,
+.onlineexam-page .btn-action-icon:hover {
+    background-color: var(--theme-primary-dark) !important;
+    background: var(--theme-primary-dark) !important;
+    border-color: var(--theme-primary-dark) !important;
+    color: #ffffff !important;
+}
+
+.assign-modal .icon-action-btn svg,
+.assign-modal .assigned-table .btn-action svg,
+.sf-icon-action-btn svg,
+.tag-list-panel .icon-action-btn svg,
+.tag-list-panel .btn-action svg,
+.onlineexam-page .btn-action-icon svg {
+    stroke: #ffffff !important;
+    color: #ffffff !important;
+}
+

@@ -1,0 +1,206 @@
+/* Lesson Plan Topic page */
+.lessonplan-lesson-page .lesson-name-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.45rem;
+}
+
+.lessonplan-lesson-page .lesson-name-header label {
+    margin-bottom: 0;
+}
+
+.lessonplan-lesson-page .btn-add-more {
+    border: none;
+    border-radius: 4px;
+    background: #8b5cf6;
+    color: #fff;
+    font-family: inherit;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.35rem 0.75rem;
+    cursor: pointer;
+}
+
+.lessonplan-lesson-page .btn-add-more:hover {
+    background: #7c3aed;
+}
+
+.lessonplan-lesson-page .lesson-name-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+}
+
+.lessonplan-lesson-page .lesson-name-row {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.lessonplan-lesson-page .lesson-name-row .form-control {
+    flex: 1;
+}
+
+.lessonplan-lesson-page .btn-remove-lesson {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 4px;
+    background: #ef4444;
+    color: #fff;
+    font-size: 1.2rem;
+    line-height: 1;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.lessonplan-lesson-page .btn-remove-lesson:hover {
+    background: #dc2626;
+}
+
+.lessonplan-lesson-page .lesson-cell-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    white-space: normal;
+}
+
+.lessonplan-lesson-page .lesson-table-controls {
+    margin-top: 0.5rem;
+}
+
+.lessonplan-lesson-page .table-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: nowrap;
+    gap: 0.75rem;
+}
+
+.lessonplan-lesson-page .table-search {
+    flex: 0 1 260px;
+    min-width: 140px;
+}
+
+.lessonplan-lesson-page .table-search-input {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 4px;
+    color: #f1f5f9;
+    font-size: 0.88rem;
+}
+
+.lessonplan-lesson-page .table-actions {
+    display: inline-flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.35rem;
+    flex-shrink: 0;
+}
+
+.lessonplan-lesson-page .entries-select {
+    padding: 0.45rem 1.75rem 0.45rem 0.65rem;
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 4px;
+    color: #f1f5f9;
+    font-size: 0.88rem;
+    flex-shrink: 0;
+}
+
+.lessonplan-lesson-page .icon-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    padding: 0;
+    flex-shrink: 0;
+}
+
+.lessonplan-lesson-page .icon-action-btn svg {
+    width: 14px;
+    height: 14px;
+}
+
+.lessonplan-lesson-page .data-table td:last-child {
+    white-space: nowrap;
+    vertical-align: middle;
+    width: 1%;
+}
+
+.lessonplan-lesson-page .action-buttons {
+    display: inline-flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.35rem;
+    white-space: nowrap;
+}
+
+.lessonplan-lesson-page .btn-action {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    padding: 0;
+    flex-shrink: 0;
+}
+
+.lessonplan-lesson-page .btn-action svg {
+    width: 14px;
+    height: 14px;
+}
+
+.lessonplan-lesson-page .table-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.lessonplan-lesson-page .showing-info {
+    color: #94a3b8;
+    font-size: 0.84rem;
+}
+
+.lessonplan-lesson-page .pagination {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.lessonplan-lesson-page .pagination-btn {
+    min-width: 32px;
+    height: 32px;
+    border: 1px solid #334155;
+    border-radius: 4px;
+    background: #0f172a;
+    color: #e2e8f0;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.84rem;
+}
+
+.lessonplan-lesson-page .pagination-btn.active {
+    background: #8b5cf6;
+    border-color: #8b5cf6;
+    color: #fff;
+}
+
+.lessonplan-lesson-page .pagination-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+@media (max-width: 1100px) {
+    .lessonplan-lesson-page .subjectgroup-container {
+        grid-template-columns: 1fr;
+    }
+}

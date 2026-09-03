@@ -1,0 +1,276 @@
+/* Gmeet Live Classes Report */
+.gmeet-classreport-page {
+    background: #e8edf2;
+    padding: 20px;
+    min-height: calc(100vh - 80px);
+}
+
+.gmeet-classreport-page .criteria-section,
+.gmeet-classreport-page .report-section {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem 1.5rem;
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto 1.25rem;
+}
+
+.gmeet-classreport-page .section-title {
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 1.1rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid #334155;
+}
+
+.gmeet-classreport-page .criteria-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.gmeet-classreport-page .criteria-row .form-group {
+    flex: 1 1 180px;
+    max-width: 260px;
+    display: flex;
+    flex-direction: column;
+}
+
+.gmeet-classreport-page .criteria-row .form-submit {
+    flex: 0 0 auto;
+    max-width: none;
+}
+
+.gmeet-classreport-page .form-group label {
+    color: #e2e8f0;
+    font-size: 0.88rem;
+    font-weight: 500;
+    margin-bottom: 0.45rem;
+}
+
+.gmeet-classreport-page .form-select {
+    background: #0f172a;
+    border: 1px solid #334155;
+    color: #f1f5f9;
+    padding: 0.6rem 2rem 0.6rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    width: 100%;
+    height: 40px;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    cursor: pointer;
+}
+
+.gmeet-classreport-page .form-select:focus {
+    outline: none;
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+}
+
+.gmeet-classreport-page .required {
+    color: #ef4444;
+}
+
+.gmeet-classreport-page .btn-search {
+    background: #8b5cf6;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    height: 40px;
+    padding: 0 1.35rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    min-width: 110px;
+}
+
+.gmeet-classreport-page .btn-search:hover {
+    background: #7c3aed;
+}
+
+.gmeet-classreport-page .no-record-box {
+    background: #dbeafe;
+    border: 1px solid #93c5fd;
+    border-radius: 4px;
+    color: #1e40af;
+    font-size: 0.95rem;
+    padding: 0.85rem 1rem;
+    margin: 0;
+}
+
+.gmeet-classreport-page .table-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.gmeet-classreport-page .table-search {
+    position: relative;
+    flex: 1;
+    min-width: 180px;
+    max-width: 260px;
+}
+
+.gmeet-classreport-page .table-search-icon {
+    position: absolute;
+    left: 0.7rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #64748b;
+    pointer-events: none;
+}
+
+.gmeet-classreport-page .table-search-input,
+.gmeet-classreport-page .entries-select {
+    background: #0f172a;
+    border: 1px solid #334155;
+    color: #f1f5f9;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-family: inherit;
+}
+
+.gmeet-classreport-page .table-search-input {
+    width: 100%;
+    padding: 0.55rem 0.75rem 0.55rem 2.1rem;
+    height: 36px;
+}
+
+.gmeet-classreport-page .entries-select {
+    padding: 0.45rem 0.6rem;
+    height: 36px;
+    cursor: pointer;
+}
+
+.gmeet-classreport-page .table-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.gmeet-classreport-page .icon-action-btn {
+    background: transparent;
+    border: none;
+    color: #e2e8f0;
+    padding: 0.35rem;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gmeet-classreport-page .icon-action-btn:hover {
+    background: #334155;
+    color: #fff;
+}
+
+.gmeet-classreport-page .table-responsive {
+    overflow-x: auto;
+}
+
+.gmeet-classreport-page .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1100px;
+}
+
+.gmeet-classreport-page .data-table th,
+.gmeet-classreport-page .data-table td {
+    padding: 0.75rem 0.7rem;
+    border-bottom: 1px solid #334155;
+    color: #e2e8f0;
+    font-size: 0.88rem;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.gmeet-classreport-page .data-table th {
+    color: #94a3b8;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.gmeet-classreport-page .data-table tbody tr:hover {
+    background: rgba(148, 163, 184, 0.08);
+}
+
+.gmeet-classreport-page .sort-icon {
+    color: #64748b;
+    font-size: 0.75rem;
+    margin-left: 0.2rem;
+}
+
+.gmeet-classreport-page .table-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid #334155;
+}
+
+.gmeet-classreport-page .showing-info {
+    color: #94a3b8;
+    font-size: 0.85rem;
+}
+
+.gmeet-classreport-page .pagination {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.gmeet-classreport-page .pagination-btn {
+    min-width: 32px;
+    height: 32px;
+    border: 1px solid #334155;
+    background: #0f172a;
+    color: #e2e8f0;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.gmeet-classreport-page .pagination-btn:hover:not(:disabled) {
+    background: #334155;
+}
+
+.gmeet-classreport-page .pagination-btn.active {
+    background: #8b5cf6;
+    border-color: #8b5cf6;
+    color: #fff;
+}
+
+.gmeet-classreport-page .pagination-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.gmeet-classreport-page .empty-state {
+    text-align: center;
+    padding: 1.5rem 1rem;
+}
+
+.gmeet-classreport-page .empty-message {
+    margin: 0;
+    color: #94a3b8;
+}
+
+.gmeet-classreport-page .report-results[hidden] {
+    display: none !important;
+}

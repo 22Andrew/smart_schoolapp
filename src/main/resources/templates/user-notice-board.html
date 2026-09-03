@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+      th:replace="~{fragments/user-layout :: layout(~{::title}, ~{::.user-page-card})}">
+<head>
+    <title th:text="|${schoolName} - Notice Board|">Mount Carmel School - Notice Board</title>
+</head>
+<body>
+<div class="user-page-card">
+        <div class="user-page-header">
+            <h1>Notice Board</h1>
+        </div>
+
+        <div class="user-notice-page-list">
+            <article class="user-notice-page-item" th:each="notice : ${notices}">
+                <div class="user-notice-page-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                </div>
+                <div class="user-notice-page-body">
+                    <h3 th:text="${notice.title}">Notice title</h3>
+                    <p th:text="${notice.message}">Notice message</p>
+                    <span class="user-notice-page-date" th:text="${notice.date}">08/18/2026</span>
+                </div>
+            </article>
+            <div class="user-empty-cell" th:if="${#lists.isEmpty(notices)}">No notices found</div>
+        </div>
+</div>
+</body>
+</html>

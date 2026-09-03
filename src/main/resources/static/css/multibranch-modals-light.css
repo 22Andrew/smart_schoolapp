@@ -1,0 +1,138 @@
+/* Multi Branch – light modal theme + backend theme color */
+
+.branch-modal-dialog,
+.assign-modal-dialog {
+    background: #ffffff !important;
+    border-color: #e5e7eb !important;
+}
+
+.branch-modal-header,
+.assign-modal-header,
+.assign-modal-header.purple-header {
+    background: var(--theme-primary, #8b5cf6) !important;
+    border-bottom-color: transparent !important;
+}
+
+.branch-modal-header h3,
+.assign-modal-header h3 {
+    color: #ffffff !important;
+}
+
+.branch-modal-close,
+.assign-modal-close {
+    color: #ffffff !important;
+}
+
+.branch-modal-body,
+.assign-modal-body,
+.view-assigned-body {
+    background: #ffffff !important;
+}
+
+.branch-modal-footer,
+.assign-modal-footer {
+    background: #f8fafc !important;
+    border-top-color: #e5e7eb !important;
+}
+
+.branch-modal .branch-section-title,
+.branch-modal .form-group label {
+    color: #374151 !important;
+}
+
+.branch-modal .form-input {
+    background: #ffffff !important;
+    border: 1px solid #d1d5db !important;
+    color: #111827 !important;
+}
+
+.branch-modal .form-input:focus {
+    border-color: var(--theme-primary, #8b5cf6) !important;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--theme-primary, #8b5cf6) 18%, transparent) !important;
+}
+
+.branch-modal .btn-save,
+.assign-modal .btn-save {
+    background: var(--theme-primary, #8b5cf6) !important;
+    color: #ffffff !important;
+}
+
+.branch-modal .btn-save:hover,
+.assign-modal .btn-save:hover {
+    background: var(--theme-primary-dark, #7c3aed) !important;
+}
+
+.assign-modal .table-search-input,
+.assign-modal .entries-select {
+    background: #ffffff !important;
+    border: 1px solid #d1d5db !important;
+    color: #111827 !important;
+}
+
+.assign-modal .table-search-input:focus,
+.assign-modal .entries-select:focus {
+    border-color: var(--theme-primary, #8b5cf6) !important;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--theme-primary, #8b5cf6) 18%, transparent) !important;
+}
+
+.assign-modal .table-search-icon {
+    color: #64748b !important;
+}
+
+.assign-modal .icon-action-btn {
+    background: var(--theme-primary, #8b5cf6) !important;
+    border: 1px solid var(--theme-primary, #8b5cf6) !important;
+    color: #ffffff !important;
+}
+
+.assign-modal .icon-action-btn:hover {
+    border-color: var(--theme-primary-dark, #7c3aed) !important;
+    color: #ffffff !important;
+    background: var(--theme-primary-dark, #7c3aed) !important;
+}
+
+.assign-modal .icon-action-btn svg {
+    stroke: #ffffff !important;
+}
+
+.assign-modal .showing-info {
+    color: #64748b !important;
+}
+
+.assign-modal .pagination-btn.active,
+.assign-modal .pagination-btn:hover:not(:disabled) {
+    background: var(--theme-primary, #8b5cf6) !important;
+    border-color: var(--theme-primary, #8b5cf6) !important;
+    color: #ffffff !important;
+}
+
+.assign-modal .pagination-btn {
+    background: #ffffff !important;
+    border: 1px solid #d1d5db !important;
+    color: #475569 !important;
+}
+
+.assign-modal .assigned-table thead th {
+    background: #f8fafc !important;
+    color: #475569 !important;
+    border-bottom-color: #e5e7eb !important;
+}
+
+.assign-modal .assigned-table tbody td {
+    background: #ffffff !important;
+    color: #334155 !important;
+    border-bottom-color: #f1f5f9 !important;
+}
+
+.assign-modal .assigned-table tbody tr:hover td {
+    background: #f8fafc !important;
+}
+
+.assign-modal .assigned-table tbody tr.empty-row td {
+    background: #ffffff !important;
+    color: #64748b !important;
+}
+
+.assign-modal .sort-icon {
+    color: #94a3b8 !important;
+}

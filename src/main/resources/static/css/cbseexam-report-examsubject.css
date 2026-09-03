@@ -1,0 +1,259 @@
+/* CBSE Exam Subject Marks Report */
+.cbse-report-page {
+    background: #e8edf2;
+    padding: 20px;
+    min-height: calc(100vh - 80px);
+}
+
+.cbse-report-panel,
+.report-content-panel {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem 1.5rem;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.report-content-panel {
+    margin-top: 1rem;
+}
+
+.section-title {
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 1rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid #334155;
+}
+
+.report-tabs {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.report-tab {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.55rem 0.9rem;
+    border-radius: 4px;
+    color: #e2e8f0;
+    text-decoration: none;
+    font-size: 0.88rem;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.report-tab:hover {
+    background: rgba(148, 163, 184, 0.12);
+    color: #fff;
+}
+
+.report-tab.active {
+    background: #e2e8f0;
+    color: #0f172a;
+    font-weight: 600;
+}
+
+.report-subtitle {
+    color: #f1f5f9;
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 1rem;
+}
+
+.report-filter-form {
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+}
+
+.report-filter-form .form-group {
+    flex: 1 1 320px;
+    max-width: 420px;
+}
+
+.report-filter-form label {
+    display: block;
+    color: #e2e8f0;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 0.45rem;
+}
+
+.required {
+    color: #ef4444;
+}
+
+.form-select {
+    width: 100%;
+    height: 40px;
+    box-sizing: border-box;
+    padding: 0.55rem 0.75rem;
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 4px;
+    color: #f1f5f9;
+    font-size: 0.88rem;
+    font-family: inherit;
+}
+
+.form-select:focus {
+    outline: none;
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+}
+
+.btn-search {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: #8b5cf6;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    height: 40px;
+    padding: 0 1.1rem;
+    font-size: 0.88rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.btn-search:hover {
+    background: #7c3aed;
+}
+
+.report-table-section {
+    border-top: 1px solid #334155;
+    padding-top: 1rem;
+}
+
+.table-toolbar {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 0.75rem;
+}
+
+.table-toolbar-actions {
+    display: flex;
+    gap: 0.45rem;
+}
+
+.icon-action-btn {
+    background: #8b5cf6;
+    border: none;
+    color: #fff;
+    width: 34px;
+    height: 34px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.icon-action-btn:hover {
+    background: #7c3aed;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.subject-marks-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 980px;
+}
+
+.subject-marks-table th,
+.subject-marks-table td {
+    border: 1px solid #334155;
+    padding: 0.55rem 0.65rem;
+    text-align: center;
+    color: #e2e8f0;
+    font-size: 0.82rem;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.subject-marks-table thead th {
+    background: #0f172a;
+    color: #f8fafc;
+    font-weight: 600;
+}
+
+.subject-marks-table tbody tr:nth-child(even) {
+    background: rgba(15, 23, 42, 0.35);
+}
+
+.subject-marks-table tbody tr:hover {
+    background: rgba(139, 92, 246, 0.08);
+}
+
+.subject-marks-table .student-cell {
+    text-align: left;
+    white-space: normal;
+    min-width: 120px;
+}
+
+.subject-marks-table .sub-header {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #cbd5e1;
+}
+
+.subject-marks-table .abs-mark {
+    color: #f87171;
+    font-weight: 600;
+}
+
+.report-filter-form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(180px, 1fr)) auto;
+    gap: 1rem;
+    align-items: end;
+}
+
+.report-filter-form-grid .form-group {
+    max-width: none;
+    flex: unset;
+}
+
+.report-filter-form-grid .btn-search {
+    justify-self: end;
+}
+
+@media (max-width: 992px) {
+    .report-filter-form-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .report-filter-form-grid .btn-search {
+        grid-column: 1 / -1;
+        justify-self: stretch;
+    }
+}
+
+@media (max-width: 768px) {
+    .cbse-report-page {
+        padding: 12px;
+    }
+
+    .report-filter-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .report-filter-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .report-filter-form .form-group {
+        max-width: none;
+    }
+}

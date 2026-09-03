@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+      th:replace="~{fragments/user-layout :: layout(~{::title}, ~{::#user-hostelroom-page})}">
+<head>
+    <title th:text="|${schoolName} - Hostel Rooms|">Mount Carmel School - Hostel Rooms</title>
+</head>
+<body>
+<div id="user-hostelroom-page" class="ugm-page uhr-page">
+    <link rel="stylesheet" th:href="@{/css/user-gmeet.css}">
+    <link rel="stylesheet" th:href="@{/css/user-hostelroom.css}">
+
+    <div class="ugm-card">
+        <div class="ugm-header">
+            <h1 class="ugm-title">Hostel Rooms</h1>
+        </div>
+
+        <div class="ugm-toolbar">
+            <div class="ugm-search">
+                <input type="text" id="uhrSearchInput" class="ugm-search-input" placeholder="Search" autocomplete="off">
+            </div>
+            <div class="ugm-toolbar-right">
+                <select class="ugm-entries-select" id="uhrEntriesSelect" aria-label="Rows per page">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50" selected>50</option>
+                    <option value="100">100</option>
+                </select>
+                <div class="ugm-actions table-actions">
+                    <button type="button" class="icon-action-btn" id="uhrCopyBtn" title="Copy">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    </button>
+                    <button type="button" class="icon-action-btn" id="uhrExcelBtn" title="Excel">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                    </button>
+                    <button type="button" class="icon-action-btn" id="uhrCsvBtn" title="CSV">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                    </button>
+                    <button type="button" class="icon-action-btn" id="uhrPdfBtn" title="PDF">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M10 12h4"></path><path d="M10 16h4"></path></svg>
+                    </button>
+                    <button type="button" class="icon-action-btn" id="uhrPrintBtn" title="Print">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                    </button>
+                    <div class="column-visibility-wrap ugm-colvis-wrap">
+                        <button type="button" class="icon-action-btn" id="uhrColumnsBtn" title="Column Visibility">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                        </button>
+                        <div class="column-visibility-dropdown" id="uhrColumnsDropdown">
+                            <div class="dropdown-header"><span>Toggle Columns</span></div>
+                            <div class="dropdown-content">
+                                <label class="column-toggle-item"><input type="checkbox" class="uhr-column-toggle" data-column="0" checked><span>Hostel</span></label>
+                                <label class="column-toggle-item"><input type="checkbox" class="uhr-column-toggle" data-column="1" checked><span>Room Type</span></label>
+                                <label class="column-toggle-item"><input type="checkbox" class="uhr-column-toggle" data-column="2" checked><span>Room Number / Name</span></label>
+                                <label class="column-toggle-item"><input type="checkbox" class="uhr-column-toggle" data-column="3" checked><span>No Of Bed</span></label>
+                                <label class="column-toggle-item"><input type="checkbox" class="uhr-column-toggle" data-column="4" checked><span>Status</span></label>
+                                <label class="column-toggle-item"><input type="checkbox" class="uhr-column-toggle" data-column="5" checked><span>Cost Per Bed</span></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ugm-table-wrap">
+            <table class="ugm-table data-table uhr-table" id="uhrTable">
+                <thead>
+                    <tr>
+                        <th data-sort="hostel">Hostel <span class="sort-icon">↕</span></th>
+                        <th data-sort="roomType">Room Type <span class="sort-icon">↕</span></th>
+                        <th data-sort="roomNumber">Room Number / Name <span class="sort-icon">↕</span></th>
+                        <th data-sort="numberOfBed">No Of Bed <span class="sort-icon">↕</span></th>
+                        <th data-sort="status">Status <span class="sort-icon">↕</span></th>
+                        <th data-sort="costPerBed">Cost Per Bed <span class="sort-icon">↕</span></th>
+                    </tr>
+                </thead>
+                <tbody id="uhrTableBody">
+                    <tr class="ugm-empty-row">
+                        <td colspan="6">Loading hostel rooms...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="ugm-footer">
+            <div class="ugm-showing" id="uhrShowingInfo">Showing 0 to 0 of 0 entries</div>
+            <div class="ugm-pagination" id="uhrPagination"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script th:src="@{/js/user-hostelroom.js}"></script>
+</div>
+</body>
+</html>

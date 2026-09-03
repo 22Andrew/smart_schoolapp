@@ -1,0 +1,745 @@
+/* Student Fees / Add Fee Page */
+.studentfee-page {
+    background: #e8edf2;
+    padding: 20px;
+    min-height: calc(100vh - 80px);
+}
+
+.page-header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.page-title {
+    margin: 0;
+    color: #1e293b;
+    font-size: 1.35rem;
+    font-weight: 600;
+}
+
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #6366f1;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    height: 36px;
+    padding: 0 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.btn-back:hover {
+    background: #4f46e5;
+    color: #fff;
+}
+
+.student-info-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.student-photo {
+    width: 96px;
+    height: 96px;
+    background: #cbd5e1;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.student-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.photo-placeholder {
+    color: #64748b;
+}
+
+.student-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.35rem 2.5rem;
+    flex: 1;
+}
+
+.detail-row {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 0.75rem;
+    padding: 0.35rem 0;
+    color: #e2e8f0;
+    font-size: 0.9rem;
+}
+
+.detail-row .label {
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.detail-row .value {
+    color: #f1f5f9;
+}
+
+.rte-value {
+    color: #ef4444 !important;
+    font-weight: 600;
+}
+
+.action-meta-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.6rem;
+}
+
+.btn-print-selected,
+.btn-collect-selected {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: none;
+    border-radius: 4px;
+    height: 38px;
+    padding: 0 1rem;
+    color: #fff;
+    font-size: 0.88rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.btn-print-selected {
+    background: #8b5cf6;
+}
+
+.btn-print-selected:hover {
+    background: #7c3aed;
+}
+
+.btn-collect-selected {
+    background: #f59e0b;
+}
+
+.btn-collect-selected:hover {
+    background: #d97706;
+}
+
+.session-text,
+.date-text {
+    color: #334155;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.fees-table-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 1rem 1.25rem 1.25rem;
+}
+
+.table-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 0.75rem;
+}
+
+.table-actions {
+    display: flex;
+    gap: 0.35rem;
+}
+
+.icon-action-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #334155;
+    background: #0f172a;
+    color: #cbd5e1;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.icon-action-btn:hover {
+    border-color: #8b5cf6;
+    color: #fff;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.fees-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1200px;
+}
+
+.fees-table thead th {
+    background: #243342;
+    color: #e2e8f0;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-align: left;
+    padding: 0.7rem 0.55rem;
+    border-bottom: 1px solid #334155;
+    white-space: nowrap;
+}
+
+.fees-table tbody td {
+    color: #cbd5e1;
+    font-size: 0.82rem;
+    padding: 0.65rem 0.55rem;
+    border-bottom: 1px solid #334155;
+    vertical-align: middle;
+}
+
+.fees-table tbody tr.row-unpaid,
+.fees-table tbody tr.row-partial {
+    background: rgba(239, 68, 68, 0.12);
+}
+
+.fees-table tbody tr.row-paid {
+    background: transparent;
+}
+
+.fees-table tbody tr.payment-row {
+    background: rgba(15, 23, 42, 0.65);
+}
+
+.fees-table tbody tr.payment-row td:nth-child(2) {
+    padding-left: 1.5rem;
+    color: #94a3b8;
+}
+
+.status-badge {
+    display: inline-block;
+    min-width: 68px;
+    text-align: center;
+    border-radius: 3px;
+    padding: 0.2rem 0.45rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+.status-unpaid { background: #ef4444; }
+.status-partial { background: #f59e0b; }
+.status-paid { background: #22c55e; }
+
+.action-btns {
+    display: flex;
+    gap: 0.3rem;
+}
+
+.btn-mini {
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 3px;
+    background: #334155;
+    color: #e2e8f0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.btn-mini:hover {
+    background: #475569;
+}
+
+.fees-table input[type="checkbox"] {
+    accent-color: #8b5cf6;
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+}
+
+/* Add Fee Modal */
+.add-fee-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.add-fee-modal.active {
+    display: flex;
+}
+
+.add-fee-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(2, 6, 23, 0.72);
+}
+
+.add-fee-dialog {
+    position: relative;
+    width: min(720px, 100%);
+    background: #1e293b;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+    border: 1px solid #334155;
+}
+
+.add-fee-header {
+    background: #8b5cf6;
+    color: #fff;
+    padding: 0.9rem 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.add-fee-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+.add-fee-close {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 1.6rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 0.2rem;
+}
+
+.add-fee-body {
+    padding: 1.25rem 1.35rem 1rem;
+}
+
+.add-fee-row {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 0.85rem;
+    align-items: center;
+    margin-bottom: 0.95rem;
+}
+
+.add-fee-row.twin {
+    align-items: start;
+}
+
+.add-fee-row label {
+    color: #e2e8f0;
+    font-size: 0.9rem;
+    text-align: right;
+}
+
+.add-fee-row .required {
+    color: #ef4444;
+}
+
+.readonly-value {
+    color: #f1f5f9;
+    font-size: 0.95rem;
+}
+
+.discount-msg {
+    color: #ef4444;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.add-fee-input,
+.add-fee-textarea {
+    width: 100%;
+    background: #0f172a;
+    border: 1px solid #475569;
+    border-radius: 4px;
+    color: #f1f5f9;
+    font-family: inherit;
+    font-size: 0.9rem;
+    box-sizing: border-box;
+}
+
+.add-fee-input {
+    height: 40px;
+    padding: 0 0.75rem;
+}
+
+.add-fee-textarea {
+    min-height: 96px;
+    padding: 0.65rem 0.75rem;
+    resize: vertical;
+}
+
+.add-fee-input:focus,
+.add-fee-textarea:focus {
+    outline: none;
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+}
+
+.twin .twin-field {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
+}
+
+.twin {
+    grid-template-columns: 160px 1fr;
+}
+
+.twin > .twin-field:first-child {
+    grid-column: 2;
+}
+
+.add-fee-row.twin {
+    display: flex;
+    gap: 1rem;
+    align-items: end;
+}
+
+.add-fee-row.twin > label {
+    display: none;
+}
+
+.add-fee-row.twin .twin-field {
+    flex: 1;
+}
+
+.add-fee-row.twin .twin-field label {
+    display: block;
+    text-align: left;
+    margin-bottom: 0.4rem;
+}
+
+.payment-modes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem 1.1rem;
+}
+
+.mode-option {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 0.4rem;
+    color: #e2e8f0 !important;
+    text-align: left !important;
+    cursor: pointer;
+    margin: 0;
+    font-size: 0.88rem;
+}
+
+.mode-option input {
+    accent-color: #8b5cf6;
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+}
+
+.add-fee-footer {
+    border-top: 1px solid #334155;
+    padding: 0.95rem 1.25rem 1.1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.footer-actions {
+    display: flex;
+    gap: 0.55rem;
+}
+
+.btn-modal-cancel,
+.btn-modal-collect {
+    background: #8b5cf6;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    height: 38px;
+    padding: 0 1.1rem;
+    font-size: 0.88rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.btn-modal-cancel:hover,
+.btn-modal-collect:hover {
+    background: #7c3aed;
+}
+
+/* Collect Selected Modal */
+.collect-selected-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1210;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.collect-selected-modal.active {
+    display: flex;
+}
+
+.collect-selected-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(2, 6, 23, 0.72);
+}
+
+.collect-selected-dialog {
+    position: relative;
+    width: min(760px, 100%);
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+}
+
+.collect-selected-header {
+    background: #8b5cf6;
+    color: #fff;
+    padding: 0.9rem 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.collect-selected-title {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+.collect-selected-close {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 1.6rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.collect-selected-body {
+    padding: 1.25rem 1.4rem 1rem;
+}
+
+.collect-form-row {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 0.85rem;
+    align-items: start;
+    margin-bottom: 1rem;
+}
+
+.collect-form-row label {
+    color: #e2e8f0;
+    font-size: 0.9rem;
+    text-align: right;
+    padding-top: 0.55rem;
+}
+
+.collect-input,
+.collect-textarea,
+.collect-paying-input {
+    width: 100%;
+    background: #0f172a;
+    border: 1px solid #475569;
+    border-radius: 4px;
+    color: #f1f5f9;
+    font-family: inherit;
+    font-size: 0.9rem;
+    box-sizing: border-box;
+}
+
+.collect-input,
+.collect-paying-input {
+    height: 40px;
+    padding: 0 0.75rem;
+}
+
+.collect-textarea {
+    min-height: 84px;
+    padding: 0.65rem 0.75rem;
+    resize: vertical;
+}
+
+.collect-input:focus,
+.collect-textarea:focus,
+.collect-paying-input:focus {
+    outline: none;
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+}
+
+.bulk-modes {
+    padding-top: 0.35rem;
+}
+
+.collect-fees-table-wrap {
+    border-top: 1px solid #334155;
+    border-bottom: 1px solid #334155;
+    margin: 0.5rem 0 1rem;
+    padding: 0.75rem 0;
+}
+
+.collect-fees-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.collect-fees-table th,
+.collect-fees-table td {
+    padding: 0.65rem 0.5rem;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+.collect-fees-table thead th {
+    color: #e2e8f0;
+    font-weight: 600;
+    border-bottom: 1px solid #334155;
+}
+
+.collect-fees-table tbody td {
+    color: #a78bfa;
+    border-bottom: 1px solid #334155;
+}
+
+.collect-fees-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.collect-total-row td {
+    color: #f1f5f9 !important;
+    font-weight: 700;
+    border-top: 1px solid #475569;
+    padding-top: 0.85rem;
+}
+
+.collect-paying-row {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 0.85rem;
+    align-items: center;
+    margin-top: 0.5rem;
+}
+
+.collect-paying-row label {
+    color: #e2e8f0;
+    font-size: 0.9rem;
+}
+
+.collect-paying-input {
+    border: none;
+    border-bottom: 1px solid #cbd5e1;
+    border-radius: 0;
+    background: transparent;
+    text-align: right;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.collect-selected-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0.85rem 1.25rem 1.15rem;
+}
+
+.btn-collect-pay {
+    background: #8b5cf6;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    height: 40px;
+    padding: 0 1.35rem;
+    font-size: 0.92rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.btn-collect-pay:hover {
+    background: #7c3aed;
+}
+
+@media (max-width: 900px) {
+    .student-details-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .action-meta-bar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 640px) {
+    .collect-form-row,
+    .collect-paying-row {
+        grid-template-columns: 1fr;
+    }
+
+    .collect-form-row label {
+        text-align: left;
+        padding-top: 0;
+    }
+}
+
+@media (max-width: 640px) {
+    .add-fee-row {
+        grid-template-columns: 1fr;
+    }
+
+    .add-fee-row label {
+        text-align: left;
+    }
+
+    .add-fee-row.twin {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .add-fee-footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .footer-actions {
+        flex-direction: column;
+    }
+}
