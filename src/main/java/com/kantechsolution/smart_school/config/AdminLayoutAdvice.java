@@ -6,6 +6,7 @@ import com.kantechsolution.smart_school.service.AppBrandingService;
 import com.kantechsolution.smart_school.service.AppLanguageService;
 import com.kantechsolution.smart_school.service.AppLanguageTranslationService;
 import com.kantechsolution.smart_school.service.RoleSidebarMenuService;
+import com.kantechsolution.smart_school.service.SchoolWhatsappSettingService;
 import com.kantechsolution.smart_school.service.StaffSessionService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class AdminLayoutAdvice {
     private final AppBrandingService appBrandingService;
     private final AppLanguageService appLanguageService;
     private final AppLanguageTranslationService appLanguageTranslationService;
+    private final SchoolWhatsappSettingService whatsappSettingService;
 
     @ModelAttribute("headerLanguages")
     public List<Map<String, Object>> headerLanguages() {
@@ -86,6 +88,22 @@ public class AdminLayoutAdvice {
     @ModelAttribute("noticeCount")
     public long noticeCount() {
         return noticeBoardRepository.count();
+    }
+
+    @ModelAttribute("chatPageActive")
+    public boolean chatPageActive(jakarta.servlet.http.HttpServletRequest request) {
+        String uri = request.getRequestURI();
+        return uri != null && uri.contains("/admin/chat");
+    }
+
+    @ModelAttribute("adminWhatsappUrl")
+    public String adminWhatsappUrl() {
+        return whatsappSettingService.getAdminPanelWhatsappUrl();
+    }
+
+    @ModelAttribute("userWhatsappUrl")
+    public String userWhatsappUrl() {
+        return whatsappSettingService.getStudentGuardianPanelWhatsappUrl();
     }
 
     @ModelAttribute("teacherSidebar")
@@ -190,5 +208,13 @@ public class AdminLayoutAdvice {
     @ModelAttribute("staffUserEmail")
     public String staffUserEmail(Authentication authentication) {
         return staffSessionService.resolve(authentication).getEmail();
+    }
+
+    @ModelAttribute("staffProfileImageUrl")
+    public String staffProfileImageUrl(Authentication authentication) {
+        if (!staffSessionService.isStaffPanelUser(authentication)) {
+            return null;
+        }
+        return staffSessionService.resolveProfileImageUrl(authentication);
     }
 }

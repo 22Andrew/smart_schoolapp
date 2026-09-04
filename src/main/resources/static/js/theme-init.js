@@ -144,8 +144,10 @@
                 ? 'color-mix(in srgb, ' + primary + ' 14%, #ffffff)'
                 : 'color-mix(in srgb, ' + primary + ' 22%, #1e293b)'
         );
-        root.style.setProperty('--theme-primary-sidebar-text', primary);
+        root.style.setProperty('--theme-primary-sidebar-text', mode === 'light' ? primary : '#ffffff');
         root.style.setProperty('--theme-primary-sidebar-border', primary);
+        root.style.setProperty('--nav-chrome-fg', mode === 'light' ? '#000000' : '#ffffff');
+        root.style.setProperty('--nav-chrome-icon', mode === 'light' ? '#000000' : '#ffffff');
         root.style.backgroundColor = mode === 'light' ? '#ffffff' : '#0f172a';
         root.style.color = mode === 'light' ? '#111827' : '#f8fafc';
 

@@ -5,14 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat System - Smart School</title>
-    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
-    <link rel="stylesheet" th:href="@{/css/chat-system.css}">
-    <link rel="stylesheet" th:href="@{/css/app-theme.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css(v=20260903-1)}">
+    <link rel="stylesheet" th:href="@{/css/chat-system.css(v=20260903-1)}">
+    <link rel="stylesheet" th:href="@{/css/app-theme.css(v=20260830-7)}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body>
+<body class="chat-system-page">
     <nav th:replace="~{fragments/top-navbar :: top-navbar}"></nav>
 
     <div class="main-container">
@@ -81,7 +81,8 @@
         </div>
     </div>
 
-    <script th:src="@{/js/dashboard.js}"></script>
-    <script th:src="@{/js/chat-system.js}"></script>
+    <script th:src="@{/js/language-picker.js(v=20260831-4)}"></script>
+    <script th:src="@{/js/dashboard.js(v=20260903-1)}"></script>
+    <script th:src="@{/js/chat-system.js(v=20260903-1)}"></script>
 </body>
 </html>

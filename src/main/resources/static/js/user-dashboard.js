@@ -120,9 +120,21 @@
                 }
             }
 
-            dropdown.querySelectorAll('.profile-avatar img').forEach(function (img) {
+            dropdown.querySelectorAll('.profile-avatar img, .profile-btn-avatar').forEach(function (img) {
                 img.classList.add('profile-avatar-img');
+                img.style.display = '';
             });
+
+            var header = dropdown.querySelector('.profile-dropdown-header');
+            if (header && !header.querySelector('.profile-avatar')) {
+                var profileName = dropdown.querySelector('.profile-name');
+                var name = profileName ? profileName.textContent.trim() : 'Student';
+                var avatarWrap = document.createElement('div');
+                avatarWrap.className = 'profile-avatar';
+                avatarWrap.innerHTML = '<img class="profile-avatar-img" src="https://ui-avatars.com/api/?name='
+                    + encodeURIComponent(name) + '&background=e2e8f0&color=64748b&size=128" alt="Profile Picture">';
+                header.insertBefore(avatarWrap, header.firstChild);
+            }
 
             dropdown.dataset.enhanced = 'true';
         }
@@ -191,8 +203,42 @@
         initProfileDropdown();
         initProfileTabs();
         initActiveSubmenu();
+        initHeaderWhatsappLink();
         if (window.initLanguagePicker) {
             window.initLanguagePicker();
         }
     });
+
+    function getWhatsappPanelContext() {
+        return 'student';
+    }
+
+    async function fetchWhatsappHeaderUrl(panel) {
+        try {
+            const response = await fetch('/api/schsettings/whatsapp/link?panel=' + encodeURIComponent(panel || 'student'));
+            if (!response.ok) {
+                return '';
+            }
+            const payload = await response.json();
+            return payload && payload.enabled && payload.url ? payload.url : '';
+        } catch (error) {
+            return '';
+        }
+    }
+
+    function initHeaderWhatsappLink() {
+        document.querySelectorAll('.user-top-navbar .icon-btn-whatsapp:not([href])').forEach(function (el) {
+            if (el.dataset.whatsappBound === 'true') {
+                return;
+            }
+            el.dataset.whatsappBound = 'true';
+            el.addEventListener('click', async function (event) {
+                event.preventDefault();
+                const url = await fetchWhatsappHeaderUrl(getWhatsappPanelContext());
+                if (url) {
+                    window.open(url, '_blank', 'noopener,noreferrer');
+                }
+            });
+        });
+    }
 })();

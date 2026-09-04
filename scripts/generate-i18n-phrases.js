@@ -57,6 +57,9 @@ function isValidPhrase(text) {
   if (!/[A-Za-z]/.test(text)) return false;
   if (text.includes('${') || text.includes('#{') || text.includes('[[${')) return false;
   if (text.includes("' +") || text.includes("+ '") || text.includes(' + ')) return false;
+  if (/^['"\`]|['"\`]$/.test(text)) return false;
+  if (/^\?\s/.test(text) || text.startsWith('. ')) return false;
+  if (/[{}();]/.test(text) && /\+/.test(text)) return false;
   if ((text.match(/ /g) || []).length > 25) return false;
   return !SKIP.some((re) => re.test(text));
 }
@@ -249,6 +252,7 @@ async function translateAll(phrases, lang) {
   const catalog = fs.existsSync(outPath)
     ? JSON.parse(fs.readFileSync(outPath, 'utf8'))
     : {};
+  const concurrency = Math.max(1, parseInt(process.env.I18N_CONCURRENCY || '4', 10));
 
   Object.keys(catalog).forEach((key) => {
     if (!isTranslated(key, catalog[key])) {
@@ -263,25 +267,34 @@ async function translateAll(phrases, lang) {
   }
 
   const pending = phrases.filter((phrase) => !isTranslated(phrase, catalog[phrase]));
-  console.log(`${lang}: ${complete} done, ${pending.length} remaining`);
+  console.log(`${lang}: ${complete} done, ${pending.length} remaining (${concurrency} workers)`);
 
-  for (let i = 0; i < pending.length; i++) {
-    const phrase = pending[i];
-    try {
-      catalog[phrase] = await translateWithRetry(phrase, lang);
-    } catch (error) {
-      console.warn(`  ${lang} skip "${phrase.slice(0, 50)}": ${error.message}`);
-      continue;
-    }
+  let nextIndex = 0;
+  let processed = 0;
 
-    if ((i + 1) % 10 === 0 || i === pending.length - 1) {
-      fs.writeFileSync(outPath, JSON.stringify(catalog, null, 2), 'utf8');
-      const done = phrases.filter((p) => isTranslated(p, catalog[p])).length;
-      console.log(`  ${lang}: ${done}/${phrases.length}`);
+  async function worker() {
+    while (true) {
+      const index = nextIndex++;
+      if (index >= pending.length) {
+        return;
+      }
+      const phrase = pending[index];
+      try {
+        catalog[phrase] = await translateWithRetry(phrase, lang);
+      } catch (error) {
+        console.warn(`  ${lang} skip "${phrase.slice(0, 50)}": ${error.message}`);
+      }
+      processed++;
+      if (processed % 20 === 0 || processed === pending.length) {
+        fs.writeFileSync(outPath, JSON.stringify(catalog, null, 2), 'utf8');
+        const done = phrases.filter((p) => isTranslated(p, catalog[p])).length;
+        console.log(`  ${lang}: ${done}/${phrases.length}`);
+      }
+      await sleep(40);
     }
-    await sleep(100);
   }
 
+  await Promise.all(Array.from({ length: concurrency }, () => worker()));
   fs.writeFileSync(outPath, JSON.stringify(catalog, null, 2), 'utf8');
   console.log(`Done ${lang}: ${phrases.filter((p) => isTranslated(p, catalog[p])).length}/${phrases.length}`);
 }

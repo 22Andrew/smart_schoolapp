@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <script th:src="@{/js/theme-init.js}"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Update - Smart School</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/systemupdate.css}">
+    <link rel="stylesheet" th:href="@{/css/app-theme.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <nav th:replace="~{fragments/top-navbar :: top-navbar}"></nav>
+
+    <div class="main-container">
+        <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+
+        <main class="main-content system-update-page">
+            <div class="system-update-layout">
+                <section class="system-info-panel">
+                    <div class="panel-header">
+                        <h2 class="panel-title">System Information</h2>
+                        <button type="button" class="btn-refresh" id="refreshInfoBtn">Refresh</button>
+                    </div>
+                    <dl class="info-grid" id="systemInfoGrid">
+                        <div class="info-item"><dt>Application</dt><dd id="infoAppName">Loading...</dd></div>
+                        <div class="info-item"><dt>Version</dt><dd id="infoAppVersion">-</dd></div>
+                        <div class="info-item"><dt>Spring Boot</dt><dd id="infoSpringBoot">-</dd></div>
+                        <div class="info-item"><dt>Java</dt><dd id="infoJava">-</dd></div>
+                        <div class="info-item"><dt>Operating System</dt><dd id="infoOs">-</dd></div>
+                        <div class="info-item"><dt>Server Time</dt><dd id="infoServerTime">-</dd></div>
+                        <div class="info-item"><dt>Database</dt><dd id="infoDatabase">-</dd></div>
+                        <div class="info-item"><dt>DB Version</dt><dd id="infoDbVersion">-</dd></div>
+                        <div class="info-item"><dt>Bootstrap Backup</dt><dd id="infoBootstrapBackup">-</dd></div>
+                    </dl>
+                </section>
+
+                <aside class="system-update-side">
+                    <section class="update-steps-panel">
+                        <h2 class="panel-title">How to Update</h2>
+                        <ol class="update-steps">
+                            <li>Create a full database backup before applying any update.</li>
+                            <li>Stop the Smart School application service.</li>
+                            <li>Replace the application JAR with the new build.</li>
+                            <li>Review release notes and run any required SQL migrations.</li>
+                            <li>Start the application and verify login, fees, and reports.</li>
+                        </ol>
+                        <a href="/admin/backup" class="btn-backup-link">Open Backup &amp; Restore</a>
+                    </section>
+
+                    <section class="update-notes-panel">
+                        <h2 class="panel-title">Update Notes</h2>
+                        <p class="update-note">This installation runs the Spring Boot build deployed on this server. Automatic in-app updates are not enabled; deploy a newer JAR and restart the service to upgrade.</p>
+                        <p class="update-note">Bundled schema reference: <span id="schemaReference">-</span></p>
+                    </section>
+                </aside>
+            </div>
+        </main>
+    </div>
+
+    <div th:replace="~{fragments/quick-links-modal :: modal}"></div>
+
+    <script th:src="@{/js/dashboard.js}"></script>
+    <script th:src="@{/js/systemupdate.js}"></script>
+</body>
+</html>

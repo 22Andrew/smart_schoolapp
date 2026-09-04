@@ -589,10 +589,18 @@ html.theme-light[class*="front-cms-theme-"] .sidebar-session-edit-btn,
 html.theme-dark[class*="front-cms-theme-"] .sidebar-session-edit-btn,
 html.theme-light[class*="front-cms-theme-"] .menu-item,
 html.theme-dark[class*="front-cms-theme-"] .menu-item,
+html.theme-light[class*="front-cms-theme-"] .menu-item > span,
+html.theme-dark[class*="front-cms-theme-"] .menu-item > span,
 html.theme-light[class*="front-cms-theme-"] .submenu-item,
 html.theme-dark[class*="front-cms-theme-"] .submenu-item,
 html.theme-light[class*="front-cms-theme-"] .menu-caret,
-html.theme-dark[class*="front-cms-theme-"] .menu-caret {
+html.theme-dark[class*="front-cms-theme-"] .menu-caret,
+html.theme-light[class*="front-cms-theme-"] .sidebar-quick-links-title,
+html.theme-dark[class*="front-cms-theme-"] .sidebar-quick-links-title,
+html.theme-light[class*="front-cms-theme-"] .sidebar-session-label,
+html.theme-dark[class*="front-cms-theme-"] .sidebar-session-label,
+html.theme-light[class*="front-cms-theme-"] .sidebar-session-value,
+html.theme-dark[class*="front-cms-theme-"] .sidebar-session-value {
     color: #ffffff !important;
 }
 

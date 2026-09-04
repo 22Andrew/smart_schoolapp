@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.json.JsonMapper;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,6 +38,9 @@ public class CommunicateService {
     private final LoginCredentialSendLogRepository loginCredentialSendLogRepository;
     private final UploadStorage uploadStorage;
     private final StudentAdmissionRepository studentAdmissionRepository;
+    private final CommunicateDeliveryService communicateDeliveryService;
+    private final LoginCredentialDeliveryService loginCredentialDeliveryService;
+    private final JsonMapper jsonMapper;
 
     // ---------- Notice Board ----------
 
@@ -85,7 +91,9 @@ public class CommunicateService {
         }
 
         notice.setIsActive(true);
-        return noticeToMap(noticeBoardRepository.save(notice));
+        NoticeBoard saved = noticeBoardRepository.save(notice);
+        deliverNoticeNotifications(saved);
+        return noticeToMap(saved);
     }
 
     @Transactional
@@ -141,11 +149,35 @@ public class CommunicateService {
                 .message(requiredText(payload.get("message"), "Message"))
                 .recipientType(requiredText(payload.get("recipientType"), "Recipient type"))
                 .recipientDetails(optionalText(payload.get("recipientDetails")))
-                .status("SENT")
-                .sentAt(LocalDateTime.now())
+                .status("PENDING")
                 .build();
         log.setIsActive(true);
-        return messageToMap(messageLogRepository.save(log));
+        log = messageLogRepository.save(log);
+        deliverImmediateMessage(log);
+        return messageToMap(log);
+    }
+
+    private void deliverImmediateMessage(CommunicateMessageLog log) {
+        CommunicateDeliveryResult result;
+        if ("EMAIL".equals(log.getMessageType())) {
+            result = communicateDeliveryService.deliverEmail(
+                    log.getTitle(),
+                    log.getMessage(),
+                    log.getRecipientType(),
+                    log.getRecipientDetails(),
+                    log.getAttachmentPath());
+        } else {
+            result = communicateDeliveryService.deliverSmsChannels(
+                    log.getTitle(),
+                    log.getMessage(),
+                    log.getRecipientType(),
+                    log.getRecipientDetails(),
+                    readSendThroughFromLog(log));
+        }
+        result.requireSuccess();
+        log.setStatus("SENT");
+        log.setSentAt(LocalDateTime.now());
+        messageLogRepository.save(log);
     }
 
     @Transactional
@@ -161,6 +193,7 @@ public class CommunicateService {
                 .recipientDetails(optionalText(payload.get("recipientDetails")))
                 .status("SCHEDULED")
                 .scheduledAt(scheduledAt)
+                .sendThrough(writeSendThrough(readSendThrough(payload.get("sendThrough"))))
                 .build();
         log.setIsActive(true);
         return messageToMap(messageLogRepository.save(log));
@@ -215,12 +248,15 @@ public class CommunicateService {
             log.setStatus("SCHEDULED");
             log.setScheduledAt(parseDateTime(payload.get("scheduledAt"), "Schedule date & time"));
         } else {
-            log.setStatus("SENT");
-            log.setSentAt(LocalDateTime.now());
+            log.setStatus("PENDING");
         }
 
         log.setIsActive(true);
-        return messageToMap(messageLogRepository.save(log));
+        log = messageLogRepository.save(log);
+        if (!"SCHEDULE".equals(sendMode)) {
+            deliverImmediateMessage(log);
+        }
+        return messageToMap(log);
     }
 
     @Transactional
@@ -230,6 +266,7 @@ public class CommunicateService {
             sendMode = "NOW";
         }
         sendMode = sendMode.toUpperCase(Locale.ROOT);
+        List<String> sendThrough = readSendThrough(payload.get("sendThrough"));
 
         CommunicateMessageLog log = CommunicateMessageLog.builder()
                 .messageType("SMS")
@@ -240,18 +277,157 @@ public class CommunicateService {
                 .composeTab(optionalText(payload.get("composeTab")))
                 .smsTemplateId(parseLong(payload.get("smsTemplateId")))
                 .sendMode(sendMode)
+                .sendThrough(writeSendThrough(sendThrough))
                 .build();
 
         if ("SCHEDULE".equals(sendMode)) {
             log.setStatus("SCHEDULED");
             log.setScheduledAt(parseDateTime(payload.get("scheduledAt"), "Schedule date & time"));
         } else {
-            log.setStatus("SENT");
-            log.setSentAt(LocalDateTime.now());
+            log.setStatus("PENDING");
         }
 
         log.setIsActive(true);
-        return messageToMap(messageLogRepository.save(log));
+        log = messageLogRepository.save(log);
+        if (!"SCHEDULE".equals(sendMode)) {
+            deliverImmediateSms(log, sendThrough);
+        }
+        return messageToMap(log);
+    }
+
+    private void deliverImmediateSms(CommunicateMessageLog log, List<String> sendThrough) {
+        CommunicateDeliveryResult result = communicateDeliveryService.deliverSmsChannels(
+                log.getTitle(),
+                log.getMessage(),
+                log.getRecipientType(),
+                log.getRecipientDetails(),
+                sendThrough);
+        result.requireSuccess();
+        log.setStatus("SENT");
+        log.setSentAt(LocalDateTime.now());
+        messageLogRepository.save(log);
+    }
+
+    @Transactional
+    public int processDueScheduledMessages() {
+        List<CommunicateMessageLog> due = messageLogRepository
+                .findByStatusAndScheduledAtLessThanEqualOrderByScheduledAtAsc("SCHEDULED", LocalDateTime.now());
+        int processed = 0;
+        for (CommunicateMessageLog log : due) {
+            try {
+                if ("EMAIL".equalsIgnoreCase(log.getMessageType())) {
+                    deliverImmediateMessage(log);
+                } else if ("SMS".equalsIgnoreCase(log.getMessageType())) {
+                    deliverImmediateSms(log, readSendThroughFromLog(log));
+                } else {
+                    log.setStatus("FAILED");
+                    messageLogRepository.save(log);
+                    continue;
+                }
+                processed++;
+            } catch (Exception error) {
+                log.setStatus("FAILED");
+                messageLogRepository.save(log);
+            }
+        }
+        return processed;
+    }
+
+    private void deliverNoticeNotifications(NoticeBoard notice) {
+        if (!Boolean.TRUE.equals(notice.getSendByEmail()) && !Boolean.TRUE.equals(notice.getSendBySms())) {
+            return;
+        }
+
+        String recipientDetails = buildNoticeRecipientDetails(notice.getMessageTo());
+        if (recipientDetails.isBlank()) {
+            return;
+        }
+
+        if (Boolean.TRUE.equals(notice.getSendByEmail())) {
+            CommunicateDeliveryResult emailResult = communicateDeliveryService.deliverEmail(
+                    notice.getTitle(),
+                    notice.getMessage(),
+                    "Group",
+                    recipientDetails,
+                    notice.getAttachmentPath());
+            emailResult.requireSuccess();
+        }
+
+        if (Boolean.TRUE.equals(notice.getSendBySms())) {
+            CommunicateDeliveryResult smsResult = communicateDeliveryService.deliverSms(
+                    notice.getMessage(),
+                    "Group",
+                    recipientDetails,
+                    List.of("SMS"));
+            smsResult.requireSuccess();
+        }
+    }
+
+    private String buildNoticeRecipientDetails(String messageTo) {
+        if (messageTo == null || messageTo.isBlank()) {
+            return "";
+        }
+        List<String> roles = new ArrayList<>();
+        for (String role : messageTo.split(",")) {
+            String mapped = mapNoticeAudienceRole(role.trim());
+            if (!mapped.isBlank()) {
+                roles.add(mapped);
+            }
+        }
+        if (roles.isEmpty()) {
+            return "";
+        }
+        return "{\"roles\":" + roles.stream()
+                .map(role -> "\"" + role.replace("\"", "") + "\"")
+                .collect(java.util.stream.Collectors.joining(",", "[", "]")) + "}";
+    }
+
+    private String mapNoticeAudienceRole(String role) {
+        return switch (role) {
+            case "Student" -> "Students";
+            case "Parent" -> "Guardians";
+            case "Super Admin", "Admin" -> "Admin";
+            case "Teacher" -> "Teacher";
+            case "Accountant" -> "Accountant";
+            case "Librarian" -> "Librarian";
+            case "Receptionist" -> "Receptionist";
+            default -> role;
+        };
+    }
+
+    private List<String> readSendThrough(Object value) {
+        if (!(value instanceof List<?> list)) {
+            return List.of("SMS");
+        }
+        List<String> channels = new ArrayList<>();
+        for (Object item : list) {
+            String channel = optionalText(item);
+            if (!channel.isBlank()) {
+                channels.add(channel);
+            }
+        }
+        return channels.isEmpty() ? List.of("SMS") : channels;
+    }
+
+    private List<String> readSendThroughFromLog(CommunicateMessageLog log) {
+        if (log.getSendThrough() == null || log.getSendThrough().isBlank()) {
+            return List.of("SMS");
+        }
+        try {
+            List<String> channels = jsonMapper.readValue(log.getSendThrough(), new TypeReference<List<String>>() {
+            });
+            return channels == null || channels.isEmpty() ? List.of("SMS") : channels;
+        } catch (Exception error) {
+            return List.of("SMS");
+        }
+    }
+
+    private String writeSendThrough(List<String> channels) {
+        try {
+            return jsonMapper.writeValueAsString(channels == null || channels.isEmpty() ? List.of("SMS") : channels);
+        } catch (Exception error) {
+            return "[\"SMS\"]";
+        }
     }
 
     private Map<String, Object> birthdayStudentToMap(StudentAdmission student) {
@@ -419,10 +595,17 @@ public class CommunicateService {
                 .sendVia(sendVia)
                 .recipientType(recipientType)
                 .recipientDetails(recipientDetails)
-                .status("SENT")
-                .sentAt(LocalDateTime.now())
+                .status("PENDING")
                 .build();
         log.setIsActive(true);
+        log = loginCredentialSendLogRepository.save(log);
+
+        CommunicateDeliveryResult result = loginCredentialDeliveryService.sendLoginCredentials(
+                studentIds, userType, sendVia);
+        result.requireSuccess();
+
+        log.setStatus("SENT");
+        log.setSentAt(LocalDateTime.now());
         return loginCredentialToMap(loginCredentialSendLogRepository.save(log));
     }
 
@@ -508,6 +691,7 @@ public class CommunicateService {
         row.put("emailTemplateId", log.getEmailTemplateId());
         row.put("smsTemplateId", log.getSmsTemplateId());
         row.put("sendMode", log.getSendMode());
+        row.put("sendThrough", log.getSendThrough());
         return row;
     }
 

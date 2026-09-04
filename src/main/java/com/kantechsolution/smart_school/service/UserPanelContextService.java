@@ -78,7 +78,7 @@ public class UserPanelContextService {
         model.addAttribute("classLabel", resolveClassLabel(student));
         model.addAttribute("currentSession", resolveCurrentSession());
         model.addAttribute("noticeCount", resolveNoticeCount());
-        model.addAttribute("profileImageUrl", resolveProfileImage(studentName));
+        model.addAttribute("profileImageUrl", resolveProfileImage(student));
         model.addAttribute("student", student);
     }
 
@@ -120,11 +120,23 @@ public class UserPanelContextService {
         return noticeBoardRepository.count();
     }
 
-    public String resolveProfileImage(String studentName) {
+    public String resolveProfileImage(StudentAdmission student) {
+        if (student != null && student.getPhotoPath() != null && !student.getPhotoPath().isBlank()) {
+            return normalizePublicPath(student.getPhotoPath());
+        }
+        String studentName = resolveStudentName(student);
         if (studentName == null || studentName.isBlank()) {
             return "https://ui-avatars.com/api/?name=Student&background=e2e8f0&color=64748b&size=128";
         }
         String encoded = studentName.replace(" ", "+");
         return "https://ui-avatars.com/api/?name=" + encoded + "&background=e2e8f0&color=64748b&size=128";
+    }
+
+    private String normalizePublicPath(String path) {
+        String trimmed = path.trim();
+        if (trimmed.startsWith("http://") || trimmed.startsWith("https://") || trimmed.startsWith("/")) {
+            return trimmed;
+        }
+        return "/uploads/" + trimmed.replace("\\", "/");
     }
 }

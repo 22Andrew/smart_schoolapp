@@ -52,4 +52,7 @@ public class CommunicateMessageLog extends BaseEntity {
 
     @Column(name = "send_mode", length = 20)
     private String sendMode;
+
+    @Column(name = "send_through", columnDefinition = "TEXT")
+    private String sendThrough;
 }

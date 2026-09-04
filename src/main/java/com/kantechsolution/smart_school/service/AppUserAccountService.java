@@ -144,13 +144,7 @@ public class AppUserAccountService {
     }
 
     private AppUserAccount ensureStaffAccount(StaffMember staff) {
-        return appUserAccountRepository.findByUserTypeAndSourceId(TYPE_STAFF, staff.getId())
-                .orElseGet(() -> appUserAccountRepository.save(AppUserAccount.builder()
-                        .userType(TYPE_STAFF)
-                        .sourceId(staff.getId())
-                        .username(buildStaffUsername(staff))
-                        .loginEnabled(true)
-                        .build()));
+        return userLoginAuthService.ensureStaffAccount(staff);
     }
 
     private AppUserAccount requireAccount(Long id) {
@@ -176,13 +170,6 @@ public class AppUserAccountService {
 
     private String buildParentUsername(StudentAdmission student) {
         return "parent" + student.getId();
-    }
-
-    private String buildStaffUsername(StaffMember staff) {
-        if (staff.getEmail() != null && staff.getEmail().contains("@")) {
-            return staff.getEmail().substring(0, staff.getEmail().indexOf('@')).toLowerCase(Locale.ROOT);
-        }
-        return "staff" + staff.getId();
     }
 
     private String classLabel(StudentAdmission student) {

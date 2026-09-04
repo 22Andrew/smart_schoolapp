@@ -345,6 +345,35 @@ public class StaffSessionService {
         }
     }
 
+    public String resolveProfileImageUrl(Authentication authentication) {
+        StaffSessionUser sessionUser = resolve(authentication);
+        String displayName = sessionUser.getName();
+        Optional<StaffMember> staffMember = resolveLinkedStaffMemberId(authentication)
+                .flatMap(staffMemberRepository::findById);
+        if (staffMember.isPresent()) {
+            String photoPath = staffMember.get().getPhotoPath();
+            if (photoPath != null && !photoPath.isBlank()) {
+                return normalizePublicPath(photoPath);
+            }
+            displayName = formatFullName(staffMember.get());
+        }
+        return buildAvatarUrl(displayName);
+    }
+
+    private String normalizePublicPath(String path) {
+        String trimmed = path.trim();
+        if (trimmed.startsWith("http://") || trimmed.startsWith("https://") || trimmed.startsWith("/")) {
+            return trimmed;
+        }
+        return "/uploads/" + trimmed.replace("\\", "/");
+    }
+
+    private String buildAvatarUrl(String name) {
+        String safeName = name == null || name.isBlank() ? "Staff User" : name.trim();
+        return "https://ui-avatars.com/api/?name=" + safeName.replace(" ", "+")
+                + "&background=3182ce&color=fff&size=128";
+    }
+
     private boolean isStaffAuthority(String authority) {
         if (authority == null) {
             return false;

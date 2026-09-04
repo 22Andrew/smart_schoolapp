@@ -36,6 +36,19 @@ public class SmsConfigService implements ApplicationRunner {
     }
 
     @Transactional(readOnly = true)
+    public Map<String, Object> getActiveGatewayConfig() {
+        for (String gateway : GATEWAYS) {
+            SmsGatewaySetting row = repository.findByGateway(gateway).orElse(null);
+            if (row != null && "Enabled".equalsIgnoreCase(text(row.getStatus()))) {
+                Map<String, Object> config = new LinkedHashMap<>(readSettings(row.getSettingsJson()));
+                config.put("gateway", gateway);
+                return config;
+            }
+        }
+        return Map.of();
+    }
+
+    @Transactional(readOnly = true)
     public Map<String, Object> list() {
         Map<String, Object> gateways = new LinkedHashMap<>();
         String enabled = null;

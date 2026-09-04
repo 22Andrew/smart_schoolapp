@@ -1,5 +1,52 @@
 /* Student user panel — extends dashboard.css layout */
 
+/* User panel sidebar — always light nav text on dark sidebar (all user roles/pages) */
+.user-panel-body .user-sidebar {
+    background: #1e293b !important;
+    color: #ffffff !important;
+}
+
+.user-panel-body .user-sidebar .sidebar-session-label,
+.user-panel-body .user-sidebar .sidebar-session-value {
+    color: #cbd5e0 !important;
+}
+
+.user-panel-body .user-sidebar .menu-item,
+.user-panel-body .user-sidebar .menu-item-expandable,
+.user-panel-body .user-sidebar .menu-item > span,
+.user-panel-body .user-sidebar .submenu-item,
+.user-panel-body .user-sidebar .submenu-item-expandable,
+.user-panel-body .user-sidebar .sub-submenu-item {
+    color: #cbd5e0 !important;
+}
+
+.user-panel-body .user-sidebar .menu-item:hover,
+.user-panel-body .user-sidebar .menu-item-expandable:hover,
+.user-panel-body .user-sidebar .submenu-item:hover,
+.user-panel-body .user-sidebar .submenu-item-expandable:hover,
+.user-panel-body .user-sidebar .sub-submenu-item:hover {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.user-panel-body .user-sidebar .menu-item.active,
+.user-panel-body .user-sidebar .menu-item-expandable.active,
+.user-panel-body .user-sidebar .menu-item-expandable.expanded,
+.user-panel-body .user-sidebar .submenu-item.active,
+.user-panel-body .user-sidebar .submenu-item-expandable.active {
+    color: #ffffff !important;
+}
+
+.user-panel-body .user-sidebar .menu-item svg,
+.user-panel-body .user-sidebar .menu-caret {
+    stroke: currentColor !important;
+    color: inherit !important;
+}
+
+.user-panel-body .user-sidebar .submenu {
+    background: rgba(0, 0, 0, 0.2) !important;
+}
+
 .user-panel-body .user-top-navbar .nav-right {
     gap: 0.75rem;
 }
@@ -588,7 +635,7 @@
 }
 
 .user-sidebar .submenu-item.active {
-    color: #ffffff;
+    color: #ffffff !important;
     font-weight: 700;
 }
 

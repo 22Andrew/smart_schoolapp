@@ -5,11 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mount Carmel School - Admin Dashboard</title>
-    <link rel="stylesheet" th:href="@{/css/dashboard.css(v=20260830-7)}">
-    <link rel="stylesheet" th:href="@{/css/app-theme.css(v=20260830-7)}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css(v=20260903-8)}">
+    <link rel="stylesheet" th:href="@{/css/app-theme.css(v=20260903-12)}">
     <link rel="stylesheet" th:href="@{/css/admin-dashboard.css(v=20260831-2)}">
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
-    <script th:if="${dashboardLayout == 'accountant' or dashboardLayout == 'admin'}" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body th:classappend="${teacherSidebar} ? ' teacher-dashboard-page' : (${accountantSidebar} ? ' accountant-dashboard-page' : (${receptionistSidebar} ? ' receptionist-dashboard-page' : (${librarianSidebar} ? ' librarian-dashboard-page' : '')))">
     <!-- Top Navigation Bar -->
@@ -769,6 +768,7 @@
 
     <div th:replace="~{fragments/quick-links-modal :: modal}"></div>
 
+    <script th:if="${dashboardLayout == 'accountant' or dashboardLayout == 'admin'}" th:src="@{/js/chart.umd.min.js}"></script>
     <script th:if="${dashboardLayout == 'accountant' or dashboardLayout == 'admin'}" th:inline="javascript">
         window.dashboardChartData = {
             dayLabels: /*[[${chartDayLabels}]]*/ [],
@@ -784,6 +784,6 @@
         };
     </script>
     <script th:src="@{/js/language-picker.js(v=20260831-4)}"></script>
-    <script th:src="@{/js/dashboard.js(v=20260831-3)}"></script>
+    <script th:src="@{/js/dashboard.js(v=20260903-11)}"></script>
 </body>
 </html>

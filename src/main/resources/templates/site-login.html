@@ -40,6 +40,9 @@
                 <div th:if="${param.error}" class="login-alert login-alert-error">
                     Invalid username or password. Please try again.
                 </div>
+                <div th:if="${successMessage}" class="login-alert login-alert-success" th:text="${successMessage}">
+                    Success message
+                </div>
                 <div th:if="${param.logout}" class="login-alert login-alert-success">
                     You have been logged out successfully.
                 </div>
@@ -103,7 +106,7 @@
                 </form>
 
                 <div class="login-footer">
-                    <a href="/forgot-password" class="footer-link">
+                    <a href="/site/forgotpassword" class="footer-link">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
                             <line x1="12" y1="2" x2="12" y2="12"></line>

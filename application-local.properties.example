@@ -1,0 +1,8 @@
+# Copy to application-local.properties and fill in your local MySQL password.
+# This file is safe to commit — it contains no real secrets.
+
+spring.datasource.password=your-mysql-password-here
+spring.jpa.show-sql=true
+
+# Optional: override demo passwords locally
+# app.demo.staff.admin-password=Admin123

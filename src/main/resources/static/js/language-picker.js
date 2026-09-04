@@ -99,6 +99,14 @@
                 }
                 var willOpen = !dropdown.classList.contains('active');
                 closeAllDropdowns();
+                document.querySelectorAll('.header-tasks-popover.active').forEach(function (popover) {
+                    popover.classList.remove('active');
+                    popover.setAttribute('aria-hidden', 'true');
+                });
+                document.querySelectorAll('.header-tasks-trigger.is-active').forEach(function (trigger) {
+                    trigger.classList.remove('is-active');
+                    trigger.setAttribute('aria-expanded', 'false');
+                });
                 if (willOpen) {
                     dropdown.classList.add('active');
                     trigger.setAttribute('aria-expanded', 'true');

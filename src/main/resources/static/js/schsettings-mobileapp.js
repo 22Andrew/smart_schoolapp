@@ -26,6 +26,7 @@ async function loadMobileAppSettings() {
         setValue('apiUrl', data.apiUrl);
         setValue('primaryColor', data.primaryColor);
         setValue('secondaryColor', data.secondaryColor);
+        setValue('fcmServerKey', data.fcmServerKey);
         setValue('envatoPurchaseCode', data.envatoPurchaseCode);
         setValue('envatoEmail', data.envatoEmail);
     } catch (error) {
@@ -58,7 +59,8 @@ async function handleSave(event) {
     const payload = {
         apiUrl: getValue('apiUrl'),
         primaryColor: getValue('primaryColor'),
-        secondaryColor: getValue('secondaryColor')
+        secondaryColor: getValue('secondaryColor'),
+        fcmServerKey: getValue('fcmServerKey')
     };
 
     try {

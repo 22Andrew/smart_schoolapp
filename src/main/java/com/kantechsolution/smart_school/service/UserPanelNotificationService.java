@@ -1,6 +1,9 @@
 package com.kantechsolution.smart_school.service;
 
+import com.kantechsolution.smart_school.model.AppUserAccount;
+import com.kantechsolution.smart_school.model.MobileAppMessage;
 import com.kantechsolution.smart_school.model.NoticeBoard;
+import com.kantechsolution.smart_school.repository.MobileAppMessageRepository;
 import com.kantechsolution.smart_school.repository.NoticeBoardRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -20,9 +23,15 @@ public class UserPanelNotificationService {
     private static final DateTimeFormatter US_DATE = DateTimeFormatter.ofPattern("MM/dd/yyyy", Locale.US);
 
     private final NoticeBoardRepository noticeBoardRepository;
+    private final MobileAppMessageRepository mobileAppMessageRepository;
+    private final UserPanelContextService userPanelContextService;
 
-    public UserPanelNotificationService(NoticeBoardRepository noticeBoardRepository) {
+    public UserPanelNotificationService(NoticeBoardRepository noticeBoardRepository,
+                                        MobileAppMessageRepository mobileAppMessageRepository,
+                                        UserPanelContextService userPanelContextService) {
         this.noticeBoardRepository = noticeBoardRepository;
+        this.mobileAppMessageRepository = mobileAppMessageRepository;
+        this.userPanelContextService = userPanelContextService;
     }
 
     @Transactional(readOnly = true)
@@ -37,9 +46,34 @@ public class UserPanelNotificationService {
             notices.add(toRow(notice));
         }
 
+        AppUserAccount account = userPanelContextService.resolveAccount(authentication);
+        if (account != null && account.getUserType() != null && account.getSourceId() != null) {
+            for (MobileAppMessage message : mobileAppMessageRepository
+                    .findByUserTypeAndSourceIdAndIsActiveTrueOrderByCreatedAtDesc(
+                            account.getUserType(), account.getSourceId())) {
+                notices.add(toMobileRow(message));
+            }
+        }
+
+        notices.sort((left, right) -> String.valueOf(right.get("createdAt")).compareTo(String.valueOf(left.get("createdAt"))));
+
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("notices", notices);
         return response;
+    }
+
+    private Map<String, Object> toMobileRow(MobileAppMessage message) {
+        Map<String, Object> row = new LinkedHashMap<>();
+        row.put("id", "push-" + message.getId());
+        row.put("title", text(message.getTitle()));
+        row.put("message", text(message.getMessage()));
+        row.put("noticeDate", formatDate(message.getCreatedAt() != null ? message.getCreatedAt().toLocalDate() : LocalDate.now()));
+        row.put("publishOn", formatDate(message.getCreatedAt() != null ? message.getCreatedAt().toLocalDate() : LocalDate.now()));
+        row.put("publishTo", "Mobile App");
+        row.put("messageTo", "Mobile App");
+        row.put("createdAt", message.getCreatedAt() != null ? message.getCreatedAt().toString() : "");
+        row.put("source", "mobile_app");
+        return row;
     }
 
     private String resolveAudience(Authentication authentication) {
@@ -86,60 +120,6 @@ public class UserPanelNotificationService {
             }
         }
         return false;
-    }
-
-    private void ensureDemoNotices() {
-        if (noticeBoardRepository.count() > 0) {
-            return;
-        }
-
-        LocalDate aug18 = LocalDate.of(2026, 8, 18);
-        LocalDate aug6 = LocalDate.of(2026, 8, 6);
-        LocalDate apr1 = LocalDate.of(2026, 4, 1);
-
-        saveNotice("Notice for new Book collection",
-                "Please collect new books from the library during school hours.",
-                aug18, "Student");
-        saveNotice("Fee Submission Reminder",
-                "Kindly submit pending fees before the due date to avoid late charges.",
-                aug6, "Student");
-        saveNotice("Extra class for Std - X to XII",
-                "Extra classes for standards X to XII will be held on Saturday.",
-                aug6, "Student");
-        saveNotice("Parent-Teacher Meeting",
-                "Dear parents, the parent-teacher meeting is scheduled next week.",
-                aug6, "Parent");
-        saveNotice("Online Learning Notice",
-                "Online learning sessions will continue as per the shared timetable.",
-                aug6, "Student");
-        saveNotice("Student Health Check-up",
-                "Annual student health check-up camp will be organized in the school campus.",
-                aug6, "Student");
-        saveNotice("PTM",
-                "Parent teacher meeting for all classes will be held this month.",
-                apr1, "Parent");
-        saveNotice("Fees Reminder",
-                "This is a reminder to clear outstanding fee dues at the earliest.",
-                aug6, "Student");
-        saveNotice("PTM Notice - April 2026",
-                "PTM for April 2026 is scheduled. Please check the notice for date and time.",
-                apr1, "Parent");
-    }
-
-    private void saveNotice(String title, String message, LocalDate noticeDate, String publishTo) {
-        NoticeBoard notice = NoticeBoard.builder()
-                .title(title)
-                .message(message)
-                .noticeDate(noticeDate)
-                .publishOn(noticeDate)
-                .publishTo(publishTo)
-                .messageTo(publishTo)
-                .sendByEmail(false)
-                .sendBySms(false)
-                .showOnWebsite(true)
-                .build();
-        notice.setIsActive(true);
-        noticeBoardRepository.save(notice);
     }
 
     private Map<String, Object> toRow(NoticeBoard notice) {

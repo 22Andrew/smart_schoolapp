@@ -3,19 +3,20 @@
 <body>
     <!-- Staff / admin panel profile popup (Super Admin, Admin, Teacher, etc.) -->
     <div class="profile-dropdown-container" th:fragment="staff-profile-dropdown">
-        <button class="icon-btn user-btn" id="profileBtn" type="button" title="Profile" aria-expanded="false" aria-haspopup="true">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-            </svg>
+        <button class="icon-btn user-btn profile-trigger-btn" id="profileBtn" type="button" title="Profile" aria-expanded="false" aria-haspopup="true">
+            <img class="profile-btn-avatar"
+                 th:src="${staffProfileImageUrl != null ? staffProfileImageUrl : 'https://ui-avatars.com/api/?name=Staff+User&amp;background=3182ce&amp;color=fff&amp;size=80'}"
+                 th:alt="${staffUserName != null ? staffUserName : 'Profile'}"
+                 width="32"
+                 height="32">
         </button>
 
         <div class="profile-dropdown" id="profileDropdown" role="menu" aria-label="Profile menu">
             <div class="profile-dropdown-header">
                 <div class="profile-avatar">
                     <img class="profile-avatar-img"
-                         src="https://ui-avatars.com/api/?name=Staff+User&amp;background=3182ce&amp;color=fff&amp;size=80"
-                         alt="Profile Picture">
+                         th:src="${staffProfileImageUrl != null ? staffProfileImageUrl : 'https://ui-avatars.com/api/?name=Staff+User&amp;background=3182ce&amp;color=fff&amp;size=80'}"
+                         th:alt="${staffUserName != null ? staffUserName : 'Profile Picture'}">
                 </div>
                 <div class="profile-info">
                     <div class="profile-name" th:text="${staffUserName != null ? staffUserName : (session.user != null ? session.user.name : 'Staff User')}">Staff User</div>
@@ -55,17 +56,20 @@
 
     <!-- Student / parent user panel profile popup -->
     <div class="profile-dropdown-container" th:fragment="user-profile-dropdown">
-        <button class="icon-btn user-btn" id="profileBtn" type="button" title="Profile" aria-expanded="false" aria-haspopup="true">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-            </svg>
+        <button class="icon-btn user-btn profile-trigger-btn" id="profileBtn" type="button" title="Profile" aria-expanded="false" aria-haspopup="true">
+            <img class="profile-btn-avatar"
+                 th:src="${profileImageUrl != null ? profileImageUrl : 'https://ui-avatars.com/api/?name=Student&amp;background=e2e8f0&amp;color=64748b&amp;size=80'}"
+                 th:alt="${studentName != null ? studentName : 'Profile'}"
+                 width="32"
+                 height="32">
         </button>
 
         <div class="profile-dropdown" id="profileDropdown" role="menu" aria-label="Profile menu">
             <div class="profile-dropdown-header">
                 <div class="profile-avatar">
-                    <img class="profile-avatar-img" th:src="${profileImageUrl}" alt="Profile Picture">
+                    <img class="profile-avatar-img"
+                         th:src="${profileImageUrl != null ? profileImageUrl : 'https://ui-avatars.com/api/?name=Student&amp;background=e2e8f0&amp;color=64748b&amp;size=80'}"
+                         th:alt="${studentName != null ? studentName : 'Profile Picture'}">
                 </div>
                 <div class="profile-info">
                     <div class="profile-name" th:text="${studentName}">Student</div>

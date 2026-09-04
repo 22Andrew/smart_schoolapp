@@ -1,0 +1,10 @@
+  ar skip "&nbsp;": MyMemory returned source text
+  ar skip "G1": MyMemory returned source text
+  ar skip "PayU": MyMemory returned source text
+  ar skip "SDA0009998": MyMemory returned source text
+  ar skip "SSLCommerz": MyMemory returned source text
+  ar skip "ToyyibPay": HTTP 429
+  ar skip "Twocheckout": HTTP 429
+  ar skip "VH4584": HTTP 429
+  ar skip "X²": HTTP 429
+  ar skip "X₂": HTTP 429

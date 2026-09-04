@@ -131,7 +131,13 @@ document.addEventListener('DOMContentLoaded', function () {
             label: 'Custom SMS Gateway',
             url: '',
             fields: [
-                { key: 'gatewayName', label: 'Gateway Name' }
+                { key: 'gatewayName', label: 'Gateway Name' },
+                { key: 'apiUrl', label: 'API URL ({phone}, {message}, {sender})' },
+                { key: 'senderId', label: 'Sender ID' },
+                { key: 'apiMethod', label: 'HTTP Method', type: 'select', options: [
+                    { value: 'GET', label: 'GET' },
+                    { value: 'POST', label: 'POST' }
+                ] }
             ],
             logo: '/images/sms/custom.png'
         }

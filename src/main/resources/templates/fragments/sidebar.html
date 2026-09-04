@@ -2,9 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <body>
 <aside class="sidebar" th:fragment="sidebar">
+            <script>document.documentElement.classList.add('sidebar-nav-pending');</script>
             <div th:replace="~{fragments/language-i18n-init :: language-i18n-init}"></div>
             <div id="staffSessionContext" hidden
-                 th:attr="data-role=${staffRole},data-name=${staffUserName},data-dashboard=${staffDashboardUrl},data-role-sidebar=${roleBasedSidebar},data-school-name=${schoolName}"></div>
+                 th:attr="data-role=${staffRole},data-name=${staffUserName},data-dashboard=${staffDashboardUrl},data-role-sidebar=${roleBasedSidebar},data-school-name=${schoolName},data-photo-url=${staffProfileImageUrl}"></div>
             <script th:if="${roleBasedSidebar}" th:inline="javascript">
                 document.documentElement.setAttribute('data-role-sidebar', 'true');
             </script>
@@ -103,7 +104,7 @@
                         <a href="/studentfee/searchpayment" class="submenu-item">Search Fees Payment</a>
                         <a href="/feesearchr" class="submenu-item">Search Due Fees</a>
                         <a href="/feemaster" class="submenu-item">Fees Master</a>
-                        <a href="#" class="submenu-item">Quick Fees</a>
+                        <a href="/studentfee/quickfees" class="submenu-item">Quick Fees</a>
                         <a href="/feegroup/index" class="submenu-item">Fees Group</a>
                         <a href="/feetype" class="submenu-item">Fees Type</a>
                         <a href="/feediscount" class="submenu-item">Fees Discount</a>
@@ -707,7 +708,7 @@
                         <a href="/admin/onlineadmission/admissionsetting" class="submenu-item">Online Admission</a>
                         <a href="/admin/filetype" class="submenu-item">File Types</a>
                         <a href="/admin/sidemenu" class="submenu-item">Sidebar Menu</a>
-                        <a href="#" class="submenu-item">System Update</a>
+                        <a href="/admin/systemupdate" class="submenu-item">System Update</a>
                     </div>
                 </div>
             </div>
@@ -854,6 +855,15 @@
                         });
                     });
                 })();
+            </script>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    setTimeout(function () {
+                        if (document.documentElement.classList.contains('sidebar-nav-pending')) {
+                            document.documentElement.classList.remove('sidebar-nav-pending');
+                        }
+                    }, 600);
+                });
             </script>
         </aside>
 </body>

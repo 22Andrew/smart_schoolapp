@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +45,14 @@ public class CalendarController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(calendarService.listTodos(page, size));
+    }
+
+    @GetMapping("/api/calendar/todos/pending-count")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> pendingTodoCount() {
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("count", calendarService.countPendingTasksForToday());
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/api/calendar/todos")

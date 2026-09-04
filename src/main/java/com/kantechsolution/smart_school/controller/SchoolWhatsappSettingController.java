@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Controller
@@ -25,6 +26,23 @@ public class SchoolWhatsappSettingController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getWhatsappSettings() {
         return ResponseEntity.ok(whatsappSettingService.getSettings());
+    }
+
+    @GetMapping("/api/schsettings/whatsapp/link")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getWhatsappHeaderLink(
+            @RequestParam(name = "panel", defaultValue = "admin") String panel) {
+        String url;
+        if ("student".equalsIgnoreCase(panel) || "user".equalsIgnoreCase(panel)) {
+            url = whatsappSettingService.getStudentGuardianPanelWhatsappUrl();
+        } else {
+            url = whatsappSettingService.getAdminPanelWhatsappUrl();
+        }
+
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("enabled", url != null && !url.isBlank());
+        response.put("url", url != null ? url : "");
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/api/schsettings/whatsapp")

@@ -1,1 +1,61 @@
-  sw stopped at "' + displayValue(item.createdBy) + '": MyMemory returned source text
+  sw skip "(290px X 51px)": MyMemory returned source text
+  sw skip "(170px X 184px)": MyMemory returned source text
+  sw skip "(32px X 32px)": MyMemory returned source text
+  sw skip "(1460px X 1080px)": MyMemory returned source text
+  sw skip "<div style=": MyMemory returned source text
+  sw skip "<div class=": MyMemory returned source text
+  sw skip "<p>": MyMemory returned source text
+  sw skip "56 Main Street, Suite 3, Brooklyn, NY 11210-0000": MyMemory returned source text
+  sw skip "8:00 AM-08:45 AM": MyMemory returned source text
+  sw skip "A+": MyMemory returned source text
+  sw skip "Asia Pacific (Mumbai) ap-south-1": MyMemory returned source text
+  sw skip "Arial": MyMemory returned source text
+  sw skip "AWS SES": MyMemory returned source text
+  sw skip "Billplz": MyMemory returned source text
+  sw skip "CCAvenue": MyMemory returned source text
+  sw skip "Caroline Thomas": MyMemory returned source text
+  sw skip "col-md-": MyMemory returned source text
+  sw skip "Compact": MyMemory returned source text
+  sw skip "DD": MyMemory returned source text
+  sw skip "document.documentElement.classList.add('sidebar-na": MyMemory returned source text
+  sw skip "document.documentElement.setAttribute('data-restri": MyMemory returned source text
+  sw skip "document.documentElement.setAttribute('data-role-s": MyMemory returned source text
+  sw skip "Edward Thomas": MyMemory returned source text
+  sw skip "Excel": MyMemory returned source text
+  sw skip "Favicon (32px X 32px)": MyMemory returned source text
+  sw skip "G1": MyMemory returned source text
+  sw skip "Georgia": MyMemory returned source text
+  sw skip "Google Analytics": MyMemory returned source text
+  sw skip "Google Plus": MyMemory returned source text
+  sw skip "InstaMojo": MyMemory returned source text
+  sw skip "Img": MyMemory returned source text
+  sw skip "Jasper": MyMemory returned source text
+  sw skip "Java": MyMemory returned source text
+  sw skip "Joe Black (9000)": MyMemory returned source text
+  sw skip "JazzCash": MyMemory returned source text
+  sw skip "MC": MyMemory returned source text
+  sw skip "Midtrans": MyMemory returned source text
+  sw skip "MM/DD/YYYY": MyMemory returned source text
+  sw skip "Mollie": MyMemory returned source text
+  sw skip "MOMO Pay": MyMemory returned source text
+  sw skip "MSG91": MyMemory returned source text
+  sw skip "Nexmo": MyMemory returned source text
+  sw skip "Olivier Thomas": MyMemory returned source text
+  sw skip "Paypal": MyMemory returned source text
+  sw skip "Payslip": MyMemory returned source text
+  sw skip "Paytm": MyMemory returned source text
+  sw skip "PayU": MyMemory returned source text
+  sw skip "Pdf": MyMemory returned source text
+  sw skip "Pesapal": MyMemory returned source text
+  sw skip "Rar": MyMemory returned source text
+  sw skip "Razorpay": MyMemory returned source text
+  sw skip "Reverse": MyMemory returned source text
+  sw skip "Roll No.": MyMemory returned source text
+  sw skip "SDA0009998": MyMemory returned source text
+  sw skip "SH": MyMemory returned source text
+  sw skip "Shivam Verma": MyMemory returned source text
+  sw skip "Skrill": MyMemory returned source text
+  sw skip "SMS Gateway Hub": MyMemory returned source text
+  sw skip "SSLCommerz": MyMemory returned source text
+  sw skip "std": MyMemory returned source text
+  sw skip "Times New Roman": MyMemory returned source text

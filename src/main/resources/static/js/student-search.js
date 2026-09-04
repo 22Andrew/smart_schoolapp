@@ -601,7 +601,16 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    Promise.all([loadClasses(), loadSections()]).catch(function (error) {
+    Promise.all([loadClasses(), loadSections()]).then(function () {
+        const params = new URLSearchParams(window.location.search);
+        const headerKeyword = params.get('keyword');
+        if (headerKeyword && keywordSearch) {
+            keywordSearch.value = headerKeyword;
+            if (keywordSearchBtn) {
+                keywordSearchBtn.click();
+            }
+        }
+    }).catch(function (error) {
         console.error(error);
     Swal.fire({
             icon: 'error',

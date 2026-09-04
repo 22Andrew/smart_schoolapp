@@ -341,6 +341,10 @@
         if (observerStarted || !window.MutationObserver) {
             return;
         }
+        var observeRoot = document.querySelector('.main-content');
+        if (!observeRoot) {
+            return;
+        }
         observerStarted = true;
         var timer = null;
         var observer = new MutationObserver(function (mutations) {
@@ -348,6 +352,9 @@
                 return;
             }
             var shouldApply = mutations.some(function (mutation) {
+                if (mutation.target && mutation.target.closest && mutation.target.closest('.sidebar')) {
+                    return false;
+                }
                 return mutation.type === 'childList' || mutation.type === 'characterData';
             });
             if (!shouldApply) {
@@ -355,10 +362,10 @@
             }
             clearTimeout(timer);
             timer = setTimeout(function () {
-                applyPhrases(phraseMap);
+                applyPhrases(phraseMap, observeRoot);
             }, 120);
         });
-        observer.observe(document.body, {
+        observer.observe(observeRoot, {
             childList: true,
             subtree: true,
             characterData: true
@@ -380,6 +387,15 @@
         if (activeLangCode() === 'en') {
             return;
         }
+
+        var sidebar = document.querySelector('.sidebar');
+        if (window.__UI_PHRASES__ && Object.keys(window.__UI_PHRASES__).length) {
+            phraseMap = window.__UI_PHRASES__;
+            if (sidebar) {
+                applyPhrases(window.__UI_PHRASES__, sidebar);
+            }
+        }
+
         var phrases = await resolvePhrases();
         applyPhrases(phrases);
         patchSweetAlert();
@@ -387,6 +403,10 @@
     }
 
     window.loadUiLanguage = loadUiLanguage;
+
+    if (window.__UI_PHRASES__ && document.querySelector('.sidebar')) {
+        applyPhrases(window.__UI_PHRASES__, document.querySelector('.sidebar'));
+    }
 
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', loadUiLanguage);

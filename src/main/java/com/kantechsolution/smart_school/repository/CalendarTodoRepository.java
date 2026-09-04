@@ -13,4 +13,6 @@ public interface CalendarTodoRepository extends JpaRepository<CalendarTodo, Long
     Page<CalendarTodo> findAllByOrderByDueDateAscIdAsc(Pageable pageable);
 
     List<CalendarTodo> findByDueDateBetweenOrderByDueDateAscIdAsc(LocalDate start, LocalDate end);
+
+    long countByCompletedFalseAndDueDateLessThanEqual(LocalDate dueDate);
 }

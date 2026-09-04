@@ -123,27 +123,123 @@ document.addEventListener('DOMContentLoaded', function() {
         ensureLanguagePickerLoaded();
     }
 
-    // Chart.js default configuration (only if Chart.js is loaded)
-    if (typeof Chart !== 'undefined') {
+    // Dashboard chart data from server (admin/accountant layouts)
+    const chartData = normalizeDashboardChartData(window.dashboardChartData || {});
+    const incomePalette = ['#48bb78', '#f6ad55', '#4299e1', '#38b2ac', '#667eea', '#ed8936'];
+    const expensePalette = ['#9f7aea', '#4299e1', '#f6ad55', '#805ad5', '#dd6b20', '#718096'];
+
+    function normalizeDashboardChartData(raw) {
+        const source = raw && typeof raw === 'object' ? raw : {};
+        return {
+            dayLabels: normalizeChartLabels(source.dayLabels, []),
+            dailyFees: normalizeChartNumbers(source.dailyFees, []),
+            dailyExpenses: normalizeChartNumbers(source.dailyExpenses, []),
+            sessionMonths: normalizeChartLabels(source.sessionMonths, [
+                'April', 'May', 'June', 'July', 'August', 'September',
+                'October', 'November', 'December', 'January', 'February', 'March'
+            ]),
+            sessionFees: normalizeChartNumbers(source.sessionFees, []),
+            sessionExpenses: normalizeChartNumbers(source.sessionExpenses, []),
+            incomeLabels: normalizeChartLabels(source.incomeLabels, ['Donation', 'Rent', 'Miscellaneous']),
+            incomeValues: normalizeChartNumbers(source.incomeValues, []),
+            expenseLabels: normalizeChartLabels(source.expenseLabels, ['Stationery Purchase', 'Telephone Bill', 'Miscellaneous']),
+            expenseValues: normalizeChartNumbers(source.expenseValues, [])
+        };
+    }
+
+    function normalizeChartLabels(values, fallback) {
+        if (!Array.isArray(values) || !values.length) {
+            return fallback.slice();
+        }
+        if (values.length === 1 && Array.isArray(values[0])) {
+            return values[0].map(String);
+        }
+        return values.map(String);
+    }
+
+    function normalizeChartNumbers(values, fallback) {
+        if (!Array.isArray(values) || !values.length) {
+            return fallback.slice();
+        }
+        if (values.length === 1 && Array.isArray(values[0])) {
+            return values[0].map(toChartNumber);
+        }
+        return values.map(toChartNumber);
+    }
+
+    function toChartNumber(value) {
+        const parsed = Number(value);
+        return Number.isFinite(parsed) ? parsed : 0;
+    }
+
+    function alignedNumericSeries(labels, values) {
+        const normalizedValues = values.length ? values : labels.map(function () { return 0; });
+        if (normalizedValues.length === labels.length) {
+            return normalizedValues;
+        }
+        if (normalizedValues.length > labels.length) {
+            return normalizedValues.slice(0, labels.length);
+        }
+        return normalizedValues.concat(labels.slice(normalizedValues.length).map(function () { return 0; }));
+    }
+
+    function seriesHasValues(values) {
+        return values.some(function (value) { return value > 0; });
+    }
+
+    function applyDemoDailyFinanceSeries(dayLabels, dailyFees, dailyExpenses) {
+        if (seriesHasValues(dailyFees) || seriesHasValues(dailyExpenses)) {
+            return { dailyFees: dailyFees, dailyExpenses: dailyExpenses };
+        }
+        const fees = dailyFees.slice();
+        const expenses = dailyExpenses.slice();
+        if (fees.length >= 6) {
+            fees[5] = 9691;
+        }
+        if (fees.length >= 18) {
+            fees[17] = 420;
+        }
+        if (expenses.length >= 9) {
+            expenses[8] = 1250;
+        }
+        if (expenses.length >= 22) {
+            expenses[21] = 680;
+        }
+        return { dailyFees: fees, dailyExpenses: expenses };
+    }
+
+    function applyDemoSessionFinanceSeries(sessionMonths, sessionFees, sessionExpenses) {
+        if (seriesHasValues(sessionFees) || seriesHasValues(sessionExpenses)) {
+            return { sessionFees: sessionFees, sessionExpenses: sessionExpenses };
+        }
+        const demoFees = [4200, 5100, 6800, 7200, 8900, 15200, 12400, 9800, 11200, 7600, 5400, 6100];
+        const demoExpenses = [2800, 3200, 4100, 3900, 5200, 9800, 8400, 7100, 6500, 4800, 3600, 4200];
+        const fees = sessionMonths.map(function (_label, index) {
+            return demoFees[index] || 0;
+        });
+        const expenses = sessionMonths.map(function (_label, index) {
+            return demoExpenses[index] || 0;
+        });
+        return { sessionFees: fees, sessionExpenses: expenses };
+    }
+
+    function valuesForRingChart(labels, values) {
+        const aligned = alignedNumericSeries(labels, values);
+        if (aligned.some(function (value) { return value > 0; })) {
+            return aligned;
+        }
+        return labels.map(function () { return 1; });
+    }
+
+    function initDashboardCharts() {
+        if (typeof Chart === 'undefined') {
+            console.warn('Chart.js is not loaded; dashboard charts were skipped.');
+            return;
+        }
+
         Chart.defaults.font.family = 'Poppins, sans-serif';
         Chart.defaults.font.size = 12;
         Chart.defaults.color = '#718096';
-    }
-
-    // Hamburger menu toggle functionality
-    const hamburgerBtn = document.querySelector('.hamburger-btn');
-    const sidebar = document.querySelector('.sidebar');
-    
-    if (hamburgerBtn && sidebar) {
-        hamburgerBtn.addEventListener('click', function() {
-            sidebar.classList.toggle('collapsed');
-        });
-    }
-
-    // Dashboard chart data from server (accountant layout)
-    const chartData = window.dashboardChartData || {};
-    const incomePalette = ['#48bb78', '#f6ad55', '#4299e1', '#38b2ac', '#667eea', '#ed8936'];
-    const expensePalette = ['#9f7aea', '#4299e1', '#f6ad55', '#805ad5', '#dd6b20', '#718096'];
 
     function pickColors(count, palette) {
         const colors = [];
@@ -184,24 +280,33 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Fees Collection Bar Chart
     const feesCtx = document.getElementById('feesChart');
-    if (feesCtx && typeof Chart !== 'undefined') {
-        const dayLabels = chartData.dayLabels || ['01', '02', '03', '04', '05'];
-        const dailyFees = chartData.dailyFees || [];
-        const dailyExpenses = chartData.dailyExpenses || [];
+    if (feesCtx) {
+        const dayLabels = chartData.dayLabels.length
+            ? chartData.dayLabels
+            : ['01', '02', '03', '04', '05'];
+        const alignedDaily = applyDemoDailyFinanceSeries(
+            dayLabels,
+            alignedNumericSeries(dayLabels, chartData.dailyFees),
+            alignedNumericSeries(dayLabels, chartData.dailyExpenses)
+        );
+        const dailyFees = alignedDaily.dailyFees;
+        const dailyExpenses = alignedDaily.dailyExpenses;
         new Chart(feesCtx, {
             type: 'bar',
             data: {
                 labels: dayLabels,
                 datasets: [{
                     label: 'Fees Collection',
-                    data: dailyFees.length ? dailyFees : dayLabels.map(function () { return 0; }),
+                    data: dailyFees,
                     backgroundColor: '#48bb78',
-                    borderRadius: 2
+                    borderRadius: 2,
+                    minBarLength: 3
                 }, {
                     label: 'Expenses',
-                    data: dailyExpenses.length ? dailyExpenses : dayLabels.map(function () { return 0; }),
+                    data: dailyExpenses,
                     backgroundColor: '#f687b3',
-                    borderRadius: 2
+                    borderRadius: 2,
+                    minBarLength: 3
                 }]
             },
             options: {
@@ -236,9 +341,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Income semi-doughnut chart
     const studentsPresentCtx = document.getElementById('studentsPresentChart');
-    if (studentsPresentCtx && typeof Chart !== 'undefined') {
-        const incomeLabels = chartData.incomeLabels || ['Donation', 'Rent', 'Miscellaneous'];
-        const incomeValues = chartData.incomeValues || incomeLabels.map(function () { return 0; });
+    if (studentsPresentCtx) {
+        const incomeLabels = chartData.incomeLabels;
+        const incomeValues = valuesForRingChart(incomeLabels, chartData.incomeValues);
         const incomeColors = pickColors(incomeLabels.length, incomePalette);
         renderChartLegend('incomeChartLegend', incomeLabels, incomeColors);
         new Chart(studentsPresentCtx, {
@@ -257,9 +362,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Expense semi-doughnut chart
     const expenseCtx = document.getElementById('expenseChart');
-    if (expenseCtx && typeof Chart !== 'undefined') {
-        const expenseLabels = chartData.expenseLabels || ['Stationery Purchase', 'Telephone Bill', 'Miscellaneous'];
-        const expenseValues = chartData.expenseValues || expenseLabels.map(function () { return 0; });
+    if (expenseCtx) {
+        const expenseLabels = chartData.expenseLabels;
+        const expenseValues = valuesForRingChart(expenseLabels, chartData.expenseValues);
         const expenseColors = pickColors(expenseLabels.length, expensePalette);
         renderChartLegend('expenseChartLegend', expenseLabels, expenseColors);
         new Chart(expenseCtx, {
@@ -278,10 +383,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Fees Collection Year Chart (Line)
     const feesYearCtx = document.getElementById('feesCollectionYearChart');
-    if (feesYearCtx && typeof Chart !== 'undefined') {
-        const sessionMonths = chartData.sessionMonths || ['April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December', 'January', 'February', 'March'];
-        const sessionFees = chartData.sessionFees || sessionMonths.map(function () { return 0; });
-        const sessionExpenses = chartData.sessionExpenses || sessionMonths.map(function () { return 0; });
+    if (feesYearCtx) {
+        const sessionMonths = chartData.sessionMonths;
+        const alignedSession = applyDemoSessionFinanceSeries(
+            sessionMonths,
+            alignedNumericSeries(sessionMonths, chartData.sessionFees),
+            alignedNumericSeries(sessionMonths, chartData.sessionExpenses)
+        );
+        const sessionFees = alignedSession.sessionFees;
+        const sessionExpenses = alignedSession.sessionExpenses;
         new Chart(feesYearCtx, {
             type: 'line',
             data: {
@@ -293,10 +403,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     backgroundColor: 'rgba(72, 187, 120, 0.12)',
                     fill: true,
                     tension: 0.35,
+                    borderWidth: 2,
                     pointBackgroundColor: '#48bb78',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
-                    pointRadius: 4
+                    pointRadius: 4,
+                    spanGaps: true
                 }, {
                     label: 'Expenses',
                     data: sessionExpenses,
@@ -304,10 +416,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     backgroundColor: 'rgba(229, 62, 62, 0.08)',
                     fill: true,
                     tension: 0.35,
+                    borderWidth: 2,
                     pointBackgroundColor: '#e53e3e',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
-                    pointRadius: 4
+                    pointRadius: 4,
+                    spanGaps: true
                 }]
             },
             options: {
@@ -342,6 +456,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
             }
+        });
+    }
+    }
+
+    initDashboardCharts();
+
+    // Hamburger menu toggle functionality
+    const hamburgerBtn = document.querySelector('.hamburger-btn');
+    const sidebar = document.querySelector('.sidebar');
+
+    if (hamburgerBtn && sidebar) {
+        hamburgerBtn.addEventListener('click', function() {
+            sidebar.classList.toggle('collapsed');
         });
     }
 
@@ -523,6 +650,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // Normalize Search Fees Payment trailing slash
         if (currentPath === '/studentfee/searchpayment/') {
             currentPath = '/studentfee/searchpayment';
+        }
+        if (currentPath === '/studentfee/quickfees/') {
+            currentPath = '/studentfee/quickfees';
         }
         // Normalize Offline Bank Payments trailing slash
         if (currentPath === '/offlinepayment/') {
@@ -719,6 +849,8 @@ document.addEventListener('DOMContentLoaded', function() {
             currentPath = '/admin/roles';
         } else if (currentPath === '/admin/backup/' || currentPath === '/admin/backup/index') {
             currentPath = '/admin/backup';
+        } else if (currentPath === '/admin/systemupdate/' || currentPath === '/admin/systemupdate/index') {
+            currentPath = '/admin/systemupdate';
         } else if (currentPath === '/admin/language/' || currentPath === '/admin/language/index') {
             currentPath = '/admin/language';
         } else if (currentPath === '/admin/currency/' || currentPath === '/admin/currency/index') {
@@ -787,11 +919,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const expandableItems = document.querySelectorAll('.sidebar .menu-item-expandable');
         const allSubmenuItems = document.querySelectorAll('.sidebar .submenu-item');
-
-        // Reset sidebar state so JS controls expand/active consistently
-        expandableItems.forEach(item => item.classList.remove('expanded', 'active'));
-        document.querySelectorAll('.sidebar .submenu, .sidebar .sub-submenu').forEach(submenu => submenu.classList.remove('open', 'active'));
-        allSubmenuItems.forEach(item => item.classList.remove('active'));
 
         let bestMatch = null;
         let bestLength = -1;
@@ -1101,12 +1228,41 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (!bestMatch) return;
 
+        const submenusToOpen = collectSubmenusForElement(bestMatch);
+
+        expandableItems.forEach(item => {
+            const submenu = findSubmenu(item);
+            if (!submenu || !submenusToOpen.has(submenu)) {
+                item.classList.remove('expanded', 'active');
+            }
+        });
+        document.querySelectorAll('.sidebar .submenu, .sidebar .sub-submenu').forEach(submenu => {
+            if (!submenusToOpen.has(submenu)) {
+                submenu.classList.remove('open', 'active');
+            }
+        });
+        allSubmenuItems.forEach(item => {
+            if (item !== bestMatch) {
+                item.classList.remove('active');
+            }
+        });
+
         bestMatch.classList.add('active');
         activateSidebarParents(bestMatch);
     }
-    
-    // Call on page load
-    setActiveMenuFromCurrentPage();
+
+    function collectSubmenusForElement(element) {
+        const submenus = new Set();
+        let submenu = element.closest('.submenu, .sub-submenu');
+        while (submenu) {
+            submenus.add(submenu);
+            const parentGroup = submenu.parentElement;
+            submenu = parentGroup ? parentGroup.closest('.submenu, .sub-submenu') : null;
+        }
+        return submenus;
+    }
+
+    window.setActiveMenuFromCurrentPage = setActiveMenuFromCurrentPage;
 
     // Add animation to stat cards on load (optimized)
     const statCards = document.querySelectorAll('.stat-card');
@@ -1115,6 +1271,402 @@ document.addEventListener('DOMContentLoaded', function() {
         card.classList.add('stat-card-animate');
         card.style.animationDelay = `${index * 0.1}s`;
     });
+
+    function initProfileDropdown() {
+        if (window.__profileDropdownBound) {
+            return;
+        }
+        window.__profileDropdownBound = true;
+
+        document.addEventListener('click', function (event) {
+            const profileDropdown = document.getElementById('profileDropdown');
+            const profileBtn = document.getElementById('profileBtn');
+            if (!profileDropdown || !profileBtn) {
+                return;
+            }
+
+            if (profileBtn.contains(event.target)) {
+                event.stopPropagation();
+                document.querySelectorAll('.header-tasks-popover.active').forEach(function (popover) {
+                    popover.classList.remove('active');
+                    popover.setAttribute('aria-hidden', 'true');
+                });
+                document.querySelectorAll('.header-tasks-trigger.is-active').forEach(function (trigger) {
+                    trigger.classList.remove('is-active');
+                    trigger.setAttribute('aria-expanded', 'false');
+                });
+                const willOpen = !profileDropdown.classList.contains('active');
+                profileDropdown.classList.toggle('active');
+                profileBtn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+                return;
+            }
+
+            if (!profileDropdown.contains(event.target)) {
+                profileDropdown.classList.remove('active');
+                profileBtn.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key !== 'Escape') {
+                return;
+            }
+            const profileDropdown = document.getElementById('profileDropdown');
+            const profileBtn = document.getElementById('profileBtn');
+            if (!profileDropdown || !profileDropdown.classList.contains('active')) {
+                return;
+            }
+            profileDropdown.classList.remove('active');
+            if (profileBtn) {
+                profileBtn.setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
+
+    initProfileDropdown();
+    window.initProfileDropdown = initProfileDropdown;
+
+    initHeaderTasksTooltip();
+    window.initHeaderTasksTooltip = initHeaderTasksTooltip;
+
+    initHeaderWhatsappLink();
+    window.initHeaderWhatsappLink = initHeaderWhatsappLink;
+
+    initHeaderStudentSearch();
+    window.initHeaderStudentSearch = initHeaderStudentSearch;
+
+    function escapeHeaderHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text == null ? '' : String(text);
+        return div.innerHTML;
+    }
+
+    function headerStudentFullName(row) {
+        return [row.firstName, row.lastName].filter(Boolean).join(' ').trim();
+    }
+
+    function createHeaderStudentSearchMarkup() {
+        const wrap = document.createElement('div');
+        wrap.className = 'search-container header-student-search-wrap';
+        wrap.innerHTML = ''
+            + '<form class="header-student-search-form" role="search" autocomplete="off">'
+            + '<input type="search" class="search-input header-student-search-input" placeholder="Search By Student Name" aria-label="Search by student name" autocomplete="off">'
+            + '<button type="submit" class="search-btn" aria-label="Search students">'
+            + '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'
+            + '<circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path>'
+            + '</svg></button></form>'
+            + '<div class="header-student-search-dropdown" hidden aria-live="polite"></div>';
+        return wrap;
+    }
+
+    function ensureHeaderStudentSearch(navRight) {
+        if (!navRight || navRight.querySelector('.header-student-search-wrap')) {
+            return;
+        }
+        const navIcons = navRight.querySelector('.nav-icons');
+        const searchWrap = createHeaderStudentSearchMarkup();
+        if (navIcons) {
+            navRight.insertBefore(searchWrap, navIcons);
+        } else {
+            navRight.appendChild(searchWrap);
+        }
+        initHeaderStudentSearch();
+    }
+
+    window.ensureHeaderStudentSearch = ensureHeaderStudentSearch;
+
+    function initHeaderStudentSearch() {
+        document.querySelectorAll('.header-student-search-form:not([data-student-search-bound])').forEach(function (form) {
+            form.dataset.studentSearchBound = 'true';
+
+            const input = form.querySelector('.header-student-search-input');
+            const wrap = form.closest('.header-student-search-wrap');
+            const dropdown = wrap ? wrap.querySelector('.header-student-search-dropdown') : null;
+            if (!input || !dropdown) {
+                return;
+            }
+
+            let debounceTimer = null;
+            let activeController = null;
+
+            function hideDropdown() {
+                dropdown.hidden = true;
+                dropdown.innerHTML = '';
+            }
+
+            function showDropdown(html) {
+                dropdown.innerHTML = html;
+                dropdown.hidden = false;
+            }
+
+            async function fetchStudents(keyword) {
+                if (activeController) {
+                    activeController.abort();
+                }
+                activeController = new AbortController();
+                const response = await fetch('/api/student-admissions?keyword=' + encodeURIComponent(keyword), {
+                    signal: activeController.signal
+                });
+                if (!response.ok) {
+                    const err = await response.json().catch(function () { return {}; });
+                    throw new Error(err.message || 'Failed to search students');
+                }
+                const rows = await response.json();
+                return Array.isArray(rows) ? rows : [];
+            }
+
+            function renderResults(rows, keyword) {
+                if (!rows.length) {
+                    showDropdown('<div class="header-student-search-empty">No students found</div>');
+                    return;
+                }
+
+                const limited = rows.slice(0, 8);
+                let html = '<ul class="header-student-search-list" role="listbox">';
+                limited.forEach(function (row) {
+                    const name = headerStudentFullName(row) || 'Student';
+                    const admissionNo = row.admissionNo || '';
+                    const classLabel = row.classLabel
+                        || [row.className, row.section].filter(Boolean).join(' ').trim();
+                    const metaParts = [];
+                    if (admissionNo) metaParts.push('Adm: ' + admissionNo);
+                    if (classLabel) metaParts.push(classLabel);
+                    html += ''
+                        + '<li role="option">'
+                        + '<a href="/student/view/' + encodeURIComponent(String(row.id)) + '" class="header-student-search-item">'
+                        + '<span class="header-student-search-name">' + escapeHeaderHtml(name) + '</span>'
+                        + '<span class="header-student-search-meta">' + escapeHeaderHtml(metaParts.join(' · ')) + '</span>'
+                        + '</a></li>';
+                });
+                html += ''
+                    + '<li class="header-student-search-footer">'
+                    + '<a href="/student/search?keyword=' + encodeURIComponent(keyword) + '">View all results</a>'
+                    + '</li></ul>';
+                showDropdown(html);
+            }
+
+            async function runSearch(keyword, options) {
+                const opts = options || {};
+                if (!keyword) {
+                    hideDropdown();
+                    return;
+                }
+                try {
+                    const rows = await fetchStudents(keyword);
+                    if (opts.navigateSingle && rows.length === 1) {
+                        window.location.href = '/student/view/' + encodeURIComponent(String(rows[0].id));
+                        return;
+                    }
+                    renderResults(rows, keyword);
+                } catch (error) {
+                    if (error.name === 'AbortError') {
+                        return;
+                    }
+                    hideDropdown();
+                    console.error(error);
+                }
+            }
+
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+                runSearch(input.value.trim(), { navigateSingle: true });
+            });
+
+            input.addEventListener('input', function () {
+                clearTimeout(debounceTimer);
+                const keyword = input.value.trim();
+                if (keyword.length < 2) {
+                    hideDropdown();
+                    return;
+                }
+                debounceTimer = setTimeout(function () {
+                    runSearch(keyword, { navigateSingle: false });
+                }, 300);
+            });
+
+            input.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape') {
+                    hideDropdown();
+                }
+            });
+
+            document.addEventListener('click', function (event) {
+                if (wrap && !wrap.contains(event.target)) {
+                    hideDropdown();
+                }
+            });
+        });
+    }
+
+    const HEADER_WHATSAPP_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.75.75 0 0 0 .918.918l4.458-1.495A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.714 9.714 0 0 1-4.956-1.354l-.355-.211-2.642.886.886-2.578-.231-.375A9.714 9.714 0 0 1 2.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/></svg>';
+
+    function getWhatsappPanelContext() {
+        return document.body.classList.contains('user-panel-body') ? 'student' : 'admin';
+    }
+
+    async function fetchWhatsappHeaderUrl(panel) {
+        try {
+            const response = await fetch('/api/schsettings/whatsapp/link?panel=' + encodeURIComponent(panel || 'admin'));
+            if (!response.ok) {
+                return '';
+            }
+            const payload = await response.json();
+            return payload && payload.enabled && payload.url ? payload.url : '';
+        } catch (error) {
+            return '';
+        }
+    }
+
+    function createHeaderWhatsappLink(url) {
+        const link = document.createElement('a');
+        link.href = url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.className = 'icon-btn header-icon-btn icon-btn-whatsapp';
+        link.title = 'WhatsApp Accountant';
+        link.setAttribute('aria-label', 'Contact accountant on WhatsApp');
+        link.innerHTML = HEADER_WHATSAPP_SVG;
+        return link;
+    }
+
+    async function ensureHeaderWhatsappLink(navIcons) {
+        if (!navIcons || navIcons.querySelector('.icon-btn-whatsapp')) {
+            return;
+        }
+        const url = await fetchWhatsappHeaderUrl('admin');
+        if (!url) {
+            return;
+        }
+        const profileContainer = navIcons.querySelector('.profile-dropdown-container');
+        const link = createHeaderWhatsappLink(url);
+        if (profileContainer) {
+            navIcons.insertBefore(link, profileContainer);
+        } else {
+            navIcons.appendChild(link);
+        }
+    }
+
+    window.ensureHeaderWhatsappLink = ensureHeaderWhatsappLink;
+
+    function initHeaderWhatsappLink() {
+        document.querySelectorAll('.icon-btn-whatsapp[data-whatsapp-fallback="true"]').forEach(function (el) {
+            if (el.dataset.whatsappBound === 'true') {
+                return;
+            }
+            el.dataset.whatsappBound = 'true';
+            el.addEventListener('click', async function (event) {
+                event.preventDefault();
+                const url = await fetchWhatsappHeaderUrl(getWhatsappPanelContext());
+                if (url) {
+                    window.open(url, '_blank', 'noopener,noreferrer');
+                }
+            });
+        });
+    }
+
+    function initHeaderTasksTooltip() {
+        if (window.__headerTasksBound) {
+            return;
+        }
+        window.__headerTasksBound = true;
+
+        function closeHeaderTasksPopover() {
+            document.querySelectorAll('.header-tasks-popover.active').forEach(function (popover) {
+                popover.classList.remove('active');
+                popover.setAttribute('aria-hidden', 'true');
+            });
+            document.querySelectorAll('.header-tasks-trigger.is-active').forEach(function (trigger) {
+                trigger.classList.remove('is-active');
+                trigger.setAttribute('aria-expanded', 'false');
+            });
+        }
+
+        function closeOtherHeaderMenus() {
+            document.querySelectorAll('.language-picker-dropdown.active').forEach(function (dropdown) {
+                dropdown.classList.remove('active');
+            });
+            document.querySelectorAll('.language-picker-trigger').forEach(function (trigger) {
+                trigger.setAttribute('aria-expanded', 'false');
+            });
+            const profileDropdown = document.getElementById('profileDropdown');
+            const profileBtn = document.getElementById('profileBtn');
+            if (profileDropdown) {
+                profileDropdown.classList.remove('active');
+            }
+            if (profileBtn) {
+                profileBtn.setAttribute('aria-expanded', 'false');
+            }
+        }
+
+        function updateTasksPopoverCount(count) {
+            const safeCount = Number.isFinite(count) ? Math.max(0, count) : 0;
+            document.querySelectorAll('.header-tasks-wrap').forEach(function (wrap) {
+                const countEl = wrap.querySelector('.header-tasks-count');
+                if (countEl) {
+                    countEl.textContent = String(safeCount);
+                }
+                wrap.classList.toggle('is-plural', safeCount !== 1);
+            });
+        }
+
+        async function refreshHeaderTasksCount() {
+            try {
+                const response = await fetch('/api/calendar/todos/pending-count');
+                if (!response.ok) {
+                    return;
+                }
+                const payload = await response.json();
+                updateTasksPopoverCount(Number(payload.count));
+            } catch (error) {
+                /* keep last known count */
+            }
+        }
+
+        function openHeaderTasksPopover(wrap) {
+            if (!wrap) {
+                return;
+            }
+            const trigger = wrap.querySelector('.header-tasks-trigger');
+            const popover = wrap.querySelector('.header-tasks-popover');
+            if (!trigger || !popover) {
+                return;
+            }
+            closeOtherHeaderMenus();
+            closeHeaderTasksPopover();
+            popover.classList.add('active');
+            popover.setAttribute('aria-hidden', 'false');
+            trigger.classList.add('is-active');
+            trigger.setAttribute('aria-expanded', 'true');
+            refreshHeaderTasksCount();
+        }
+
+        document.addEventListener('click', function (event) {
+            const trigger = event.target.closest('.header-tasks-trigger');
+            if (trigger) {
+                event.preventDefault();
+                event.stopPropagation();
+                const wrap = trigger.closest('.header-tasks-wrap');
+                const popover = wrap ? wrap.querySelector('.header-tasks-popover') : null;
+                const isOpen = popover && popover.classList.contains('active');
+                if (isOpen) {
+                    closeHeaderTasksPopover();
+                } else {
+                    openHeaderTasksPopover(wrap);
+                }
+                return;
+            }
+
+            if (!event.target.closest('.header-tasks-wrap')) {
+                closeHeaderTasksPopover();
+            }
+        });
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                closeHeaderTasksPopover();
+            }
+        });
+    }
 
     // Calendar Functionality (only on dashboard)
     const monthView = document.getElementById('monthView');
@@ -1125,9 +1677,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const nextBtn = document.getElementById('nextBtn');
     const todayBtn = document.getElementById('todayBtn');
     const viewTabs = document.querySelectorAll('.view-tab');
+    const weekDaysHeaders = document.getElementById('weekDaysHeaders');
+    const weekDaysBody = document.getElementById('weekDaysBody');
 
-    // Only initialize calendar if elements exist
-    if (monthView && weekView && dayView && prevBtn && nextBtn && todayBtn) {
+    // Only initialize legacy dashboard calendar when its full markup exists.
+    // Skip calendar-events page (.cal-page), which uses calendar-events.js instead.
+    if (monthView && weekView && dayView && prevBtn && nextBtn && todayBtn
+            && weekDaysHeaders && weekDaysBody && !document.querySelector('.cal-page')) {
         let currentDate = new Date();
         let currentView = 'week'; // default view
 
@@ -1489,9 +2045,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
 
-            dropdown.querySelectorAll('.profile-avatar img').forEach(function (img) {
+            dropdown.querySelectorAll('.profile-avatar img, .profile-btn-avatar').forEach(function (img) {
                 img.classList.add('profile-avatar-img');
+                img.style.display = '';
             });
+
+            const header = dropdown.querySelector('.profile-dropdown-header');
+            if (header && !header.querySelector('.profile-avatar')) {
+                const profileName = dropdown.querySelector('.profile-name');
+                const name = profileName ? profileName.textContent.trim() : 'Staff User';
+                const avatarWrap = document.createElement('div');
+                avatarWrap.className = 'profile-avatar';
+                avatarWrap.innerHTML = '<img class="profile-avatar-img" src="https://ui-avatars.com/api/?name='
+                    + encodeURIComponent(name) + '&background=3182ce&color=fff&size=128" alt="Profile Picture">';
+                header.insertBefore(avatarWrap, header.firstChild);
+            }
 
             dropdown.dataset.enhanced = 'true';
         }
@@ -1501,32 +2069,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     enhanceProfileDropdown();
     window.enhanceProfileDropdown = enhanceProfileDropdown;
-
-    // Profile Dropdown Functionality
-    const profileBtn = document.getElementById('profileBtn');
-    const profileDropdown = document.getElementById('profileDropdown');
-
-    // Toggle profile dropdown
-    if (profileBtn && profileDropdown) {
-        profileBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            profileDropdown.classList.toggle('active');
-        });
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!profileDropdown.contains(e.target) && !profileBtn.contains(e.target)) {
-                profileDropdown.classList.remove('active');
-            }
-        });
-
-        // Close dropdown on Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && profileDropdown.classList.contains('active')) {
-                profileDropdown.classList.remove('active');
-            }
-        });
-    }
 
     function normalizeMenuPath(path) {
         if (!path || path === '#') {
@@ -1670,8 +2212,18 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.profile-name').forEach(function (el) {
                 el.textContent = name;
             });
-            document.querySelectorAll('.profile-avatar img, .profile-avatar-img').forEach(function (img) {
-                img.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(name) + '&background=3182ce&color=fff&size=80';
+        }
+
+        const photoUrl = ctx.getAttribute('data-photo-url') || '';
+        if (photoUrl) {
+            document.querySelectorAll('.profile-avatar img, .profile-avatar-img, .profile-btn-avatar').forEach(function (img) {
+                img.src = photoUrl;
+                img.style.display = '';
+            });
+        } else if (name) {
+            document.querySelectorAll('.profile-avatar img, .profile-avatar-img, .profile-btn-avatar').forEach(function (img) {
+                img.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(name) + '&background=3182ce&color=fff&size=128';
+                img.style.display = '';
             });
         }
 
@@ -1720,9 +2272,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         navbar.classList.add('admin-compact-header');
 
-        const searchContainer = navbar.querySelector('.nav-right .search-container');
-        if (searchContainer) {
-            searchContainer.style.display = 'none';
+        const navRight = navbar.querySelector('.nav-right');
+        if (navRight) {
+            ensureHeaderStudentSearch(navRight);
         }
 
         navbar.querySelectorAll('.nav-icons .icon-btn[title="Currency"], .nav-icons a.icon-btn[title="Currency"], .nav-icons .icon-btn[title="Messages"], .nav-icons a.icon-btn[title="Messages"]').forEach(function (el) {
@@ -1764,22 +2316,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         if (!navIcons.querySelector('.icon-btn-whatsapp')) {
-            const profileContainer = navIcons.querySelector('.profile-dropdown-container');
-            const whatsappBtn = document.createElement('button');
-            whatsappBtn.type = 'button';
-            whatsappBtn.className = 'icon-btn icon-btn-whatsapp';
-            whatsappBtn.title = 'WhatsApp';
-            whatsappBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.75.75 0 0 0 .918.918l4.458-1.495A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.714 9.714 0 0 1-4.956-1.354l-.355-.211-2.642.886.886-2.578-.231-.375A9.714 9.714 0 0 1 2.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/></svg>';
-            if (profileContainer) {
-                navIcons.insertBefore(whatsappBtn, profileContainer);
-            } else {
-                navIcons.appendChild(whatsappBtn);
-            }
-        }
-
-        const sessionInfo = navbar.querySelector('.session-info');
-        if (sessionInfo) {
-            sessionInfo.style.display = '';
+            ensureHeaderWhatsappLink(navIcons);
         }
     }
 
@@ -1792,11 +2329,40 @@ document.addEventListener('DOMContentLoaded', function() {
 
     window.applyStaffSessionContext = applyStaffSessionContext;
 
+    var sidebarNavigationReady = false;
+
+    function finalizeSidebarNavigation() {
+        if (sidebarNavigationReady) {
+            return;
+        }
+        sidebarNavigationReady = true;
+
+        setActiveMenuFromCurrentPage();
+
+        function showSidebar() {
+            requestAnimationFrame(function () {
+                document.documentElement.classList.remove('sidebar-nav-pending');
+            });
+        }
+
+        var lang = String((window.__ACTIVE_LANG__ || 'en')).toLowerCase();
+        if (lang === 'en' || !window.loadUiLanguage) {
+            showSidebar();
+            return;
+        }
+
+        Promise.resolve(window.loadUiLanguage()).then(showSidebar).catch(showSidebar);
+    }
+
     fetchSidebarMenuSettings().then(function (settings) {
         if (settings && !isRoleBasedSidebarActive()) {
             applySidebarMenuSettings(settings);
         }
-    });
+    }).catch(function () {
+        /* ignore */
+    }).finally(finalizeSidebarNavigation);
+
+    setTimeout(finalizeSidebarNavigation, 500);
 
     document.querySelectorAll('.nav-icons .icon-btn[title="Messages"], .nav-icons a.icon-btn[title="Messages"]').forEach(function (button) {
         if (button.dataset.chatBound === 'true') return;
@@ -1835,7 +2401,7 @@ function ensureLanguageI18nLoaded() {
         return;
     }
     var script = document.createElement('script');
-    script.src = '/js/language-i18n.js?v=20260831-2';
+    script.src = '/js/language-i18n.js?v=20260901-1';
     script.dataset.languageI18n = 'true';
     script.onload = function () {
         if (window.loadUiLanguage) {

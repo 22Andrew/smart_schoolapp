@@ -40,12 +40,16 @@
 
                 <h2 class="login-title">Admin Login</h2>
 
+                <div th:if="${successMessage}" class="login-alert login-alert-success" th:text="${successMessage}">
+                    Success message
+                </div>
+
                 <form class="login-form" th:action="@{/perform-login}" method="post">
                     <div class="form-group">
                         <input type="email" 
                                class="form-control" 
                                name="username" 
-                               placeholder="superadmin@gmail.com" 
+                               placeholder="Email address" 
                                required>
                         <span class="input-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -129,7 +133,7 @@
                 </form>
 
                 <div class="login-footer">
-                    <a href="/forgot-password" class="footer-link">
+                    <a href="/site/forgotpassword" class="footer-link">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
                             <line x1="12" y1="2" x2="12" y2="12"></line>
