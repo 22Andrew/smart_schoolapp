@@ -1,8 +1,9 @@
 [build]
-builder = "NIXPACKS"
-buildCommand = "./mvnw -DskipTests package"
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile.railway"
 
 [deploy]
-startCommand = "java -Dspring.profiles.active=prod -jar target/smart-school-0.0.1-SNAPSHOT.jar"
+healthcheckPath = "/login"
+healthcheckTimeout = 600
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 3

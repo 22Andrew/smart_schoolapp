@@ -1,0 +1,14 @@
+target/*
+!target/*.jar
+.git/
+.idea/
+.vscode/
+*.iml
+node_modules/
+uploads/
+.env
+application-local.properties
+src/main/resources/application-local.properties
+*.log
+.DS_Store
+Thumbs.db
