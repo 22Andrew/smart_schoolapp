@@ -43,10 +43,11 @@
                     </div>
 
                     <div class="cal-week-view" id="weekView" hidden>
-                        <div class="cal-placeholder">Week view coming soon.</div>
+                        <div class="cal-weekdays" id="weekHeaderRow"></div>
+                        <div class="cal-week-grid" id="weekDaysGrid"></div>
                     </div>
                     <div class="cal-day-view" id="dayView" hidden>
-                        <div class="cal-placeholder">Day view coming soon.</div>
+                        <div class="cal-day-schedule" id="daySchedule"></div>
                     </div>
                 </section>
 
@@ -87,6 +88,6 @@
     </div>
 
     <script th:src="@{/js/dashboard.js(v=20260903-3)}"></script>
-    <script th:src="@{/js/calendar-events.js}"></script>
+    <script th:src="@{/js/calendar-events.js(v=20260904-1)}"></script>
 </body>
 </html>

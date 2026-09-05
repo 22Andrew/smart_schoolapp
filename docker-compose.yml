@@ -1,0 +1,49 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: smart-school-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: smart_schoolapp
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  app:
+    image: springboot-app
+    build: .
+    container_name: smart-school-app
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/smart_schoolapp?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: rootpassword
+      APP_DEMO_STUDENT_PASSWORD: "110001"
+      APP_DEMO_PARENT_PASSWORD: "110001"
+      APP_DEMO_STAFF_SUPERADMIN_PASSWORD: Superadmin1
+      APP_DEMO_STAFF_ADMIN_PASSWORD: Admin123
+      APP_DEMO_STAFF_TEACHER_PASSWORD: Teacher123
+      APP_DEMO_STAFF_ACCOUNTANT_PASSWORD: Accountant123
+      APP_DEMO_STAFF_RECEPTIONIST_PASSWORD: Receptionist123
+      APP_DEMO_STAFF_LIBRARIAN_PASSWORD: Librarian123
+      APP_UPLOAD_DIR: /data/uploads
+    volumes:
+      - uploads_data:/data/uploads
+
+volumes:
+  mysql_data:
+  uploads_data:

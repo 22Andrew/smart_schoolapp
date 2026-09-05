@@ -84,6 +84,69 @@ Demo **usernames** are fixed (e.g. `admin@gmail.com`, `std1`). **Passwords** are
 
 Do not commit real passwords to Git.
 
+## Run with Docker
+
+Requires [Docker Desktop](https://www.docker.com/products/docker-desktop/) (or Docker Engine + Compose).
+
+Build the image (first build may take several minutes while Maven downloads dependencies):
+
+```bash
+docker build -t springboot-app .
+```
+
+If the build fails with a Docker Hub error (`502 Bad Gateway` or timeout), wait a minute and retry — that is a temporary registry/network issue.
+
+If Maven downloads fail inside Docker but work on your PC, build the JAR locally first, then use the runtime-only Dockerfile:
+
+```bash
+.\mvnw.cmd package -DskipTests
+docker build -f Dockerfile.local -t springboot-app .
+```
+
+Start the app and MySQL together:
+
+```bash
+docker compose up --build
+```
+
+Open `http://localhost:8080`. The first boot may take several minutes while the database bootstrap runs.
+
+| Service | URL / port |
+|---------|------------|
+| App | http://localhost:8080 |
+| MySQL | localhost:3306 (user `root`, password `rootpassword`, database `smart_schoolapp`) |
+
+Use the demo logins above (passwords match the defaults in `docker-compose.yml`).
+
+```bash
+# Run in background
+docker compose up --build -d
+
+# Stop and remove containers
+docker compose down
+
+# Stop and remove containers + volumes (fresh database)
+docker compose down -v
+```
+
+Run the built image (requires MySQL reachable from Docker):
+
+```bash
+docker run -p 8080:8080 \
+  -e SPRING_DATASOURCE_URL=jdbc:mysql://host.docker.internal:3306/smart_schoolapp?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true \
+  -e SPRING_DATASOURCE_USERNAME=root \
+  -e SPRING_DATASOURCE_PASSWORD=your-password \
+  -e APP_DEMO_STUDENT_PASSWORD=110001 \
+  -e APP_DEMO_PARENT_PASSWORD=110001 \
+  -e APP_DEMO_STAFF_SUPERADMIN_PASSWORD=Superadmin1 \
+  -e APP_DEMO_STAFF_ADMIN_PASSWORD=Admin123 \
+  -e APP_DEMO_STAFF_TEACHER_PASSWORD=Teacher123 \
+  -e APP_DEMO_STAFF_ACCOUNTANT_PASSWORD=Accountant123 \
+  -e APP_DEMO_STAFF_RECEPTIONIST_PASSWORD=Receptionist123 \
+  -e APP_DEMO_STAFF_LIBRARIAN_PASSWORD=Librarian123 \
+  springboot-app
+```
+
 ## Deploy to Railway (online demo)
 
 See **[docs/RAILWAY-DEPLOY.md](docs/RAILWAY-DEPLOY.md)** for step-by-step hosting with MySQL and secrets in Railway environment variables.

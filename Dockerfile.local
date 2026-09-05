@@ -1,0 +1,21 @@
+# Use when Maven/network inside Docker is unreliable:
+#   .\mvnw.cmd package -DskipTests
+#   docker build -f Dockerfile.local -t springboot-app .
+
+FROM eclipse-temurin:17-jre-jammy
+
+WORKDIR /app
+
+RUN groupadd -r spring && useradd -r -g spring spring \
+    && mkdir -p /data/uploads \
+    && chown -R spring:spring /data/uploads
+
+USER spring
+
+COPY target/smart-school-*.jar app.jar
+
+EXPOSE 8080
+
+ENV SPRING_PROFILES_ACTIVE=prod
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
