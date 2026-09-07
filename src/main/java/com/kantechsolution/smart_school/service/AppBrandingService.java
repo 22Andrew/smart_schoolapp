@@ -21,6 +21,10 @@ public class AppBrandingService {
 
         Map<String, Object> branding = new LinkedHashMap<>();
         branding.put("schoolName", general.get("schoolName"));
+        branding.put("address", general.get("address"));
+        branding.put("phone", general.get("phone"));
+        branding.put("email", general.get("email"));
+        branding.put("website", general.get("baseUrl"));
         branding.put("session", general.get("session"));
         branding.put("printLogo", logos.get("printLogo"));
         branding.put("adminLogo", logos.get("adminLogo"));

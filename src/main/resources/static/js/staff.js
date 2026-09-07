@@ -69,6 +69,16 @@
         currentStaffLoginEmail: null
     };
 
+    let payslipSchoolInfo = {
+        schoolName: document.body?.dataset?.schoolName || 'Smart School',
+        address: '',
+        phone: '',
+        email: '',
+        website: '',
+        printLogo: null
+    };
+    let payslipSchoolInfoLoaded = false;
+
     const staffProfileModal = document.getElementById('staffProfileModal');
     const staffProfileOverlay = document.getElementById('staffProfileOverlay');
     const staffProfileCloseBtn = document.getElementById('staffProfileCloseBtn');
@@ -98,6 +108,7 @@
             console.error('Staff directory event binding failed', error);
         }
         await loadFormOptions();
+        await loadPayslipSchoolInfo();
         await handleInitialRoute();
         ensureStaffDirectoryContext()
             .then(() => {
@@ -702,7 +713,9 @@
                     if (!row || !activeProfileStaff) return;
                     const payslip = payrollRecords.find((item) => String(item.payslipNo) === String(row.dataset.payslipNo));
                     if (payslip) {
-                        openPayslipModal(activeProfileStaff, payslip);
+                        openPayslipModal(activeProfileStaff, payslip).catch((error) => {
+                            console.error('Failed to open payslip modal', error);
+                        });
                     }
                     return;
                 }
@@ -1252,7 +1265,38 @@
         });
     }
 
-    function openPayslipModal(staff, payslip) {
+    async function loadPayslipSchoolInfo() {
+        if (payslipSchoolInfoLoaded) {
+            return payslipSchoolInfo;
+        }
+
+        const fallbackName = document.body?.dataset?.schoolName || 'Smart School';
+        try {
+            const response = await fetch('/api/schsettings/branding');
+            if (response.ok) {
+                const branding = await response.json();
+                payslipSchoolInfo = {
+                    schoolName: branding.schoolName || fallbackName,
+                    address: branding.address || '',
+                    phone: branding.phone || '',
+                    email: branding.email || '',
+                    website: branding.website || '',
+                    printLogo: branding.printLogo || null
+                };
+            } else {
+                payslipSchoolInfo.schoolName = fallbackName;
+            }
+        } catch (error) {
+            console.warn('Failed to load payslip school info', error);
+            payslipSchoolInfo.schoolName = fallbackName;
+        }
+
+        payslipSchoolInfoLoaded = true;
+        return payslipSchoolInfo;
+    }
+
+    async function openPayslipModal(staff, payslip) {
+        await loadPayslipSchoolInfo();
         activePayslipDetail = { staff, payslip };
         if (staffPayslipDocument) {
             staffPayslipDocument.innerHTML = renderPayslipDocument(staff, payslip);
@@ -1306,26 +1350,33 @@
 
     function renderPayslipDocument(staff, payslip) {
         const detail = buildPayslipDetail(staff, payslip);
+        const school = payslipSchoolInfo;
+        const logoHtml = school.printLogo
+            ? `<img src="${school.printLogo}" alt="${escapeHtml(school.schoolName)}" class="staff-payslip-logo-img">`
+            : `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="42" height="42">
+                                <rect x="8" y="10" width="34" height="32" fill="#f39c12" rx="2"/>
+                                <rect x="10" y="12" width="30" height="28" fill="#f6c544" rx="1"/>
+                                <path d="M 25 12 L 25 40" stroke="#f39c12" stroke-width="2"/>
+                            </svg>
+                            <span>${escapeHtml((school.schoolName || 'SMART SCHOOL').toUpperCase())}</span>`;
+        const contactLines = [
+            school.address ? `<div>Address: ${escapeHtml(school.address)}</div>` : '',
+            school.phone ? `<div>Phone No.: ${escapeHtml(school.phone)}</div>` : '',
+            school.email ? `<div>Email: ${escapeHtml(school.email)}</div>` : '',
+            school.website ? `<div>Website: ${escapeHtml(school.website)}</div>` : ''
+        ].filter(Boolean).join('');
 
         return `
             <div class="staff-payslip-sheet" id="staffPayslipPrintArea">
                 <div class="staff-payslip-sheet-header">
                     <div class="staff-payslip-brand">
                         <div class="staff-payslip-logo">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="42" height="42">
-                                <rect x="8" y="10" width="34" height="32" fill="#f39c12" rx="2"/>
-                                <rect x="10" y="12" width="30" height="28" fill="#f6c544" rx="1"/>
-                                <path d="M 25 12 L 25 40" stroke="#f39c12" stroke-width="2"/>
-                            </svg>
-                            <span>SMART SCHOOL</span>
+                            ${logoHtml}
                         </div>
-                        <h4 class="staff-payslip-school-name">Your School Name Here</h4>
+                        <h4 class="staff-payslip-school-name">${escapeHtml(school.schoolName || 'Smart School')}</h4>
                     </div>
                     <div class="staff-payslip-school-contact">
-                        <div>Address: 25 Kings Street, CA</div>
-                        <div>Phone No.: 89562423934</div>
-                        <div>Email: yourschool@gmail.com</div>
-                        <div>Website: www.yoursite.in</div>
+                        ${contactLines || '<div>&nbsp;</div>'}
                     </div>
                 </div>
                 <div class="staff-payslip-title-bar">Payslip</div>
@@ -1486,20 +1537,20 @@
                 .staff-payslip-logo { display: flex; align-items: center; gap: 8px; font-weight: 700; }
                 .staff-payslip-school-name { margin: 0; font-size: 28px; }
                 .staff-payslip-school-contact { text-align: right; font-size: 12px; line-height: 1.5; }
-                .staff-payslip-title-bar { background: #111; color: #fff; text-align: center; padding: 6px; margin-top: 0; }
-                .staff-payslip-sheet-body { background: #243447; color: #fff; padding: 16px; }
-                .staff-payslip-period-title { text-align: center; margin: 0 0 12px; font-size: 22px; font-weight: 400; }
-                .staff-payslip-meta-row { display: flex; justify-content: space-between; margin-bottom: 14px; font-size: 13px; }
-                .staff-payslip-staff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; margin-bottom: 14px; font-size: 13px; }
-                .staff-payslip-info-row { display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.12); padding: 6px 0; }
+                .staff-payslip-title-bar { background: #f1f5f9; color: #000; text-align: center; padding: 6px; margin-top: 0; }
+                .staff-payslip-sheet-body { background: #ffffff; color: #000; padding: 16px; }
+                .staff-payslip-period-title { text-align: center; margin: 0 0 12px; font-size: 22px; font-weight: 400; color: #000; }
+                .staff-payslip-meta-row { display: flex; justify-content: space-between; margin-bottom: 14px; font-size: 13px; color: #000; }
+                .staff-payslip-staff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; margin-bottom: 14px; font-size: 13px; color: #000; }
+                .staff-payslip-info-row { display: flex; justify-content: space-between; border-bottom: 1px solid #e2e8f0; padding: 6px 0; color: #000; }
                 .staff-payslip-ledger { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-bottom: 14px; }
-                .staff-payslip-ledger-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-                .staff-payslip-ledger-table th, .staff-payslip-ledger-table td { border: 1px solid rgba(255,255,255,0.12); padding: 8px; }
-                .staff-payslip-ledger-table th { background: rgba(255,255,255,0.08); text-align: left; }
+                .staff-payslip-ledger-table { width: 100%; border-collapse: collapse; font-size: 13px; color: #000; }
+                .staff-payslip-ledger-table th, .staff-payslip-ledger-table td { border: 1px solid #e2e8f0; padding: 8px; color: #000; }
+                .staff-payslip-ledger-table th { background: #f1f5f9; text-align: left; color: #000; }
                 .text-end { text-align: right; }
-                .staff-payslip-summary { margin-left: auto; width: 320px; font-size: 13px; }
-                .staff-payslip-summary-row { display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.12); padding: 6px 0; }
-                .staff-payslip-note { font-size: 11px; margin-top: 16px; opacity: 0.85; }
+                .staff-payslip-summary { margin-left: auto; width: 320px; font-size: 13px; color: #000; }
+                .staff-payslip-summary-row { display: flex; justify-content: space-between; border-bottom: 1px solid #e2e8f0; padding: 6px 0; color: #000; }
+                .staff-payslip-note { font-size: 11px; margin-top: 16px; color: #000; }
                 .is-hidden { display: none !important; }
             </style></head><body>${printArea.outerHTML}</body></html>
         `);

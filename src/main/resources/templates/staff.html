@@ -18,7 +18,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body th:classappend="${staffDirectoryRestricted} ? ' restricted-staff-directory-mode receptionist-staff-directory-mode' : ''"
-      th:attr="data-restricted-staff=${staffDirectoryRestricted},data-receptionist-staff=${staffDirectoryRestricted},data-staff-member-id=${currentStaffMemberId},data-login-email=${staffUserEmail},data-restricted-role=${staffDirectoryRole}">
+      th:attr="data-restricted-staff=${staffDirectoryRestricted},data-receptionist-staff=${staffDirectoryRestricted},data-staff-member-id=${currentStaffMemberId},data-login-email=${staffUserEmail},data-restricted-role=${staffDirectoryRole},data-school-name=${schoolName}">
     <!-- Top Navigation Bar -->
     <nav th:replace="~{fragments/top-navbar :: top-navbar}"></nav>
 
@@ -882,7 +882,7 @@
         document.documentElement.setAttribute('data-restricted-staff-directory', 'true');
         document.documentElement.setAttribute('data-receptionist-staff-directory', 'true');
     </script>
-    <script th:src="@{/js/staff.js(v='20260830-2')}"></script>
+    <script th:src="@{/js/staff.js(v=${appVersion})}"></script>
 </body>
 </html>
 

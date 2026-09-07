@@ -2199,12 +2199,13 @@
 .staff-payslip-dialog {
     width: min(920px, 100%);
     max-height: calc(100vh - 2rem);
-    background: #1e293b;
-    border: 1px solid #334155;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
     border-radius: 6px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    color: #000000;
 }
 
 .staff-payslip-header {
@@ -2212,12 +2213,12 @@
     align-items: center;
     justify-content: space-between;
     padding: 0.85rem 1rem;
-    background: #8b5cf6;
+    background: var(--theme-primary, #22c55e);
 }
 
 .staff-payslip-header h3 {
     margin: 0;
-    color: #fff;
+    color: #000000;
     font-size: 1rem;
     font-weight: 600;
 }
@@ -2232,7 +2233,7 @@
 .staff-payslip-header .assign-modal-close {
     border: none;
     background: transparent;
-    color: #fff;
+    color: #000000;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -2252,7 +2253,7 @@
     flex-direction: column;
     gap: 0.75rem;
     min-height: 0;
-    background: #1e293b;
+    background: #ffffff;
 }
 
 .staff-payslip-toolbar {
@@ -2283,10 +2284,10 @@
     top: calc(100% + 0.35rem);
     right: 0;
     min-width: 190px;
-    background: #0f172a;
-    border: 1px solid #334155;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
     border-radius: 6px;
-    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.45);
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
     z-index: 2600;
     padding: 0.35rem 0;
 }
@@ -2299,10 +2300,10 @@
 .staff-payslip-columns-header,
 .staff-columns-dropdown-header {
     padding: 0.55rem 0.85rem;
-    color: #94a3b8;
+    color: #000000;
     font-size: 0.76rem;
     font-weight: 600;
-    border-bottom: 1px solid #334155;
+    border-bottom: 1px solid #e2e8f0;
 }
 
 .staff-payslip-column-toggle,
@@ -2311,14 +2312,14 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.45rem 0.85rem;
-    color: #e2e8f0;
+    color: #000000;
     font-size: 0.8rem;
     cursor: pointer;
 }
 
 .staff-payslip-column-toggle:hover,
 .staff-columns-toggle:hover {
-    background: rgba(139, 92, 246, 0.08);
+    background: rgba(0, 0, 0, 0.04);
 }
 
 .staff-payroll-table-controls {
@@ -2359,27 +2360,33 @@
     gap: 0.2rem;
     font-size: 0.62rem;
     font-weight: 700;
-    color: #111827;
+    color: #000000;
     line-height: 1.1;
+}
+
+.staff-payslip-logo-img {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
 }
 
 .staff-payslip-school-name {
     margin: 0;
     font-size: 1.65rem;
     font-weight: 700;
-    color: #111827;
+    color: #000000;
 }
 
 .staff-payslip-school-contact {
     text-align: right;
     font-size: 0.78rem;
     line-height: 1.45;
-    color: #374151;
+    color: #000000;
 }
 
 .staff-payslip-title-bar {
-    background: #111827;
-    color: #ffffff;
+    background: #f1f5f9;
+    color: #000000;
     text-align: center;
     padding: 0.45rem;
     font-size: 0.95rem;
@@ -2387,8 +2394,8 @@
 }
 
 .staff-payslip-sheet-body {
-    background: #243447;
-    color: #ffffff;
+    background: #ffffff;
+    color: #000000;
     padding: 1rem 1.25rem 1.1rem;
 }
 
@@ -2397,6 +2404,7 @@
     text-align: center;
     font-size: 1.35rem;
     font-weight: 400;
+    color: #000000;
 }
 
 .staff-payslip-meta-row {
@@ -2405,6 +2413,7 @@
     gap: 1rem;
     font-size: 0.82rem;
     margin-bottom: 0.85rem;
+    color: #000000;
 }
 
 .staff-payslip-staff-grid {
@@ -2420,11 +2429,11 @@
     justify-content: space-between;
     gap: 1rem;
     padding: 0.45rem 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    border-bottom: 1px solid #e2e8f0;
 }
 
 .staff-payslip-info-row span {
-    color: #cbd5e1;
+    color: #000000;
 }
 
 .staff-payslip-ledger {
@@ -2441,13 +2450,15 @@
 
 .staff-payslip-ledger-table th,
 .staff-payslip-ledger-table td {
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid #e2e8f0;
     padding: 0.55rem 0.65rem;
+    color: #000000;
 }
 
 .staff-payslip-ledger-table th {
-    background: rgba(255, 255, 255, 0.08);
+    background: #f1f5f9;
     font-weight: 600;
+    color: #000000;
 }
 
 .staff-payslip-ledger-table .text-end {
@@ -2469,17 +2480,25 @@
     justify-content: space-between;
     gap: 1rem;
     padding: 0.45rem 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    border-bottom: 1px solid #e2e8f0;
 }
 
 .staff-payslip-summary-row span {
-    color: #cbd5e1;
+    color: #000000;
 }
 
 .staff-payslip-note {
     margin: 0.85rem 0 0;
     font-size: 0.72rem;
-    color: rgba(255, 255, 255, 0.75);
+    color: #000000;
+}
+
+.staff-payslip-modal .staff-icon-action-btn {
+    border: 1px solid #e2e8f0;
+}
+
+.staff-payslip-modal .staff-icon-action-btn svg {
+    stroke: #000000;
 }
 
 .staff-payslip-document [data-payslip-section].is-hidden {
