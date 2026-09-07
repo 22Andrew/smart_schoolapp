@@ -613,13 +613,14 @@
     position: relative;
     width: min(1220px, 100%);
     max-height: calc(100vh - 2rem);
-    background: #1e293b;
-    border: 1px solid #334155;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
     border-radius: 8px;
     overflow: hidden;
     z-index: 1;
     display: flex;
     flex-direction: column;
+    color: #000000;
 }
 
 .staff-profile-modal-header {
@@ -627,14 +628,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #8b5cf6;
+    background: #22c55e;
     padding: 0.9rem 3rem;
     flex-shrink: 0;
 }
 
 .staff-profile-modal-title {
     margin: 0;
-    color: #ffffff;
+    color: #000000;
     font-size: 1rem;
     font-weight: 600;
     text-align: center;
@@ -648,7 +649,7 @@
     z-index: 2;
     border: none;
     background: transparent;
-    color: #ffffff;
+    color: #000000;
     font-size: 1.75rem;
     line-height: 1;
     cursor: pointer;
@@ -656,13 +657,14 @@
 }
 
 .staff-profile-close:hover {
-    color: #ede9fe;
+    color: #333333;
 }
 
 .staff-profile-body {
     padding: 1rem;
     overflow: auto;
     flex: 1;
+    background: #ffffff;
 }
 
 .staff-profile-layout {
@@ -675,8 +677,8 @@
 }
 
 .staff-profile-card {
-    background: #1e293b;
-    border: 1px solid #334155;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
     border-radius: 8px;
     overflow: hidden;
 }
@@ -700,7 +702,7 @@
     margin: 0 auto 0.9rem;
     border-radius: 4px;
     overflow: hidden;
-    background: #334155;
+    background: #f1f5f9;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -719,13 +721,13 @@
 .staff-profile-name {
     margin: 0 0 0.9rem;
     text-align: center;
-    color: #f8fafc;
+    color: #000000;
     font-size: 1.08rem;
     font-weight: 600;
 }
 
 .staff-profile-summary {
-    border-top: 1px solid #334155;
+    border-top: 1px solid #e2e8f0;
 }
 
 .staff-profile-summary-row {
@@ -733,16 +735,16 @@
     grid-template-columns: 1fr 1fr;
     gap: 0.65rem;
     padding: 0.6rem 0;
-    border-bottom: 1px solid #334155;
+    border-bottom: 1px solid #e2e8f0;
     font-size: 0.8rem;
 }
 
 .staff-profile-summary-row .summary-label {
-    color: #94a3b8;
+    color: #000000;
 }
 
 .staff-profile-summary-row .summary-value {
-    color: #38bdf8;
+    color: #000000;
     text-align: right;
     word-break: break-word;
 }
@@ -772,7 +774,7 @@
 
 .staff-profile-barcode-id {
     margin-top: 0.35rem;
-    color: #cbd5e1;
+    color: #000000;
     font-size: 0.75rem;
 }
 
@@ -800,8 +802,8 @@
     justify-content: space-between;
     gap: 1rem;
     padding: 0 1rem;
-    border-bottom: 1px solid #334155;
-    background: #1e293b;
+    border-bottom: 1px solid #e2e8f0;
+    background: #ffffff;
     flex-shrink: 0;
 }
 
@@ -814,7 +816,7 @@
 .staff-profile-tab {
     border: none;
     background: transparent;
-    color: #94a3b8;
+    color: #000000;
     padding: 0.9rem 0.8rem;
     font-size: 0.84rem;
     font-family: inherit;
@@ -824,7 +826,7 @@
 }
 
 .staff-profile-tab.active {
-    color: #f8fafc;
+    color: #000000;
     border-bottom-color: #8b5cf6;
 }
 
@@ -838,7 +840,7 @@
 .staff-profile-action-btn {
     border: none;
     background: transparent;
-    color: #ffffff;
+    color: #000000;
     cursor: pointer;
     padding: 0.2rem;
     display: inline-flex;
@@ -861,7 +863,7 @@
 .staff-profile-tab-panels {
     flex: 1;
     overflow-y: auto;
-    background: #1e293b;
+    background: #ffffff;
     min-height: 0;
 }
 
@@ -900,7 +902,7 @@
 }
 
 .staff-profile-section {
-    border-bottom: 1px solid #334155;
+    border-bottom: 1px solid #e2e8f0;
 }
 
 .staff-profile-section:last-child {
@@ -908,8 +910,8 @@
 }
 
 .staff-profile-section-title {
-    background: #334155;
-    color: #f1f5f9;
+    background: #f1f5f9;
+    color: #000000;
     font-size: 0.88rem;
     font-weight: 600;
     padding: 0.6rem 1rem;
@@ -924,7 +926,7 @@
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
     padding: 0.78rem 0;
-    border-bottom: 1px solid #334155;
+    border-bottom: 1px solid #e2e8f0;
     font-size: 0.84rem;
 }
 
@@ -933,12 +935,12 @@
 }
 
 .staff-profile-detail-row .detail-label {
-    color: #cbd5e1;
+    color: #000000;
     font-weight: 500;
 }
 
 .staff-profile-detail-row .detail-value {
-    color: #ffffff;
+    color: #000000;
     text-align: right;
     word-break: break-word;
 }
@@ -946,12 +948,12 @@
 .staff-profile-empty {
     padding: 2rem 1rem;
     text-align: center;
-    color: #94a3b8;
+    color: #000000;
     font-size: 0.9rem;
 }
 
 .staff-profile-doc-link {
-    color: #38bdf8;
+    color: #000000;
     text-decoration: none;
 }
 
@@ -990,7 +992,7 @@
 
 .staff-documents-table-wrap {
     overflow-x: auto;
-    border: 1px solid #334155;
+    border: 1px solid #e2e8f0;
     border-radius: 4px;
     flex: 1;
 }
@@ -1002,20 +1004,20 @@
 }
 
 .staff-documents-table thead th {
-    background: #243342;
-    color: #f1f5f9;
+    background: #f1f5f9;
+    color: #000000;
     font-size: 0.85rem;
     font-weight: 600;
     text-align: left;
     padding: 0.8rem 0.9rem;
-    border-bottom: 1px solid #3d5166;
+    border-bottom: 1px solid #e2e8f0;
 }
 
 .staff-documents-table tbody td {
-    color: #cbd5e1;
+    color: #000000;
     font-size: 0.85rem;
     padding: 0.85rem 0.9rem;
-    border-bottom: 1px solid #334155;
+    border-bottom: 1px solid #e2e8f0;
     vertical-align: middle;
 }
 
@@ -1161,7 +1163,7 @@
     align-items: center;
     justify-content: center;
     z-index: 2;
-    box-shadow: 0 0 0 4px #1e293b;
+    box-shadow: 0 0 0 4px #ffffff;
 }
 
 .staff-timeline-node.calendar {
@@ -1173,8 +1175,8 @@
 }
 
 .staff-timeline-card {
-    background: #0f172a;
-    border: 1px solid #334155;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
     border-radius: 4px;
     overflow: hidden;
 }
@@ -1185,13 +1187,13 @@
     justify-content: space-between;
     gap: 0.75rem;
     padding: 0.7rem 0.9rem;
-    background: #243342;
-    border-bottom: 1px solid #334155;
+    background: #f1f5f9;
+    border-bottom: 1px solid #e2e8f0;
 }
 
 .staff-timeline-card-title {
     margin: 0;
-    color: #38bdf8;
+    color: #000000;
     font-size: 0.92rem;
     font-weight: 600;
 }
@@ -1208,7 +1210,7 @@
     border: none;
     border-radius: 3px;
     background: transparent;
-    color: #38bdf8;
+    color: #000000;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -1217,7 +1219,7 @@
 }
 
 .staff-timeline-card-actions .btn-action:hover {
-    background: rgba(56, 189, 248, 0.12);
+    background: rgba(0, 0, 0, 0.06);
 }
 
 .staff-timeline-card-actions .btn-action svg {
@@ -1226,12 +1228,12 @@
 
 .staff-timeline-card-body {
     padding: 0.85rem 0.95rem 1rem;
-    color: #cbd5e1;
+    color: #000000;
     font-size: 0.9rem;
 }
 
 .staff-timeline-empty {
-    color: #94a3b8;
+    color: #000000;
     font-size: 0.9rem;
     padding: 1.5rem 0;
 }
@@ -1440,21 +1442,21 @@
     align-items: center;
     justify-content: space-between;
     gap: 0.5rem;
-    background: #0f172a;
-    border: 1px solid #334155;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
     border-radius: 6px;
     padding: 0.65rem 0.75rem;
     min-height: 68px;
 }
 
 .staff-payroll-stat-label {
-    color: #94a3b8;
+    color: #000000;
     font-size: 0.72rem;
     margin-bottom: 0.25rem;
 }
 
 .staff-payroll-stat-value {
-    color: #f8fafc;
+    color: #000000;
     font-size: 1.05rem;
     font-weight: 600;
     line-height: 1.15;
@@ -1471,8 +1473,8 @@
 }
 
 .staff-payroll-table-wrap {
-    background: #0f172a;
-    border: 1px solid #334155;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
     border-radius: 6px;
     padding: 0.65rem 0.75rem;
     flex: 1;
@@ -1503,8 +1505,8 @@
 .staff-payroll-table th,
 .staff-payroll-table td {
     padding: 0.45rem 0.5rem;
-    border-bottom: 1px solid #334155;
-    color: #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
+    color: #000000;
     font-size: 0.76rem;
     text-align: left;
     white-space: normal;
@@ -1534,10 +1536,10 @@
 .staff-payroll-table td:nth-child(7) { width: 12%; }
 
 .staff-payroll-table thead th {
-    color: #94a3b8;
+    color: #000000;
     font-weight: 600;
-    background: #0f172a;
-    border-bottom: 1px solid #475569;
+    background: #f1f5f9;
+    border-bottom: 1px solid #e2e8f0;
 }
 
 .staff-payroll-table thead th.sortable {
@@ -1546,7 +1548,7 @@
 }
 
 .staff-payroll-table thead th.sortable:hover {
-    color: #e2e8f0;
+    color: #000000;
 }
 
 .staff-payroll-table .sort-icon {
@@ -1556,7 +1558,7 @@
 }
 
 .staff-payroll-table tbody tr:hover {
-    background: rgba(139, 92, 246, 0.06);
+    background: rgba(0, 0, 0, 0.03);
 }
 
 .staff-payroll-status {
@@ -1670,8 +1672,8 @@
     min-height: 0;
     display: flex;
     flex-direction: column;
-    background: #1e293b;
-    border: 1px solid #334155;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
     border-radius: 4px;
     overflow: hidden;
 }
@@ -1679,7 +1681,7 @@
 .staff-leaves-table-controls {
     flex-shrink: 0;
     padding: 0.55rem 0.65rem;
-    border-bottom: 1px solid #334155;
+    border-bottom: 1px solid #e2e8f0;
 }
 
 .staff-leaves-table-wrap .table-responsive {
@@ -1699,8 +1701,8 @@
 .staff-leaves-table td {
     padding: 0.62rem 0.75rem;
     text-align: left;
-    color: #e2e8f0;
-    border-bottom: 1px solid #334155;
+    color: #000000;
+    border-bottom: 1px solid #e2e8f0;
     vertical-align: middle;
     white-space: nowrap;
     overflow: hidden;
@@ -1726,8 +1728,8 @@
 .staff-leaves-table td:nth-child(6) { width: 12%; }
 
 .staff-leaves-table thead th {
-    background: #334155;
-    color: #f8fafc;
+    background: #f1f5f9;
+    color: #000000;
     font-weight: 600;
     position: sticky;
     top: 0;
@@ -1740,7 +1742,7 @@
 }
 
 .staff-leaves-table thead th.sortable:hover {
-    background: #3b4a63;
+    background: #e2e8f0;
 }
 
 .staff-leaves-table .sort-icon {
@@ -1750,7 +1752,7 @@
 }
 
 .staff-leaves-table tbody tr:hover {
-    background: rgba(51, 65, 85, 0.35);
+    background: rgba(0, 0, 0, 0.03);
 }
 
 .staff-leaves-table .empty-row td {
@@ -1814,7 +1816,7 @@
 .staff-leaves-table-footer {
     padding: 0.45rem 0.65rem;
     flex-shrink: 0;
-    border-top: 1px solid #334155;
+    border-top: 1px solid #e2e8f0;
 }
 
 .staff-profile-dialog.leaves-tab-active .staff-leaves-table-controls .staff-table-search-input,
@@ -1892,21 +1894,21 @@
     align-items: center;
     justify-content: space-between;
     gap: 0.5rem;
-    background: #0f172a;
-    border: 1px solid #334155;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
     border-radius: 6px;
     padding: 0.65rem 0.75rem;
     min-height: 68px;
 }
 
 .staff-attendance-stat-label {
-    color: #94a3b8;
+    color: #000000;
     font-size: 0.72rem;
     margin-bottom: 0.25rem;
 }
 
 .staff-attendance-stat-value {
-    color: #f8fafc;
+    color: #000000;
     font-size: 1.05rem;
     font-weight: 600;
     line-height: 1.15;
@@ -1938,15 +1940,15 @@
 }
 
 .staff-attendance-year-label {
-    color: #cbd5e1;
+    color: #000000;
     font-size: 0.8rem;
     font-weight: 500;
 }
 
 .staff-attendance-year-select {
-    background: #0f172a;
-    border: 1px solid #475569;
-    color: #f1f5f9;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    color: #000000;
     border-radius: 4px;
     padding: 0.35rem 1.75rem 0.35rem 0.55rem;
     font-size: 0.78rem;
@@ -1958,7 +1960,7 @@
     flex-wrap: wrap;
     align-items: center;
     gap: 0.45rem 0.85rem;
-    color: #cbd5e1;
+    color: #000000;
     font-size: 0.76rem;
     flex: 1 1 auto;
     min-width: 0;
@@ -1979,7 +1981,7 @@
 .staff-att-code.present { color: #22c55e; }
 .staff-att-code.late { color: #f59e0b; }
 .staff-att-code.absent { color: #ef4444; }
-.staff-att-code.holiday { color: #e2e8f0; }
+.staff-att-code.holiday { color: #000000; }
 .staff-att-code.half { color: #c084fc; }
 .staff-att-code.second-half { color: #fb923c; }
 
@@ -1999,10 +2001,10 @@
 .staff-attendance-table-wrap {
     flex: 1;
     min-height: 0;
-    border: 1px solid #334155;
+    border: 1px solid #e2e8f0;
     border-radius: 4px;
     overflow: hidden;
-    background: #0f172a;
+    background: #ffffff;
 }
 
 .staff-attendance-table-wrap .table-responsive {
@@ -2017,13 +2019,13 @@
 }
 
 .staff-attendance-table thead th {
-    background: #243342;
-    color: #f1f5f9;
+    background: #f1f5f9;
+    color: #000000;
     font-size: 0.78rem;
     font-weight: 600;
     text-align: center;
     padding: 0.6rem 0.4rem;
-    border-bottom: 1px solid #3d5166;
+    border-bottom: 1px solid #e2e8f0;
     white-space: nowrap;
     position: sticky;
     top: 0;
@@ -2034,34 +2036,34 @@
 .staff-attendance-table tbody td:first-child {
     text-align: left;
     padding-left: 0.75rem;
-    color: #e2e8f0;
+    color: #000000;
     font-weight: 500;
     position: sticky;
     left: 0;
-    background: #1e293b;
+    background: #ffffff;
     z-index: 2;
 }
 
 .staff-attendance-table thead th:first-child {
-    background: #243342;
+    background: #f1f5f9;
     z-index: 3;
 }
 
 .staff-attendance-table tbody td {
-    color: #94a3b8;
+    color: #000000;
     font-size: 0.8rem;
     text-align: center;
     padding: 0.42rem 0.35rem;
-    border-bottom: 1px solid #334155;
+    border-bottom: 1px solid #e2e8f0;
     min-width: 58px;
 }
 
 .staff-attendance-table tbody tr:hover td {
-    background: rgba(51, 65, 85, 0.25);
+    background: rgba(0, 0, 0, 0.03);
 }
 
 .staff-attendance-table tbody tr:hover td:first-child {
-    background: #243342;
+    background: #f1f5f9;
 }
 
 .staff-profile-dialog.attendance-tab-active .staff-attendance-actions .staff-icon-action-btn {
@@ -2130,6 +2132,47 @@
     .staff-profile-detail-row .detail-value {
         text-align: left;
     }
+}
+
+/* Staff profile modal — light theme overrides for shared table controls */
+.staff-profile-modal .staff-table-search-input,
+.staff-profile-modal .staff-entries-select {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    color: #000000;
+}
+
+.staff-profile-modal .staff-entries-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23000000' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+}
+
+.staff-profile-modal .staff-icon-action-btn {
+    border: 1px solid #e2e8f0;
+}
+
+.staff-profile-modal .staff-icon-action-btn svg {
+    stroke: #000000;
+}
+
+.staff-profile-modal .staff-showing-info {
+    color: #000000;
+}
+
+.staff-profile-modal .staff-pagination-btn {
+    border: 1px solid #e2e8f0;
+    background: #ffffff;
+    color: #000000;
+}
+
+.staff-profile-modal .staff-pagination-btn:hover:not(:disabled) {
+    border-color: #8b5cf6;
+    color: #000000;
+}
+
+.staff-profile-modal .staff-pagination-btn.active {
+    background: #8b5cf6;
+    border-color: #8b5cf6;
+    color: #ffffff;
 }
 
 /* Staff Payslip Details Modal */
