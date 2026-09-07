@@ -1306,12 +1306,14 @@
             togglePayslipColumn(input.dataset.payslipCol, true);
         });
         staffPayslipColumnsDropdown?.classList.remove('active');
+        staffProfileOverlay?.classList.add('is-hidden-during-payslip');
         staffPayslipModal.hidden = false;
     }
 
     function closePayslipModal() {
         if (!staffPayslipModal) return;
         staffPayslipModal.hidden = true;
+        staffProfileOverlay?.classList.remove('is-hidden-during-payslip');
         activePayslipDetail = null;
         staffPayslipColumnsDropdown?.classList.remove('active');
     }

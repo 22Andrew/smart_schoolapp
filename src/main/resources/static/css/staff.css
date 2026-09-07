@@ -2193,7 +2193,7 @@
 .staff-payslip-modal .assign-modal-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(15, 23, 42, 0.72);
+    background: rgba(255, 255, 255, 0.92);
 }
 
 .staff-payslip-dialog {
@@ -2206,6 +2206,8 @@
     display: flex;
     flex-direction: column;
     color: #000000;
+    position: relative;
+    z-index: 2;
 }
 
 .staff-payslip-header {
@@ -2335,7 +2337,8 @@
 }
 
 .staff-payslip-sheet {
-    color: #111827;
+    color: #000000;
+    background: #ffffff;
 }
 
 .staff-payslip-sheet-header {
@@ -2499,6 +2502,71 @@
 
 .staff-payslip-modal .staff-icon-action-btn svg {
     stroke: #000000;
+}
+
+/* Force light payslip modal even when app theme is dark */
+html.theme-dark .staff-payslip-modal .assign-modal-overlay {
+    background: rgba(255, 255, 255, 0.92) !important;
+}
+
+html.theme-dark .staff-payslip-modal .staff-payslip-dialog,
+html.theme-dark .staff-payslip-modal .assign-modal-body,
+html.theme-dark .staff-payslip-modal .staff-payslip-body,
+html.theme-dark .staff-payslip-modal .staff-payslip-document,
+html.theme-dark .staff-payslip-modal .staff-payslip-sheet,
+html.theme-dark .staff-payslip-modal .staff-payslip-sheet-header,
+html.theme-dark .staff-payslip-modal .staff-payslip-sheet-body,
+html.theme-dark .staff-payslip-modal .staff-payslip-title-bar {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border-color: #e2e8f0 !important;
+}
+
+html.theme-dark .staff-payslip-modal .staff-payslip-title-bar {
+    background: #f1f5f9 !important;
+}
+
+html.theme-dark .staff-payslip-modal .staff-payslip-school-name,
+html.theme-dark .staff-payslip-modal .staff-payslip-school-contact,
+html.theme-dark .staff-payslip-modal .staff-payslip-logo,
+html.theme-dark .staff-payslip-modal .staff-payslip-period-title,
+html.theme-dark .staff-payslip-modal .staff-payslip-meta-row,
+html.theme-dark .staff-payslip-modal .staff-payslip-info-row,
+html.theme-dark .staff-payslip-modal .staff-payslip-info-row span,
+html.theme-dark .staff-payslip-modal .staff-payslip-info-row strong,
+html.theme-dark .staff-payslip-modal .staff-payslip-ledger-table th,
+html.theme-dark .staff-payslip-modal .staff-payslip-ledger-table td,
+html.theme-dark .staff-payslip-modal .staff-payslip-summary-row,
+html.theme-dark .staff-payslip-modal .staff-payslip-summary-row span,
+html.theme-dark .staff-payslip-modal .staff-payslip-summary-row strong,
+html.theme-dark .staff-payslip-modal .staff-payslip-note {
+    color: #000000 !important;
+}
+
+html.theme-dark .staff-payslip-modal .staff-payslip-ledger-table th {
+    background: #f1f5f9 !important;
+}
+
+html.theme-dark .staff-payslip-modal .staff-payslip-ledger-table th,
+html.theme-dark .staff-payslip-modal .staff-payslip-ledger-table td,
+html.theme-dark .staff-payslip-modal .staff-payslip-info-row,
+html.theme-dark .staff-payslip-modal .staff-payslip-summary-row {
+    border-color: #e2e8f0 !important;
+}
+
+html.theme-dark .staff-payslip-modal .staff-payslip-columns-dropdown {
+    background: #ffffff !important;
+    border-color: #e2e8f0 !important;
+}
+
+html.theme-dark .staff-payslip-modal .staff-payslip-columns-header,
+html.theme-dark .staff-payslip-modal .staff-payslip-column-toggle {
+    color: #000000 !important;
+}
+
+.staff-profile-overlay.is-hidden-during-payslip {
+    opacity: 0 !important;
+    pointer-events: none;
 }
 
 .staff-payslip-document [data-payslip-section].is-hidden {
