@@ -129,6 +129,10 @@ public class StaffMemberService implements ApplicationRunner {
         return repository.findById(id).map(this::toMap);
     }
 
+    public Optional<StaffMember> getEntityById(Long id) {
+        return repository.findById(id);
+    }
+
     @Transactional
     public Map<String, Object> create(Map<String, Object> payload, MultipartFile photo, Map<String, MultipartFile> documents) {
         StaffMember member = new StaffMember();

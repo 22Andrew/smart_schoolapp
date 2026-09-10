@@ -141,6 +141,10 @@ public class StaffSessionService {
         return resolveStaffDirectoryRestrictedRole(authentication).isPresent();
     }
 
+    public boolean isSuperAdmin(Authentication authentication) {
+        return roleSidebarMenuService.isSuperAdmin(authentication);
+    }
+
     public boolean isReceptionistStaffDirectoryRestricted(Authentication authentication) {
         return isStaffDirectoryRestrictedForRole(authentication, "Receptionist");
     }
