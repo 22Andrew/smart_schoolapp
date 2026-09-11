@@ -2,7 +2,16 @@
     display: none !important;
 }
 
+.teacher-hidden-panel {
+    display: none !important;
+}
+
+.teacher-hidden-toolbar {
+    display: none !important;
+}
+
 .assign-teacher-page.receptionist-list-view-only .assign-teacher-container,
+.assign-teacher-page.teacher-list-view-only .assign-teacher-container,
 .subjectgroup-page.receptionist-list-view-only .subjectgroup-container,
 .subject-page.receptionist-list-view-only .subject-container,
 .classes-page.receptionist-list-view-only .classes-container,
@@ -13,6 +22,7 @@
 }
 
 .assign-teacher-page.receptionist-list-view-only .assign-list-panel,
+.assign-teacher-page.teacher-list-view-only .assign-list-panel,
 .subjectgroup-page.receptionist-list-view-only .group-list-panel,
 .subject-page.receptionist-list-view-only .subject-list-panel,
 .classes-page.receptionist-list-view-only .class-list-panel,

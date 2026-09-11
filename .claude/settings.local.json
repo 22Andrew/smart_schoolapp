@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add *)",
+      "Bash(git commit -m 'Hide Assign Class Teacher form, list toolbar and action buttons for teacher logins *)"
+    ]
+  }
+}

@@ -28,10 +28,10 @@
         <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
 
         <!-- Main Content -->
-        <main class="main-content assign-teacher-page" th:classappend="${receptionistSidebar} ? ' receptionist-list-view-only' : ''">
+        <main class="main-content assign-teacher-page" th:classappend="${teacherSidebar} ? ' teacher-list-view-only' : (${receptionistSidebar} ? ' receptionist-list-view-only' : '')">
             <div class="assign-teacher-container">
                 <!-- Left: Assign Class Teacher -->
-                <div class="assign-form-panel" th:classappend="${receptionistSidebar} ? ' receptionist-hidden-panel' : ''">
+                <div class="assign-form-panel" th:classappend="${teacherSidebar} ? ' teacher-hidden-panel' : (${receptionistSidebar} ? ' receptionist-hidden-panel' : '')">
                     <h2 class="panel-title">Assign Class Teacher</h2>
                     <form id="assignTeacherForm">
                         <input type="hidden" id="assignmentId" value="">
@@ -65,7 +65,7 @@
                         <h2 class="panel-title">Class Teacher List</h2>
                     </div>
 
-                    <div class="list-toolbar">
+                    <div class="list-toolbar" th:classappend="${teacherSidebar} ? ' teacher-hidden-toolbar' : ''">
                         <div class="toolbar-left">
                             <input type="text" id="tableSearch" class="table-search-input" placeholder="Search...">
                         </div>
@@ -292,7 +292,7 @@
     </div>
 
     <script th:inline="javascript">
-        window.academicsListReadOnly = /*[[${receptionistSidebar}]]*/ false;
+        window.academicsListReadOnly = /*[[${teacherSidebar}]]*/ true || /*[[${receptionistSidebar}]]*/ false;
     </script>
     <script th:src="@{/js/dashboard.js}"></script>
     <script th:src="@{/js/assignclassteacher.js}"></script>
