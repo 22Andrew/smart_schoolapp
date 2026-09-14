@@ -66,6 +66,17 @@ main.main-content.onlinecourse-category-page {
     text-align: right;
 }
 
+.onlinecourse-category-page.accountant-category-view-only .btn-edit,
+body.teacher-dashboard-page .onlinecourse-category-page .btn-edit {
+    display: none !important;
+}
+
+body.teacher-dashboard-page .onlinecourse-category-page .add-category-panel,
+.onlinecourse-category-page.accountant-category-view-only .add-category-panel,
+.category-container-list-only .add-category-panel {
+    display: none !important;
+}
+
 .onlinecourse-category-page.accountant-category-view-only .table-footer {
     margin-top: auto;
 }

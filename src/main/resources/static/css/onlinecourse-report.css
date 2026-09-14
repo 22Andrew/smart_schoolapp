@@ -24,7 +24,8 @@
 
 .report-nav-grid.report-nav-grid-accountant,
 .report-nav-grid.report-nav-grid-librarian,
-.report-nav-grid.report-nav-grid-receptionist {
+.report-nav-grid.report-nav-grid-receptionist,
+.report-nav-grid.report-nav-grid-teacher {
     grid-template-columns: minmax(0, 1fr);
     max-width: 420px;
 }

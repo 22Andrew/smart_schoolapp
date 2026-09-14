@@ -8,7 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
     <link rel="stylesheet" th:href="@{/css/examgroup.css}">
     <link rel="stylesheet" th:href="@{/css/app-theme.css}">
-    <link rel="stylesheet" th:href="@{/css/examgroup-exam-list-modal.css}">
+    <link rel="stylesheet" th:href="@{/css/examgroup-exam-list-modal.css(v='20260914-link-alert')}">
     <link rel="stylesheet" th:href="@{/css/cbseexam-exam-modals-theme.css}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- SweetAlert2 -->
@@ -430,6 +430,39 @@
         </div>
     </div>
 
+    <!-- Link Exam Modal (opens above the Exam List modal) -->
+    <div class="link-exam-modal" id="linkExamModal" hidden>
+        <div class="link-exam-modal-overlay" data-close-link-exam></div>
+        <div class="link-exam-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="linkExamModalTitle">
+            <div class="link-exam-modal-header">
+                <h3 id="linkExamModalTitle">Link Exam</h3>
+                <button type="button" class="link-exam-modal-close" data-close-link-exam aria-label="Close">&times;</button>
+            </div>
+            <form id="linkExamForm">
+                <div class="link-exam-modal-body">
+                    <div class="link-exam-table-wrap">
+                        <table class="link-exam-table" id="linkExamTable">
+                            <thead>
+                                <tr>
+                                    <th class="link-exam-check-col">
+                                        <input type="checkbox" id="linkExamSelectAll" aria-label="Select all exams">
+                                    </th>
+                                    <th>Exam</th>
+                                    <th class="link-exam-weightage-col">Weightage</th>
+                                </tr>
+                            </thead>
+                            <tbody id="linkExamTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="link-exam-modal-footer">
+                    <button type="button" class="btn-reset-link-exam" id="resetLinkExamBtn">Reset Link Exam</button>
+                    <button type="submit" class="btn-save">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Exam Students Modal (Assign / View Student from Exam List) -->
     <div class="cbse-modal" id="assignStudentModal" hidden>
         <div class="cbse-modal-overlay" data-close-assign-modal></div>
@@ -674,7 +707,7 @@
     </div>
 
     <script th:src="@{/js/dashboard.js}"></script>
-    <script th:src="@{/js/examgroup.js}"></script>
+    <script th:src="@{/js/examgroup.js(v='20260914-link-alert')}"></script>
 </body>
 </html>
 

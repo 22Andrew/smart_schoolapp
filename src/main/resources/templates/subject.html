@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Subjects - Smart School</title>
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
-    <link rel="stylesheet" th:href="@{/css/subject.css}">
-    <link rel="stylesheet" th:href="@{/css/receptionist-academics.css}">
+    <link rel="stylesheet" th:href="@{/css/subject.css(v='20260914-teacher-list')}">
+    <link rel="stylesheet" th:href="@{/css/receptionist-academics.css(v='20260914-teacher-list')}">
     <link rel="stylesheet" th:href="@{/css/app-theme.css}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- SweetAlert2 -->
@@ -28,10 +28,10 @@
         <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
 
         <!-- Main Content -->
-        <main class="main-content subject-page" th:classappend="${receptionistSidebar} ? ' receptionist-list-view-only' : ''">
+        <main class="main-content subject-page" th:classappend="${receptionistSidebar or teacherSidebar} ? ' receptionist-list-view-only' : ''">
             <div class="subject-container">
                 <!-- Left: Add Subject -->
-                <div class="add-subject-panel" th:classappend="${receptionistSidebar} ? ' receptionist-hidden-panel' : ''">
+                <div class="add-subject-panel" th:unless="${receptionistSidebar or teacherSidebar}">
                     <h2 class="panel-title">Add Subject</h2>
                     <form id="subjectForm">
                         <input type="hidden" id="subjectId" value="">
@@ -346,10 +346,10 @@
     </div>
 
     <script th:inline="javascript">
-        window.academicsListReadOnly = /*[[${receptionistSidebar}]]*/ false;
+        window.academicsListReadOnly = /*[[${receptionistSidebar or teacherSidebar}]]*/ false;
     </script>
     <script th:src="@{/js/dashboard.js}"></script>
-    <script th:src="@{/js/subject.js}"></script>
+    <script th:src="@{/js/subject.js(v='20260914-teacher-list')}"></script>
 </body>
 </html>
 

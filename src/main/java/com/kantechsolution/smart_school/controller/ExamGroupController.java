@@ -174,6 +174,55 @@ public class ExamGroupController {
         }
     }
 
+    @GetMapping("/api/exam-groups/{groupId}/link-exams")
+    @ResponseBody
+    public ResponseEntity<List<Map<String, Object>>> getLinkExams(@PathVariable Long groupId) {
+        try {
+            return ResponseEntity.ok(examGroupService.getLinkExams(groupId));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PutMapping("/api/exam-groups/{groupId}/link-exams")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> saveLinkExams(
+            @PathVariable Long groupId, @RequestBody Map<String, Object> body) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            @SuppressWarnings("unchecked")
+            List<Map<String, Object>> exams = (List<Map<String, Object>>) body.get("exams");
+            examGroupService.saveLinkExams(groupId, exams);
+            response.put("success", true);
+            response.put("message", "Linked exams saved successfully!");
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Failed to save linked exams: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @DeleteMapping("/api/exam-groups/{groupId}/link-exams")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> resetLinkExams(@PathVariable Long groupId) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            examGroupService.resetLinkExams(groupId);
+            response.put("success", true);
+            response.put("message", "Linked exams reset successfully!");
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
     @GetMapping("/api/exam-groups/form-options")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getExamGroupFormOptions() {

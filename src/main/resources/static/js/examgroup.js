@@ -30,6 +30,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const examListTableBody = document.getElementById('examListTableBody');
     const newExamForm = document.getElementById('newExamForm');
     const newExamNameInput = document.getElementById('newExamNameInput');
+    const linkExamModal = document.getElementById('linkExamModal');
+    const linkExamForm = document.getElementById('linkExamForm');
+    const linkExamTableBody = document.getElementById('linkExamTableBody');
+    const linkExamSelectAll = document.getElementById('linkExamSelectAll');
 
     const examListActionIcons = {
         assign: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>',
@@ -59,6 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function closeExamListModal() {
         if (examListModal) examListModal.hidden = true;
+        closeLinkExamModal();
         document.body.style.overflow = '';
     }
 
@@ -72,6 +77,51 @@ document.addEventListener('DOMContentLoaded', function () {
         if (newExamForm) newExamForm.reset();
         newExamModal.hidden = false;
         newExamNameInput?.focus();
+    }
+
+    function closeLinkExamModal() {
+        if (linkExamModal) linkExamModal.hidden = true;
+    }
+
+    function syncLinkExamSelectAll() {
+        if (!linkExamSelectAll || !linkExamTableBody) return;
+        const checks = linkExamTableBody.querySelectorAll('.link-exam-check');
+        let checked = 0;
+        checks.forEach(function (check) {
+            if (check.checked) checked++;
+        });
+        linkExamSelectAll.checked = checks.length > 0 && checked === checks.length;
+        linkExamSelectAll.indeterminate = checked > 0 && checked < checks.length;
+    }
+
+    function renderLinkExamTable(exams) {
+        if (!linkExamTableBody) return;
+        if (!exams.length) {
+            linkExamTableBody.innerHTML = '<tr><td colspan="3"><div class="exam-list-empty">No exams found for this group.</div></td></tr>';
+            syncLinkExamSelectAll();
+            return;
+        }
+        linkExamTableBody.innerHTML = exams.map(function (exam) {
+            return '<tr data-exam-id="' + escapeHtml(String(exam.id)) + '">'
+                + '<td class="link-exam-check-col"><input type="checkbox" class="link-exam-check"' + (exam.linked ? ' checked' : '') + '></td>'
+                + '<td>' + escapeHtml(exam.name || '') + '</td>'
+                + '<td><input type="number" class="link-exam-weightage" step="0.01" min="0" value="'
+                + escapeHtml(exam.weightage != null ? String(exam.weightage) : '0.00') + '"></td>'
+                + '</tr>';
+        }).join('');
+        syncLinkExamSelectAll();
+    }
+
+    async function loadLinkExams(groupId) {
+        const response = await fetch('/api/exam-groups/' + groupId + '/link-exams');
+        if (!response.ok) throw new Error('Failed to load exams for linking');
+        renderLinkExamTable(await response.json());
+    }
+
+    async function openLinkExamModal() {
+        if (!activeGroupId) return;
+        await loadLinkExams(activeGroupId);
+        if (linkExamModal) linkExamModal.hidden = false;
     }
 
     async function loadGroupExams(groupId) {
@@ -881,13 +931,95 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('newExamInListBtn')?.addEventListener('click', openNewExamModal);
 
-    document.getElementById('linkExamsInListBtn')?.addEventListener('click', function () {
-        Swal.fire({
-            icon: 'info',
-            title: 'Link Exams',
-            text: 'Link exams for this group will be available in a later update.',
+    document.getElementById('linkExamsInListBtn')?.addEventListener('click', async function () {
+        try {
+            await openLinkExamModal();
+        } catch (error) {
+            showError(error);
+        }
+    });
+
+    document.querySelectorAll('[data-close-link-exam]').forEach(function (el) {
+        el.addEventListener('click', closeLinkExamModal);
+    });
+
+    linkExamSelectAll?.addEventListener('change', function () {
+        linkExamTableBody?.querySelectorAll('.link-exam-check').forEach(function (check) {
+            check.checked = linkExamSelectAll.checked;
+        });
+        linkExamSelectAll.indeterminate = false;
+    });
+
+    linkExamTableBody?.addEventListener('change', function (event) {
+        if (event.target.classList.contains('link-exam-check')) {
+            syncLinkExamSelectAll();
+        }
+    });
+
+    document.getElementById('resetLinkExamBtn')?.addEventListener('click', async function () {
+        if (!activeGroupId) return;
+        const confirmed = await Swal.fire({
+            icon: 'warning',
+            title: 'Reset Link Exam',
+            text: 'This will remove all linked exams for this group.',
+            showCancelButton: true,
+            confirmButtonText: 'Reset',
             confirmButtonColor: '#8b5cf6'
         });
+        if (!confirmed.isConfirmed) return;
+        try {
+            const response = await fetch('/api/exam-groups/' + activeGroupId + '/link-exams', { method: 'DELETE' });
+            const data = await response.json().catch(function () { return {}; });
+            if (!response.ok || !data.success) {
+                throw new Error(data.message || 'Failed to reset linked exams');
+            }
+            await loadLinkExams(activeGroupId);
+            Swal.fire({
+                icon: 'success',
+                title: 'Reset',
+                text: 'Linked exams have been reset.',
+                timer: 1400,
+                showConfirmButton: false
+            });
+        } catch (error) {
+            showError(error);
+        }
+    });
+
+    linkExamForm?.addEventListener('submit', async function (event) {
+        event.preventDefault();
+        if (!activeGroupId) return;
+        const exams = [];
+        linkExamTableBody?.querySelectorAll('tr[data-exam-id]').forEach(function (row) {
+            const check = row.querySelector('.link-exam-check');
+            if (!check || !check.checked) return;
+            const weightageInput = row.querySelector('.link-exam-weightage');
+            const weightage = weightageInput && weightageInput.value.trim() !== ''
+                ? Number(weightageInput.value)
+                : 0;
+            exams.push({ examId: Number(row.getAttribute('data-exam-id')), weightage: weightage });
+        });
+        try {
+            const response = await fetch('/api/exam-groups/' + activeGroupId + '/link-exams', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ exams: exams })
+            });
+            const data = await response.json().catch(function () { return {}; });
+            if (!response.ok || !data.success) {
+                throw new Error(data.message || 'Failed to save linked exams');
+            }
+            await Swal.fire({
+                icon: 'success',
+                title: 'Saved',
+                text: 'Linked exams saved successfully.',
+                timer: 1400,
+                showConfirmButton: false
+            });
+            closeLinkExamModal();
+        } catch (error) {
+            showError(error);
+        }
     });
 
     newExamForm?.addEventListener('submit', async function (event) {

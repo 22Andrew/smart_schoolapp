@@ -333,6 +333,182 @@
     background: var(--theme-primary-dark, #7c3aed);
 }
 
+/* Link Exam sub-modal – stacks above Exam List modal */
+.link-exam-modal[hidden] {
+    display: none !important;
+}
+
+.link-exam-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 3350;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+/* Keep SweetAlert confirmations above the stacked Exam List modals. */
+.swal2-container {
+    z-index: 4000 !important;
+}
+
+.link-exam-modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45);
+}
+
+.link-exam-modal-dialog {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 620px;
+    max-height: calc(100vh - 2rem);
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 16px 32px rgba(15, 23, 42, 0.2);
+}
+
+.link-exam-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.9rem 1.15rem;
+    background: var(--theme-primary, #8b5cf6);
+}
+
+.link-exam-modal-header h3 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 1.05rem;
+}
+
+.link-exam-modal-close {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    border-radius: 4px;
+    width: 32px;
+    height: 32px;
+    font-size: 1.35rem;
+    line-height: 1;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.link-exam-modal-dialog form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+
+.link-exam-modal-body {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    background: #ffffff;
+}
+
+.link-exam-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+}
+
+.link-exam-table thead th {
+    background: #f8fafc;
+    color: #475569;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: left;
+    padding: 0.75rem 0.9rem;
+    border-bottom: 1px solid #e5e7eb;
+    white-space: nowrap;
+}
+
+.link-exam-table tbody td {
+    background: #ffffff;
+    color: #334155;
+    font-size: 0.88rem;
+    padding: 0.6rem 0.9rem;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+}
+
+.link-exam-table tbody tr:hover td {
+    background: #f8fafc;
+}
+
+.link-exam-table .link-exam-check-col {
+    width: 46px;
+    padding-right: 0;
+}
+
+.link-exam-table .link-exam-weightage-col {
+    width: 45%;
+}
+
+.link-exam-table input[type="checkbox"] {
+    accent-color: var(--theme-primary, #8b5cf6);
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.link-exam-table .link-exam-weightage {
+    width: 100%;
+    box-sizing: border-box;
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    color: #111827;
+    padding: 0.5rem 0.7rem;
+    font-size: 0.9rem;
+    font-family: inherit;
+}
+
+.link-exam-table .link-exam-weightage:focus {
+    outline: none;
+    border-color: var(--theme-primary, #8b5cf6);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--theme-primary, #8b5cf6) 18%, transparent);
+}
+
+.link-exam-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.65rem;
+    padding: 1rem 1.15rem;
+    background: #ffffff;
+    border-top: 1px solid #f1f5f9;
+}
+
+.link-exam-modal-footer .btn-reset-link-exam,
+.link-exam-modal-footer .btn-save {
+    background: var(--theme-primary, #8b5cf6);
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    height: 40px;
+    padding: 0 1.15rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.link-exam-modal-footer .btn-reset-link-exam:hover,
+.link-exam-modal-footer .btn-save:hover {
+    background: var(--theme-primary-dark, #7c3aed);
+}
+
 @media (max-width: 768px) {
     .exam-list-meta {
         grid-template-columns: 1fr;

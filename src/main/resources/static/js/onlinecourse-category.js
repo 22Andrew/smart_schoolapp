@@ -11,6 +11,44 @@ document.addEventListener('DOMContentLoaded', function () {
     const columnBtn = document.getElementById('categoryColumnBtn');
     const columnDropdown = document.getElementById('categoryColumnDropdown');
     const readOnly = window.courseCategoryReadOnly === true;
+    const hideEdit = isTeacherCategoryView();
+    const listOnly = window.courseCategoryListOnly === true || hideEdit || readOnly;
+
+    function isTeacherCategoryView() {
+        if (window.courseCategoryHideEdit === true) {
+            return true;
+        }
+        if (document.body.classList.contains('teacher-dashboard-page')) {
+            return true;
+        }
+        const ctx = document.getElementById('staffSessionContext');
+        const role = String((ctx && ctx.getAttribute('data-role')) || '').toLowerCase();
+        return role === 'teacher' || role.indexOf('teacher') !== -1 || role === 'faculty';
+    }
+
+    function applyListOnlyLayout() {
+        if (!listOnly && !hideEdit) {
+            return;
+        }
+        const page = document.querySelector('.onlinecourse-category-page');
+        if (page) {
+            page.classList.add('accountant-category-view-only');
+        }
+        const addPanel = document.querySelector('.add-category-panel');
+        if (addPanel) {
+            addPanel.remove();
+        }
+        const container = document.querySelector('.onlinecourse-category-page .category-container');
+        if (container) {
+            container.classList.add('category-container-list-only');
+            const listPanel = container.querySelector('.category-list-panel');
+            if (listPanel) {
+                listPanel.classList.add('category-list-panel-full');
+            }
+        }
+    }
+
+    applyListOnlyLayout();
 
     let categories = [];
     let currentPage = 1;
@@ -19,17 +57,22 @@ document.addEventListener('DOMContentLoaded', function () {
         if (readOnly) {
             return '';
         }
+        const deleteButton = ''
+            + '<button type="button" class="btn-action btn-delete" title="Delete">'
+            + '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'
+            + '<line x1="18" y1="6" x2="6" y2="18"></line>'
+            + '<line x1="6" y1="6" x2="18" y2="18"></line>'
+            + '</svg></button>';
+        if (hideEdit) {
+            return deleteButton;
+        }
         return ''
             + '<button type="button" class="btn-action btn-edit" title="Edit">'
             + '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'
             + '<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>'
             + '<path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>'
             + '</svg></button>'
-            + '<button type="button" class="btn-action btn-delete" title="Delete">'
-            + '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'
-            + '<line x1="18" y1="6" x2="6" y2="18"></line>'
-            + '<line x1="6" y1="6" x2="18" y2="18"></line>'
-            + '</svg></button>';
+            + deleteButton;
     }
 
     function resetForm() {
@@ -267,7 +310,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         if (!response.ok) {
                             throw new Error(await parseErrorMessage(response));
                         }
-                        if (categoryIdInput.value === rowId) resetForm();
+                        if (categoryIdInput && categoryIdInput.value === rowId) resetForm();
                         await loadCategories();
                         Swal.fire({
                             icon: 'success',

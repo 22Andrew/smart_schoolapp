@@ -267,6 +267,11 @@ public class RoleSidebarMenuService {
             "guestreport"
     );
 
+    /** Online course report tabs visible to teachers on the report page. */
+    private static final Set<String> TEACHER_ONLINE_COURSE_REPORTS = Set.of(
+            "coursecomplete", "courserating", "guestreport"
+    );
+
     /** Main menus hidden for Admin (Super Admin still sees all menus). */
     private static final List<String> ADMIN_HIDDEN_MENU_SLUGS = List.of(
             "qr-code-attendance"
@@ -548,6 +553,18 @@ public class RoleSidebarMenuService {
         }
 
         return RECEPTIONIST_ONLINE_COURSE_REPORTS.contains(reportKey.toLowerCase(Locale.ROOT));
+
+    }
+
+    public boolean isTeacherOnlineCourseReportAllowed(String reportKey) {
+
+        if (reportKey == null || reportKey.isBlank()) {
+
+            return false;
+
+        }
+
+        return TEACHER_ONLINE_COURSE_REPORTS.contains(reportKey.toLowerCase(Locale.ROOT));
 
     }
 

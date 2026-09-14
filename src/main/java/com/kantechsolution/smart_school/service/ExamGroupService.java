@@ -3,9 +3,11 @@ package com.kantechsolution.smart_school.service;
 import com.kantechsolution.smart_school.model.ExamGroup;
 import com.kantechsolution.smart_school.model.ExamGroupExam;
 import com.kantechsolution.smart_school.model.ExamGroupExamStudent;
+import com.kantechsolution.smart_school.model.ExamGroupLinkedExam;
 import com.kantechsolution.smart_school.model.StudentAdmission;
 import com.kantechsolution.smart_school.repository.ExamGroupExamRepository;
 import com.kantechsolution.smart_school.repository.ExamGroupExamStudentRepository;
+import com.kantechsolution.smart_school.repository.ExamGroupLinkedExamRepository;
 import com.kantechsolution.smart_school.repository.ExamGroupRepository;
 import com.kantechsolution.smart_school.repository.ExamScheduleEntryRepository;
 import com.kantechsolution.smart_school.repository.StudentAdmissionRepository;
@@ -15,6 +17,8 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -38,6 +42,7 @@ public class ExamGroupService implements ApplicationRunner {
     private final ExamGroupExamRepository examGroupExamRepository;
     private final ExamScheduleEntryRepository examScheduleEntryRepository;
     private final ExamGroupExamStudentRepository examGroupExamStudentRepository;
+    private final ExamGroupLinkedExamRepository examGroupLinkedExamRepository;
     private final StudentAdmissionRepository studentAdmissionRepository;
 
     @Override
@@ -185,6 +190,111 @@ public class ExamGroupService implements ApplicationRunner {
                         .build());
             }
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<Map<String, Object>> getLinkExams(Long groupId) {
+        requireExamGroup(groupId);
+
+        Map<Long, BigDecimal> linked = new LinkedHashMap<>();
+        for (ExamGroupLinkedExam link : examGroupLinkedExamRepository.findByExamGroupId(groupId)) {
+            linked.put(link.getExamGroupExam().getId(),
+                    link.getWeightage() != null ? link.getWeightage() : BigDecimal.ZERO);
+        }
+
+        return examGroupExamRepository.findByExamGroupIdOrderByIdAsc(groupId).stream()
+                .filter(exam -> exam.getIsActive() == null || Boolean.TRUE.equals(exam.getIsActive()))
+                .map(exam -> {
+                    Map<String, Object> map = new LinkedHashMap<>();
+                    map.put("id", exam.getId());
+                    map.put("name", exam.getName());
+                    map.put("linked", linked.containsKey(exam.getId()));
+                    map.put("weightage", scaleWeightage(linked.getOrDefault(exam.getId(), BigDecimal.ZERO))
+                            .toPlainString());
+                    return map;
+                })
+                .toList();
+    }
+
+    @Transactional
+    public void saveLinkExams(Long groupId, List<Map<String, Object>> rows) {
+        requireExamGroup(groupId);
+
+        Map<Long, BigDecimal> selected = new LinkedHashMap<>();
+        if (rows != null) {
+            for (Map<String, Object> row : rows) {
+                Long examId = toLong(row.get("examId"));
+                if (examId == null) {
+                    continue;
+                }
+                ExamGroupExam exam = examGroupExamRepository.findByIdAndExamGroupId(examId, groupId)
+                        .orElseThrow(() -> new IllegalArgumentException("Exam does not belong to this exam group"));
+                selected.put(exam.getId(), toWeightage(row.get("weightage")));
+            }
+        }
+
+        clearLinkExams(groupId);
+        for (Map.Entry<Long, BigDecimal> entry : selected.entrySet()) {
+            examGroupLinkedExamRepository.save(ExamGroupLinkedExam.builder()
+                    .examGroupExam(examGroupExamRepository.getReferenceById(entry.getKey()))
+                    .weightage(entry.getValue())
+                    .build());
+        }
+    }
+
+    @Transactional
+    public void resetLinkExams(Long groupId) {
+        requireExamGroup(groupId);
+        clearLinkExams(groupId);
+    }
+
+    private void clearLinkExams(Long groupId) {
+        List<ExamGroupLinkedExam> existing = examGroupLinkedExamRepository.findByExamGroupId(groupId);
+        if (!existing.isEmpty()) {
+            examGroupLinkedExamRepository.deleteAll(existing);
+            examGroupLinkedExamRepository.flush();
+        }
+    }
+
+    private void requireExamGroup(Long groupId) {
+        if (groupId == null || !examGroupRepository.existsById(groupId)) {
+            throw new IllegalArgumentException("Exam group not found");
+        }
+    }
+
+    private Long toLong(Object value) {
+        if (value instanceof Number number) {
+            return number.longValue();
+        }
+        if (value == null || String.valueOf(value).isBlank()) {
+            return null;
+        }
+        try {
+            return Long.parseLong(String.valueOf(value).trim());
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    private BigDecimal toWeightage(Object value) {
+        BigDecimal weightage = BigDecimal.ZERO;
+        if (value instanceof Number number) {
+            weightage = new BigDecimal(number.toString());
+        } else if (value != null && !String.valueOf(value).isBlank()) {
+            try {
+                weightage = new BigDecimal(String.valueOf(value).trim());
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Weightage must be a valid number");
+            }
+        }
+        if (weightage.signum() < 0) {
+            throw new IllegalArgumentException("Weightage cannot be negative");
+        }
+        return scaleWeightage(weightage);
+    }
+
+    private BigDecimal scaleWeightage(BigDecimal weightage) {
+        return weightage.setScale(2, RoundingMode.HALF_UP);
     }
 
     private String fullName(StudentAdmission student) {

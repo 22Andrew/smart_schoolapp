@@ -17,7 +17,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 </head>
-<body th:classappend="${accountantSidebar} ? ' accountant-dashboard-page' : ''">
+<body th:classappend="${teacherSidebar} ? ' teacher-dashboard-page' : (${accountantSidebar} ? ' accountant-dashboard-page' : '')">
     <!-- Top Navigation Bar -->
     <nav th:replace="~{fragments/top-navbar :: top-navbar}"></nav>
 
@@ -27,15 +27,15 @@
         <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
 
         <!-- Main Content -->
-        <main class="main-content onlinecourse-category-page" th:classappend="${accountantSidebar} ? ' accountant-category-view-only' : ''">
+        <main class="main-content onlinecourse-category-page" th:classappend="${courseCategoryListOnly or accountantSidebar or teacherSidebar} ? ' accountant-category-view-only' : ''">
 
-            <!-- Accountant: Category List fills entire content area (no grid wrapper) -->
-            <div th:if="${accountantSidebar}" class="category-list-panel category-list-panel-full">
+            <!-- Teacher/Accountant: Category List fills entire content area (no Add Category panel) -->
+            <div th:if="${courseCategoryListOnly or accountantSidebar or teacherSidebar}" class="category-list-panel category-list-panel-full">
                 <th:block th:replace="~{fragments/onlinecourse-category-list-body :: categoryListBody}"></th:block>
             </div>
 
             <!-- Other roles: Add Category + Category List side by side -->
-            <div th:unless="${accountantSidebar}" class="category-container">
+            <div th:unless="${courseCategoryListOnly or accountantSidebar or teacherSidebar}" class="category-container">
                 <div class="add-category-panel">
                     <h2 class="panel-title">Add Category</h2>
                     <form id="categoryForm">
@@ -232,6 +232,8 @@
 
     <script th:inline="javascript">
         window.courseCategoryReadOnly = /*[[${accountantSidebar}]]*/ false;
+        window.courseCategoryHideEdit = /*[[${courseCategoryHideEdit or teacherSidebar}]]*/ false;
+        window.courseCategoryListOnly = /*[[${courseCategoryListOnly or teacherSidebar or accountantSidebar}]]*/ false;
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {

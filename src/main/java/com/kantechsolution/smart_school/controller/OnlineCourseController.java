@@ -76,8 +76,35 @@ public class OnlineCourseController {
     }
 
     @GetMapping("/onlinecourse/coursecategory/categoryadd")
-    public String showCourseCategoryPage() {
+    public String showCourseCategoryPage(Authentication authentication, Model model) {
+        boolean teacherView = isCourseCategoryTeacherView(authentication);
+        boolean accountantView = roleSidebarMenuService.isAccountant(authentication);
+        model.addAttribute("courseCategoryListOnly", teacherView || accountantView);
+        model.addAttribute("courseCategoryHideEdit", teacherView);
         return "onlinecourse-category";
+    }
+
+    private boolean isCourseCategoryTeacherView(Authentication authentication) {
+        if (authentication == null) {
+            return false;
+        }
+        if (roleSidebarMenuService.isTeacher(authentication)) {
+            return true;
+        }
+        String role = roleSidebarMenuService.resolveRoleLabel(authentication);
+        if (role != null) {
+            String normalized = role.toLowerCase(java.util.Locale.ROOT);
+            if (normalized.contains("teacher") || normalized.contains("faculty")) {
+                return true;
+            }
+        }
+        String username = authentication.getName();
+        if (username != null && username.toLowerCase(java.util.Locale.ROOT).contains("teacher")) {
+            return true;
+        }
+        return authentication.getAuthorities().stream()
+                .map(authority -> authority.getAuthority() == null ? "" : authority.getAuthority().toUpperCase(java.util.Locale.ROOT))
+                .anyMatch(authority -> authority.contains("TEACHER") || authority.contains("FACULTY"));
     }
 
     @GetMapping("/onlinecourse/coursecertificate/templatelist")
@@ -116,6 +143,10 @@ public class OnlineCourseController {
         if (roleSidebarMenuService.isReceptionist(authentication)
                 && !roleSidebarMenuService.isReceptionistOnlineCourseReportAllowed(reportKey)) {
             return "redirect:/onlinecourse/coursereport/guestreport";
+        }
+        if (roleSidebarMenuService.isTeacher(authentication)
+                && !roleSidebarMenuService.isTeacherOnlineCourseReportAllowed(reportKey)) {
+            return "redirect:/onlinecourse/coursereport/coursecomplete";
         }
         model.addAttribute("reportKey", reportKey);
         model.addAttribute("reportTitle", resolveReportTitle(reportKey));
