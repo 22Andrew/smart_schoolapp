@@ -2,6 +2,7 @@ package com.kantechsolution.smart_school.service;
 
 import com.kantechsolution.smart_school.model.PhoneCall;
 import com.kantechsolution.smart_school.repository.PhoneCallRepository;
+import com.kantechsolution.smart_school.validation.PhoneNumberValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class PhoneCallService {
     @Transactional
     public PhoneCall savePhoneCall(PhoneCall phoneCall) {
         log.info("Saving phone call record for: {}", phoneCall.getName());
+        phoneCall.setPhone(PhoneNumberValidator.requireInternational(phoneCall.getPhone()));
         return phoneCallRepository.save(phoneCall);
     }
     
@@ -54,12 +56,13 @@ public class PhoneCallService {
     @Transactional
     public PhoneCall updatePhoneCall(Long id, PhoneCall phoneCallDetails) {
         log.info("Updating phone call record with ID: {}", id);
+        String validatedPhone = PhoneNumberValidator.requireInternational(phoneCallDetails.getPhone());
         
         PhoneCall phoneCall = phoneCallRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Phone call record not found with ID: " + id));
         
         phoneCall.setName(phoneCallDetails.getName());
-        phoneCall.setPhone(phoneCallDetails.getPhone());
+        phoneCall.setPhone(validatedPhone);
         phoneCall.setCallType(phoneCallDetails.getCallType());
         phoneCall.setDate(phoneCallDetails.getDate());
         phoneCall.setFollowUpDate(phoneCallDetails.getFollowUpDate());

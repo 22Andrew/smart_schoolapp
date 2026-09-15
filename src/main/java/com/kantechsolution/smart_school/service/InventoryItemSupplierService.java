@@ -3,6 +3,7 @@ package com.kantechsolution.smart_school.service;
 import com.kantechsolution.smart_school.model.InventoryItemSupplier;
 import com.kantechsolution.smart_school.repository.InventoryItemStockRepository;
 import com.kantechsolution.smart_school.repository.InventoryItemSupplierRepository;
+import com.kantechsolution.smart_school.validation.PhoneNumberValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -71,11 +72,13 @@ public class InventoryItemSupplierService {
             throw new IllegalArgumentException("This item supplier already exists");
         }
         supplier.setName(name);
-        supplier.setPhone(blankToNull(text(payload.get("phone"))));
+        supplier.setPhone(PhoneNumberValidator.optionalInternational(
+                blankToNull(text(payload.get("phone")))));
         supplier.setEmail(blankToNull(text(payload.get("email"))));
         supplier.setAddress(blankToNull(text(payload.get("address"))));
         supplier.setContactPersonName(blankToNull(text(payload.get("contactPersonName"))));
-        supplier.setContactPersonPhone(blankToNull(text(payload.get("contactPersonPhone"))));
+        supplier.setContactPersonPhone(PhoneNumberValidator.optionalInternational(
+                blankToNull(text(payload.get("contactPersonPhone")))));
         supplier.setContactPersonEmail(blankToNull(text(payload.get("contactPersonEmail"))));
         supplier.setDescription(blankToNull(text(payload.get("description"))));
         return supplier;

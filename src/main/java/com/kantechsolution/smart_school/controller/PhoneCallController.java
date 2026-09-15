@@ -47,6 +47,10 @@ public class PhoneCallController {
             response.put("message", "Phone call record saved successfully!");
             response.put("data", savedPhoneCall);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (IllegalArgumentException e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         } catch (Exception e) {
             response.put("success", false);
             response.put("message", "Failed to save phone call record: " + e.getMessage());
@@ -90,6 +94,10 @@ public class PhoneCallController {
             response.put("message", "Phone call record updated successfully!");
             response.put("data", updatedPhoneCall);
             return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         } catch (RuntimeException e) {
             response.put("success", false);
             response.put("message", e.getMessage());

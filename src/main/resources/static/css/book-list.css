@@ -699,7 +699,26 @@ html.theme-dark .book-list-page .column-toggle-item:hover {
 .book-modal-footer {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
+    gap: 0.65rem;
     padding: 0.85rem 1.35rem 1.2rem;
+}
+
+.btn-book-cancel {
+    background: #e5e7eb;
+    color: #111827;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1.2rem;
+    min-width: 78px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.btn-book-cancel:hover {
+    background: #d1d5db;
 }
 
 .btn-book-save {
@@ -740,5 +759,183 @@ html.theme-dark .book-textarea {
 @media (max-width: 760px) {
     .book-form-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+.book-import-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 10120;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 1.5rem 1.25rem;
+    overflow-y: auto;
+}
+
+.book-import-modal.active {
+    display: flex;
+}
+
+.book-import-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45);
+}
+
+.book-import-dialog {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 1180px;
+    margin: 1.5rem auto;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.18);
+}
+
+.book-import-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.1rem 1.35rem 0.85rem;
+    background: #ffffff !important;
+    color: #111827 !important;
+}
+
+.book-import-title {
+    margin: 0;
+    color: #111827 !important;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.btn-download-sample,
+.btn-import-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    background: var(--theme-primary, #8b5cf6);
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    padding: 0.55rem 1rem;
+    font-size: 0.88rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.btn-download-sample:hover,
+.btn-import-submit:hover {
+    background: var(--theme-primary-dark, #7c3aed);
+}
+
+.book-import-body {
+    padding: 0 1.35rem 1.35rem;
+}
+
+.book-import-notes {
+    margin: 0 0 1rem;
+    padding-left: 1.2rem;
+    color: #4b5563;
+    font-size: 0.86rem;
+    line-height: 1.55;
+}
+
+.book-import-table-wrap {
+    overflow-x: auto;
+    border-top: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 1.2rem;
+}
+
+.book-import-sample-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 980px;
+}
+
+.book-import-sample-table th,
+.book-import-sample-table td {
+    padding: 0.7rem 0.65rem;
+    text-align: left;
+    font-size: 0.82rem;
+    white-space: nowrap;
+}
+
+.book-import-sample-table th {
+    color: #111827;
+    font-weight: 600;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.book-import-sample-table th .required {
+    color: #ef4444;
+}
+
+.book-import-sample-table td {
+    color: var(--theme-primary, #6366f1);
+    font-weight: 500;
+}
+
+.book-import-file-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+}
+
+.book-import-file-field {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.book-import-file-field label {
+    color: #374151;
+    font-size: 0.88rem;
+    font-weight: 500;
+}
+
+.book-import-dropzone {
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    background: #ffffff;
+    min-height: 46px;
+    display: flex;
+    align-items: center;
+    padding: 0.7rem 0.9rem;
+    cursor: pointer;
+}
+
+.book-import-dropzone.dragover {
+    border-color: var(--theme-primary, #8b5cf6);
+    background: color-mix(in srgb, var(--theme-primary, #8b5cf6) 8%, #ffffff);
+}
+
+.book-import-dropzone-content {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #6b7280;
+    font-size: 0.88rem;
+}
+
+.book-import-file-name {
+    color: #111827;
+    font-size: 0.88rem;
+}
+
+@media (max-width: 760px) {
+    .book-import-header,
+    .book-import-file-row {
+        flex-direction: column;
+        align-items: stretch;
     }
 }

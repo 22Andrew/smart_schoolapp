@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const classSelect = document.getElementById('classSelect');
     const sectionSelect = document.getElementById('sectionSelect');
+    const sessionSelect = document.getElementById('sessionSelect');
     const searchBtn = document.getElementById('searchBtn');
     const tableHead = document.getElementById('reportTableHead');
     const tableBody = document.getElementById('reportTableBody');
@@ -332,6 +333,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const query = new URLSearchParams();
             query.set('classId', classValue);
             if (sectionSelect && sectionSelect.value) query.set('section', sectionSelect.value);
+            if (sessionSelect && sessionSelect.value) query.set('session', sessionSelect.value);
             url += (url.indexOf('?') >= 0 ? '&' : '?') + query.toString();
         }
 

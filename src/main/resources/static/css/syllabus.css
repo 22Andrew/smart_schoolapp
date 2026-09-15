@@ -7,10 +7,10 @@
 
 .syllabus-page .criteria-panel,
 .syllabus-page .timetable-panel {
-    background: #1e293b;
+    background: var(--theme-primary-soft, #ffffff);
     border-radius: 8px;
     padding: 1.25rem 1.5rem 1.5rem;
-    border: 1px solid #334155;
+    border: 1px solid var(--theme-primary-border, #d1d5db);
     margin-bottom: 1.25rem;
 }
 
@@ -23,7 +23,7 @@
 }
 
 .syllabus-page .panel-title {
-    color: #f1f5f9;
+    color: #111827;
     font-size: 1.1rem;
     font-weight: 600;
     margin: 0;
@@ -48,7 +48,7 @@
 }
 
 .syllabus-page .form-group label {
-    color: #e2e8f0;
+    color: #111827;
     font-size: 0.85rem;
     margin-bottom: 0.45rem;
     font-weight: 500;
@@ -62,10 +62,10 @@
 .syllabus-page .form-control {
     width: 100%;
     height: 46px;
-    background: #0f172a;
-    border: 1px solid #334155;
+    background: #ffffff;
+    border: 1px solid #d1d5db;
     border-radius: 4px;
-    color: #f1f5f9;
+    color: #111827;
     padding: 0.55rem 0.75rem;
     font-size: 0.95rem;
     font-family: inherit;
@@ -74,10 +74,15 @@
 .syllabus-page .form-select {
     padding-right: 2rem;
     appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%94a3b8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 0.75rem center;
     cursor: pointer;
+}
+
+.syllabus-page .form-select option {
+    background: #ffffff;
+    color: #111827;
 }
 
 .syllabus-page .form-select:focus,
@@ -92,7 +97,7 @@
 }
 
 .syllabus-page .btn-search {
-    background: #8b5cf6;
+    background: var(--theme-primary, #8b5cf6);
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -119,10 +124,10 @@
 .syllabus-page .week-nav-btn {
     width: 34px;
     height: 34px;
-    border: 1px solid #475569;
+    border: 1px solid #d1d5db;
     border-radius: 4px;
-    background: #0f172a;
-    color: #e2e8f0;
+    background: #ffffff;
+    color: #111827;
     font-size: 1rem;
     cursor: pointer;
 }
@@ -133,7 +138,7 @@
 }
 
 .syllabus-page .week-range {
-    color: #f1f5f9;
+    color: #111827;
     font-size: 0.95rem;
     font-weight: 500;
     min-width: 220px;
@@ -148,8 +153,8 @@
 }
 
 .syllabus-page .day-column {
-    background: #0f172a;
-    border: 1px solid #334155;
+    background: #ffffff;
+    border: 1px solid var(--theme-primary-border, #d1d5db);
     border-radius: 6px;
     min-height: 280px;
     display: flex;
@@ -157,13 +162,13 @@
 }
 
 .syllabus-page .day-header {
-    background: #243342;
-    color: #f1f5f9;
+    background: var(--theme-primary, #8b5cf6);
+    color: #ffffff;
     font-size: 0.85rem;
     font-weight: 600;
     text-align: center;
     padding: 0.75rem 0.5rem;
-    border-bottom: 1px solid #334155;
+    border-bottom: 1px solid var(--theme-primary, #8b5cf6);
     border-radius: 6px 6px 0 0;
     line-height: 1.35;
 }
@@ -177,11 +182,12 @@
 }
 
 .syllabus-page .schedule-card {
-    background: #1e293b;
-    border: 1px solid #334155;
+    background: #ffffff;
+    border: 1px solid var(--theme-primary-border, #d1d5db);
     border-radius: 4px;
     padding: 0.55rem 0.6rem 0.65rem;
     position: relative;
+    color: #111827;
 }
 
 .syllabus-page .schedule-actions {
@@ -196,7 +202,7 @@
     height: 24px;
     border: none;
     border-radius: 3px;
-    background: #8b5cf6;
+    background: var(--theme-primary, #8b5cf6);
     color: #fff;
     display: inline-flex;
     align-items: center;
@@ -218,7 +224,7 @@
     display: flex;
     align-items: flex-start;
     gap: 0.4rem;
-    color: #38bdf8;
+    color: #111827;
     font-size: 0.76rem;
     line-height: 1.35;
     margin-bottom: 0.35rem;
@@ -231,7 +237,7 @@
 .syllabus-page .schedule-line svg {
     flex-shrink: 0;
     margin-top: 0.1rem;
-    stroke: #38bdf8;
+    stroke: var(--theme-primary, #0f766e);
 }
 
 .syllabus-page .not-scheduled {
@@ -256,9 +262,9 @@
 
 .syllabus-page .btn-add-day {
     margin-top: auto;
-    border: 1px dashed #475569;
+    border: 1px dashed #9ca3af;
     background: transparent;
-    color: #94a3b8;
+    color: #111827;
     border-radius: 4px;
     padding: 0.45rem;
     font-size: 0.78rem;
@@ -293,30 +299,35 @@
 .schedule-modal-content {
     position: relative;
     width: min(640px, 100%);
-    background: #1e293b;
-    border: 1px solid #334155;
+    background: #ffffff;
+    border: 1px solid var(--theme-primary-border, #d1d5db);
     border-radius: 8px;
-    padding: 1.25rem;
+    padding: 0 1.25rem 1.25rem;
     z-index: 1;
+    color: #111827;
+    overflow: hidden;
 }
 
 .schedule-modal-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 1rem;
+    margin: 0 -1.25rem 1rem;
+    padding: 0.85rem 1.25rem;
+    background: var(--theme-primary, #8b5cf6);
 }
 
 .schedule-modal-header h3 {
     margin: 0;
-    color: #f1f5f9;
+    color: #ffffff;
     font-size: 1rem;
+    font-weight: 600;
 }
 
 .schedule-modal-close {
     border: none;
     background: transparent;
-    color: #94a3b8;
+    color: #ffffff;
     font-size: 1.5rem;
     line-height: 1;
     cursor: pointer;
@@ -330,7 +341,7 @@
 
 .schedule-modal-content .form-group label {
     display: block;
-    color: #ffffff;
+    color: #111827;
     font-size: 0.85rem;
     font-weight: 500;
     margin-bottom: 0.45rem;
@@ -344,10 +355,10 @@
 .schedule-modal-content .form-select {
     width: 100%;
     height: 46px;
-    background: #0f172a;
-    border: 1px solid #334155;
+    background: #ffffff;
+    border: 1px solid #d1d5db;
     border-radius: 4px;
-    color: #f1f5f9;
+    color: #111827;
     padding: 0.55rem 0.75rem;
     font-size: 0.95rem;
     font-family: inherit;
@@ -357,7 +368,7 @@
 .schedule-modal-content .form-select {
     padding-right: 2rem;
     appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%94a3b8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 0.75rem center;
     cursor: pointer;
@@ -369,17 +380,17 @@
 }
 
 .schedule-modal-content .form-select option {
-    background: #0f172a;
-    color: #f1f5f9;
+    background: #ffffff;
+    color: #111827;
 }
 
 .schedule-modal-content .form-control {
     width: 100%;
     height: 46px;
-    background: #0f172a;
-    border: 1px solid #334155;
+    background: #ffffff;
+    border: 1px solid #d1d5db;
     border-radius: 4px;
-    color: #f1f5f9;
+    color: #111827;
     padding: 0.55rem 0.75rem;
     font-size: 0.95rem;
     font-family: inherit;
@@ -387,22 +398,22 @@
 }
 
 .schedule-modal-content .form-control::placeholder {
-    color: #94a3b8;
+    color: #6b7280;
 }
 
 .schedule-modal-content .form-control:focus,
 .schedule-modal-content .form-select:focus {
     outline: none;
-    border-color: #8b5cf6;
-    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+    border-color: var(--theme-primary, #8b5cf6);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--theme-primary, #8b5cf6) 18%, transparent);
 }
 
 .schedule-modal-content input[type="time"].form-control {
-    color-scheme: dark;
+    color-scheme: light;
 }
 
 .schedule-modal-content input[type="time"].form-control::-webkit-calendar-picker-indicator {
-    filter: invert(0.85);
+    filter: none;
     cursor: pointer;
 }
 
@@ -430,21 +441,17 @@
 }
 
 .btn-cancel {
-    background: #334155;
-    color: #e2e8f0;
+    background: #e5e7eb;
+    color: #111827;
 }
 
 .btn-save-modal {
-    background: #8b5cf6;
+    background: var(--theme-primary, #8b5cf6);
     color: #fff;
 }
 
 .btn-save-modal:hover {
-    background: #7c3aed;
-}
-
-.btn-save-modal:hover {
-    background: #7c3aed;
+    filter: brightness(0.95);
 }
 
 .lesson-plan-view-modal {
@@ -471,20 +478,21 @@
     position: relative;
     width: min(980px, 100%);
     max-height: calc(100vh - 2rem);
-    background: #1e293b;
-    border: 1px solid #334155;
+    background: #ffffff;
+    border: 1px solid var(--theme-primary-border, #d1d5db);
     border-radius: 6px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     z-index: 1;
+    color: #111827;
 }
 
 .lesson-plan-view-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #8b5cf6;
+    background: var(--theme-primary, #8b5cf6);
     padding: 0.85rem 1rem;
 }
 
@@ -519,7 +527,7 @@
 }
 
 .lesson-plan-view-left {
-    border-right: 1px solid #334155;
+    border-right: 1px solid #e5e7eb;
 }
 
 .lesson-plan-view-toolbar,
@@ -528,7 +536,7 @@
     align-items: center;
     justify-content: space-between;
     margin: 0 0 0.85rem;
-    color: #ffffff;
+    color: #111827;
     font-size: 0.95rem;
     font-weight: 600;
 }
@@ -547,7 +555,7 @@
     height: 30px;
     border: none;
     border-radius: 4px;
-    background: #8b5cf6;
+    background: var(--theme-primary, #8b5cf6);
     color: #fff;
     display: inline-flex;
     align-items: center;
@@ -556,11 +564,11 @@
 }
 
 .view-icon-btn:hover {
-    background: #7c3aed;
+    filter: brightness(0.95);
 }
 
 .lesson-plan-detail-table {
-    border-top: 1px solid #334155;
+    border-top: 1px solid #e5e7eb;
 }
 
 .lesson-plan-detail-row {
@@ -568,8 +576,8 @@
     grid-template-columns: 180px 1fr;
     gap: 1rem;
     padding: 0.8rem 0;
-    border-bottom: 1px solid #334155;
-    color: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    color: #111827;
     font-size: 0.88rem;
     line-height: 1.45;
 }
@@ -593,11 +601,11 @@
 }
 
 .comment-item {
-    background: #0f172a;
-    border: 1px solid #334155;
+    background: var(--theme-primary-soft, #f8fafc);
+    border: 1px solid var(--theme-primary-border, #e5e7eb);
     border-radius: 4px;
     padding: 0.55rem 0.65rem;
-    color: #e2e8f0;
+    color: #111827;
     font-size: 0.84rem;
 }
 
@@ -610,30 +618,30 @@
 .comment-input {
     flex: 1;
     height: 40px;
-    background: #0f172a;
-    border: 1px solid #334155;
+    background: #ffffff;
+    border: 1px solid #d1d5db;
     border-radius: 4px;
-    color: #f1f5f9;
+    color: #111827;
     padding: 0.55rem 0.75rem;
     font-family: inherit;
     font-size: 0.9rem;
 }
 
 .comment-input::placeholder {
-    color: #94a3b8;
+    color: #6b7280;
     font-style: italic;
 }
 
 .comment-input:focus {
     outline: none;
-    border-color: #8b5cf6;
+    border-color: var(--theme-primary, #8b5cf6);
 }
 
 .comment-send-btn {
     height: 40px;
     border: none;
     border-radius: 4px;
-    background: #8b5cf6;
+    background: var(--theme-primary, #8b5cf6);
     color: #fff;
     padding: 0 1rem;
     font-family: inherit;
@@ -642,7 +650,7 @@
 }
 
 .comment-send-btn:hover {
-    background: #7c3aed;
+    filter: brightness(0.95);
 }
 
 @media (max-width: 900px) {
@@ -652,7 +660,7 @@
 
     .lesson-plan-view-left {
         border-right: none;
-        border-bottom: 1px solid #334155;
+        border-bottom: 1px solid #e5e7eb;
     }
 
     .lesson-plan-detail-row {

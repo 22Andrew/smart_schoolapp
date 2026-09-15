@@ -8,7 +8,8 @@
     <title th:replace="${title}">User Panel</title>
     <link rel="stylesheet" th:href="@{/css/dashboard.css(v=20260903-9)}">
     <link rel="stylesheet" th:href="@{/css/user-dashboard.css(v=20260903-9)}">
-    <link rel="stylesheet" th:href="@{/css/app-theme.css(v=20260903-9)}">
+    <link rel="stylesheet" th:href="@{/css/app-theme.css(v=20260915-theme-bg)}">
+    <link rel="stylesheet" th:href="@{/css/select-dropdown.css(v='20260915-theme-bg')}">
     <link rel="stylesheet" th:href="@{/css/user-profile.css}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -24,6 +25,7 @@
     </div>
 
     <div th:replace="~{fragments/language-i18n-init :: language-i18n-init}"></div>
+    <script th:src="@{/js/select-dropdown.js(v='20260915-label-ph2')}"></script>
     <script th:src="@{/js/language-picker.js(v=20260831-4)}"></script>
     <script th:src="@{/js/user-dashboard.js(v=20260903-10)}"></script>
 </body>

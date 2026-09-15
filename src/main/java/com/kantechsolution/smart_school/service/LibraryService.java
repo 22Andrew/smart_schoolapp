@@ -5,12 +5,17 @@ import com.kantechsolution.smart_school.repository.LibraryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 @Service
@@ -52,6 +57,89 @@ public class LibraryService {
         libraryRepository.deleteById(id);
     }
 
+    public byte[] sampleImportCsv() {
+        String csv = "\uFEFF"
+                + "Book Title,Book Number,ISBN Number,Subject,Rack Number,Publisher,Author,Qty,Book Price,Post Date,Description,Available\n"
+                + "Sample Data,BK-001,978-0000000000,English,R1,Sample Publisher,Sample Author,10,25.00,2018-06-06,Sample Data,10\n";
+        return csv.getBytes(StandardCharsets.UTF_8);
+    }
+
+    @Transactional
+    public Map<String, Object> importBooks(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("Please select a CSV file");
+        }
+        String filename = file.getOriginalFilename() == null ? "" : file.getOriginalFilename().toLowerCase(Locale.ROOT);
+        if (!filename.isBlank() && !filename.endsWith(".csv") && !filename.endsWith(".txt")) {
+            throw new IllegalArgumentException("Please upload a CSV file");
+        }
+
+        String content;
+        try {
+            content = new String(file.getBytes(), StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Unable to read the CSV file");
+        }
+        if (content.startsWith("\uFEFF")) {
+            content = content.substring(1);
+        }
+        if (content.isBlank()) {
+            throw new IllegalArgumentException("The CSV file is empty");
+        }
+
+        List<List<String>> rows = parseCsv(content);
+        if (rows.isEmpty()) {
+            throw new IllegalArgumentException("The CSV file is empty");
+        }
+
+        List<String> headers = rows.get(0).stream().map(this::normalizeHeader).toList();
+        int titleIndex = headerIndex(headers, "booktitle", "title");
+        if (titleIndex < 0) {
+            throw new IllegalArgumentException("CSV must include a Book Title column");
+        }
+
+        List<String> errors = new ArrayList<>();
+        int imported = 0;
+        for (int i = 1; i < rows.size(); i++) {
+            List<String> cells = rows.get(i);
+            if (isBlankRow(cells)) {
+                continue;
+            }
+            Map<String, Object> payload = new LinkedHashMap<>();
+            payload.put("title", cell(cells, titleIndex));
+            payload.put("bookNumber", cellByHeader(cells, headers, "booknumber", "bookno"));
+            payload.put("isbn", cellByHeader(cells, headers, "isbnnumber", "isbn"));
+            payload.put("subject", cellByHeader(cells, headers, "subject"));
+            payload.put("rackNumber", cellByHeader(cells, headers, "racknumber", "rack"));
+            payload.put("publisher", cellByHeader(cells, headers, "publisher"));
+            payload.put("author", cellByHeader(cells, headers, "author"));
+            payload.put("qty", cellByHeader(cells, headers, "qty", "quantity", "totalcopies"));
+            payload.put("bookPrice", cellByHeader(cells, headers, "bookprice", "price"));
+            payload.put("postDate", cellByHeader(cells, headers, "postdate", "date"));
+            payload.put("description", cellByHeader(cells, headers, "description"));
+            payload.put("available", cellByHeader(cells, headers, "available", "availablecopies"));
+            try {
+                createBook(payload);
+                imported++;
+            } catch (IllegalArgumentException e) {
+                errors.add("Row " + (i + 1) + ": " + e.getMessage());
+            }
+        }
+
+        if (imported == 0) {
+            String firstError = errors.isEmpty() ? "No valid book rows were found in the CSV file" : errors.get(0);
+            throw new IllegalArgumentException(firstError);
+        }
+
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("success", true);
+        result.put("imported", imported);
+        result.put("skipped", errors.size());
+        result.put("errors", errors);
+        result.put("message", imported + (imported == 1 ? " book imported successfully!" : " books imported successfully!"));
+        return result;
+    }
+
     private void applyFields(Library book, Map<String, Object> payload) {
         String title = text(payload.get("title"));
         if (title.isBlank()) {
@@ -61,6 +149,10 @@ public class LibraryService {
         Integer qty = parseInteger(payload.get("qty"), "Qty");
         if (qty != null && qty < 0) {
             throw new IllegalArgumentException("Qty cannot be negative");
+        }
+        Integer available = parseInteger(payload.get("available"), "Available");
+        if (available != null && available < 0) {
+            throw new IllegalArgumentException("Available cannot be negative");
         }
 
         book.setTitle(title);
@@ -76,7 +168,9 @@ public class LibraryService {
         book.setPostDate(parseDate(payload.get("postDate")));
         book.setTotalCopies(qty);
         if (book.getId() == null || book.getAvailableCopies() == null) {
-            book.setAvailableCopies(qty);
+            book.setAvailableCopies(available != null ? available : qty);
+        } else if (available != null) {
+            book.setAvailableCopies(available);
         }
         book.setIsActive(true);
     }
@@ -113,10 +207,92 @@ public class LibraryService {
             return null;
         }
         try {
+            if (raw.contains(".")) {
+                return (int) Math.round(Double.parseDouble(raw));
+            }
             return Integer.parseInt(raw);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException(label + " must be a number");
         }
+    }
+
+    private String normalizeHeader(String header) {
+        return text(header).toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9]", "");
+    }
+
+    private int headerIndex(List<String> headers, String... aliases) {
+        for (int i = 0; i < headers.size(); i++) {
+            String header = headers.get(i);
+            for (String alias : aliases) {
+                if (alias.equals(header)) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+
+    private String cellByHeader(List<String> cells, List<String> headers, String... aliases) {
+        int index = headerIndex(headers, aliases);
+        return index < 0 ? "" : cell(cells, index);
+    }
+
+    private String cell(List<String> cells, int index) {
+        if (index < 0 || index >= cells.size()) {
+            return "";
+        }
+        return text(cells.get(index));
+    }
+
+    private boolean isBlankRow(List<String> cells) {
+        if (cells == null || cells.isEmpty()) {
+            return true;
+        }
+        for (String cell : cells) {
+            if (!text(cell).isBlank()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private List<List<String>> parseCsv(String content) {
+        List<List<String>> rows = new ArrayList<>();
+        List<String> currentRow = new ArrayList<>();
+        StringBuilder current = new StringBuilder();
+        boolean inQuotes = false;
+        for (int i = 0; i < content.length(); i++) {
+            char c = content.charAt(i);
+            if (inQuotes) {
+                if (c == '"') {
+                    if (i + 1 < content.length() && content.charAt(i + 1) == '"') {
+                        current.append('"');
+                        i++;
+                    } else {
+                        inQuotes = false;
+                    }
+                } else {
+                    current.append(c);
+                }
+            } else if (c == '"') {
+                inQuotes = true;
+            } else if (c == ',') {
+                currentRow.add(current.toString());
+                current.setLength(0);
+            } else if (c == '\n') {
+                currentRow.add(current.toString());
+                current.setLength(0);
+                rows.add(currentRow);
+                currentRow = new ArrayList<>();
+            } else if (c != '\r') {
+                current.append(c);
+            }
+        }
+        if (inQuotes || !current.isEmpty() || !currentRow.isEmpty()) {
+            currentRow.add(current.toString());
+            rows.add(currentRow);
+        }
+        return rows;
     }
 
     private BigDecimal parseMoney(Object value) {

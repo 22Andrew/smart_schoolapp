@@ -15,6 +15,7 @@ import com.kantechsolution.smart_school.repository.SchoolHouseRepository;
 import com.kantechsolution.smart_school.repository.StudentAdmissionRepository;
 import com.kantechsolution.smart_school.repository.StudentCategoryRepository;
 import com.kantechsolution.smart_school.repository.StudentClassAssignmentRepository;
+import com.kantechsolution.smart_school.validation.PhoneNumberValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -316,7 +317,8 @@ public class StudentAdmissionService {
         admission.setDateOfBirth(dateOfBirth);
         admission.setCategory(resolveCategory(asLong(payload.get("categoryId"))));
         admission.setReligion(optionalText(payload.get("religion")));
-        admission.setMobileNumber(optionalText(payload.get("mobileNumber")));
+        admission.setMobileNumber(PhoneNumberValidator.optionalInternational(
+                optionalText(payload.get("mobileNumber"))));
         admission.setEmail(optionalText(payload.get("email")));
         admission.setAdmissionDate(optionalDate(payload.get("admissionDate")));
         admission.setBloodGroup(optionalText(payload.get("bloodGroup")));
@@ -339,16 +341,19 @@ public class StudentAdmissionService {
         admission.setHostelRoom(room);
 
         admission.setFatherName(optionalText(payload.get("fatherName")));
-        admission.setFatherPhone(optionalText(payload.get("fatherPhone")));
+        admission.setFatherPhone(PhoneNumberValidator.optionalInternational(
+                optionalText(payload.get("fatherPhone"))));
         admission.setFatherOccupation(optionalText(payload.get("fatherOccupation")));
         admission.setMotherName(optionalText(payload.get("motherName")));
-        admission.setMotherPhone(optionalText(payload.get("motherPhone")));
+        admission.setMotherPhone(PhoneNumberValidator.optionalInternational(
+                optionalText(payload.get("motherPhone"))));
         admission.setMotherOccupation(optionalText(payload.get("motherOccupation")));
         admission.setGuardianIs(optionalText(payload.get("guardianIs")));
         admission.setGuardianName(optionalText(payload.get("guardianName")));
         admission.setGuardianRelation(optionalText(payload.get("guardianRelation")));
         admission.setGuardianEmail(optionalText(payload.get("guardianEmail")));
-        admission.setGuardianPhone(optionalText(payload.get("guardianPhone")));
+        admission.setGuardianPhone(PhoneNumberValidator.optionalInternational(
+                optionalText(payload.get("guardianPhone"))));
         admission.setGuardianOccupation(optionalText(payload.get("guardianOccupation")));
         admission.setGuardianAddress(optionalText(payload.get("guardianAddress")));
         admission.setCurrentAddress(optionalText(payload.get("currentAddress")));

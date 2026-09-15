@@ -1,4 +1,30 @@
 /* Manage Syllabus Status page */
+.lessonplan-syllabus-status-page .examresult-panel {
+    background: var(--theme-primary-soft, #ffffff);
+    border: 1px solid var(--theme-primary-border, #d1d5db);
+    color: #111827;
+}
+
+.lessonplan-syllabus-status-page .panel-header-row {
+    border-bottom-color: var(--theme-primary-border, #d1d5db);
+}
+
+.lessonplan-syllabus-status-page .panel-header-row .section-title,
+.lessonplan-syllabus-status-page .examresult-filter-form .form-group label {
+    color: #111827;
+}
+
+.lessonplan-syllabus-status-page .form-select {
+    background: #ffffff;
+    border-color: #d1d5db;
+    color: #111827;
+}
+
+.lessonplan-syllabus-status-page .form-select option {
+    background: #ffffff;
+    color: #111827;
+}
+
 .lessonplan-syllabus-status-page .syllabus-criteria-grid {
     grid-template-columns: repeat(4, minmax(180px, 1fr));
 }
@@ -33,9 +59,9 @@
 }
 
 .syllabus-no-record-banner {
-    background: rgba(56, 189, 248, 0.12);
-    border: 1px solid rgba(56, 189, 248, 0.35);
-    color: #7dd3fc;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #111827;
     text-align: center;
     padding: 1rem 1.25rem;
     border-radius: 4px;
@@ -58,36 +84,36 @@
 .syllabus-table th,
 .syllabus-table td {
     padding: 0.55rem 0.65rem;
-    border: 1px solid #334155;
-    color: #e2e8f0;
+    border: 1px solid #d1d5db;
+    color: #111827;
     text-align: left;
     vertical-align: middle;
 }
 
 .syllabus-table thead th {
-    background: #0f172a;
-    color: #f8fafc;
+    background: var(--theme-primary, #8b5cf6);
+    color: #ffffff;
     font-weight: 600;
     white-space: nowrap;
 }
 
 .syllabus-table tbody tr:nth-child(even) {
-    background: rgba(15, 23, 42, 0.35);
+    background: #f9fafb;
 }
 
 .syllabus-table tbody tr:hover {
-    background: rgba(139, 92, 246, 0.08);
+    background: var(--theme-primary-soft, #f3f4f6);
 }
 
 .syllabus-table .lesson-topic-cell .lesson-name {
     display: block;
     font-weight: 600;
-    color: #f8fafc;
+    color: #111827;
 }
 
 .syllabus-table .lesson-topic-cell .topic-name {
     display: block;
-    color: #cbd5e1;
+    color: #111827;
     margin-top: 0.15rem;
 }
 
@@ -100,21 +126,21 @@
     border-radius: 999px;
     font-size: 0.78rem;
     font-weight: 600;
-    background: #1e293b;
-    color: #e2e8f0;
-    border: 1px solid #334155;
+    background: #f3f4f6;
+    color: #111827;
+    border: 1px solid #d1d5db;
 }
 
 .status-badge.completed {
-    background: rgba(34, 197, 94, 0.15);
-    color: #86efac;
-    border-color: rgba(34, 197, 94, 0.35);
+    background: #dcfce7;
+    color: #166534;
+    border-color: #86efac;
 }
 
 .status-badge.incomplete {
-    background: rgba(148, 163, 184, 0.12);
-    color: #cbd5e1;
-    border-color: rgba(148, 163, 184, 0.35);
+    background: #f3f4f6;
+    color: #111827;
+    border-color: #d1d5db;
 }
 
 .syllabus-table td.action-cell {

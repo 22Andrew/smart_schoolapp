@@ -3,6 +3,7 @@ package com.kantechsolution.smart_school.service;
 import com.kantechsolution.smart_school.config.UploadStorage;
 import com.kantechsolution.smart_school.model.StaffMember;
 import com.kantechsolution.smart_school.repository.StaffMemberRepository;
+import com.kantechsolution.smart_school.validation.PhoneNumberValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -210,8 +211,9 @@ public class StaffMemberService implements ApplicationRunner {
         member.setDepartment(text(payload.get("department")));
         member.setFatherName(text(payload.get("fatherName")));
         member.setMotherName(text(payload.get("motherName")));
-        member.setPhone(text(payload.get("phone")));
-        member.setEmergencyContact(text(payload.get("emergencyContact")));
+        member.setPhone(PhoneNumberValidator.optionalInternational(text(payload.get("phone"))));
+        member.setEmergencyContact(PhoneNumberValidator.optionalInternational(
+                text(payload.get("emergencyContact"))));
         member.setMaritalStatus(text(payload.get("maritalStatus")));
         member.setAddress(text(payload.get("address")));
         member.setPermanentAddress(text(payload.get("permanentAddress")));

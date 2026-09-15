@@ -260,7 +260,7 @@ async function handleApplySave(event) {
         reason: document.getElementById('addReason').value.trim()
     };
 
-    if (!payload.leaveType || !payload.applyDate || !payload.fromDate || !payload.toDate) {
+    if (!payload.leaveType || !payload.applyDate || !payload.fromDate || !payload.toDate || !payload.reason) {
         Swal.fire({
             icon: 'error',
             title: 'Validation Error',

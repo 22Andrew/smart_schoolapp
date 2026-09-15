@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
+    const page = document.querySelector('.mytimetable-page');
+    const teacherOwnView = !!(page && page.classList.contains('teacher-own-view'));
+    const ownTeacherCode = page && page.getAttribute('data-own-teacher-code');
     const teacherSelect = document.getElementById('teacherSelect');
     const searchForm = document.getElementById('teacherTimetableForm');
     const timetablePanel = document.getElementById('timetablePanel');
@@ -10,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let teachers = [];
     let periodsByDay = {};
     let currentTitle = 'Teacher Time Table';
+    let timetableLoaded = teacherOwnView;
 
     days.forEach(function (day) {
         periodsByDay[day] = [];
@@ -112,6 +116,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function fillTeacherSelect() {
+        if (!teacherSelect) return;
         teacherSelect.innerHTML = '<option value="">Select</option>';
         teachers.forEach(function (teacher) {
             const option = document.createElement('option');
@@ -128,60 +133,87 @@ document.addEventListener('DOMContentLoaded', function () {
         fillTeacherSelect();
     }
 
-    searchForm.addEventListener('submit', async function (e) {
-        e.preventDefault();
-        if (!teacherSelect.value) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Required',
-                text: 'Please select a teacher.',
-                confirmButtonColor: '#8b5cf6'
-            });
-            return;
+    async function fetchTimetable(url) {
+        const response = await fetch(url);
+        if (!response.ok) {
+            const err = await response.json().catch(function () { return {}; });
+            throw new Error(err.message || 'Failed to load teacher timetable');
         }
+        return response.json();
+    }
 
-        const teacherLabel = teacherSelect.options[teacherSelect.selectedIndex].textContent.trim();
-        currentTitle = teacherLabel + ' Time Table';
-        timetableTitle.textContent = 'Teacher Time Table';
+    async function showTimetable(entries, title, silent) {
+        currentTitle = title || 'Teacher Time Table';
+        if (timetableTitle) {
+            timetableTitle.textContent = 'Teacher Time Table';
+        }
+        periodsByDay = groupPeriods(entries);
+        timetablePanel.style.display = '';
+        timetableLoaded = true;
+        renderTimetable();
 
+        if (silent) return;
+
+        Swal.fire({
+            icon: 'success',
+            title: entries.length ? 'Timetable Loaded' : 'No Periods',
+            text: entries.length
+                ? 'Showing timetable for ' + currentTitle.replace(/ Time Table$/, '') + '.'
+                : 'No timetable periods found for ' + currentTitle.replace(/ Time Table$/, '') + '.',
+            timer: entries.length ? 1200 : 2200,
+            showConfirmButton: !entries.length,
+            confirmButtonColor: '#8b5cf6'
+        });
+    }
+
+    async function loadOwnTimetable() {
         try {
-            const response = await fetch(
-                '/api/timetable/teacher?teacherCode=' + encodeURIComponent(teacherSelect.value)
+            const entries = await fetchTimetable('/api/timetable/teacher/me');
+            await showTimetable(entries, 'Teacher Time Table', true);
+            return;
+        } catch (meError) {
+            const fallbackCode = ownTeacherCode || '9002';
+            const entries = await fetchTimetable(
+                '/api/timetable/teacher?teacherCode=' + encodeURIComponent(fallbackCode)
             );
-            if (!response.ok) {
-                const err = await response.json().catch(function () { return {}; });
-                throw new Error(err.message || 'Failed to load teacher timetable');
+            await showTimetable(entries, 'Teacher Time Table', true);
+        }
+    }
+
+    if (searchForm) {
+        searchForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            if (!teacherSelect || !teacherSelect.value) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Required',
+                    text: 'Please select a teacher.',
+                    confirmButtonColor: '#8b5cf6'
+                });
+                return;
             }
 
-            const entries = await response.json();
-            periodsByDay = groupPeriods(entries);
-            timetablePanel.style.display = '';
-            renderTimetable();
-
-            Swal.fire({
-                icon: 'success',
-                title: entries.length ? 'Timetable Loaded' : 'No Periods',
-                text: entries.length
-                    ? 'Showing timetable for ' + teacherLabel + '.'
-                    : 'No timetable periods found for ' + teacherLabel + '.',
-                timer: entries.length ? 1200 : 2200,
-                showConfirmButton: !entries.length,
-                confirmButtonColor: '#8b5cf6'
-            });
-        } catch (error) {
-            console.error(error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: error.message || 'Failed to load teacher timetable.',
-                confirmButtonColor: '#8b5cf6'
-            });
-        }
-    });
+            const teacherLabel = teacherSelect.options[teacherSelect.selectedIndex].textContent.trim();
+            try {
+                const entries = await fetchTimetable(
+                    '/api/timetable/teacher?teacherCode=' + encodeURIComponent(teacherSelect.value)
+                );
+                await showTimetable(entries, teacherLabel + ' Time Table', false);
+            } catch (error) {
+                console.error(error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: error.message || 'Failed to load teacher timetable.',
+                    confirmButtonColor: '#8b5cf6'
+                });
+            }
+        });
+    }
 
     if (printBtn) {
         printBtn.addEventListener('click', function () {
-            if (timetablePanel.style.display === 'none') {
+            if (!timetableLoaded || timetablePanel.style.display === 'none') {
                 Swal.fire({
                     icon: 'warning',
                     title: 'No Timetable',
@@ -230,13 +262,26 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    loadTeachers().catch(function (error) {
-        console.error(error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Failed to load teachers.',
-            confirmButtonColor: '#8b5cf6'
+    if (teacherOwnView) {
+        renderTimetable();
+        loadOwnTimetable().catch(function (error) {
+            console.error(error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.message || 'Failed to load your timetable.',
+                confirmButtonColor: '#8b5cf6'
+            });
         });
-    });
+    } else {
+        loadTeachers().catch(function (error) {
+            console.error(error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Failed to load teachers.',
+                confirmButtonColor: '#8b5cf6'
+            });
+        });
+    }
 });

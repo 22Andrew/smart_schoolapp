@@ -95,10 +95,11 @@ public class BehaviourController {
     @ResponseBody
     public ResponseEntity<?> studentIncidentReport(
             @RequestParam Long classId,
-            @RequestParam(required = false) String section
+            @RequestParam(required = false) String section,
+            @RequestParam(required = false, defaultValue = "current") String session
     ) {
         try {
-            return ResponseEntity.ok(behaviourReportService.studentIncidentReport(classId, section));
+            return ResponseEntity.ok(behaviourReportService.studentIncidentReport(classId, section, session));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(errorBody(e.getMessage()));
         } catch (Exception e) {
@@ -111,10 +112,11 @@ public class BehaviourController {
     @ResponseBody
     public ResponseEntity<?> studentBehaviourRankReport(
             @RequestParam Long classId,
-            @RequestParam(required = false) String section
+            @RequestParam(required = false) String section,
+            @RequestParam(required = false, defaultValue = "current") String session
     ) {
         try {
-            return ResponseEntity.ok(behaviourReportService.studentBehaviourRankReport(classId, section));
+            return ResponseEntity.ok(behaviourReportService.studentBehaviourRankReport(classId, section, session));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(errorBody(e.getMessage()));
         } catch (Exception e) {

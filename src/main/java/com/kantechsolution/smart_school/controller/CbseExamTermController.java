@@ -1,9 +1,11 @@
 package com.kantechsolution.smart_school.controller;
 
 import com.kantechsolution.smart_school.service.CbseExamTermService;
+import com.kantechsolution.smart_school.service.StaffSessionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,10 +18,11 @@ import java.util.Map;
 public class CbseExamTermController {
 
     private final CbseExamTermService cbseExamTermService;
+    private final StaffSessionService staffSessionService;
 
     @GetMapping("/cbseexam/cbseterm/index")
-    public String showCbseExamTermPage() {
-        return "cbseexam-cbseterm-index";
+    public String showCbseExamTermPage(Authentication authentication) {
+        return staffSessionService.superAdminView(authentication, "cbseexam-cbseterm-index");
     }
 
     @GetMapping("/api/cbse-exam-terms")

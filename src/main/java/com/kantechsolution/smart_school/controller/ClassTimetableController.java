@@ -1,9 +1,12 @@
 package com.kantechsolution.smart_school.controller;
 
 import com.kantechsolution.smart_school.service.ClassTimetableService;
+import com.kantechsolution.smart_school.service.RoleSidebarMenuService;
+import com.kantechsolution.smart_school.service.StaffSessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +27,12 @@ public class ClassTimetableController {
     @Autowired
     private ClassTimetableService classTimetableService;
 
+    @Autowired
+    private StaffSessionService staffSessionService;
+
+    @Autowired
+    private RoleSidebarMenuService roleSidebarMenuService;
+
     @GetMapping("/api/timetable")
     @ResponseBody
     public ResponseEntity<?> getTimetable(@RequestParam Long classId, @RequestParam String section) {
@@ -37,10 +46,34 @@ public class ClassTimetableController {
         }
     }
 
+    @GetMapping("/api/timetable/teacher/me")
+    @ResponseBody
+    public ResponseEntity<?> getOwnTeacherTimetable(Authentication authentication) {
+        try {
+            String teacherCode = staffSessionService.resolveLinkedStaffId(authentication).orElse(null);
+            if (teacherCode == null || teacherCode.isBlank()) {
+                return ResponseEntity.badRequest().body(errorBody("Teacher profile not found"));
+            }
+            return ResponseEntity.ok(classTimetableService.getTimetableByTeacher(teacherCode));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(errorBody(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorBody("Failed to load teacher timetable"));
+        }
+    }
+
     @GetMapping("/api/timetable/teacher")
     @ResponseBody
-    public ResponseEntity<?> getTeacherTimetable(@RequestParam String teacherCode) {
+    public ResponseEntity<?> getTeacherTimetable(@RequestParam String teacherCode, Authentication authentication) {
         try {
+            if (roleSidebarMenuService.isTeacher(authentication)) {
+                String ownCode = staffSessionService.resolveLinkedStaffId(authentication).orElse("");
+                if (!ownCode.equalsIgnoreCase(teacherCode == null ? "" : teacherCode.trim())) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .body(errorBody("You can only view your own timetable"));
+                }
+            }
             return ResponseEntity.ok(classTimetableService.getTimetableByTeacher(teacherCode));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(errorBody(e.getMessage()));

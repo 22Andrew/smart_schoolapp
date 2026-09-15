@@ -719,14 +719,17 @@ html.theme-dark .visitor-modal .form-group-modal label {
 }
 
 html.theme-light .visitor-modal .form-input-modal,
-html.theme-light .visitor-modal .form-select-modal,
-html.theme-light .visitor-modal .form-textarea-modal,
-html.theme-dark .visitor-modal .form-input-modal,
-html.theme-dark .visitor-modal .form-select-modal,
-html.theme-dark .visitor-modal .form-textarea-modal {
+html.theme-light .visitor-modal .form-textarea-modal {
     background: #ffffff !important;
     border-color: #d1d5db !important;
     color: #111827 !important;
+}
+
+html.theme-dark .visitor-modal .form-input-modal,
+html.theme-dark .visitor-modal .form-textarea-modal {
+    background: #0f172a !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
 }
 
 /* Responsive Design */

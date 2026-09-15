@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function renderContacts() {
         if (!contactList) return;
         if (!contacts.length) {
-            contactList.innerHTML = '<div class="chat-empty-state"><p>No users available for chat.</p></div>';
+            contactList.innerHTML = '<div class="chat-empty-state"><p>No chat messages yet. Only conversations sent to you will appear here.</p></div>';
             return;
         }
 
@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
             chatMessages.innerHTML = ''
                 + '<div class="chat-empty-state">'
                 + '<div class="chat-empty-avatar no-image">NO IMAGE</div>'
-                + '<p>Select a user from the list to view the conversation.</p>'
+                + '<p>Select a conversation to read and reply.</p>'
                 + '</div>';
             return;
         }
@@ -188,7 +188,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!response.ok) {
             throw new Error('Failed to load chat contacts');
         }
-        contacts = await response.json();
+        contacts = (await response.json()).filter(function (contact) {
+            return contact && String(contact.lastMessage || '').trim() !== '';
+        });
         renderContacts();
     }
 
@@ -203,6 +205,21 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         messages = await response.json();
         renderMessages();
+        try {
+            const key = contactKey(activeContact);
+            const watermarks = JSON.parse(localStorage.getItem('chatReadAt') || '{}') || {};
+            const lastId = messages.reduce(function (max, message) {
+                const id = Number(message && message.id) || 0;
+                return id > max ? id : max;
+            }, 0);
+            watermarks[key] = lastId;
+            localStorage.setItem('chatReadAt', JSON.stringify(watermarks));
+        } catch (error) {
+            // Ignore local unread tracking failures.
+        }
+        if (typeof window.refreshChatUnreadBadge === 'function') {
+            window.refreshChatUnreadBadge();
+        }
     }
 
     async function selectContact(contact) {

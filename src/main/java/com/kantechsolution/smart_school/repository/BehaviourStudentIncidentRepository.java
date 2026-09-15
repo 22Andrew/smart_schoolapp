@@ -12,6 +12,8 @@ public interface BehaviourStudentIncidentRepository extends JpaRepository<Behavi
 
     List<BehaviourStudentIncident> findByStudentAdmissionIdOrderByIncidentDateDescIdDesc(Long studentAdmissionId);
 
+    List<BehaviourStudentIncident> findByStudentAdmissionIdIn(Collection<Long> studentAdmissionIds);
+
     long countByStudentAdmissionId(Long studentAdmissionId);
 
     @Query("select i.studentAdmissionId, coalesce(sum(i.points), 0) from BehaviourStudentIncident i "

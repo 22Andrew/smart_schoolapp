@@ -1,3 +1,5 @@
+@import url('select-dropdown.css');
+
 /* Reset and Base Styles */
 
 * {
@@ -2835,6 +2837,11 @@ html.theme-dark .sidebar:not(.user-sidebar) .sub-submenu-item.active {
     font-weight: 700;
     line-height: 16px;
     text-align: center;
+}
+
+.chat-unread-badge.is-empty,
+.chat-unread-badge[hidden] {
+    display: none !important;
 }
 
 .icon-btn {

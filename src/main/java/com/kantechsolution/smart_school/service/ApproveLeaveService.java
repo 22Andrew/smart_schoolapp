@@ -139,7 +139,11 @@ public class ApproveLeaveService {
         leave.setApplyDate(parseDate(payload.get("applyDate"), "Apply date is required"));
         leave.setFromDate(parseDate(payload.get("fromDate"), "From date is required"));
         leave.setToDate(parseDate(payload.get("toDate"), "To date is required"));
-        leave.setReason(text(payload.get("reason")));
+        String reason = text(payload.get("reason"));
+        if (reason.isBlank()) {
+            throw new IllegalArgumentException("Reason is required");
+        }
+        leave.setReason(reason);
 
         String status = text(payload.get("status"));
         if (status.isBlank()) {

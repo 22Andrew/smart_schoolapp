@@ -234,10 +234,10 @@ select.form-control option {
 
 .fees-details-section {
     margin-top: 0.75rem;
-    border: 1px solid #334155;
+    border: 1px solid #e5e7eb;
     border-radius: 4px;
     overflow: hidden;
-    background: #1e293b;
+    background: #ffffff;
 }
 
 .fees-details-header {
@@ -259,9 +259,16 @@ select.form-control option {
 .fees-item {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 0.75rem;
     padding: 0.75rem 1rem;
-    border-top: 1px solid #334155;
+    border-top: 1px solid #e5e7eb;
+}
+
+.fees-empty {
+    padding: 0.9rem 1rem;
+    color: #111827;
+    font-size: 0.9rem;
 }
 
 .fees-item:first-child {
@@ -276,7 +283,7 @@ select.form-control option {
     justify-content: center;
     background: transparent;
     border: none;
-    color: #f1f5f9;
+    color: #111827;
     font-size: 1.15rem;
     font-weight: 500;
     line-height: 1;
@@ -286,7 +293,12 @@ select.form-control option {
 }
 
 .fees-expand-btn:hover {
-    color: #c4b5fd;
+    color: #000000;
+}
+
+.fees-expand-btn:disabled {
+    opacity: 0.35;
+    cursor: default;
 }
 
 .fees-item-label {
@@ -307,18 +319,37 @@ select.form-control option {
     flex-shrink: 0;
 }
 
-.fees-name {
-    color: #e2e8f0;
-    font-size: 0.9rem;
-    font-weight: 400;
-}
-
-.fees-amount {
-    color: #e2e8f0;
+.fees-name,
+.fees-sub-name {
+    color: #111827;
     font-size: 0.9rem;
     font-weight: 500;
+}
+
+.fees-amount,
+.fees-sub-amount {
+    color: #111827;
+    font-size: 0.9rem;
+    font-weight: 600;
     margin-left: auto;
     flex-shrink: 0;
+}
+
+.fees-item-children {
+    display: none;
+    width: 100%;
+    padding: 0.15rem 0 0.1rem 2.15rem;
+}
+
+.fees-item.is-expanded .fees-item-children {
+    display: block;
+}
+
+.fees-sub-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.35rem 0;
 }
 
 .parent-guardian-header {
@@ -624,6 +655,41 @@ html.theme-light .parent-guardian-header {
 html.theme-light .fees-details-section {
     background: #ffffff;
     border-color: #e5e7eb;
+}
+
+html.theme-dark .fees-details-section {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+html.theme-dark .fees-item {
+    border-top-color: #334155;
+}
+
+html.theme-light .fees-item {
+    border-top-color: #e5e7eb;
+}
+
+html.theme-light .fees-name,
+html.theme-light .fees-amount,
+html.theme-light .fees-expand-btn,
+html.theme-light .fees-sub-name,
+html.theme-light .fees-sub-amount,
+html.theme-light .fees-empty {
+    color: #000000 !important;
+}
+
+html.theme-light .fees-expand-btn:hover {
+    color: #000000;
+}
+
+html.theme-dark .fees-name,
+html.theme-dark .fees-amount,
+html.theme-dark .fees-expand-btn,
+html.theme-dark .fees-sub-name,
+html.theme-dark .fees-sub-amount,
+html.theme-dark .fees-empty {
+    color: #f8fafc;
 }
 
 html.theme-light .more-details-section {

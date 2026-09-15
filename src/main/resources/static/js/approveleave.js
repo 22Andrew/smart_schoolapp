@@ -344,7 +344,7 @@ document.addEventListener('DOMContentLoaded', function () {
         event.preventDefault();
         const payload = buildPayload();
         if (!payload.studentAdmissionId || !payload.classId || !payload.section
-            || !payload.applyDate || !payload.fromDate || !payload.toDate) {
+            || !payload.applyDate || !payload.fromDate || !payload.toDate || !payload.reason) {
             showError({ message: 'Please fill all required fields.' });
             return;
         }

@@ -104,6 +104,16 @@ public class StaffSessionService {
     /**
      * Resolves the staff directory record linked to the logged-in demo account.
      */
+    public Optional<StaffMember> resolveLinkedStaffMember(Authentication authentication) {
+        return resolveLinkedStaffMemberId(authentication).flatMap(staffMemberRepository::findById);
+    }
+
+    public Optional<String> resolveLinkedStaffId(Authentication authentication) {
+        return resolveLinkedStaffMember(authentication)
+                .map(StaffMember::getStaffId)
+                .filter(id -> id != null && !id.isBlank());
+    }
+
     public Optional<Long> resolveLinkedStaffMemberId(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return Optional.empty();
@@ -143,6 +153,13 @@ public class StaffSessionService {
 
     public boolean isSuperAdmin(Authentication authentication) {
         return roleSidebarMenuService.isSuperAdmin(authentication);
+    }
+
+    public String superAdminView(Authentication authentication, String viewName) {
+        if (!isSuperAdmin(authentication)) {
+            return "redirect:" + resolveDashboardUrl(authentication);
+        }
+        return viewName;
     }
 
     public boolean isReceptionistStaffDirectoryRestricted(Authentication authentication) {

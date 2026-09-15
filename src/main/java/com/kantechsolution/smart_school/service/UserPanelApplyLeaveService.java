@@ -90,7 +90,11 @@ public class UserPanelApplyLeaveService {
         if (leave.getToDate().isBefore(leave.getFromDate())) {
             throw new IllegalArgumentException("To date cannot be before from date");
         }
-        leave.setReason(reason == null ? "" : reason.trim());
+        String trimmedReason = reason == null ? "" : reason.trim();
+        if (trimmedReason.isBlank()) {
+            throw new IllegalArgumentException("Reason is required");
+        }
+        leave.setReason(trimmedReason);
         if (document != null && !document.isEmpty()) {
             leave.setDocumentPath(storeDocument(document));
         }

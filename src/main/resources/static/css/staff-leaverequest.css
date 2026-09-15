@@ -3,16 +3,19 @@
     padding: 0.55rem 1.15rem;
 }
 
-/* Details modal — white background on Apply Leave */
-.staff-apply-leave-page #leaveDetailsModal .leave-modal-dialog {
-    background: #fff;
-    border: 1px solid #e2e8f0;
+/* Details and Add Details modals — white background for all roles */
+.staff-apply-leave-page #leaveDetailsModal .leave-modal-dialog,
+.staff-apply-leave-page #leaveAddModal .leave-modal-dialog {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
     box-shadow: 0 12px 40px rgba(15, 23, 42, 0.18);
 }
 
 .staff-apply-leave-page #leaveDetailsModal .leave-modal-body .form-group label,
-.staff-apply-leave-page #leaveDetailsModal .leave-status-options .radio-label {
-    color: #334155;
+.staff-apply-leave-page #leaveDetailsModal .leave-status-options .radio-label,
+.staff-apply-leave-page #leaveAddModal .leave-modal-body .form-group label,
+.staff-apply-leave-page #leaveAddModal .leave-status-options .radio-label {
+    color: #374151;
 }
 
 .staff-apply-leave-page #leaveDetailsModal .leave-details-grid {

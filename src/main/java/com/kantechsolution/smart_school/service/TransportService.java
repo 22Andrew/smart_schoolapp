@@ -3,6 +3,7 @@ package com.kantechsolution.smart_school.service;
 import com.kantechsolution.smart_school.config.UploadStorage;
 import com.kantechsolution.smart_school.model.*;
 import com.kantechsolution.smart_school.repository.*;
+import com.kantechsolution.smart_school.validation.PhoneNumberValidator;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
@@ -591,7 +592,8 @@ public class TransportService implements ApplicationRunner {
         vehicle.setMaxSeatingCapacity(asInteger(payload.get("maxSeatingCapacity")));
         vehicle.setDriverName(blankToNull(text(payload.get("driverName"))));
         vehicle.setDriverLicence(blankToNull(text(payload.get("driverLicence"))));
-        vehicle.setDriverContact(blankToNull(text(payload.get("driverContact"))));
+        vehicle.setDriverContact(PhoneNumberValidator.optionalInternational(
+                blankToNull(text(payload.get("driverContact")))));
         vehicle.setNote(blankToNull(text(payload.get("note"))));
     }
 

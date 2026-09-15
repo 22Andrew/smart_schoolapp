@@ -213,6 +213,7 @@ public class LessonPlanTopicService implements ApplicationRunner {
         row.put("subjectCode", lesson.getSubjectCode());
         row.put("lessonName", lesson.getLessonName());
         row.put("topics", lesson.getTopics().stream().map(LessonPlanTopic::getTopicName).toList());
+        row.put("topicIds", lesson.getTopics().stream().map(LessonPlanTopic::getId).toList());
         row.put("topicText", lesson.getTopics().stream()
                 .map(LessonPlanTopic::getTopicName)
                 .reduce((a, b) -> a + "\n" + b)

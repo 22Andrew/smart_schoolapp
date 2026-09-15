@@ -683,7 +683,7 @@
                             <li><a href="#">Assign Observation</a></li>
                             <li><a href="#">Admit Card</a></li>
                             <li><a href="#">Reports</a></li>
-                            <li><a href="/cbseexam/cbsecategory/index">Setting</a></li>
+                            <li th:if="${staffRole == 'Super Admin'}"><a href="/cbseexam/cbsecategory/index">Setting</a></li>
                         </ul>
                     </div>
 

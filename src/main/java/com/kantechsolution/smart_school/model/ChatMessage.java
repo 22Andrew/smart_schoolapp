@@ -37,6 +37,9 @@ public class ChatMessage extends BaseEntity {
     @Column(name = "sent_by_owner", nullable = false)
     private Boolean sentByOwner;
 
+    @Column(name = "read_by_owner")
+    private Boolean readByOwner;
+
     @Column(name = "sent_at", nullable = false)
     private LocalDateTime sentAt;
 }

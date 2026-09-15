@@ -117,8 +117,8 @@
                     </div>
                 </div>
                 <div class="uhw-field">
-                    <label for="ualReason">Reason</label>
-                    <textarea id="ualReason" class="uhw-textarea ual-reason" rows="4"></textarea>
+                    <label for="ualReason">Reason <span class="required">*</span></label>
+                    <textarea id="ualReason" class="uhw-textarea ual-reason" rows="4" required></textarea>
                 </div>
                 <div class="uhw-field">
                     <label>Attach Document</label>
@@ -143,7 +143,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
-    <script th:src="@{/js/user-applyleave.js}"></script>
+    <script th:src="@{/js/user-applyleave.js(v='20260915-reason-req')}"></script>
 </div>
 </body>
 </html>

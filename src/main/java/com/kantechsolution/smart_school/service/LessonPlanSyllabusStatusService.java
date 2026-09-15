@@ -26,6 +26,8 @@ public class LessonPlanSyllabusStatusService implements ApplicationRunner {
     private final SchoolClassRepository schoolClassRepository;
     private final SubjectGroupRepository subjectGroupRepository;
     private final SubjectRepository subjectRepository;
+    private final LessonPlanScheduleRepository scheduleRepository;
+    private final LessonPlanDetailRepository detailRepository;
 
     @Override
     @Transactional
@@ -35,35 +37,63 @@ public class LessonPlanSyllabusStatusService implements ApplicationRunner {
         }
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Map<String, Object> searchSyllabusStatus(Long classId, String section, Long subjectGroupId, Long subjectId) {
         validateSearchParams(classId, section, subjectGroupId, subjectId);
 
+        String sectionNorm = section.trim();
+        SchoolClass schoolClass = schoolClassRepository.findById(classId)
+                .orElseThrow(() -> new IllegalArgumentException("Selected class was not found"));
+        SubjectGroup group = subjectGroupRepository.findById(subjectGroupId)
+                .orElseThrow(() -> new IllegalArgumentException("Selected subject group was not found"));
         Subject subject = subjectRepository.findById(subjectId)
                 .orElseThrow(() -> new IllegalArgumentException("Selected subject was not found"));
 
-        List<LessonPlanLesson> lessons = lessonRepository
-                .findByClassIdAndSectionIgnoreCaseAndSubjectGroupIdAndSubjectIdOrderByLessonNameAsc(
-                        classId, section.trim(), subjectGroupId, subjectId);
+        List<LessonPlanLesson> candidates = new ArrayList<>();
+        addUniqueLessons(candidates, lessonRepository
+                .findByClassIdAndSectionIgnoreCaseOrderBySubjectNameAscIdAsc(classId, sectionNorm));
+        addUniqueLessons(candidates, lessonRepository
+                .findByClassNameIgnoreCaseAndSectionIgnoreCaseOrderBySubjectNameAscIdAsc(
+                        schoolClass.getName(), sectionNorm));
 
-        List<Map<String, Object>> rows = new ArrayList<>();
-        int serial = 1;
+        List<LessonPlanLesson> lessons = candidates.stream()
+                .filter(lesson -> matchesSubjectGroup(lesson, group))
+                .filter(lesson -> matchesSubject(lesson, subject))
+                .toList();
+        if (lessons.isEmpty()) {
+            lessons = candidates.stream()
+                    .filter(lesson -> matchesSubject(lesson, subject))
+                    .toList();
+        }
+
+        LinkedHashMap<String, Map<String, Object>> uniqueRows = new LinkedHashMap<>();
         for (LessonPlanLesson lesson : lessons) {
-            if (lesson.getTopics() == null) {
-                continue;
-            }
-            for (LessonPlanTopic topic : lesson.getTopics()) {
+            List<LessonPlanTopic> topics = lesson.getTopics() == null ? List.of() : lesson.getTopics();
+            for (LessonPlanTopic topic : topics) {
                 LessonPlanSyllabusStatus status = statusRepository.findByTopicId(topic.getId())
                         .orElseGet(() -> LessonPlanSyllabusStatus.builder()
                                 .topicId(topic.getId())
                                 .completed(false)
                                 .build());
-                rows.add(toRow(serial++, lesson, topic, status));
+                uniqueRows.putIfAbsent(rowKey(lesson.getLessonName(), topic.getTopicName()),
+                        toRow(0, lesson, topic, status));
             }
+        }
+
+        addRowsFromManageLessonPlan(uniqueRows, schoolClass, sectionNorm, group, subject, candidates);
+
+        List<Map<String, Object>> rows = new ArrayList<>();
+        int serial = 1;
+        for (Map<String, Object> row : uniqueRows.values()) {
+            row.put("serial", serial++);
+            rows.add(row);
         }
 
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("subjectLabel", formatSubjectLabel(subject));
+        response.put("className", schoolClass.getName());
+        response.put("section", sectionNorm.toUpperCase(Locale.ROOT));
+        response.put("subjectGroupName", group.getName());
         response.put("rows", rows);
         return response;
     }
@@ -111,6 +141,197 @@ public class LessonPlanSyllabusStatusService implements ApplicationRunner {
             return subject.getName() + " (" + subject.getSubjectCode() + ")";
         }
         return subject.getName();
+    }
+
+    private void addRowsFromManageLessonPlan(LinkedHashMap<String, Map<String, Object>> uniqueRows,
+                                             SchoolClass schoolClass,
+                                             String section,
+                                             SubjectGroup group,
+                                             Subject subject,
+                                             List<LessonPlanLesson> knownLessons) {
+        List<LessonPlanSchedule> schedules = new ArrayList<>();
+        addUniqueSchedules(schedules, scheduleRepository
+                .findByClassIdAndSectionIgnoreCaseOrderByPlanDateAscTimeFromAsc(schoolClass.getId(), section));
+        addUniqueSchedules(schedules, scheduleRepository
+                .findByClassNameIgnoreCaseAndSectionIgnoreCaseOrderByPlanDateAscTimeFromAsc(
+                        schoolClass.getName(), section));
+
+        for (LessonPlanSchedule schedule : schedules) {
+            if (!matchesScheduleSubject(schedule, subject)) {
+                continue;
+            }
+            LessonPlanDetail detail = detailRepository.findByScheduleId(schedule.getId()).orElse(null);
+            String lessonName = text(detail == null ? null : detail.getLessonName());
+            String topicName = text(detail == null ? null : detail.getTopicName());
+            if (lessonName.isBlank() && topicName.isBlank()) {
+                continue;
+            }
+            if (lessonName.isBlank()) {
+                lessonName = text(schedule.getSubjectName());
+            }
+            if (topicName.isBlank()) {
+                topicName = "Lesson Plan";
+            }
+
+            String key = rowKey(lessonName, topicName);
+            if (uniqueRows.containsKey(key)) {
+                continue;
+            }
+
+            LessonPlanTopic topic = findOrCreateTopic(schoolClass, section, group, subject, knownLessons,
+                    lessonName, topicName);
+            if (topic == null || topic.getId() == null) {
+                uniqueRows.put(key, toPlainRow(0, lessonName, topicName));
+                continue;
+            }
+            LessonPlanSyllabusStatus status = statusRepository.findByTopicId(topic.getId())
+                    .orElseGet(() -> LessonPlanSyllabusStatus.builder()
+                            .topicId(topic.getId())
+                            .completed(false)
+                            .build());
+            LessonPlanLesson lesson = topic.getLesson();
+            uniqueRows.put(key, toRow(0, lesson, topic, status));
+        }
+    }
+
+    private LessonPlanTopic findOrCreateTopic(SchoolClass schoolClass, String section, SubjectGroup group,
+                                              Subject subject, List<LessonPlanLesson> knownLessons,
+                                              String lessonName, String topicName) {
+        LessonPlanTopic existing = findTopic(knownLessons, lessonName, topicName);
+        if (existing != null) {
+            return existing;
+        }
+
+        List<LessonPlanLesson> contextLessons = lessonRepository
+                .findByClassIdAndSectionIgnoreCaseAndSubjectGroupIdAndSubjectIdOrderByLessonNameAsc(
+                        schoolClass.getId(), section, group.getId(), subject.getId());
+        existing = findTopic(contextLessons, lessonName, topicName);
+        if (existing != null) {
+            return existing;
+        }
+
+        LessonPlanLesson lesson = contextLessons.stream()
+                .filter(item -> lessonName.equalsIgnoreCase(text(item.getLessonName())))
+                .findFirst()
+                .orElseGet(() -> createLesson(schoolClass, group, subject, lessonName, section));
+
+        LessonPlanTopic topic = LessonPlanTopic.builder()
+                .lesson(lesson)
+                .topicName(topicName)
+                .build();
+        topic = topicRepository.save(topic);
+        if (lesson.getTopics() == null) {
+            lesson.setTopics(new ArrayList<>());
+        }
+        lesson.getTopics().add(topic);
+        return topic;
+    }
+
+    private LessonPlanTopic findTopic(List<LessonPlanLesson> lessons, String lessonName, String topicName) {
+        if (lessons == null) {
+            return null;
+        }
+        for (LessonPlanLesson lesson : lessons) {
+            if (!lessonName.equalsIgnoreCase(text(lesson.getLessonName())) || lesson.getTopics() == null) {
+                continue;
+            }
+            for (LessonPlanTopic topic : lesson.getTopics()) {
+                if (topicName.equalsIgnoreCase(text(topic.getTopicName()))) {
+                    return topic;
+                }
+            }
+        }
+        return null;
+    }
+
+    private Map<String, Object> toPlainRow(int serial, String lessonName, String topicName) {
+        Map<String, Object> row = new LinkedHashMap<>();
+        row.put("serial", serial);
+        row.put("topicId", "");
+        row.put("lessonName", lessonName);
+        row.put("topicName", topicName);
+        row.put("lessonTopicLabel", lessonName + " (" + topicName + ")");
+        row.put("completionDate", "");
+        row.put("status", "Incomplete");
+        row.put("completed", false);
+        return row;
+    }
+
+    private String rowKey(String lessonName, String topicName) {
+        return text(lessonName).toLowerCase(Locale.ROOT) + "|" + text(topicName).toLowerCase(Locale.ROOT);
+    }
+
+    private void addUniqueSchedules(List<LessonPlanSchedule> target, List<LessonPlanSchedule> source) {
+        if (source == null) {
+            return;
+        }
+        for (LessonPlanSchedule schedule : source) {
+            boolean exists = target.stream()
+                    .anyMatch(existing -> existing.getId() != null && existing.getId().equals(schedule.getId()));
+            if (!exists) {
+                target.add(schedule);
+            }
+        }
+    }
+
+    private boolean matchesScheduleSubject(LessonPlanSchedule schedule, Subject subject) {
+        if (schedule.getSubjectId() != null && subject.getId() != null
+                && schedule.getSubjectId().equals(subject.getId())) {
+            return true;
+        }
+        String scheduleCode = text(schedule.getSubjectCode());
+        String subjectCode = text(subject.getSubjectCode());
+        if (!scheduleCode.isBlank() && scheduleCode.equalsIgnoreCase(subjectCode)) {
+            return true;
+        }
+        String scheduleName = text(schedule.getSubjectName()).toLowerCase(Locale.ROOT);
+        String subjectName = text(subject.getName()).toLowerCase(Locale.ROOT);
+        if (scheduleName.isEmpty() || subjectName.isEmpty()) {
+            return false;
+        }
+        return scheduleName.equals(subjectName)
+                || scheduleName.startsWith(subjectName)
+                || subjectName.startsWith(scheduleName);
+    }
+
+    private String text(String value) {
+        return value == null ? "" : value.trim();
+    }
+
+    private void addUniqueLessons(List<LessonPlanLesson> target, List<LessonPlanLesson> source) {
+        if (source == null) {
+            return;
+        }
+        for (LessonPlanLesson lesson : source) {
+            boolean exists = target.stream()
+                    .anyMatch(existing -> existing.getId() != null && existing.getId().equals(lesson.getId()));
+            if (!exists) {
+                target.add(lesson);
+            }
+        }
+    }
+
+    private boolean matchesSubjectGroup(LessonPlanLesson lesson, SubjectGroup group) {
+        if (lesson.getSubjectGroupId() != null && group.getId() != null
+                && lesson.getSubjectGroupId().equals(group.getId())) {
+            return true;
+        }
+        return lesson.getSubjectGroupName() != null && group.getName() != null
+                && lesson.getSubjectGroupName().equalsIgnoreCase(group.getName());
+    }
+
+    private boolean matchesSubject(LessonPlanLesson lesson, Subject subject) {
+        if (lesson.getSubjectId() != null && subject.getId() != null
+                && lesson.getSubjectId().equals(subject.getId())) {
+            return true;
+        }
+        if (lesson.getSubjectName() != null && subject.getName() != null
+                && lesson.getSubjectName().equalsIgnoreCase(subject.getName())) {
+            return true;
+        }
+        return lesson.getSubjectCode() != null && subject.getSubjectCode() != null
+                && !subject.getSubjectCode().isBlank()
+                && lesson.getSubjectCode().equalsIgnoreCase(subject.getSubjectCode());
     }
 
     private void validateSearchParams(Long classId, String section, Long subjectGroupId, Long subjectId) {
@@ -204,10 +425,15 @@ public class LessonPlanSyllabusStatusService implements ApplicationRunner {
 
     private LessonPlanLesson createLesson(SchoolClass schoolClass, SubjectGroup group, Subject subject,
                                           String lessonName) {
+        return createLesson(schoolClass, group, subject, lessonName, "A");
+    }
+
+    private LessonPlanLesson createLesson(SchoolClass schoolClass, SubjectGroup group, Subject subject,
+                                          String lessonName, String section) {
         LessonPlanLesson lesson = LessonPlanLesson.builder()
                 .classId(schoolClass.getId())
                 .className(schoolClass.getName())
-                .section("A")
+                .section(section == null || section.isBlank() ? "A" : section.trim().toUpperCase(Locale.ROOT))
                 .subjectGroupId(group.getId())
                 .subjectGroupName(group.getName())
                 .subjectId(subject.getId())

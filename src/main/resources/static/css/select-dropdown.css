@@ -1,0 +1,63 @@
+/* Native <select> fields follow the active Light/Dark + color theme and keep a caret. */
+select:not([multiple]):not([size]),
+select.form-control:not([multiple]):not([size]),
+select.form-select:not([multiple]):not([size]),
+select.form-select-modal:not([multiple]):not([size]),
+.entries-select {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    background-color: var(--theme-primary-soft, #ffffff) !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 0.7rem center !important;
+    background-size: 12px 12px !important;
+    padding-right: 2.15rem !important;
+    color: #111827 !important;
+    cursor: pointer;
+}
+
+html.theme-light select:not([multiple]):not([size]),
+html.theme-light select.form-control:not([multiple]):not([size]),
+html.theme-light select.form-select:not([multiple]):not([size]),
+html.theme-light select.form-select-modal:not([multiple]):not([size]),
+html.theme-light .entries-select {
+    background-color: var(--theme-primary-soft, #ffffff) !important;
+    color: #111827 !important;
+}
+
+html.theme-dark select:not([multiple]):not([size]),
+html.theme-dark select.form-control:not([multiple]):not([size]),
+html.theme-dark select.form-select:not([multiple]):not([size]),
+html.theme-dark select.form-select-modal:not([multiple]):not([size]),
+html.theme-dark .entries-select {
+    background-color: color-mix(in srgb, var(--theme-primary, #8b5cf6) 18%, #0f172a) !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%94a3b8' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+    color: #f8fafc !important;
+}
+
+select.is-placeholder:not([multiple]):not([size]) {
+    color: #9ca3af !important;
+}
+
+html.theme-dark select.is-placeholder:not([multiple]):not([size]) {
+    color: #94a3b8 !important;
+}
+
+select:not([multiple]):not([size]) option,
+select.form-control option,
+select.form-select option,
+select.form-select-modal option,
+.entries-select option {
+    background-color: var(--theme-primary-soft, #ffffff) !important;
+    color: #111827 !important;
+}
+
+html.theme-dark select:not([multiple]):not([size]) option,
+html.theme-dark select.form-control option,
+html.theme-dark select.form-select option,
+html.theme-dark select.form-select-modal option,
+html.theme-dark .entries-select option {
+    background-color: color-mix(in srgb, var(--theme-primary, #8b5cf6) 18%, #0f172a) !important;
+    color: #f8fafc !important;
+}

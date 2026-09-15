@@ -143,11 +143,12 @@
     position: relative;
     width: 100%;
     max-width: 900px;
-    background: #1e293b;
-    border: 1px solid #334155;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
     border-radius: 8px;
     z-index: 1;
     overflow: hidden;
+    box-shadow: 0 12px 40px rgba(15, 23, 42, 0.18);
 }
 
 .leave-modal-header {
@@ -155,7 +156,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 0.9rem 1.15rem;
-    background: #8b5cf6;
+    background: var(--theme-primary, #8b5cf6);
 }
 
 .leave-modal-header h3 {
@@ -195,7 +196,7 @@
 }
 
 .leave-modal-body .form-group label {
-    color: #e2e8f0;
+    color: #374151;
     font-size: 0.88rem;
     font-weight: 500;
     margin-bottom: 0.4rem;
@@ -205,10 +206,10 @@
 .leave-modal-body .form-textarea {
     width: 100%;
     box-sizing: border-box;
-    background: #0f172a;
-    border: 1px solid #334155;
+    background: #ffffff;
+    border: 1px solid #d1d5db;
     border-radius: 4px;
-    color: #f1f5f9;
+    color: #111827;
     padding: 0.65rem 0.75rem;
     font-size: 0.88rem;
     font-family: inherit;
@@ -237,7 +238,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    color: #e2e8f0;
+    color: #374151;
     font-size: 0.88rem;
     cursor: pointer;
 }
@@ -258,10 +259,10 @@
     gap: 0.65rem;
     min-height: 120px;
     padding: 1.25rem;
-    border: 1px dashed #475569;
+    border: 1px dashed #d1d5db;
     border-radius: 4px;
-    background: #0f172a;
-    color: #94a3b8;
+    background: #f9fafb;
+    color: #6b7280;
     cursor: pointer;
     text-align: center;
 }
@@ -272,7 +273,7 @@
 }
 
 .file-upload-area svg {
-    color: #e2e8f0;
+    color: #6b7280;
 }
 
 .file-input {

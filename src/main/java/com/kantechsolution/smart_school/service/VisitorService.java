@@ -2,6 +2,7 @@ package com.kantechsolution.smart_school.service;
 
 import com.kantechsolution.smart_school.model.Visitor;
 import com.kantechsolution.smart_school.repository.VisitorRepository;
+import com.kantechsolution.smart_school.validation.PhoneNumberValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,7 @@ public class VisitorService {
      * Save a new visitor
      */
     public Visitor saveVisitor(Visitor visitor) {
+        visitor.setPhone(PhoneNumberValidator.requireInternational(visitor.getPhone()));
         return repository.save(visitor);
     }
     
@@ -45,13 +47,14 @@ public class VisitorService {
      * Update visitor
      */
     public Visitor updateVisitor(Long id, Visitor visitorDetails) {
+        String validatedPhone = PhoneNumberValidator.requireInternational(visitorDetails.getPhone());
         Visitor visitor = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Visitor not found with id: " + id));
         
         visitor.setPurpose(visitorDetails.getPurpose());
         visitor.setMeetingWith(visitorDetails.getMeetingWith());
         visitor.setVisitorName(visitorDetails.getVisitorName());
-        visitor.setPhone(visitorDetails.getPhone());
+        visitor.setPhone(validatedPhone);
         visitor.setIdCard(visitorDetails.getIdCard());
         visitor.setNumberOfPerson(visitorDetails.getNumberOfPerson());
         visitor.setDate(visitorDetails.getDate());

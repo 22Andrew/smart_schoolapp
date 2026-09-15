@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teacher Time Table - Smart School</title>
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
-    <link rel="stylesheet" th:href="@{/css/mytimetable.css}">
-    <link rel="stylesheet" th:href="@{/css/app-theme.css}">
+    <link rel="stylesheet" th:href="@{/css/mytimetable.css(v='20260915-theme-tt')}">
+    <link rel="stylesheet" th:href="@{/css/app-theme.css(v='20260915-teacher-tt')}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- SweetAlert2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -27,8 +27,10 @@
         <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
 
         <!-- Main Content -->
-        <main class="main-content mytimetable-page">
-            <div class="criteria-panel">
+        <main class="main-content mytimetable-page"
+              th:classappend="${teacherSidebar} ? ' teacher-own-view'"
+              th:attr="data-own-teacher-code=${currentStaffId}">
+            <div class="criteria-panel" th:if="${!teacherSidebar}">
                 <div class="criteria-header">
                     <h2 class="panel-title">Teacher Time Table</h2>
                 </div>
@@ -47,7 +49,8 @@
                 </form>
             </div>
 
-            <div class="timetable-panel" id="timetablePanel" style="display:none;">
+            <div class="timetable-panel" id="timetablePanel"
+                 th:style="${teacherSidebar} ? 'display:block;' : 'display:none;'">
                 <div class="timetable-toolbar">
                     <h2 class="panel-title" id="timetableTitle">Teacher Time Table</h2>
                     <button type="button" class="icon-action-btn" id="printBtn" title="Print">
@@ -237,7 +240,7 @@
     </div>
 
     <script th:src="@{/js/dashboard.js}"></script>
-    <script th:src="@{/js/mytimetable.js}"></script>
+    <script th:src="@{/js/mytimetable.js(v='20260915-teacher-tt')}"></script>
 </body>
 </html>
 

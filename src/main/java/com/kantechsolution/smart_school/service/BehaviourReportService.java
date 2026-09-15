@@ -33,11 +33,19 @@ public class BehaviourReportService {
     private StudentAdmissionRepository studentAdmissionRepository;
 
     public List<Map<String, Object>> studentIncidentReport(Long classId, String section) {
-        return studentIncidentService.studentIncidentReport(classId, section);
+        return studentIncidentReport(classId, section, "current");
+    }
+
+    public List<Map<String, Object>> studentIncidentReport(Long classId, String section, String session) {
+        return studentIncidentService.studentIncidentReport(classId, section, session);
     }
 
     public List<Map<String, Object>> studentBehaviourRankReport(Long classId, String section) {
-        List<Map<String, Object>> rows = studentIncidentService.studentIncidentReport(classId, section);
+        return studentBehaviourRankReport(classId, section, "current");
+    }
+
+    public List<Map<String, Object>> studentBehaviourRankReport(Long classId, String section, String session) {
+        List<Map<String, Object>> rows = studentIncidentService.studentIncidentReport(classId, section, session);
         rows.sort(Comparator.comparingInt((Map<String, Object> r) -> toInt(r.get("totalPoints"))).reversed());
         int rank = 1;
         for (Map<String, Object> row : rows) {

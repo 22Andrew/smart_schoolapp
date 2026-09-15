@@ -2,6 +2,7 @@ package com.kantechsolution.smart_school.service;
 
 import com.kantechsolution.smart_school.model.SchoolWhatsappSetting;
 import com.kantechsolution.smart_school.repository.SchoolWhatsappSettingRepository;
+import com.kantechsolution.smart_school.validation.PhoneNumberValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -70,18 +71,21 @@ public class SchoolWhatsappSettingService implements ApplicationRunner {
         SchoolWhatsappSetting settings = requireSettings();
 
         settings.setFrontSiteWhatsappLinkEnabled(boolValue(payload.get("frontSiteWhatsappLinkEnabled"), true));
-        settings.setFrontSiteMobileNo(text(payload.get("frontSiteMobileNo")));
+        settings.setFrontSiteMobileNo(PhoneNumberValidator.optionalInternational(
+                text(payload.get("frontSiteMobileNo"))));
         settings.setFrontSiteTimeFrom(text(payload.get("frontSiteTimeFrom")));
         settings.setFrontSiteTimeTo(text(payload.get("frontSiteTimeTo")));
 
         settings.setAdminPanelWhatsappLinkEnabled(boolValue(payload.get("adminPanelWhatsappLinkEnabled"), true));
-        settings.setAdminPanelMobileNo(text(payload.get("adminPanelMobileNo")));
+        settings.setAdminPanelMobileNo(PhoneNumberValidator.optionalInternational(
+                text(payload.get("adminPanelMobileNo"))));
         settings.setAdminPanelTimeFrom(text(payload.get("adminPanelTimeFrom")));
         settings.setAdminPanelTimeTo(text(payload.get("adminPanelTimeTo")));
 
         settings.setStudentGuardianPanelWhatsappLinkEnabled(
                 boolValue(payload.get("studentGuardianPanelWhatsappLinkEnabled"), true));
-        settings.setStudentGuardianPanelMobileNo(text(payload.get("studentGuardianPanelMobileNo")));
+        settings.setStudentGuardianPanelMobileNo(PhoneNumberValidator.optionalInternational(
+                text(payload.get("studentGuardianPanelMobileNo"))));
         settings.setStudentGuardianPanelTimeFrom(text(payload.get("studentGuardianPanelTimeFrom")));
         settings.setStudentGuardianPanelTimeTo(text(payload.get("studentGuardianPanelTimeTo")));
 

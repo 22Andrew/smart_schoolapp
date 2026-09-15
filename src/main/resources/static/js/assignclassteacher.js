@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const readOnly = window.academicsListReadOnly === true;
+    const readOnly = window.academicsListReadOnly === true
+        || document.querySelector('.teacher-list-view-only, .receptionist-list-view-only') != null;
     const form = document.getElementById('assignTeacherForm');
     const assignmentIdInput = document.getElementById('assignmentId');
     const classSelect = document.getElementById('classSelect');
@@ -43,15 +44,25 @@ document.addEventListener('DOMContentLoaded', function () {
             + '</svg></button>';
     }
 
+    function columnCount() {
+        return readOnly ? 3 : 4;
+    }
+
+    function pageSize() {
+        return parseInt(pageSizeSelect && pageSizeSelect.value, 10) || 50;
+    }
+
     function resetForm() {
+        if (!form) return;
         form.reset();
-        assignmentIdInput.value = '';
-        saveBtn.textContent = 'Save';
+        if (assignmentIdInput) assignmentIdInput.value = '';
+        if (saveBtn) saveBtn.textContent = 'Save';
         fillSectionSelect();
         renderTeachersChecklist('');
     }
 
     function fillClassSelect() {
+        if (!classSelect) return;
         const current = classSelect.value;
         classSelect.innerHTML = '<option value="">Select</option>';
         classes.forEach(function (item) {
@@ -64,6 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function fillSectionSelect(preferred) {
+        if (!sectionSelect) return;
         sectionSelect.innerHTML = '<option value="">Select</option>';
         const schoolClass = classes.find(function (c) { return String(c.id) === String(classSelect.value); });
         const sections = schoolClass && schoolClass.sections ? schoolClass.sections : [];
@@ -77,6 +89,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function renderTeachersChecklist(selectedCode) {
+        if (!teachersChecklist) return;
         if (!teachers.length) {
             teachersChecklist.innerHTML = '<div class="empty-hint">No teachers available</div>';
             return;
@@ -101,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function applyFilters() {
-        const query = (tableSearch.value || '').trim().toLowerCase();
+        const query = ((tableSearch && tableSearch.value) || '').trim().toLowerCase();
         filtered = assignments.filter(function (row) {
             if (!query) return true;
             return [row.className, row.section, row.teacherDisplay, row.teacherName, row.teacherCode]
@@ -118,21 +131,23 @@ document.addEventListener('DOMContentLoaded', function () {
             return 0;
         });
 
-        const pageSize = parseInt(pageSizeSelect.value, 10) || 50;
-        const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+        const size = pageSize();
+        const totalPages = Math.max(1, Math.ceil(filtered.length / size));
         if (currentPage > totalPages) currentPage = totalPages;
         renderTable();
         renderPagination(totalPages);
     }
 
     function renderTable() {
-        const pageSize = parseInt(pageSizeSelect.value, 10) || 50;
-        const start = (currentPage - 1) * pageSize;
-        const pageRows = filtered.slice(start, start + pageSize);
+        if (!tableBody) return;
+        const size = pageSize();
+        const start = (currentPage - 1) * size;
+        const pageRows = filtered.slice(start, start + size);
 
         if (!pageRows.length) {
-            tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#94a3b8;">No class teacher assignments found</td></tr>';
-            entriesInfo.textContent = 'Showing 0 to 0 of 0 entries';
+            tableBody.innerHTML = '<tr><td colspan="' + columnCount()
+                + '" style="text-align:center;color:#94a3b8;">No class teacher assignments found</td></tr>';
+            if (entriesInfo) entriesInfo.textContent = 'Showing 0 to 0 of 0 entries';
             return;
         }
 
@@ -141,15 +156,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 + '<td>' + escapeHtml(row.className || '') + '</td>'
                 + '<td>' + escapeHtml(row.section || '') + '</td>'
                 + '<td>' + escapeHtml(row.teacherDisplay || '') + '</td>'
-                + '<td class="action-cell">' + createActionButtonsHtml() + '</td>'
+                + (readOnly ? '' : '<td class="action-cell">' + createActionButtonsHtml() + '</td>')
                 + '</tr>';
         }).join('');
 
         const end = start + pageRows.length;
-        entriesInfo.textContent = 'Showing ' + (start + 1) + ' to ' + end + ' of ' + filtered.length + ' entries';
+        if (entriesInfo) {
+            entriesInfo.textContent = 'Showing ' + (start + 1) + ' to ' + end + ' of ' + filtered.length + ' entries';
+        }
     }
 
     function renderPagination(totalPages) {
+        if (!pagination) return;
         let html = '';
         html += '<button type="button" class="page-btn" data-page="prev" ' + (currentPage <= 1 ? 'disabled' : '') + '>&lt;</button>';
         for (let i = 1; i <= totalPages; i++) {
@@ -186,15 +204,19 @@ document.addEventListener('DOMContentLoaded', function () {
     async function loadAssignments() {
         const response = await fetch('/api/class-teacher-assignments');
         if (!response.ok) throw new Error('Failed to load assignments');
-        assignments = await response.json();
+        const data = await response.json();
+        assignments = Array.isArray(data) ? data : [];
         applyFilters();
     }
 
-    classSelect.addEventListener('change', function () {
-        fillSectionSelect();
-    });
+    if (classSelect) {
+        classSelect.addEventListener('change', function () {
+            fillSectionSelect();
+        });
+    }
 
-    form.addEventListener('submit', async function (e) {
+    if (form) {
+        form.addEventListener('submit', async function (e) {
         e.preventDefault();
         const teacher = getSelectedTeacher();
         if (!classSelect.value || !sectionSelect.value || !teacher) {
@@ -245,8 +267,10 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
     });
+    }
 
-    tableBody.addEventListener('click', async function (e) {
+    if (tableBody && !readOnly) {
+        tableBody.addEventListener('click', async function (e) {
         const row = e.target.closest('tr[data-id]');
         if (!row) return;
         const id = row.getAttribute('data-id');
@@ -298,29 +322,36 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     });
+    }
 
-    tableSearch.addEventListener('input', function () {
-        currentPage = 1;
-        applyFilters();
-    });
+    if (tableSearch) {
+        tableSearch.addEventListener('input', function () {
+            currentPage = 1;
+            applyFilters();
+        });
+    }
 
-    pageSizeSelect.addEventListener('change', function () {
-        currentPage = 1;
-        applyFilters();
-    });
+    if (pageSizeSelect) {
+        pageSizeSelect.addEventListener('change', function () {
+            currentPage = 1;
+            applyFilters();
+        });
+    }
 
-    pagination.addEventListener('click', function (e) {
-        const btn = e.target.closest('.page-btn');
-        if (!btn || btn.disabled) return;
-        const pageSize = parseInt(pageSizeSelect.value, 10) || 50;
-        const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
-        const value = btn.getAttribute('data-page');
-        if (value === 'prev') currentPage = Math.max(1, currentPage - 1);
-        else if (value === 'next') currentPage = Math.min(totalPages, currentPage + 1);
-        else currentPage = parseInt(value, 10) || 1;
-        renderTable();
-        renderPagination(totalPages);
-    });
+    if (pagination) {
+        pagination.addEventListener('click', function (e) {
+            const btn = e.target.closest('.page-btn');
+            if (!btn || btn.disabled) return;
+            const size = pageSize();
+            const totalPages = Math.max(1, Math.ceil(filtered.length / size));
+            const value = btn.getAttribute('data-page');
+            if (value === 'prev') currentPage = Math.max(1, currentPage - 1);
+            else if (value === 'next') currentPage = Math.min(totalPages, currentPage + 1);
+            else currentPage = parseInt(value, 10) || 1;
+            renderTable();
+            renderPagination(totalPages);
+        });
+    }
 
     document.querySelectorAll('#assignmentTable thead th[data-sort]').forEach(function (th) {
         th.addEventListener('click', function () {
@@ -340,7 +371,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    document.getElementById('copyBtn').addEventListener('click', function () {
+    function bindClick(id, handler) {
+        const button = document.getElementById(id);
+        if (button) button.addEventListener('click', handler);
+    }
+
+    bindClick('copyBtn', function () {
         const text = ['Class\tSection\tClass Teacher']
             .concat(exportRows().map(function (r) { return r.join('\t'); }))
             .join('\n');
@@ -349,7 +385,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    document.getElementById('excelBtn').addEventListener('click', function () {
+    bindClick('excelBtn', function () {
         if (typeof XLSX === 'undefined') return;
         const ws = XLSX.utils.aoa_to_sheet([['Class', 'Section', 'Class Teacher']].concat(exportRows()));
         const wb = XLSX.utils.book_new();
@@ -357,7 +393,7 @@ document.addEventListener('DOMContentLoaded', function () {
         XLSX.writeFile(wb, 'class-teacher-list.xlsx');
     });
 
-    document.getElementById('pdfBtn').addEventListener('click', function () {
+    bindClick('pdfBtn', function () {
         if (!window.jspdf) return;
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
@@ -370,7 +406,7 @@ document.addEventListener('DOMContentLoaded', function () {
         doc.save('class-teacher-list.pdf');
     });
 
-    document.getElementById('printBtn').addEventListener('click', function () {
+    bindClick('printBtn', function () {
         const printWindow = window.open('', '_blank');
         printWindow.document.write(''
             + '<html><head><title>Class Teacher List</title></head><body>'
@@ -386,7 +422,11 @@ document.addEventListener('DOMContentLoaded', function () {
         printWindow.print();
     });
 
-    Promise.all([loadClasses(), loadTeachers(), loadAssignments()]).catch(function (error) {
+    const loaders = [loadAssignments()];
+    if (form) {
+        loaders.push(loadClasses(), loadTeachers());
+    }
+    Promise.all(loaders).catch(function (error) {
         console.error(error);
         Swal.fire({
             icon: 'error',

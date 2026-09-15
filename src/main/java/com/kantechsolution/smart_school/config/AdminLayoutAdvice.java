@@ -5,6 +5,7 @@ import com.kantechsolution.smart_school.service.AcademicSessionService;
 import com.kantechsolution.smart_school.service.AppBrandingService;
 import com.kantechsolution.smart_school.service.AppLanguageService;
 import com.kantechsolution.smart_school.service.AppLanguageTranslationService;
+import com.kantechsolution.smart_school.service.ChatService;
 import com.kantechsolution.smart_school.service.RoleSidebarMenuService;
 import com.kantechsolution.smart_school.service.SchoolWhatsappSettingService;
 import com.kantechsolution.smart_school.service.StaffSessionService;
@@ -30,6 +31,7 @@ public class AdminLayoutAdvice {
     private final AppLanguageService appLanguageService;
     private final AppLanguageTranslationService appLanguageTranslationService;
     private final SchoolWhatsappSettingService whatsappSettingService;
+    private final ChatService chatService;
 
     @ModelAttribute("headerLanguages")
     public List<Map<String, Object>> headerLanguages() {
@@ -88,6 +90,11 @@ public class AdminLayoutAdvice {
     @ModelAttribute("noticeCount")
     public long noticeCount() {
         return noticeBoardRepository.count();
+    }
+
+    @ModelAttribute("chatUnreadCount")
+    public long chatUnreadCount() {
+        return chatService.unreadCount();
     }
 
     @ModelAttribute("chatPageActive")
@@ -190,6 +197,11 @@ public class AdminLayoutAdvice {
         return roleSidebarMenuService.getLibrarianAllowedSubmenuSlugs();
     }
 
+    @ModelAttribute("superAdminSidebar")
+    public boolean superAdminSidebar(Authentication authentication) {
+        return roleSidebarMenuService.isSuperAdmin(authentication);
+    }
+
     @ModelAttribute("adminSidebar")
     public boolean adminSidebar(Authentication authentication) {
         return roleSidebarMenuService.isAdmin(authentication);
@@ -203,6 +215,11 @@ public class AdminLayoutAdvice {
     @ModelAttribute("currentStaffMemberId")
     public Long currentStaffMemberId(Authentication authentication) {
         return staffSessionService.resolveLinkedStaffMemberId(authentication).orElse(null);
+    }
+
+    @ModelAttribute("currentStaffId")
+    public String currentStaffId(Authentication authentication) {
+        return staffSessionService.resolveLinkedStaffId(authentication).orElse(null);
     }
 
     @ModelAttribute("staffUserEmail")

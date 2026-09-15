@@ -122,6 +122,219 @@ document.addEventListener('DOMContentLoaded', function () {
         return div.innerHTML;
     }
 
+    function formatFeeAmount(value) {
+        const amount = Number(value);
+        const safe = Number.isFinite(amount) ? amount : 0;
+        if (typeof window.formatCurrency === 'function') {
+            return window.formatCurrency(safe);
+        }
+        return safe.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function formatDiscountValue(discount) {
+        const type = String(discount.discountType || '').toUpperCase();
+        if (type === 'FIXED_AMOUNT' || type === 'FIXED') {
+            return formatFeeAmount(discount.amount);
+        }
+        const percentage = Number(discount.percentage);
+        if (Number.isFinite(percentage)) {
+            return percentage.toLocaleString('en-US', { maximumFractionDigits: 2 }) + '%';
+        }
+        if (discount.amount != null) {
+            return formatFeeAmount(discount.amount);
+        }
+        return '';
+    }
+
+    function setFeesListEmpty(container, message) {
+        if (!container) {
+            return;
+        }
+        container.innerHTML = '<div class="fees-empty">' + escapeHtml(message) + '</div>';
+    }
+
+    function bindFeesExpand(container) {
+        if (!container || container.dataset.expandBound === 'true') {
+            return;
+        }
+        container.dataset.expandBound = 'true';
+        container.addEventListener('click', function (event) {
+            const button = event.target.closest('.fees-expand-btn');
+            if (!button || button.disabled || !container.contains(button)) {
+                return;
+            }
+            const item = button.closest('.fees-item');
+            if (!item) {
+                return;
+            }
+            const expanded = item.classList.toggle('is-expanded');
+            button.textContent = expanded ? '−' : '+';
+            button.setAttribute('aria-label', expanded ? 'Collapse' : 'Expand');
+            button.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        });
+    }
+
+    function renderFeeDetails(groups) {
+        const container = document.getElementById('feesDetailsList');
+        if (!container) {
+            return;
+        }
+        bindFeesExpand(container);
+        if (!groups.length) {
+            setFeesListEmpty(container, 'No fees details found.');
+            return;
+        }
+        container.innerHTML = groups.map(function (group) {
+            const items = Array.isArray(group.items) ? group.items : [];
+            const total = items.reduce(function (sum, item) {
+                const amount = Number(item.amount);
+                return sum + (Number.isFinite(amount) ? amount : 0);
+            }, 0);
+            const canExpand = items.length > 0;
+            const children = items.map(function (item) {
+                const typeName = item.feeTypeName || item.name || '';
+                const code = item.feesCode ? ' (' + item.feesCode + ')' : '';
+                return '<div class="fees-sub-item">'
+                    + '<span class="fees-sub-name">' + escapeHtml(typeName + code) + '</span>'
+                    + '<span class="fees-sub-amount">' + escapeHtml(formatFeeAmount(item.amount)) + '</span>'
+                    + '</div>';
+            }).join('');
+            return '<div class="fees-item">'
+                + '<button type="button" class="fees-expand-btn" aria-label="Expand" aria-expanded="false"'
+                + (canExpand ? '' : ' disabled') + '>+</button>'
+                + '<label class="fees-item-label">'
+                + '<input type="checkbox" name="fees" value="' + escapeHtml(String(group.feeGroupId)) + '" class="fees-checkbox">'
+                + '<span class="fees-name">' + escapeHtml(group.feeGroupName || '') + '</span>'
+                + '</label>'
+                + '<span class="fees-amount">' + escapeHtml(formatFeeAmount(total)) + '</span>'
+                + (canExpand ? '<div class="fees-item-children">' + children + '</div>' : '')
+                + '</div>';
+        }).join('');
+    }
+
+    function renderFeeDiscounts(discounts) {
+        const container = document.getElementById('feesDiscountList');
+        if (!container) {
+            return;
+        }
+        bindFeesExpand(container);
+        if (!discounts.length) {
+            setFeesListEmpty(container, 'No fees discount details found.');
+            return;
+        }
+        container.innerHTML = discounts.map(function (discount) {
+            const name = discount.name || '';
+            const code = discount.discountCode ? ' - ' + discount.discountCode : '';
+            const value = formatDiscountValue(discount);
+            const details = [];
+            if (discount.description) {
+                details.push(discount.description);
+            }
+            if (discount.expiryDate) {
+                details.push('Expiry: ' + discount.expiryDate);
+            }
+            const children = details.length
+                ? '<div class="fees-item-children">' + details.map(function (line) {
+                    return '<div class="fees-sub-item"><span class="fees-sub-name">' + escapeHtml(line) + '</span></div>';
+                }).join('') + '</div>'
+                : '';
+            return '<div class="fees-item">'
+                + '<button type="button" class="fees-expand-btn" aria-label="Expand" aria-expanded="false"'
+                + (children ? '' : ' disabled') + '>+</button>'
+                + '<label class="fees-item-label">'
+                + '<input type="checkbox" name="feesDiscount" value="' + escapeHtml(String(discount.id)) + '" class="fees-checkbox">'
+                + '<span class="fees-name">' + escapeHtml(name + code) + '</span>'
+                + '</label>'
+                + (value ? '<span class="fees-amount">' + escapeHtml(value) + '</span>' : '')
+                + children
+                + '</div>';
+        }).join('');
+    }
+
+    async function getCurrentSessionName() {
+        try {
+            const response = await fetch('/api/sessions/current');
+            if (!response.ok) {
+                return '';
+            }
+            const data = await response.json();
+            return data && data.sessionName ? String(data.sessionName) : '';
+        } catch (error) {
+            return '';
+        }
+    }
+
+    async function fetchFeeMasterGroups(sessionYear) {
+        const query = sessionYear ? ('?sessionYear=' + encodeURIComponent(sessionYear)) : '';
+        const response = await fetch('/api/fee-masters' + query);
+        if (!response.ok) {
+            throw new Error('Failed to load fees details');
+        }
+        const data = await response.json();
+        return Array.isArray(data) ? data : [];
+    }
+
+    async function loadFeesDetails() {
+        const container = document.getElementById('feesDetailsList');
+        if (!container) {
+            return;
+        }
+        try {
+            const sessionYear = await getCurrentSessionName();
+            const groupsResponse = await fetch('/api/fee-groups');
+            if (!groupsResponse.ok) {
+                throw new Error('Failed to load fees details');
+            }
+            const feeGroups = await groupsResponse.json();
+            let masters = await fetchFeeMasterGroups(sessionYear);
+            if (!masters.length && sessionYear) {
+                masters = await fetchFeeMasterGroups('');
+            }
+            const masterById = {};
+            masters.forEach(function (group) {
+                masterById[String(group.feeGroupId)] = group;
+            });
+            const merged = (Array.isArray(feeGroups) ? feeGroups : []).map(function (group) {
+                const master = masterById[String(group.id)] || {};
+                return {
+                    feeGroupId: group.id,
+                    feeGroupName: group.name,
+                    items: Array.isArray(master.items) ? master.items : []
+                };
+            });
+            masters.forEach(function (group) {
+                const exists = merged.some(function (row) {
+                    return String(row.feeGroupId) === String(group.feeGroupId);
+                });
+                if (!exists) {
+                    merged.push(group);
+                }
+            });
+            renderFeeDetails(merged);
+        } catch (error) {
+            console.error(error);
+            setFeesListEmpty(container, 'Failed to load fees details.');
+        }
+    }
+
+    async function loadFeeDiscounts() {
+        const container = document.getElementById('feesDiscountList');
+        if (!container) {
+            return;
+        }
+        try {
+            const response = await fetch('/api/fee-discounts');
+            if (!response.ok) {
+                throw new Error('Failed to load fees discount details');
+            }
+            const discounts = await response.json();
+            renderFeeDiscounts(Array.isArray(discounts) ? discounts : []);
+        } catch (error) {
+            console.error(error);
+            setFeesListEmpty(container, 'Failed to load fees discount details.');
+        }
+    }
+
     function siblingQueryParams() {
         const studentId = getCurrentStudentId();
         if (studentId) {
@@ -480,7 +693,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (categorySelect && row.categoryId != null) {
             categorySelect.value = String(row.categoryId);
         }
-        setInputValue('religion', row.religion);
+        setSelectValue('religion', row.religion);
         setInputValue('mobileNumber', row.mobileNumber);
         setInputValue('email', row.email);
         setInputValue('admissionDate', row.admissionDate);
@@ -996,6 +1209,8 @@ document.addEventListener('DOMContentLoaded', function () {
         loadHostelRooms(),
         loadHouses(),
         loadTransport(),
+        loadFeesDetails(),
+        loadFeeDiscounts(),
         loadAutoAdmissionNo()
     ]).then(function () {
         if (getCurrentStudentId()) {

@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Leaves - Smart School</title>
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
-    <link rel="stylesheet" th:href="@{/css/leaverequest.css}">
-    <link rel="stylesheet" th:href="@{/css/staff-leaverequest.css}">
-    <link rel="stylesheet" th:href="@{/css/app-theme.css}">
+    <link rel="stylesheet" th:href="@{/css/leaverequest.css(v='20260915-leave-white')}">
+    <link rel="stylesheet" th:href="@{/css/staff-leaverequest.css(v='20260915-leave-white')}">
+    <link rel="stylesheet" th:href="@{/css/app-theme.css(v='20260915-leave-white')}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- SweetAlert2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -220,8 +220,8 @@
                             </div>
                         </div>
                         <div class="form-group leave-reason-group">
-                            <label for="addReason">Reason</label>
-                            <textarea id="addReason" class="form-control" rows="4"></textarea>
+                            <label for="addReason">Reason <span class="required">*</span></label>
+                            <textarea id="addReason" class="form-control" rows="4" required></textarea>
                         </div>
                         <div class="form-group leave-upload-group">
                             <label>Attach Document</label>
@@ -441,7 +441,7 @@
     </div>
 
     <script th:src="@{/js/dashboard.js}"></script>
-    <script th:src="@{/js/staff-leaverequest.js}"></script>
+    <script th:src="@{/js/staff-leaverequest.js(v='20260915-reason-req')}"></script>
 </body>
 </html>
 

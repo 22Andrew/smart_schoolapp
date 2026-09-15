@@ -1,9 +1,11 @@
 package com.kantechsolution.smart_school.controller;
 
 import com.kantechsolution.smart_school.service.CbseExamGradeService;
+import com.kantechsolution.smart_school.service.StaffSessionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,10 +18,11 @@ import java.util.Map;
 public class CbseExamGradeController {
 
     private final CbseExamGradeService cbseExamGradeService;
+    private final StaffSessionService staffSessionService;
 
     @GetMapping("/cbseexam/cbsegrade/index")
-    public String showCbseExamGradePage() {
-        return "cbseexam-cbsegrade-index";
+    public String showCbseExamGradePage(Authentication authentication) {
+        return staffSessionService.superAdminView(authentication, "cbseexam-cbsegrade-index");
     }
 
     @GetMapping("/api/cbse-exam-grades")

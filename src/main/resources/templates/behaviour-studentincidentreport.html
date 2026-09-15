@@ -95,6 +95,7 @@
                         <div class="form-group">
                             <label for="sessionSelect">Session</label>
                             <select id="sessionSelect" class="form-select">
+                                <option value="all">All Session Points</option>
                                 <option value="current" selected>Current Session Points</option>
                             </select>
                         </div>
@@ -398,7 +399,7 @@
     </div>
 
     <script th:src="@{/js/dashboard.js}"></script>
-    <script th:src="@{/js/behaviour-studentincidentreport.js}"></script>
+    <script th:src="@{/js/behaviour-studentincidentreport.js(v='20260915-session-points')}"></script>
 </body>
 </html>
 

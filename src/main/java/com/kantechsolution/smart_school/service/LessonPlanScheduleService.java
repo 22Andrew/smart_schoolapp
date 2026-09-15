@@ -69,6 +69,37 @@ public class LessonPlanScheduleService implements ApplicationRunner {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
+    public List<Map<String, Object>> getSchedulesForClass(Long classId, String className, String section) {
+        if (section == null || section.isBlank()) {
+            return List.of();
+        }
+        String sectionNorm = section.trim();
+        LinkedHashMap<Long, LessonPlanSchedule> unique = new LinkedHashMap<>();
+        if (classId != null) {
+            for (LessonPlanSchedule schedule : scheduleRepository
+                    .findByClassIdAndSectionIgnoreCaseOrderByPlanDateAscTimeFromAsc(classId, sectionNorm)) {
+                unique.put(schedule.getId(), schedule);
+            }
+        }
+        if (className != null && !className.isBlank()) {
+            for (LessonPlanSchedule schedule : scheduleRepository
+                    .findByClassNameIgnoreCaseAndSectionIgnoreCaseOrderByPlanDateAscTimeFromAsc(
+                            className.trim(), sectionNorm)) {
+                unique.putIfAbsent(schedule.getId(), schedule);
+            }
+        }
+        List<Map<String, Object>> rows = new ArrayList<>();
+        for (LessonPlanSchedule schedule : unique.values()) {
+            Map<String, Object> row = toMap(schedule);
+            LessonPlanDetail detail = detailRepository.findByScheduleId(schedule.getId()).orElse(null);
+            row.put("lessonName", detail == null || detail.getLessonName() == null ? "" : detail.getLessonName().trim());
+            row.put("topicName", detail == null || detail.getTopicName() == null ? "" : detail.getTopicName().trim());
+            rows.add(row);
+        }
+        return rows;
+    }
+
     @Transactional
     public void ensureStudentWeekSchedules() {
         ensureWeekForClass("Class 1", "A", STUDENT_DEMO_WEEK, null);

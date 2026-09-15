@@ -457,9 +457,8 @@ html.theme-dark .schsettings-nav-item.active {
 
 /* Forms & tables */
 html.theme-light input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="file"]),
-html.theme-light select,
 html.theme-light textarea,
-html.theme-light .form-control,
+html.theme-light .form-control:not(select),
 html.theme-light .search-input {
     background: #ffffff !important;
     color: #000000 !important;
@@ -472,9 +471,8 @@ html.theme-light textarea::placeholder {
 }
 
 html.theme-dark input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="file"]),
-html.theme-dark select,
 html.theme-dark textarea,
-html.theme-dark .form-control,
+html.theme-dark .form-control:not(select),
 html.theme-dark .search-input {
     background: #0f172a !important;
     color: #f8fafc !important;
@@ -737,9 +735,7 @@ html.theme-light .control-label {
     color: #374151 !important;
 }
 
-html.theme-light .form-select,
 html.theme-light .form-input,
-html.theme-light .entries-select,
 html.theme-light .table-search-input,
 html.theme-light .filter-input,
 html.theme-light .search-box input {
@@ -961,9 +957,7 @@ html.theme-dark .control-label {
     color: #e2e8f0 !important;
 }
 
-html.theme-dark .form-select,
 html.theme-dark .form-input,
-html.theme-dark .entries-select,
 html.theme-dark .table-search-input,
 html.theme-dark .filter-input,
 html.theme-dark .search-box input {
@@ -1668,11 +1662,10 @@ html.theme-light .downloadcenter-page .dc-summary-icon {
 html.theme-light .downloadcenter-page .dc-search-box,
 html.theme-light .downloadcenter-page .view-toggle-btn,
 html.theme-light .downloadcenter-page .table-search-input,
-html.theme-light .downloadcenter-page .entries-select,
 html.theme-light .downloadcenter-page .icon-action-btn,
 html.theme-light .downloadcenter-page .pagination-btn,
-html.theme-light .downloadcenter-page .video-filter-grid .form-control,
-html.theme-light .downloadcenter-page.type-page .form-control,
+html.theme-light .downloadcenter-page .video-filter-grid .form-control:not(select),
+html.theme-light .downloadcenter-page.type-page .form-control:not(select),
 html.theme-light .downloadcenter-page .dc-summary-stats {
     background: #ffffff !important;
     color: #111827 !important;
@@ -1721,11 +1714,10 @@ html.theme-dark .downloadcenter-page .view-details-row .label {
 html.theme-dark .downloadcenter-page .dc-search-box,
 html.theme-dark .downloadcenter-page .view-toggle-btn,
 html.theme-dark .downloadcenter-page .table-search-input,
-html.theme-dark .downloadcenter-page .entries-select,
 html.theme-dark .downloadcenter-page .icon-action-btn,
 html.theme-dark .downloadcenter-page .pagination-btn,
-html.theme-dark .downloadcenter-page .video-filter-grid .form-control,
-html.theme-dark .downloadcenter-page.type-page .form-control {
+html.theme-dark .downloadcenter-page .video-filter-grid .form-control:not(select),
+html.theme-dark .downloadcenter-page.type-page .form-control:not(select) {
     background: rgba(15, 23, 42, 0.55) !important;
     color: #e2e8f0 !important;
     border-color: rgba(148, 163, 184, 0.25) !important;
@@ -2295,5 +2287,345 @@ html.theme-dark [class*="toolbar"] .icon-action-btn svg {
 .onlineexam-page .btn-action-icon svg {
     stroke: #ffffff !important;
     color: #ffffff !important;
+}
+
+/* CBSE Examination Setting nav (Exam Category, Grade, Assessment, Term) */
+html.theme-light .cbse-settings-nav {
+    background: var(--theme-primary-soft, #ffffff) !important;
+    border-color: var(--theme-primary-border, #d1d5db) !important;
+}
+
+html.theme-light .cbse-settings-nav .settings-nav-item {
+    color: #111827 !important;
+    border-bottom-color: color-mix(in srgb, var(--theme-primary) 18%, #e5e7eb) !important;
+}
+
+html.theme-light .cbse-settings-nav .settings-nav-item:not(.active):hover {
+    color: var(--theme-primary) !important;
+    background: color-mix(in srgb, var(--theme-primary) 10%, #ffffff) !important;
+}
+
+html.theme-light .cbse-settings-nav .settings-nav-item.active {
+    color: var(--theme-primary) !important;
+    background: color-mix(in srgb, var(--theme-primary) 16%, #ffffff) !important;
+}
+
+html.theme-dark .cbse-settings-nav {
+    background: color-mix(in srgb, var(--theme-primary) 22%, #0f172a) !important;
+    border-color: #334155 !important;
+}
+
+html.theme-dark .cbse-settings-nav .settings-nav-item {
+    color: #f8fafc !important;
+    border-bottom-color: #334155 !important;
+}
+
+html.theme-dark .cbse-settings-nav .settings-nav-item:not(.active):hover {
+    color: #ffffff !important;
+    background: color-mix(in srgb, var(--theme-primary) 16%, #0f172a) !important;
+}
+
+html.theme-dark .cbse-settings-nav .settings-nav-item.active {
+    color: #ffffff !important;
+    background: color-mix(in srgb, var(--theme-primary) 28%, #0f172a) !important;
+}
+
+/* Class Timetable — filter panel and results use theme color, not black */
+html.theme-light .classreport-page .criteria-panel,
+html.theme-light .classreport-page .timetable-panel {
+    background: var(--theme-primary-soft, #ffffff) !important;
+    border-color: var(--theme-primary-border, #d1d5db) !important;
+}
+
+html.theme-light .classreport-page .day-column {
+    background: #ffffff !important;
+    border-color: var(--theme-primary-border, #d1d5db) !important;
+}
+
+html.theme-light .classreport-page .day-header {
+    background: var(--theme-primary) !important;
+    color: #ffffff !important;
+    border-bottom-color: var(--theme-primary) !important;
+}
+
+html.theme-light .classreport-page .period-card {
+    background: var(--theme-primary-soft, #f8fafc) !important;
+    border-color: var(--theme-primary-border, #d1d5db) !important;
+    color: #111827 !important;
+}
+
+html.theme-light .classreport-page .period-line,
+html.theme-light .classreport-page .period-line span {
+    color: #111827 !important;
+}
+
+html.theme-light .classreport-page .period-line svg {
+    stroke: var(--theme-primary) !important;
+}
+
+html.theme-dark .classreport-page .criteria-panel,
+html.theme-dark .classreport-page .timetable-panel {
+    background: color-mix(in srgb, var(--theme-primary) 18%, #0f172a) !important;
+    border-color: #334155 !important;
+}
+
+html.theme-dark .classreport-page .day-column {
+    background: color-mix(in srgb, var(--theme-primary) 14%, #0f172a) !important;
+    border-color: #334155 !important;
+}
+
+html.theme-dark .classreport-page .day-header {
+    background: var(--theme-primary) !important;
+    color: #ffffff !important;
+    border-bottom-color: var(--theme-primary) !important;
+}
+
+html.theme-dark .classreport-page .period-card {
+    background: color-mix(in srgb, var(--theme-primary) 22%, #1e293b) !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+}
+
+html.theme-dark .classreport-page .period-line,
+html.theme-dark .classreport-page .period-line span {
+    color: #f8fafc !important;
+}
+
+html.theme-dark .classreport-page .period-line svg {
+    stroke: var(--theme-primary) !important;
+}
+
+html.theme-light .mytimetable-page .criteria-panel,
+html.theme-light .mytimetable-page .timetable-panel {
+    background: var(--theme-primary-soft, #ffffff) !important;
+    border-color: var(--theme-primary-border, #d1d5db) !important;
+}
+
+html.theme-light .mytimetable-page .day-column {
+    background: #ffffff !important;
+    border-color: var(--theme-primary-border, #d1d5db) !important;
+}
+
+html.theme-light .mytimetable-page .day-header {
+    background: var(--theme-primary) !important;
+    color: #ffffff !important;
+    border-bottom-color: var(--theme-primary) !important;
+}
+
+html.theme-light .mytimetable-page .period-card {
+    background: var(--theme-primary-soft, #f8fafc) !important;
+    border-color: var(--theme-primary-border, #d1d5db) !important;
+    color: #111827 !important;
+}
+
+html.theme-light .mytimetable-page .period-line,
+html.theme-light .mytimetable-page .period-line span {
+    color: #111827 !important;
+}
+
+html.theme-light .mytimetable-page .period-line svg {
+    stroke: var(--theme-primary) !important;
+}
+
+html.theme-dark .mytimetable-page .criteria-panel,
+html.theme-dark .mytimetable-page .timetable-panel {
+    background: color-mix(in srgb, var(--theme-primary) 18%, #0f172a) !important;
+    border-color: #334155 !important;
+}
+
+html.theme-dark .mytimetable-page .day-column {
+    background: color-mix(in srgb, var(--theme-primary) 14%, #0f172a) !important;
+    border-color: #334155 !important;
+}
+
+html.theme-dark .mytimetable-page .day-header {
+    background: var(--theme-primary) !important;
+    color: #ffffff !important;
+    border-bottom-color: var(--theme-primary) !important;
+}
+
+html.theme-dark .mytimetable-page .period-card {
+    background: color-mix(in srgb, var(--theme-primary) 22%, #1e293b) !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+}
+
+html.theme-dark .mytimetable-page .period-line,
+html.theme-dark .mytimetable-page .period-line span {
+    color: #f8fafc !important;
+}
+
+html.theme-dark .mytimetable-page .period-line svg {
+    stroke: var(--theme-primary) !important;
+}
+
+/* Leave Add Details / Add Leave modals stay white for every role */
+.leave-modal-dialog,
+.leave-add-dialog,
+.leave-details-dialog,
+.staff-apply-dialog {
+    background: #ffffff !important;
+    border-color: #e5e7eb !important;
+    color: #111827 !important;
+}
+
+.leave-modal-body .form-group label,
+.leave-modal-body .radio-label,
+.leave-status-options .radio-label,
+.leave-modal-body .detail-value,
+.leave-modal-body .detail-readonly {
+    color: #111827 !important;
+}
+
+.leave-modal-body .detail-label {
+    color: #6b7280 !important;
+}
+
+.leave-modal-body .form-control,
+.leave-modal-body .form-input,
+.leave-modal-body .form-textarea,
+.leave-modal-body select.form-control {
+    background: #ffffff !important;
+    color: #111827 !important;
+    border-color: #d1d5db !important;
+}
+
+.leave-modal-body .file-upload-area {
+    background: #f9fafb !important;
+    color: #6b7280 !important;
+    border-color: #d1d5db !important;
+}
+
+.leave-modal-header {
+    background: var(--theme-primary) !important;
+}
+
+/* Manage Lesson Plan — filter and weekly results stay light with black text */
+html.theme-light .syllabus-page .criteria-panel,
+html.theme-light .syllabus-page .timetable-panel,
+.syllabus-page .criteria-panel,
+.syllabus-page .timetable-panel {
+    background: var(--theme-primary-soft, #ffffff) !important;
+    border-color: var(--theme-primary-border, #d1d5db) !important;
+    color: #111827 !important;
+}
+
+.syllabus-page .panel-title,
+.syllabus-page .form-group label,
+.syllabus-page .week-range,
+.syllabus-page .schedule-line,
+.syllabus-page .schedule-line span,
+.syllabus-page .btn-add-day {
+    color: #111827 !important;
+}
+
+.syllabus-page .day-column {
+    background: #ffffff !important;
+    border-color: var(--theme-primary-border, #d1d5db) !important;
+}
+
+.syllabus-page .day-header {
+    background: var(--theme-primary) !important;
+    color: #ffffff !important;
+}
+
+.syllabus-page .schedule-card {
+    background: #ffffff !important;
+    border-color: var(--theme-primary-border, #d1d5db) !important;
+    color: #111827 !important;
+}
+
+.syllabus-page .form-select,
+.syllabus-page .form-control {
+    background: #ffffff !important;
+    color: #111827 !important;
+    border-color: #d1d5db !important;
+}
+
+.syllabus-page .week-nav-btn {
+    background: #ffffff !important;
+    color: #111827 !important;
+    border-color: #d1d5db !important;
+}
+
+/* Manage Syllabus Status — light panels and readable black text */
+.lessonplan-syllabus-status-page .examresult-panel {
+    background: var(--theme-primary-soft, #ffffff) !important;
+    border-color: var(--theme-primary-border, #d1d5db) !important;
+    color: #111827 !important;
+}
+
+.lessonplan-syllabus-status-page .section-title,
+.lessonplan-syllabus-status-page .form-group label,
+.lessonplan-syllabus-status-page .syllabus-table td,
+.lessonplan-syllabus-status-page .lesson-name,
+.lessonplan-syllabus-status-page .topic-name {
+    color: #111827 !important;
+}
+
+.lessonplan-syllabus-status-page .syllabus-table thead th {
+    background: var(--theme-primary) !important;
+    color: #ffffff !important;
+}
+
+/* Manage Lesson Plan — View and Edit modals use theme header and white body */
+.schedule-modal-content,
+.lesson-plan-view-dialog {
+    background: #ffffff !important;
+    border-color: var(--theme-primary-border, #d1d5db) !important;
+    color: #111827 !important;
+}
+
+.schedule-modal-header,
+.lesson-plan-view-header {
+    background: var(--theme-primary) !important;
+}
+
+.schedule-modal-header h3,
+.schedule-modal-close,
+.lesson-plan-view-header h3,
+.lesson-plan-view-close {
+    color: #ffffff !important;
+}
+
+.schedule-modal-content .form-group label,
+.lesson-plan-view-toolbar,
+.lesson-plan-view-toolbar h4,
+.lesson-plan-view-right h4,
+.lesson-plan-detail-row,
+.lesson-plan-detail-row .detail-label,
+.lesson-plan-detail-row .detail-value,
+.comment-item {
+    color: #111827 !important;
+}
+
+.schedule-modal-content .form-control,
+.schedule-modal-content .form-select,
+.comment-input {
+    background: #ffffff !important;
+    color: #111827 !important;
+    border-color: #d1d5db !important;
+}
+
+.schedule-modal-content .form-select option {
+    background: #ffffff !important;
+    color: #111827 !important;
+}
+
+.comment-item {
+    background: var(--theme-primary-soft, #f8fafc) !important;
+    border-color: var(--theme-primary-border, #e5e7eb) !important;
+}
+
+.btn-save-modal,
+.view-icon-btn,
+.comment-send-btn {
+    background: var(--theme-primary) !important;
+    color: #ffffff !important;
+}
+
+.btn-cancel {
+    background: #e5e7eb !important;
+    color: #111827 !important;
 }
 

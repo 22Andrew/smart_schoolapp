@@ -214,9 +214,11 @@ public class StaffLeaveRequestService implements ApplicationRunner {
         leave.setToDate(toDate);
         leave.setDays(calculateDays(fromDate, toDate, halfDay));
 
-        if (payload.containsKey("reason")) {
-            leave.setReason(text(payload.get("reason")));
+        String reason = text(payload.get("reason"));
+        if (reason.isBlank()) {
+            throw new IllegalArgumentException("Reason is required");
         }
+        leave.setReason(reason);
         if (payload.containsKey("note")) {
             leave.setNote(text(payload.get("note")));
         }

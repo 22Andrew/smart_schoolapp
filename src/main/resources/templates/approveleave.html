@@ -8,8 +8,8 @@
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
     <link rel="stylesheet" th:href="@{/css/cbseexam-report-examsubject.css}">
     <link rel="stylesheet" th:href="@{/css/cbseexam-examresult.css}">
-    <link rel="stylesheet" th:href="@{/css/approveleave.css}">
-    <link rel="stylesheet" th:href="@{/css/app-theme.css}">
+    <link rel="stylesheet" th:href="@{/css/approveleave.css(v='20260915-leave-white')}">
+    <link rel="stylesheet" th:href="@{/css/app-theme.css(v='20260915-leave-white')}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- SweetAlert2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -357,8 +357,8 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="leaveReason">Reason</label>
-                        <textarea id="leaveReason" class="form-input form-textarea" rows="4"></textarea>
+                        <label for="leaveReason">Reason <span class="required">*</span></label>
+                        <textarea id="leaveReason" class="form-input form-textarea" rows="4" required></textarea>
                     </div>
                     <div class="form-group">
                         <label>Leave Status <span class="required">*</span></label>
@@ -400,7 +400,7 @@
     </div>
 
     <script th:src="@{/js/dashboard.js}"></script>
-    <script th:src="@{/js/approveleave.js}"></script>
+    <script th:src="@{/js/approveleave.js(v='20260915-reason-req')}"></script>
 </body>
 </html>
 

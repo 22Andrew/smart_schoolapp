@@ -33,6 +33,12 @@ public class ChatController {
         return ResponseEntity.ok(chatService.listContacts());
     }
 
+    @GetMapping("/api/chat/unread-count")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> unreadCount() {
+        return ResponseEntity.ok(Map.of("count", chatService.unreadCount()));
+    }
+
     @GetMapping("/api/chat/messages")
     @ResponseBody
     public ResponseEntity<List<Map<String, Object>>> listMessages(@RequestParam String contactType,

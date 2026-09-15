@@ -118,7 +118,7 @@ public class RoleSidebarMenuService {
 
             Map.entry("cbse-examination", Set.of(
 
-                    "exam", "exam-schedule", "print-marksheet", "template", "assign-observation", "reports", "setting")),
+                    "exam", "exam-schedule", "print-marksheet", "template", "assign-observation", "reports")),
 
             Map.entry("examinations", Set.of(
 

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book List - Smart School</title>
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
-    <link rel="stylesheet" th:href="@{/css/book-list.css}">
+    <link rel="stylesheet" th:href="@{/css/book-list.css(v='20260915-import-book')}">
     <link rel="stylesheet" th:href="@{/css/app-theme.css}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- SweetAlert2 -->
@@ -210,7 +210,86 @@
                 </div>
             </form>
             <div class="book-modal-footer">
+                <button type="button" class="btn-book-cancel" id="bookCancelBtn">Cancel</button>
                 <button type="submit" form="bookForm" class="btn-book-save" id="bookSaveBtn">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Book Modal -->
+    <div class="book-import-modal" id="importBookModal" aria-hidden="true">
+        <div class="book-import-overlay" id="importBookOverlay"></div>
+        <div class="book-import-dialog" role="dialog" aria-modal="true" aria-labelledby="importBookTitle">
+            <div class="book-import-header">
+                <h2 class="book-import-title" id="importBookTitle">Import Book</h2>
+                <button type="button" class="btn-download-sample" id="downloadSampleImportBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Download Sample Import File
+                </button>
+            </div>
+            <div class="book-import-body">
+                <ol class="book-import-notes">
+                    <li>Your CSV data should be in the format below. The first line of your CSV file should be the column headers as in the table example. Also make sure that your file is UTF-8 to avoid unnecessary encoding problems.</li>
+                    <li>If the column you are trying to import is date make sure that is formatted in format Y-m-d (2018-06-06).</li>
+                </ol>
+                <div class="book-import-table-wrap">
+                    <table class="book-import-sample-table">
+                        <thead>
+                            <tr>
+                                <th><span class="required">*</span> Book Title</th>
+                                <th>Book Number</th>
+                                <th>ISBN Number</th>
+                                <th>Subject</th>
+                                <th>Rack Number</th>
+                                <th>Publisher</th>
+                                <th>Author</th>
+                                <th>Qty</th>
+                                <th>Book Price</th>
+                                <th>Post Date</th>
+                                <th>Description</th>
+                                <th>Available</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Sample Data</td>
+                                <td>Sample Data</td>
+                                <td>Sample Data</td>
+                                <td>Sample Data</td>
+                                <td>Sample Data</td>
+                                <td>Sample Data</td>
+                                <td>Sample Data</td>
+                                <td>Sample Data</td>
+                                <td>Sample Data</td>
+                                <td>Sample Data</td>
+                                <td>Sample Data</td>
+                                <td>Sample Data</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="book-import-file-row">
+                    <div class="book-import-file-field">
+                        <label for="importBookFileInput">Select CSV File <span class="required">*</span></label>
+                        <div class="book-import-dropzone" id="importBookDropzone">
+                            <input type="file" id="importBookFileInput" accept=".csv,text/csv" hidden>
+                            <div class="book-import-dropzone-content" id="importBookDropzoneContent">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="17 8 12 3 7 8"></polyline>
+                                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                                </svg>
+                                <span>Drag and drop a file here or click</span>
+                            </div>
+                            <div class="book-import-file-name" id="importBookFileName" hidden></div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-import-submit" id="importBookSubmitBtn">Import Book</button>
+                </div>
             </div>
         </div>
     </div>
@@ -411,7 +490,7 @@
     </div>
 
     <script th:src="@{/js/dashboard.js}"></script>
-    <script th:src="@{/js/book-list.js}"></script>
+    <script th:src="@{/js/book-list.js(v='20260915-import-book-3')}"></script>
 </body>
 </html>
 

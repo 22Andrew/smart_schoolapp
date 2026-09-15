@@ -7,6 +7,7 @@ import com.kantechsolution.smart_school.model.SchoolClass;
 import com.kantechsolution.smart_school.repository.AcademicSessionRepository;
 import com.kantechsolution.smart_school.repository.AlumniRepository;
 import com.kantechsolution.smart_school.repository.SchoolClassRepository;
+import com.kantechsolution.smart_school.validation.PhoneNumberValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -73,7 +74,7 @@ public class AlumniService implements ApplicationRunner {
         if (text(currentPhone).isBlank()) {
             throw new IllegalArgumentException("Current Phone is required");
         }
-        row.setCurrentPhone(text(currentPhone));
+        row.setCurrentPhone(PhoneNumberValidator.requireInternational(currentPhone));
         row.setCurrentEmail(text(currentEmail));
         row.setOccupation(text(occupation));
         row.setAddress(text(address));

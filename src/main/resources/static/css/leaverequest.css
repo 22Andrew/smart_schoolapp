@@ -297,10 +297,11 @@
     max-width: 900px;
     max-height: 92vh;
     overflow-y: auto;
-    background: #1e293b;
-    border: 1px solid #334155;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
     border-radius: 8px;
     z-index: 1;
+    box-shadow: 0 12px 40px rgba(15, 23, 42, 0.18);
 }
 
 .leave-details-dialog {
@@ -316,7 +317,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 0.9rem 1.15rem;
-    background: #8b5cf6;
+    background: var(--theme-primary, #8b5cf6);
 }
 
 .leave-modal-header h3 {
@@ -339,7 +340,7 @@
 }
 
 .leave-details-grid {
-    border: 1px solid #334155;
+    border: 1px solid #e5e7eb;
     border-radius: 4px;
     overflow: hidden;
     margin-bottom: 1.25rem;
@@ -348,7 +349,7 @@
 .leave-details-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    border-bottom: 1px solid #334155;
+    border-bottom: 1px solid #e5e7eb;
 }
 
 .leave-details-row:last-child {
@@ -360,7 +361,7 @@
     grid-template-columns: 130px 1fr;
     gap: 0.75rem;
     padding: 0.85rem 1rem;
-    border-right: 1px solid #334155;
+    border-right: 1px solid #e5e7eb;
 }
 
 .leave-details-item:last-child {
@@ -368,12 +369,12 @@
 }
 
 .detail-label {
-    color: #94a3b8;
+    color: #6b7280;
     font-size: 0.88rem;
 }
 
 .detail-value {
-    color: #f1f5f9;
+    color: #111827;
     font-size: 0.88rem;
 }
 
@@ -394,7 +395,7 @@
 }
 
 .leave-modal-body .form-group label {
-    color: #e2e8f0;
+    color: #374151;
     font-size: 0.88rem;
     font-weight: 500;
     margin-bottom: 0.4rem;
@@ -407,10 +408,10 @@
 .leave-modal-body .form-control {
     width: 100%;
     box-sizing: border-box;
-    background: #0f172a;
-    border: 1px solid #334155;
+    background: #ffffff;
+    border: 1px solid #d1d5db;
     border-radius: 4px;
-    color: #f1f5f9;
+    color: #111827;
     padding: 0.65rem 0.75rem;
     font-size: 0.88rem;
     font-family: inherit;
@@ -441,7 +442,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    color: #e2e8f0;
+    color: #374151;
     font-size: 0.88rem;
     cursor: pointer;
 }
@@ -458,10 +459,10 @@
     gap: 0.65rem;
     min-height: 120px;
     padding: 1.25rem;
-    border: 1px dashed #475569;
+    border: 1px dashed #d1d5db;
     border-radius: 4px;
-    background: #0f172a;
-    color: #94a3b8;
+    background: #f9fafb;
+    color: #6b7280;
     cursor: pointer;
     text-align: center;
 }
@@ -477,12 +478,12 @@
 
 .file-name-display {
     margin-top: 0.5rem;
-    color: #94a3b8;
+    color: #6b7280;
     font-size: 0.85rem;
 }
 
 .file-name-display.active {
-    color: #cbd5e1;
+    color: #111827;
 }
 
 .leave-modal-footer {

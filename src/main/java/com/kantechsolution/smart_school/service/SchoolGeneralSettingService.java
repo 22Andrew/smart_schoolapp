@@ -2,6 +2,7 @@ package com.kantechsolution.smart_school.service;
 
 import com.kantechsolution.smart_school.model.SchoolGeneralSetting;
 import com.kantechsolution.smart_school.repository.SchoolGeneralSettingRepository;
+import com.kantechsolution.smart_school.validation.PhoneNumberValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -73,7 +74,8 @@ public class SchoolGeneralSettingService implements ApplicationRunner {
         settings.setSchoolName(requiredText(payload.get("schoolName"), "School name"));
         settings.setSchoolCode(text(payload.get("schoolCode")));
         settings.setAddress(requiredText(payload.get("address"), "Address"));
-        settings.setPhone(requiredText(payload.get("phone"), "Phone"));
+        settings.setPhone(PhoneNumberValidator.requireInternational(
+                requiredText(payload.get("phone"), "Phone")));
         settings.setEmail(requiredText(payload.get("email"), "Email"));
         settings.setSession(requiredText(payload.get("session"), "Session"));
         settings.setSessionStartMonth(requiredText(payload.get("sessionStartMonth"), "Session start month"));

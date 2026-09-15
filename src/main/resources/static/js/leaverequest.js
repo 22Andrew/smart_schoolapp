@@ -350,7 +350,7 @@ async function handleAddSave(event) {
         status: statusRadio ? statusRadio.value : 'Pending'
     };
 
-    if (!payload.staffMemberId || !payload.leaveType || !payload.applyDate || !payload.fromDate || !payload.toDate) {
+    if (!payload.staffMemberId || !payload.leaveType || !payload.applyDate || !payload.fromDate || !payload.toDate || !payload.reason) {
         Swal.fire({
             icon: 'error',
             title: 'Validation Error',

@@ -2,6 +2,7 @@ package com.kantechsolution.smart_school.service;
 
 import com.kantechsolution.smart_school.model.WhatsappConfig;
 import com.kantechsolution.smart_school.repository.WhatsappConfigRepository;
+import com.kantechsolution.smart_school.validation.PhoneNumberValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -41,11 +42,13 @@ public class WhatsappConfigService implements ApplicationRunner {
         if ("TWILIO".equals(row.getActiveProvider())) {
             row.setTwilioAccountSid(required(payload.get("accountSid"), "SID is required"));
             row.setTwilioAuthToken(required(payload.get("authToken"), "Token is required"));
-            row.setTwilioFromNumber(required(payload.get("fromNumber"), "From Number is required"));
+            row.setTwilioFromNumber(PhoneNumberValidator.requireInternational(
+                    required(payload.get("fromNumber"), "From Number is required")));
             row.setTwilioStatus(status(payload.get("status")));
         } else {
             row.setMetaAccessToken(required(payload.get("accessToken"), "Access Token is required"));
-            row.setMetaPhoneNumber(required(payload.get("phoneNumber"), "Registered Phone Number is required"));
+            row.setMetaPhoneNumber(PhoneNumberValidator.requireInternational(
+                    required(payload.get("phoneNumber"), "Registered Phone Number is required")));
             row.setMetaLanguage(required(payload.get("language"), "Language is required"));
             row.setMetaStatus(status(payload.get("status")));
         }

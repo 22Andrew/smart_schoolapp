@@ -270,20 +270,302 @@ document.addEventListener('DOMContentLoaded', function () {
     const overlay = document.getElementById('bookModalOverlay');
     if (overlay) overlay.addEventListener('click', closeBookModal);
 
+    const bookCancelBtn = document.getElementById('bookCancelBtn');
+    if (bookCancelBtn) bookCancelBtn.addEventListener('click', closeBookModal);
+
     document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && bookModal && bookModal.classList.contains('active')) {
+        if (e.key !== 'Escape') return;
+        if (importBookModal && importBookModal.classList.contains('active')) {
+            closeImportModal();
+            return;
+        }
+        if (bookModal && bookModal.classList.contains('active')) {
             closeBookModal();
         }
     });
 
+    const importBookModal = document.getElementById('importBookModal');
+    const importBookOverlay = document.getElementById('importBookOverlay');
+    const importBookDropzone = document.getElementById('importBookDropzone');
+    const importBookFileInput = document.getElementById('importBookFileInput');
+    const importBookDropzoneContent = document.getElementById('importBookDropzoneContent');
+    const importBookFileName = document.getElementById('importBookFileName');
+    const downloadSampleImportBtn = document.getElementById('downloadSampleImportBtn');
+    const importBookSubmitBtn = document.getElementById('importBookSubmitBtn');
+    let importFile = null;
+
+    function setImportFile(file) {
+        importFile = file || null;
+        if (importBookFileName) {
+            importBookFileName.hidden = !importFile;
+            importBookFileName.textContent = importFile ? importFile.name : '';
+        }
+        if (importBookDropzoneContent) {
+            importBookDropzoneContent.hidden = !!importFile;
+        }
+    }
+
+    function openImportModal() {
+        if (!importBookModal) return;
+        setImportFile(null);
+        if (importBookFileInput) importBookFileInput.value = '';
+        importBookModal.classList.add('active');
+        importBookModal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeImportModal() {
+        if (!importBookModal) return;
+        importBookModal.classList.remove('active');
+        importBookModal.setAttribute('aria-hidden', 'true');
+        setImportFile(null);
+        if (importBookFileInput) importBookFileInput.value = '';
+        if (!bookModal || !bookModal.classList.contains('active')) {
+            document.body.style.overflow = '';
+        }
+    }
+
     if (importBookBtn) {
-        importBookBtn.addEventListener('click', function () {
-            Swal.fire({
-                icon: 'info',
-                title: 'Import Book',
-                text: 'Book import will be available in a later update.',
-                confirmButtonColor: '#8b5cf6'
+        importBookBtn.addEventListener('click', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            openImportModal();
+        });
+    }
+
+    if (importBookOverlay) {
+        importBookOverlay.addEventListener('click', closeImportModal);
+    }
+
+    const SAMPLE_CSV = 'Book Title,Book Number,ISBN Number,Subject,Rack Number,Publisher,Author,Qty,Book Price,Post Date,Description,Available\n'
+        + 'Sample Data,BK-001,978-0000000000,English,R1,Sample Publisher,Sample Author,10,25.00,2018-06-06,Sample Data,10\n';
+
+    function downloadBlob(filename, content, type) {
+        const blob = new Blob([content], { type: type || 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }
+
+    function parseCsvText(text) {
+        const rows = [];
+        let row = [];
+        let current = '';
+        let inQuotes = false;
+        const source = String(text || '').replace(/^\uFEFF/, '');
+        for (let i = 0; i < source.length; i++) {
+            const ch = source.charAt(i);
+            if (inQuotes) {
+                if (ch === '"') {
+                    if (source.charAt(i + 1) === '"') {
+                        current += '"';
+                        i++;
+                    } else {
+                        inQuotes = false;
+                    }
+                } else {
+                    current += ch;
+                }
+            } else if (ch === '"') {
+                inQuotes = true;
+            } else if (ch === ',') {
+                row.push(current);
+                current = '';
+            } else if (ch === '\n') {
+                row.push(current);
+                rows.push(row);
+                row = [];
+                current = '';
+            } else if (ch !== '\r') {
+                current += ch;
+            }
+        }
+        if (inQuotes || current || row.length) {
+            row.push(current);
+            rows.push(row);
+        }
+        return rows;
+    }
+
+    function normalizeHeader(value) {
+        return String(value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    }
+
+    function cellByHeader(cells, headers, aliases) {
+        for (let i = 0; i < headers.length; i++) {
+            if (aliases.indexOf(headers[i]) !== -1) {
+                return cells[i] == null ? '' : String(cells[i]).trim();
+            }
+        }
+        return '';
+    }
+
+    function rowsFromCsv(text) {
+        const table = parseCsvText(text);
+        if (!table.length) {
+            throw new Error('The CSV file is empty');
+        }
+        const headers = table[0].map(normalizeHeader);
+        if (headers.indexOf('booktitle') < 0 && headers.indexOf('title') < 0) {
+            throw new Error('CSV must include a Book Title column');
+        }
+        const payloadRows = [];
+        for (let i = 1; i < table.length; i++) {
+            const cells = table[i];
+            const title = cellByHeader(cells, headers, ['booktitle', 'title']);
+            if (!title) {
+                continue;
+            }
+            payloadRows.push({
+                title: title,
+                bookNumber: cellByHeader(cells, headers, ['booknumber', 'bookno']),
+                isbn: cellByHeader(cells, headers, ['isbnnumber', 'isbn']),
+                subject: cellByHeader(cells, headers, ['subject']),
+                rackNumber: cellByHeader(cells, headers, ['racknumber', 'rack']),
+                publisher: cellByHeader(cells, headers, ['publisher']),
+                author: cellByHeader(cells, headers, ['author']),
+                qty: cellByHeader(cells, headers, ['qty', 'quantity', 'totalcopies']),
+                bookPrice: cellByHeader(cells, headers, ['bookprice', 'price']),
+                postDate: cellByHeader(cells, headers, ['postdate', 'date']),
+                description: cellByHeader(cells, headers, ['description']),
+                available: cellByHeader(cells, headers, ['available', 'availablecopies'])
             });
+        }
+        if (!payloadRows.length) {
+            throw new Error('No valid book rows were found in the CSV file');
+        }
+        return payloadRows;
+    }
+
+    async function importBooksFallback(file) {
+        const text = await file.text();
+        const payloadRows = rowsFromCsv(text);
+        let imported = 0;
+        let lastError = '';
+        for (let i = 0; i < payloadRows.length; i++) {
+            const response = await fetch('/api/books', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payloadRows[i])
+            });
+            const data = await response.json().catch(function () { return {}; });
+            if (!response.ok || data.success === false) {
+                lastError = data.message || ('Failed to import row ' + (i + 2));
+                continue;
+            }
+            imported += 1;
+        }
+        if (!imported) {
+            throw new Error(lastError || 'Failed to import books');
+        }
+        return {
+            imported: imported,
+            message: imported + (imported === 1 ? ' book imported successfully!' : ' books imported successfully!')
+        };
+    }
+
+    if (downloadSampleImportBtn) {
+        downloadSampleImportBtn.addEventListener('click', async function () {
+            try {
+                const response = await fetch('/api/library/books/import/sample');
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = 'import_book_sample_file.csv';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                    return;
+                }
+            } catch (error) {
+                /* fall through to local sample */
+            }
+            downloadBlob('import_book_sample_file.csv', '\uFEFF' + SAMPLE_CSV);
+        });
+    }
+
+    if (importBookDropzone && importBookFileInput) {
+        importBookDropzone.addEventListener('click', function () {
+            importBookFileInput.click();
+        });
+        importBookFileInput.addEventListener('change', function () {
+            const file = importBookFileInput.files && importBookFileInput.files[0];
+            setImportFile(file || null);
+        });
+        ['dragenter', 'dragover'].forEach(function (eventName) {
+            importBookDropzone.addEventListener(eventName, function (event) {
+                event.preventDefault();
+                importBookDropzone.classList.add('dragover');
+            });
+        });
+        ['dragleave', 'drop'].forEach(function (eventName) {
+            importBookDropzone.addEventListener(eventName, function (event) {
+                event.preventDefault();
+                importBookDropzone.classList.remove('dragover');
+            });
+        });
+        importBookDropzone.addEventListener('drop', function (event) {
+            const file = event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files[0];
+            setImportFile(file || null);
+        });
+    }
+
+    if (importBookSubmitBtn) {
+        importBookSubmitBtn.addEventListener('click', async function () {
+            if (!importFile) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'CSV File Required',
+                    text: 'Please select a CSV file to import.',
+                    confirmButtonColor: '#8b5cf6'
+                });
+                return;
+            }
+            const formData = new FormData();
+            formData.append('file', importFile);
+            try {
+                let data = {};
+                const response = await fetch('/api/library/books/import', {
+                    method: 'POST',
+                    body: formData
+                });
+                if (response.ok) {
+                    data = await response.json().catch(function () { return {}; });
+                } else if (response.status === 404 || response.status === 405) {
+                    data = await importBooksFallback(importFile);
+                } else {
+                    data = await response.json().catch(function () { return {}; });
+                    throw new Error(data.message || 'Failed to import books');
+                }
+                if (data.success === false) {
+                    throw new Error(data.message || 'Failed to import books');
+                }
+                closeImportModal();
+                closeBookModal();
+                await loadBooks();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Imported',
+                    text: data.message || 'Books imported successfully!',
+                    timer: 1800,
+                    showConfirmButton: false
+                });
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Import Failed',
+                    text: error.message || 'Failed to import books.',
+                    confirmButtonColor: '#8b5cf6'
+                });
+            }
         });
     }
 

@@ -30,15 +30,23 @@ public class BehaviourStudentIncidentService {
     @Autowired
     private BehaviourIncidentService behaviourIncidentService;
 
+    @Autowired
+    private AcademicSessionService academicSessionService;
+
     public List<Map<String, Object>> searchStudents(Long classId, String section) {
-        return searchStudentsWithStats(classId, section, false);
+        return searchStudentsWithStats(classId, section, false, "all");
     }
 
     public List<Map<String, Object>> studentIncidentReport(Long classId, String section) {
-        return searchStudentsWithStats(classId, section, true);
+        return studentIncidentReport(classId, section, "current");
     }
 
-    private List<Map<String, Object>> searchStudentsWithStats(Long classId, String section, boolean includeCounts) {
+    public List<Map<String, Object>> studentIncidentReport(Long classId, String section, String session) {
+        return searchStudentsWithStats(classId, section, true, session);
+    }
+
+    private List<Map<String, Object>> searchStudentsWithStats(Long classId, String section, boolean includeCounts,
+                                                              String session) {
         if (classId == null) {
             throw new IllegalArgumentException("Class is required");
         }
@@ -54,7 +62,23 @@ public class BehaviourStudentIncidentService {
         Map<Long, Integer> pointsByStudent = new HashMap<>();
         Map<Long, Integer> countByStudent = new HashMap<>();
         if (!ids.isEmpty()) {
-            if (includeCounts) {
+            if (isCurrentSessionOnly(session)) {
+                String currentSession = academicSessionService.getCurrentSessionName();
+                for (BehaviourStudentIncident incident : repository.findByStudentAdmissionIdIn(ids)) {
+                    if (!currentSession.equalsIgnoreCase(sessionLabel(incident.getIncidentDate()))) {
+                        continue;
+                    }
+                    Long studentId = incident.getStudentAdmissionId();
+                    if (studentId == null) {
+                        continue;
+                    }
+                    int points = incident.getPoints() == null ? 0 : incident.getPoints();
+                    pointsByStudent.merge(studentId, points, Integer::sum);
+                    if (includeCounts) {
+                        countByStudent.merge(studentId, 1, Integer::sum);
+                    }
+                }
+            } else if (includeCounts) {
                 for (Object[] row : repository.countAndSumPointsByStudentIds(ids)) {
                     Long studentId = toLong(row[0]);
                     Integer count = row[1] == null ? 0 : ((Number) row[1]).intValue();
@@ -159,6 +183,14 @@ public class BehaviourStudentIncidentService {
         int startYear = value.getMonthValue() >= 4 ? year : year - 1;
         int endYear = (startYear + 1) % 100;
         return startYear + "-" + String.format("%02d", endYear);
+    }
+
+    private boolean isCurrentSessionOnly(String session) {
+        if (session == null || session.isBlank()) {
+            return true;
+        }
+        String value = session.trim();
+        return "current".equalsIgnoreCase(value) || "current-session".equalsIgnoreCase(value);
     }
 
     private String currentAssignBy() {

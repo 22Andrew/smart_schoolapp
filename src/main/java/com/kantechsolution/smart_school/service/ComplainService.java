@@ -2,6 +2,7 @@ package com.kantechsolution.smart_school.service;
 
 import com.kantechsolution.smart_school.model.Complain;
 import com.kantechsolution.smart_school.repository.ComplainRepository;
+import com.kantechsolution.smart_school.validation.PhoneNumberValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class ComplainService {
     @Transactional
     public Complain saveComplain(Complain complain) {
         log.info("Saving complain record for: {}", complain.getComplainBy());
+        complain.setPhone(PhoneNumberValidator.requireInternational(complain.getPhone()));
         return complainRepository.save(complain);
     }
     
@@ -54,6 +56,7 @@ public class ComplainService {
     @Transactional
     public Complain updateComplain(Long id, Complain complainDetails) {
         log.info("Updating complain record with ID: {}", id);
+        String validatedPhone = PhoneNumberValidator.requireInternational(complainDetails.getPhone());
         
         Complain complain = complainRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Complain record not found with ID: " + id));
@@ -61,7 +64,7 @@ public class ComplainService {
         complain.setComplainType(complainDetails.getComplainType());
         complain.setSource(complainDetails.getSource());
         complain.setComplainBy(complainDetails.getComplainBy());
-        complain.setPhone(complainDetails.getPhone());
+        complain.setPhone(validatedPhone);
         complain.setDate(complainDetails.getDate());
         complain.setDescription(complainDetails.getDescription());
         complain.setActionTaken(complainDetails.getActionTaken());

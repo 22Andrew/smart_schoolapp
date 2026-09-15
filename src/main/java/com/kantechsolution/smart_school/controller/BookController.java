@@ -70,6 +70,30 @@ public class BookController {
         }
     }
 
+    @GetMapping("/api/library/books/import/sample")
+    @ResponseBody
+    public ResponseEntity<byte[]> downloadSampleImportFile() {
+        byte[] csv = libraryService.sampleImportCsv();
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=\"import_book_sample_file.csv\"")
+                .header("Content-Type", "text/csv; charset=UTF-8")
+                .body(csv);
+    }
+
+    @PostMapping(value = "/api/library/books/import", consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseBody
+    public ResponseEntity<?> importBooks(@RequestParam("file") org.springframework.web.multipart.MultipartFile file) {
+        try {
+            Map<String, Object> result = libraryService.importBooks(file);
+            return ResponseEntity.ok(result);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(errorBody(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorBody("Failed to import books"));
+        }
+    }
+
     @DeleteMapping("/api/books/{id}")
     @ResponseBody
     public ResponseEntity<?> deleteBook(@PathVariable Long id) {

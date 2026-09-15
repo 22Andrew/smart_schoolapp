@@ -2,6 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <body>
     <nav class="top-navbar admin-compact-header" th:fragment="top-navbar">
+        <link rel="stylesheet" th:href="@{/css/select-dropdown.css(v='20260915-theme-bg')}">
+        <script th:src="@{/js/phone-validation.js(v='20260915-country-code')}"></script>
+        <script th:src="@{/js/select-dropdown.js(v='20260915-label-ph2')}"></script>
         <div class="nav-left">
             <button class="hamburger-btn" type="button" aria-label="Toggle sidebar">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -112,8 +115,11 @@
                         <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
                         <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
                     </svg>
-                    <span class="notification-badge" th:if="${noticeCount != null and noticeCount > 0}"
-                          th:text="${noticeCount}">0</span>
+                    <span id="chatUnreadBadge"
+                          class="notification-badge chat-unread-badge"
+                          th:classappend="${chatUnreadCount == null or chatUnreadCount == 0} ? ' is-empty' : ''"
+                          th:text="${chatUnreadCount != null and chatUnreadCount > 0} ? (chatUnreadCount > 99 ? '99+' : chatUnreadCount) : ''"
+                          th:attr="hidden=${chatUnreadCount == null or chatUnreadCount == 0}, aria-hidden=${chatUnreadCount == null or chatUnreadCount == 0}"></span>
                 </a>
 
                 <a th:if="${adminWhatsappUrl != null and !#strings.isEmpty(adminWhatsappUrl)}"
@@ -134,6 +140,7 @@
                 <div th:replace="~{fragments/profile-dropdown :: staff-profile-dropdown}"></div>
             </div>
         </div>
+        <script th:src="@{/js/header-chat-badge.js(v='20260915-chat-unread-3')}"></script>
     </nav>
 </body>
 </html>

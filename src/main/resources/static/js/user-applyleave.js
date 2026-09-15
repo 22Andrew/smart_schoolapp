@@ -310,8 +310,8 @@
 
     async function saveLeave(event) {
         event.preventDefault();
-        if (!applyDateInput.value || !fromDateInput.value || !toDateInput.value) {
-            await notify('warning', 'Required Field', 'Apply Date, From Date and To Date are required.');
+        if (!applyDateInput.value || !fromDateInput.value || !toDateInput.value || !reasonInput.value.trim()) {
+            await notify('warning', 'Required Field', 'Apply Date, From Date, To Date and Reason are required.');
             return;
         }
         var payload = new FormData();

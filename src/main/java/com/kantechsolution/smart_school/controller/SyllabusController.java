@@ -40,6 +40,19 @@ public class SyllabusController {
         }
     }
 
+    @GetMapping("/api/lesson-plan/class-schedules")
+    @ResponseBody
+    public ResponseEntity<List<Map<String, Object>>> getClassSchedules(
+            @RequestParam Long classId,
+            @RequestParam String section,
+            @RequestParam(required = false) String className) {
+        try {
+            return ResponseEntity.ok(lessonPlanScheduleService.getSchedulesForClass(classId, className, section));
+        } catch (Exception e) {
+            return ResponseEntity.ok(List.of());
+        }
+    }
+
     @GetMapping("/api/lesson-plan/schedules/{id}")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getScheduleById(@PathVariable Long id) {

@@ -30,6 +30,22 @@ public class ChatService implements ApplicationRunner {
     private static final String TYPE_STUDENT = "STUDENT";
     private static final String TYPE_STAFF = "STAFF";
     private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+    private static final Map<String, String> DEMO_LOGIN_STAFF_IDS = Map.of(
+            "superadmin@gmail.com", "9000",
+            "admin@gmail.com", "9001",
+            "teacher@gmail.com", "9002",
+            "accountant@gmail.com", "9005",
+            "receptionist@gmail.com", "9006",
+            "librarian@gmail.com", "9004"
+    );
+    private static final Map<String, String> DEMO_DISPLAY_NAMES = Map.of(
+            "superadmin@gmail.com", "Super Admin",
+            "admin@gmail.com", "Admin User",
+            "teacher@gmail.com", "Teacher User",
+            "accountant@gmail.com", "Accountant User",
+            "receptionist@gmail.com", "Receptionist User",
+            "librarian@gmail.com", "Librarian User"
+    );
 
     private final ChatMessageRepository chatMessageRepository;
     private final StudentAdmissionRepository studentAdmissionRepository;
@@ -47,34 +63,17 @@ public class ChatService implements ApplicationRunner {
         String owner = currentUsername();
         Map<String, Map<String, Object>> contacts = new LinkedHashMap<>();
 
-        for (StudentAdmission student : studentAdmissionRepository.search(null, null, null, false, null)) {
-            putContact(contacts, new ContactInfo(TYPE_STUDENT, student.getId(),
-                    fullName(student.getFirstName(), student.getLastName()), "Student"));
-        }
-        for (StaffMember staff : staffMemberRepository.findByDisabledFalseOrderByFirstNameAscLastNameAsc()) {
-            String role = staff.getRoles() == null || staff.getRoles().isBlank()
-                    ? "Staff" : staff.getRoles().split(",")[0].trim();
-            putContact(contacts, new ContactInfo(TYPE_STAFF, staff.getId(),
-                    fullName(staff.getFirstName(), staff.getLastName()), role));
-        }
-
-        if (contacts.isEmpty()) {
-            demoContacts().forEach(contact -> putContact(contacts, contact));
-        }
-
         chatMessageRepository.findByOwnerUsernameOrderBySentAtDesc(owner).forEach(message -> {
+            if (isCurrentUserContact(message.getContactType(), message.getContactSourceId())) {
+                return;
+            }
             String key = contactKey(message.getContactType(), message.getContactSourceId());
             Map<String, Object> contact = contacts.get(key);
             if (contact == null) {
-                contact = new LinkedHashMap<>();
-                contact.put("contactType", message.getContactType());
-                contact.put("contactSourceId", message.getContactSourceId());
-                contact.put("name", message.getContactName());
-                contact.put("roleLabel", message.getContactRole());
-                contact.put("avatarUrl", avatarUrl(message.getContactName()));
+                contact = toThreadContact(message);
                 contacts.put(key, contact);
             }
-            if (!contact.containsKey("lastMessage")) {
+            if (!contact.containsKey("lastMessage") || String.valueOf(contact.get("lastMessage")).isBlank()) {
                 contact.put("lastMessage", preview(message.getMessageBody()));
                 contact.put("lastMessageAt", message.getSentAt());
             }
@@ -90,8 +89,18 @@ public class ChatService implements ApplicationRunner {
     }
 
     @Transactional(readOnly = true)
+    public long unreadCount() {
+        String owner = authenticatedUsername();
+        if (owner == null) {
+            return 0;
+        }
+        return chatMessageRepository.countUnreadIncoming(owner);
+    }
+
+    @Transactional
     public List<Map<String, Object>> listMessages(String contactType, Long contactSourceId) {
         String owner = currentUsername();
+        chatMessageRepository.markConversationRead(owner, contactType, contactSourceId);
         return chatMessageRepository
                 .findByOwnerUsernameAndContactTypeAndContactSourceIdOrderBySentAtAsc(owner, contactType, contactSourceId)
                 .stream()
@@ -110,11 +119,17 @@ public class ChatService implements ApplicationRunner {
         List<Map<String, Object>> results = new ArrayList<>();
 
         for (StudentAdmission student : studentAdmissionRepository.search(null, null, keyword, false, null)) {
+            if (isCurrentUserContact(TYPE_STUDENT, student.getId())) {
+                continue;
+            }
             results.add(toSearchResult(new ContactInfo(TYPE_STUDENT, student.getId(),
                     fullName(student.getFirstName(), student.getLastName()), "Student"), student.getPhotoPath()));
         }
 
         for (StaffMember staff : staffMemberRepository.findByDisabledFalseOrderByFirstNameAscLastNameAsc()) {
+            if (isCurrentUserContact(TYPE_STAFF, staff.getId())) {
+                continue;
+            }
             String name = fullName(staff.getFirstName(), staff.getLastName());
             String email = staff.getEmail() == null ? "" : staff.getEmail();
             if (name.toLowerCase(Locale.ROOT).contains(lower) || email.toLowerCase(Locale.ROOT).contains(lower)) {
@@ -153,20 +168,28 @@ public class ChatService implements ApplicationRunner {
         Long contactSourceId = parseLong(payload.get("contactSourceId"), "Contact id is required");
         String messageBody = required(payload.get("message"), "Message is required");
 
+        if (isCurrentUserContact(contactType, contactSourceId)) {
+            throw new IllegalArgumentException("You cannot chat with yourself");
+        }
+
         ContactInfo contact = resolveContact(contactType, contactSourceId)
                 .orElseGet(() -> contactFromPayload(payload, contactType, contactSourceId));
 
+        LocalDateTime sentAt = LocalDateTime.now();
+        String body = messageBody.trim();
         ChatMessage saved = chatMessageRepository.save(ChatMessage.builder()
                 .ownerUsername(owner)
                 .contactType(contact.getType())
                 .contactSourceId(contact.getSourceId())
                 .contactName(contact.getName())
                 .contactRole(contact.getRoleLabel())
-                .messageBody(messageBody.trim())
+                .messageBody(body)
                 .sentByOwner(true)
-                .sentAt(LocalDateTime.now())
+                .readByOwner(true)
+                .sentAt(sentAt)
                 .build());
 
+        deliverIncomingCopy(owner, contact, body, sentAt);
         return toMessageMap(saved);
     }
 
@@ -193,8 +216,40 @@ public class ChatService implements ApplicationRunner {
         return row;
     }
 
-    private void putContact(Map<String, Map<String, Object>> contacts, ContactInfo contact) {
-        contacts.put(contactKey(contact.getType(), contact.getSourceId()), contact.toMap());
+    private Map<String, Object> toThreadContact(ChatMessage message) {
+        Map<String, Object> contact = new LinkedHashMap<>();
+        contact.put("contactType", message.getContactType());
+        contact.put("contactSourceId", message.getContactSourceId());
+        contact.put("name", message.getContactName());
+        contact.put("roleLabel", message.getContactRole());
+        contact.put("avatarUrl", avatarUrl(message.getContactName()));
+        contact.put("lastMessage", preview(message.getMessageBody()));
+        contact.put("lastMessageAt", message.getSentAt());
+        resolveContact(message.getContactType(), message.getContactSourceId()).ifPresent(info -> {
+            contact.put("name", info.getName());
+            contact.put("roleLabel", info.getRoleLabel());
+        });
+        return contact;
+    }
+
+    private boolean isCurrentUserContact(String contactType, Long contactSourceId) {
+        if (contactType == null || contactSourceId == null) {
+            return false;
+        }
+        String owner = currentUsername();
+        if (TYPE_STAFF.equalsIgnoreCase(contactType)) {
+            return staffMemberRepository.findById(contactSourceId)
+                    .map(this::loginUsernameForStaff)
+                    .filter(owner::equalsIgnoreCase)
+                    .isPresent();
+        }
+        if (TYPE_STUDENT.equalsIgnoreCase(contactType)) {
+            return studentAdmissionRepository.findById(contactSourceId)
+                    .map(StudentAdmission::getEmail)
+                    .filter(email -> email != null && email.equalsIgnoreCase(owner))
+                    .isPresent();
+        }
+        return false;
     }
 
     private Optional<ContactInfo> resolveContact(String contactType, Long contactSourceId) {
@@ -242,6 +297,7 @@ public class ChatService implements ApplicationRunner {
                     .contactRole(String.valueOf(sample[3]))
                     .messageBody(String.valueOf(sample[4]))
                     .sentByOwner((Boolean) sample[5])
+                    .readByOwner(Boolean.TRUE.equals(sample[5]))
                     .sentAt((LocalDateTime) sample[6])
                     .build());
         }
@@ -266,12 +322,96 @@ public class ChatService implements ApplicationRunner {
         );
     }
 
-    private String currentUsername() {
+    private void deliverIncomingCopy(String senderUsername, ContactInfo recipient, String messageBody, LocalDateTime sentAt) {
+        String recipientUsername = resolveRecipientUsername(recipient);
+        if (recipientUsername == null || recipientUsername.equalsIgnoreCase(senderUsername)) {
+            return;
+        }
+
+        ContactInfo senderContact = resolveSenderContact(senderUsername);
+        chatMessageRepository.save(ChatMessage.builder()
+                .ownerUsername(recipientUsername)
+                .contactType(senderContact.getType())
+                .contactSourceId(senderContact.getSourceId())
+                .contactName(senderContact.getName())
+                .contactRole(senderContact.getRoleLabel())
+                .messageBody(messageBody)
+                .sentByOwner(false)
+                .readByOwner(false)
+                .sentAt(sentAt)
+                .build());
+    }
+
+    private String resolveRecipientUsername(ContactInfo contact) {
+        if (TYPE_STAFF.equalsIgnoreCase(contact.getType())) {
+            return staffMemberRepository.findById(contact.getSourceId())
+                    .map(this::loginUsernameForStaff)
+                    .orElse(null);
+        }
+        if (TYPE_STUDENT.equalsIgnoreCase(contact.getType())) {
+            return studentAdmissionRepository.findById(contact.getSourceId())
+                    .map(StudentAdmission::getEmail)
+                    .map(email -> email == null ? "" : email.trim())
+                    .filter(email -> !email.isBlank())
+                    .orElse(null);
+        }
+        return null;
+    }
+
+    private String loginUsernameForStaff(StaffMember staff) {
+        if (staff.getStaffId() != null) {
+            for (Map.Entry<String, String> entry : DEMO_LOGIN_STAFF_IDS.entrySet()) {
+                if (entry.getValue().equalsIgnoreCase(staff.getStaffId())) {
+                    return entry.getKey();
+                }
+            }
+        }
+        if (staff.getEmail() != null && !staff.getEmail().isBlank()) {
+            return staff.getEmail().trim();
+        }
+        return null;
+    }
+
+    private ContactInfo resolveSenderContact(String senderUsername) {
+        Optional<StaffMember> staff = staffMemberRepository.findByEmailIgnoreCase(senderUsername);
+        if (staff.isEmpty()) {
+            String demoStaffId = DEMO_LOGIN_STAFF_IDS.get(senderUsername.toLowerCase(Locale.ROOT));
+            if (demoStaffId != null) {
+                staff = staffMemberRepository.findByStaffId(demoStaffId);
+            }
+        }
+        if (staff.isPresent()) {
+            StaffMember member = staff.get();
+            String role = member.getRoles() == null || member.getRoles().isBlank()
+                    ? "Staff" : member.getRoles().split(",")[0].trim();
+            return new ContactInfo(TYPE_STAFF, member.getId(),
+                    fullName(member.getFirstName(), member.getLastName()), role);
+        }
+
+        return studentAdmissionRepository.findByEmailIgnoreCase(senderUsername).stream()
+                .findFirst()
+                .map(student -> new ContactInfo(TYPE_STUDENT, student.getId(),
+                        fullName(student.getFirstName(), student.getLastName()), "Student"))
+                .orElseGet(() -> new ContactInfo(TYPE_STAFF, 0L,
+                        DEMO_DISPLAY_NAMES.getOrDefault(senderUsername.toLowerCase(Locale.ROOT), senderUsername),
+                        "Staff"));
+    }
+
+    private String authenticatedUsername() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
-            return "superadmin@gmail.com";
+            return null;
         }
-        return authentication.getName();
+        String name = authentication.getName();
+        if (name == null || name.isBlank() || "anonymousUser".equalsIgnoreCase(name)) {
+            return null;
+        }
+        return name;
+    }
+
+    private String currentUsername() {
+        String username = authenticatedUsername();
+        return username != null ? username : "superadmin@gmail.com";
     }
 
     private String contactKey(String type, Long id) {

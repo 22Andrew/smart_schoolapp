@@ -4,6 +4,7 @@ import com.kantechsolution.smart_school.model.AdmissionEnquiry;
 import com.kantechsolution.smart_school.model.AdmissionEnquiryFollowUp;
 import com.kantechsolution.smart_school.repository.AdmissionEnquiryFollowUpRepository;
 import com.kantechsolution.smart_school.repository.AdmissionEnquiryRepository;
+import com.kantechsolution.smart_school.validation.PhoneNumberValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +28,7 @@ public class AdmissionEnquiryService {
      */
     @Transactional
     public AdmissionEnquiry saveEnquiry(AdmissionEnquiry enquiry) {
+        enquiry.setPhone(PhoneNumberValidator.requireInternational(enquiry.getPhone()));
         // Set default status if not provided
         if (enquiry.getStatus() == null) {
             enquiry.setStatus(AdmissionEnquiry.EnquiryStatus.ACTIVE);
@@ -60,11 +62,12 @@ public class AdmissionEnquiryService {
      */
     @Transactional
     public AdmissionEnquiry updateEnquiry(Long id, AdmissionEnquiry enquiryDetails) {
+        String validatedPhone = PhoneNumberValidator.requireInternational(enquiryDetails.getPhone());
         AdmissionEnquiry enquiry = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Enquiry not found with id: " + id));
         
         enquiry.setName(enquiryDetails.getName());
-        enquiry.setPhone(enquiryDetails.getPhone());
+        enquiry.setPhone(validatedPhone);
         enquiry.setEmail(enquiryDetails.getEmail());
         enquiry.setAddress(enquiryDetails.getAddress());
         enquiry.setDescription(enquiryDetails.getDescription());

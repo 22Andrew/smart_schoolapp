@@ -15,9 +15,9 @@
 }
 
 .cbse-settings-nav {
-    background: #1e293b;
+    background: var(--theme-primary-soft, #ffffff);
     border-radius: 8px;
-    border: 1px solid #334155;
+    border: 1px solid var(--theme-primary-border, #d1d5db);
     overflow: hidden;
     height: fit-content;
 }
@@ -25,23 +25,23 @@
 .settings-nav-item {
     display: block;
     padding: 0.9rem 1rem;
-    color: #e2e8f0;
+    color: #111827;
     text-decoration: none;
     font-size: 0.88rem;
     font-weight: 400;
-    border-bottom: 1px solid #334155;
+    border-bottom: 1px solid color-mix(in srgb, var(--theme-primary, #8b5cf6) 18%, #e5e7eb);
     transition: color 0.15s ease, background 0.15s ease;
 }
 
 .settings-nav-item:not(.active):hover {
-    color: #c4b5fd;
-    background: rgba(139, 92, 246, 0.08);
+    color: var(--theme-primary, #8b5cf6);
+    background: color-mix(in srgb, var(--theme-primary, #8b5cf6) 10%, #ffffff);
 }
 
 .settings-nav-item.active {
-    color: #8b5cf6;
+    color: var(--theme-primary, #8b5cf6);
     font-weight: 600;
-    background: rgba(139, 92, 246, 0.12);
+    background: color-mix(in srgb, var(--theme-primary, #8b5cf6) 16%, #ffffff);
 }
 
 .settings-nav-item:last-child {

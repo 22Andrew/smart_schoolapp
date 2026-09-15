@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const classSelect = document.getElementById('classSelect');
     const sectionSelect = document.getElementById('sectionSelect');
+    const sessionSelect = document.getElementById('sessionSelect');
     const searchBtn = document.getElementById('searchBtn');
     const tableBody = document.getElementById('reportTableBody');
     const tableSearchInput = document.getElementById('tableSearchInput');
@@ -239,6 +240,9 @@ document.addEventListener('DOMContentLoaded', function () {
         query.set('classId', classValue);
         if (sectionSelect && sectionSelect.value) {
             query.set('section', sectionSelect.value);
+        }
+        if (sessionSelect && sessionSelect.value) {
+            query.set('session', sessionSelect.value);
         }
 
         const response = await fetch('/api/behaviour/reports/student-incident?' + query.toString());
