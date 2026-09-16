@@ -4,7 +4,16 @@ This deploys the GitHub source with Dockerfile.railway and a new Railway MySQL s
 
 ## 1. Push the deployment files
 
-Run in the project directory. The current branch is development.
+Run in the project directory. **Railway auto-deploys from the `development` branch** (see step 3). After merging feature work into `main`, fast-forward `development` and push so production picks up the same commit:
+
+```powershell
+git checkout development
+git merge main
+git push origin development
+git checkout main
+```
+
+Initial Docker/Railway setup (one-time):
 
 ```powershell
 git add Dockerfile Dockerfile.railway railway.toml .dockerignore docker/certs/README.md docker/certs/.gitignore docs/RAILWAY-DEPLOY.md
