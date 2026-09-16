@@ -4,6 +4,7 @@ import com.kantechsolution.smart_school.model.DisableReason;
 import com.kantechsolution.smart_school.model.SchoolHouse;
 import com.kantechsolution.smart_school.model.StudentCategory;
 import com.kantechsolution.smart_school.service.DisableReasonService;
+import com.kantechsolution.smart_school.service.SchoolClassService;
 import com.kantechsolution.smart_school.service.SchoolHouseService;
 import com.kantechsolution.smart_school.service.StudentCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +33,15 @@ public class StudentController {
     @Autowired
     private DisableReasonService disableReasonService;
 
+    @Autowired
+    private SchoolClassService schoolClassService;
+
     /**
      * Show student search / student details page
      */
     @GetMapping("/student/search")
     public String showStudentSearchPage(Model model) {
+        model.addAttribute("schoolClasses", schoolClassService.listClassOptions());
         return "student-search";
     }
 

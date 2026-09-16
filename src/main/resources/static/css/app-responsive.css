@@ -1,0 +1,222 @@
+/**
+ * Global responsive layout for admin/staff and user panels (phones & tablets).
+ * Loaded app-wide via theme-init.js after dashboard.css / app-theme.css.
+ */
+
+/* —— Mobile / tablet sidebar (overlay) —— */
+@media (max-width: 992px) {
+    .main-container {
+        flex-direction: row;
+    }
+
+    .main-content {
+        flex: 1 1 100%;
+        min-width: 0;
+        width: 100%;
+        padding: 1rem;
+    }
+
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 56px;
+        height: calc(100vh - 56px);
+        height: calc(100dvh - 56px);
+        width: min(280px, 88vw) !important;
+        max-width: none;
+        z-index: 1100;
+        transform: translateX(-105%);
+        visibility: hidden;
+        transition: transform 0.28s ease, visibility 0.28s ease, box-shadow 0.28s ease;
+        box-shadow: none;
+    }
+
+    .sidebar.mobile-open {
+        transform: translateX(0);
+        visibility: visible;
+        box-shadow: 4px 0 28px rgba(15, 23, 42, 0.35);
+    }
+
+    /* Desktop “collapsed” must not zero-width on small screens */
+    .sidebar.collapsed {
+        width: min(280px, 88vw) !important;
+        padding: 1rem 0;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    body.side-menu-compact .sidebar.mobile-open {
+        width: min(280px, 88vw) !important;
+    }
+
+    body.side-menu-compact .sidebar.mobile-open .menu-text,
+    body.side-menu-compact .sidebar.mobile-open .sidebar-session-text,
+    body.side-menu-compact .sidebar.mobile-open .sidebar-quick-links-title {
+        display: inline !important;
+    }
+
+    body.side-menu-compact .sidebar.mobile-open .menu-item,
+    body.side-menu-compact .sidebar.mobile-open .menu-item-expandable {
+        justify-content: flex-start;
+    }
+
+    body.sidebar-scroll-lock {
+        overflow: hidden;
+    }
+
+    body.sidebar-backdrop-open::before {
+        content: "";
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 56px;
+        bottom: 0;
+        z-index: 1055;
+        background: rgba(15, 23, 42, 0.48);
+        pointer-events: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        padding: 0.75rem;
+    }
+
+    body.box-compact .main-content {
+        padding: 0.65rem;
+    }
+
+    .onlinecourse-report-page,
+    .main-content.onlinecourse-report-page {
+        padding: 0.75rem 0.65rem 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-content {
+        padding: 0.65rem 0.5rem;
+    }
+}
+
+/* —— Tables & data toolbars —— */
+@media (max-width: 992px) {
+    .main-content .report-table-wrap,
+    .main-content .results-table-wrap,
+    .main-content .table-responsive,
+    .main-content .dataTables_wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        max-width: 100%;
+    }
+
+    .main-content .report-table-wrap {
+        overflow-x: auto;
+        overflow-y: visible;
+    }
+
+    .report-nav-grid.report-nav-grid-teacher {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .report-results-panel .table-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .report-results-panel .table-search {
+        max-width: none;
+        width: 100%;
+    }
+
+    .report-results-panel .table-actions {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        width: 100%;
+    }
+
+    .table-toolbar,
+    .timetable-toolbar,
+    .ugf-table-toolbar,
+    .sf-table-toolbar,
+    .enter-marks-table-toolbar {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 0.65rem;
+    }
+
+    .table-toolbar-actions {
+        flex-wrap: wrap;
+    }
+}
+
+/* —— Form grids (stack on narrow viewports) —— */
+@media (max-width: 768px) {
+    .filter-grid,
+    [class*="form-grid"]:not(.no-stack-mobile) {
+        grid-template-columns: 1fr !important;
+    }
+
+    .filter-actions {
+        grid-column: 1 / -1;
+        justify-content: stretch;
+    }
+
+    .filter-actions .btn,
+    .filter-actions button {
+        width: 100%;
+    }
+}
+
+/* —— Modals —— */
+@media (max-width: 576px) {
+    .modal-content,
+    .modal-dialog {
+        width: calc(100vw - 1rem) !important;
+        max-width: calc(100vw - 1rem) !important;
+        margin: 0.5rem auto;
+    }
+
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+/* —— Rich text (CKEditor) —— */
+@media (max-width: 768px) {
+    .cke_chrome,
+    .cke_inner,
+    .cke_contents {
+        max-width: 100% !important;
+    }
+}
+
+/* —— Touch-friendly controls —— */
+@media (max-width: 992px) {
+    .hamburger-btn {
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    .top-navbar.admin-compact-header .header-icon-toolbar .icon-btn,
+    .top-navbar.admin-compact-header .header-icon-toolbar a.icon-btn {
+        min-width: 40px;
+        min-height: 40px;
+    }
+}
+
+/* —— Welcome / marketing pages (extra polish on small phones) —— */
+@media (max-width: 480px) {
+    .welcome-site .nav-links {
+        gap: 0.25rem;
+    }
+
+    .welcome-site .nav-link {
+        flex: 1 1 calc(50% - 0.25rem);
+        min-width: calc(50% - 0.25rem);
+    }
+}

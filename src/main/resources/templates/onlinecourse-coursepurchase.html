@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <script th:src="@{/js/theme-init.js}"></script>
+    <script th:src="@{/js/theme-init.js(v=20260916-report-bg2)}"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${reportTitle} + ' - Smart School'">Online Course Report - Smart School</title>
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
-    <link rel="stylesheet" th:href="@{/css/onlinecourse-report.css}">
+    <link rel="stylesheet" th:href="@{/css/onlinecourse-report.css(v=20260916-rating-details1)}">
     <link rel="stylesheet" th:href="@{/css/app-theme.css}">
     <link rel="stylesheet" th:href="@{/css/onlinecourse-modals-light.css}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- SweetAlert2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     </head>
 <body>
     <!-- Top Navigation Bar -->
@@ -24,12 +25,26 @@
         <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
 
         <!-- Main Content -->
-        <main class="main-content onlinecourse-report-page">
+        <main class="main-content onlinecourse-report-page" th:attr="data-report-key=${reportKey}">
             <div class="report-panel">
                 <h2 class="panel-title">Online Course Report</h2>
-                <div class="report-nav-grid" th:classappend="${accountantSidebar} ? ' report-nav-grid-accountant' : (${librarianSidebar} ? ' report-nav-grid-librarian' : (${receptionistSidebar} ? ' report-nav-grid-receptionist' : (${teacherSidebar} ? ' report-nav-grid-teacher' : '')))">
+                <div class="report-nav-grid report-nav-grid-teacher" th:if="${teacherSidebar}">
+                    <a href="/onlinecourse/coursereport/coursecomplete" class="report-nav-item" th:classappend="${reportKey == 'coursecomplete'} ? ' active' : ''">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                        <span>Course Complete Report</span>
+                    </a>
+                    <a href="/onlinecourse/coursereport/courserating" class="report-nav-item" th:classappend="${reportKey == 'courserating'} ? ' active' : ''">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                        <span>Course Rating Report</span>
+                    </a>
+                    <a href="/onlinecourse/coursereport/guestreport" class="report-nav-item" th:classappend="${reportKey == 'guestreport'} ? ' active' : ''">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                        <span>Guest Report</span>
+                    </a>
+                </div>
+                <div class="report-nav-grid" th:unless="${teacherSidebar}" th:classappend="${accountantSidebar} ? ' report-nav-grid-accountant' : (${librarianSidebar} ? ' report-nav-grid-librarian' : (${receptionistSidebar} ? ' report-nav-grid-receptionist' : ''))">
                     <div class="report-nav-col">
-                        <a href="/onlinecourse/coursereport/coursepurchase" class="report-nav-item" th:if="${!librarianSidebar and !receptionistSidebar and !teacherSidebar}" th:classappend="${reportKey == 'coursepurchase'} ? ' active' : ''">
+                        <a href="/onlinecourse/coursereport/coursepurchase" class="report-nav-item" th:if="${!librarianSidebar and !receptionistSidebar}" th:classappend="${reportKey == 'coursepurchase'} ? ' active' : ''">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                             <span>Student Course Purchase Report</span>
                         </a>
@@ -37,11 +52,11 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                             <span>Course Complete Report</span>
                         </a>
-                        <a href="/onlinecourse/coursereport/courseassignment" class="report-nav-item" th:if="${!accountantSidebar and !librarianSidebar and !receptionistSidebar and !teacherSidebar}" th:classappend="${reportKey == 'courseassignment'} ? ' active' : ''">
+                        <a href="/onlinecourse/coursereport/courseassignment" class="report-nav-item" th:if="${!accountantSidebar and !librarianSidebar and !receptionistSidebar}" th:classappend="${reportKey == 'courseassignment'} ? ' active' : ''">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                             <span>Course Assignment Report</span>
                         </a>
-                        <a href="/onlinecourse/coursereport/courseexamattempt" class="report-nav-item" th:if="${!accountantSidebar and !librarianSidebar and !receptionistSidebar and !teacherSidebar}" th:classappend="${reportKey == 'courseexamattempt'} ? ' active' : ''">
+                        <a href="/onlinecourse/coursereport/courseexamattempt" class="report-nav-item" th:if="${!accountantSidebar and !librarianSidebar and !receptionistSidebar}" th:classappend="${reportKey == 'courseexamattempt'} ? ' active' : ''">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                             <span>Course Exam Attempt Report</span>
                         </a>
@@ -76,11 +91,11 @@
                     </div>
                 </div>
 
-                <div class="report-divider"></div>
+                <div class="report-divider" th:unless="${reportKey == 'courserating' or reportKey == 'guestreport'}"></div>
 
-                <h3 class="report-subtitle" id="reportSubtitle" th:text="${reportTitle}">Student Course Purchase Report</h3>
-                <form class="report-filters" id="purchaseReportForm" th:attr="data-report-key=${reportKey}">
-                    <div class="filter-grid">
+                <h3 class="report-subtitle" id="reportSubtitle" th:unless="${reportKey == 'courserating' or reportKey == 'guestreport'}" th:text="${reportTitle}">Student Course Purchase Report</h3>
+                <form class="report-filters" id="purchaseReportForm" th:unless="${reportKey == 'courserating' or reportKey == 'guestreport'}" th:attr="data-report-key=${reportKey}">
+                    <div class="filter-grid" th:if="${reportKey != 'coursecomplete'}">
                         <div class="filter-group">
                             <label for="searchType">Search Type <span class="required">*</span></label>
                             <select id="searchType" class="filter-control" required>
@@ -124,9 +139,43 @@
                             </button>
                         </div>
                     </div>
+                    <div class="filter-grid filter-grid-complete" th:if="${reportKey == 'coursecomplete'}">
+                        <div class="filter-group">
+                            <label for="completeUserType">User Type</label>
+                            <select id="completeUserType" class="filter-control">
+                                <option value="">Select the User Type</option>
+                                <option value="student">Student</option>
+                                <option value="guest">Guest</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="completeCourse">Course</label>
+                            <select id="completeCourse" class="filter-control">
+                                <option value="">Select the Course</option>
+                            </select>
+                        </div>
+                        <div class="filter-group complete-student-field" id="completeClassGroup" hidden>
+                            <label for="completeClass">Class</label>
+                            <select id="completeClass" class="filter-control">
+                                <option value="">Select the Class</option>
+                            </select>
+                        </div>
+                        <div class="filter-group complete-student-field" id="completeSectionGroup" hidden>
+                            <label for="completeSection">Section</label>
+                            <select id="completeSection" class="filter-control">
+                                <option value="">Select the Section</option>
+                            </select>
+                        </div>
+                        <div class="filter-actions">
+                            <button type="submit" class="btn-report-search" id="searchCompleteBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+                                Search
+                            </button>
+                        </div>
+                    </div>
                 </form>
 
-                <div class="report-table-wrap">
+                <div class="report-table-wrap" th:unless="${reportKey == 'courserating' or reportKey == 'guestreport'}">
                     <table class="report-table" id="purchaseReportTable">
                         <thead>
                             <tr>
@@ -163,8 +212,130 @@
                     <div class="report-table-footer" id="purchaseReportFooter">Showing 0 to 0 of 0 entries</div>
                 </div>
             </div>
+
+            <div class="report-results-panel" id="ratingResultsPanel" th:if="${reportKey == 'courserating'}">
+                <h3 class="results-heading">Course Rating Report</h3>
+                <div class="table-controls">
+                    <div class="table-search">
+                        <input type="text" id="ratingSearchInput" class="table-search-input" placeholder="Search">
+                    </div>
+                    <div class="table-actions">
+                        <select class="entries-select" id="ratingEntriesSelect">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100" selected>100</option>
+                        </select>
+                        <button type="button" class="icon-action-btn" id="ratingCopyBtn" title="Copy">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        </button>
+                        <button type="button" class="icon-action-btn" id="ratingExcelBtn" title="Excel">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                        </button>
+                        <button type="button" class="icon-action-btn" id="ratingCsvBtn" title="CSV">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                        </button>
+                        <button type="button" class="icon-action-btn" id="ratingPdfBtn" title="PDF">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                        </button>
+                        <button type="button" class="icon-action-btn" id="ratingPrintBtn" title="Print">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="results-table" id="ratingReportTable">
+                        <thead>
+                            <tr>
+                                <th>Title <span class="sort-icon">↕</span></th>
+                                <th>Class <span class="sort-icon">↕</span></th>
+                                <th>Rating <span class="sort-icon">↕</span></th>
+                                <th>Review Count <span class="sort-icon">↕</span></th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ratingReportBody"></tbody>
+                    </table>
+                </div>
+                <div class="report-table-footer" id="ratingReportFooter">Showing 0 to 0 of 0 entries</div>
+            </div>
+
+            <div class="report-results-panel" id="guestResultsPanel" th:if="${reportKey == 'guestreport'}">
+                <h3 class="results-heading">Guest Report</h3>
+                <div class="table-controls">
+                    <div class="table-search">
+                        <input type="text" id="guestSearchInput" class="table-search-input" placeholder="Search">
+                    </div>
+                    <div class="table-actions">
+                        <select class="entries-select" id="guestEntriesSelect">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100" selected>100</option>
+                        </select>
+                        <button type="button" class="icon-action-btn" id="guestCopyBtn" title="Copy">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        </button>
+                        <button type="button" class="icon-action-btn" id="guestExcelBtn" title="Excel">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                        </button>
+                        <button type="button" class="icon-action-btn" id="guestCsvBtn" title="CSV">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                        </button>
+                        <button type="button" class="icon-action-btn" id="guestPdfBtn" title="PDF">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                        </button>
+                        <button type="button" class="icon-action-btn" id="guestPrintBtn" title="Print">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="results-table" id="guestReportTable">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Name <span class="sort-icon">↕</span></th>
+                                <th>Admission No <span class="sort-icon">↕</span></th>
+                                <th>Email <span class="sort-icon">↕</span></th>
+                                <th>Mobile Number <span class="sort-icon">↕</span></th>
+                                <th>Date Of Birth <span class="sort-icon">↕</span></th>
+                                <th>Gender <span class="sort-icon">↕</span></th>
+                                <th>Address <span class="sort-icon">↕</span></th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="guestReportBody"></tbody>
+                    </table>
+                </div>
+                <div class="report-table-footer" id="guestReportFooter">Showing 0 to 0 of 0 entries</div>
+            </div>
         </main>
     </div>
+
+    <div class="rating-details-modal" id="ratingDetailsModal" hidden>
+        <div class="rating-details-overlay" id="ratingDetailsOverlay"></div>
+        <div class="rating-details-dialog" role="dialog" aria-modal="true" aria-labelledby="ratingDetailsTitle">
+            <div class="rating-details-header">
+                <h3 id="ratingDetailsTitle">Rating Details</h3>
+                <button type="button" class="rating-details-close" id="ratingDetailsClose" aria-label="Close">&times;</button>
+            </div>
+            <div class="rating-details-body">
+                <table class="rating-details-table">
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Rating</th>
+                            <th>Review</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ratingDetailsBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <!-- Quick Links Modal -->
     <div class="quick-links-modal" id="quickLinksModal">
         <div class="modal-overlay" id="modalOverlay"></div>
@@ -340,7 +511,7 @@
     </div>
 
     <script th:src="@{/js/dashboard.js}"></script>
-    <script th:src="@{/js/onlinecourse-report.js}"></script>
+    <script th:src="@{/js/onlinecourse-report.js(v=20260916-rating-details1)}"></script>
 </body>
 </html>
 

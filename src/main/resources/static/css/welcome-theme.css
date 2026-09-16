@@ -1,0 +1,174 @@
+/* Applies the selected Backend Theme (primary color + light/dark) to public marketing pages. */
+
+body.welcome-site {
+    --welcome-hero-bg: var(--theme-primary, #8b5cf6);
+    --welcome-hero-title: #ffffff;
+    --welcome-hero-muted: rgba(255, 255, 255, 0.92);
+    --welcome-surface: #f8fafc;
+    --welcome-surface-deep: #ffffff;
+    --welcome-text: #111827;
+    --welcome-muted: #4b5563;
+    --welcome-card: #ffffff;
+    --welcome-card-border: color-mix(in srgb, var(--theme-primary, #8b5cf6) 22%, #e5e7eb);
+    --welcome-footer: color-mix(in srgb, var(--theme-primary, #8b5cf6) 82%, #0f172a);
+    --welcome-link: var(--theme-primary, #8b5cf6);
+}
+
+html.theme-light body.welcome-site {
+    --welcome-hero-title: #042f2e;
+    --welcome-hero-muted: rgba(15, 23, 42, 0.82);
+}
+
+html.theme-dark body.welcome-site {
+    --welcome-surface: color-mix(in srgb, var(--theme-primary, #8b5cf6) 12%, #0f172a);
+    --welcome-surface-deep: color-mix(in srgb, var(--theme-primary, #8b5cf6) 8%, #020617);
+    --welcome-text: #f8fafc;
+    --welcome-muted: #cbd5e1;
+    --welcome-card: color-mix(in srgb, var(--theme-primary, #8b5cf6) 18%, #0f172a);
+    --welcome-card-border: color-mix(in srgb, var(--theme-primary, #8b5cf6) 28%, #1e293b);
+    --welcome-footer: color-mix(in srgb, var(--theme-primary, #8b5cf6) 22%, #020617);
+    --welcome-link: color-mix(in srgb, var(--theme-primary, #8b5cf6) 40%, #ffffff);
+}
+
+html.theme-light body.welcome-site,
+html.theme-light body.welcome-site .container,
+body.welcome-site,
+body.welcome-site .container {
+    background: var(--welcome-surface) !important;
+    color: var(--welcome-text);
+}
+
+body.welcome-site .hero-main,
+body.welcome-site .page-hero {
+    background: var(--welcome-hero-bg) !important;
+    color: #ffffff;
+}
+
+body.welcome-site .hero-main-title,
+body.welcome-site .page-hero h1,
+body.welcome-site .page-kicker {
+    color: var(--welcome-hero-title) !important;
+}
+
+body.welcome-site .hero-tagline,
+body.welcome-site .hero-subtitle-white,
+body.welcome-site .page-hero p,
+body.welcome-site .page-hero a:not(.btn) {
+    color: var(--welcome-hero-muted) !important;
+}
+
+body.welcome-site .page-hero a:not(.btn) {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+body.welcome-site .features,
+body.welcome-site .page-body {
+    background: var(--welcome-surface) !important;
+}
+
+body.welcome-site .section-title,
+body.welcome-site .role-flow h2,
+body.welcome-site .help-content h2,
+body.welcome-site .help-toc h2 {
+    color: var(--theme-primary, #8b5cf6) !important;
+}
+
+body.welcome-site .section-intro,
+body.welcome-site .section-intro a {
+    color: var(--welcome-muted);
+}
+
+body.welcome-site .section-intro a,
+body.welcome-site .process-list a,
+body.welcome-site .help-toc a:hover,
+body.welcome-site .help-content a,
+body.welcome-site .support-grid a,
+body.welcome-site .page-body a:not(.btn) {
+    color: var(--welcome-link);
+}
+
+body.welcome-site .feature-card,
+body.welcome-site .module-card,
+body.welcome-site .process-list li,
+body.welcome-site .role-grid article,
+body.welcome-site .help-toc,
+body.welcome-site .help-content article,
+body.welcome-site .support-grid article {
+    background: var(--welcome-card) !important;
+    border-color: var(--welcome-card-border) !important;
+    box-shadow: 0 10px 28px color-mix(in srgb, var(--theme-primary, #8b5cf6) 12%, transparent);
+}
+
+body.welcome-site .feature-card h4,
+body.welcome-site .module-card h2,
+body.welcome-site .process-list h2,
+body.welcome-site .role-grid h3,
+body.welcome-site .task-grid h3,
+body.welcome-site .support-grid h2,
+body.welcome-site .support-grid h3,
+body.welcome-site details summary {
+    color: var(--welcome-text) !important;
+}
+
+body.welcome-site .feature-card p,
+body.welcome-site .module-card p,
+body.welcome-site .module-card li,
+body.welcome-site .process-list p,
+body.welcome-site .role-grid p,
+body.welcome-site .help-content p,
+body.welcome-site .help-content ol,
+body.welcome-site .help-content ul,
+body.welcome-site .help-toc a,
+body.welcome-site .support-grid p,
+body.welcome-site .support-grid li,
+body.welcome-site details p {
+    color: var(--welcome-muted) !important;
+}
+
+body.welcome-site .feature-icon,
+body.welcome-site .process-num {
+    background: var(--theme-primary, #8b5cf6) !important;
+    color: #ffffff;
+}
+
+body.welcome-site .nav-link:hover,
+body.welcome-site .nav-link.is-active {
+    color: var(--theme-primary, #8b5cf6);
+    background: var(--theme-primary-soft, color-mix(in srgb, var(--theme-primary, #8b5cf6) 14%, #ffffff));
+}
+
+body.welcome-site .nav-link-login {
+    background: var(--theme-primary, #8b5cf6) !important;
+    box-shadow: 0 8px 18px color-mix(in srgb, var(--theme-primary, #8b5cf6) 32%, transparent);
+}
+
+body.welcome-site .nav-link-login:hover {
+    background: var(--theme-primary-dark, #0f766e) !important;
+}
+
+body.welcome-site .hero-main .btn,
+body.welcome-site .page-hero .btn {
+    background: #042f2e !important;
+    color: #ffffff !important;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.18);
+}
+
+html.theme-dark body.welcome-site .hero-main .btn,
+html.theme-dark body.welcome-site .page-hero .btn {
+    background: #ffffff !important;
+    color: var(--theme-primary, #8b5cf6) !important;
+}
+
+body.welcome-site .footer {
+    background: var(--welcome-footer) !important;
+    color: #ffffff;
+}
+
+body.welcome-site .footer-section ul li a:hover {
+    color: #ffffff;
+}
+
+body.welcome-site details {
+    border-top-color: var(--welcome-card-border);
+}

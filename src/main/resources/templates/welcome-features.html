@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <script th:src="@{/js/theme-init.js}"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${appName} + ' - Features'">Smart School - Features</title>
+    <link rel="stylesheet" th:href="@{/css/welcome.css(v=20260916-theme3)}">
+    <link rel="stylesheet" th:href="@{/css/welcome-pages.css(v=20260916-theme3)}">
+    <link rel="stylesheet" th:href="@{/css/welcome-theme.css(v=20260916-theme3)}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="welcome-site">
+    <div class="container">
+        <nav th:replace="~{fragments/welcome-nav :: navbar}"></nav>
+
+        <section class="page-hero">
+            <p class="page-kicker">Application modules</p>
+            <h1>Every feature in Smart School</h1>
+            <p>This is the full set of modules available after login. Super Admin sees the complete menu. Other roles see the parts that match their work.</p>
+            <a href="/login" class="btn btn-demo">Open the application</a>
+        </section>
+
+        <section class="page-body">
+            <div class="module-grid">
+                <article class="module-card">
+                    <h2>Front Office</h2>
+                    <p>Receive visitors and new families at the front desk.</p>
+                    <ul>
+                        <li>Admission Enquiry with class, source, status and follow-up</li>
+                        <li>Visitor Book, Phone Call Log, Postal Dispatch and Receive</li>
+                        <li>Complaints and Front Office setup</li>
+                    </ul>
+                </article>
+                <article class="module-card">
+                    <h2>Student Information</h2>
+                    <p>Keep every student record in one place.</p>
+                    <ul>
+                        <li>Student Details search by class, section or keyword</li>
+                        <li>Student Admission, Online Admission and Multi Class Student</li>
+                        <li>Disabled Students, Categories, House and Disable Reason</li>
+                    </ul>
+                </article>
+                <article class="module-card">
+                    <h2>Fees Collection</h2>
+                    <p>Charge, collect and track school fees.</p>
+                    <ul>
+                        <li>Collect Fees, Quick Fees and Offline Bank Payments</li>
+                        <li>Fees Master, Group, Type, Discount and Carry Forward</li>
+                        <li>Search payment, due fees and reminders</li>
+                    </ul>
+                </article>
+                <article class="module-card">
+                    <h2>Academics</h2>
+                    <p>Build the school structure used everywhere else.</p>
+                    <ul>
+                        <li>Class and Section (this is the class table used in dropdowns)</li>
+                        <li>Subjects, Subject Group and Class Timetable</li>
+                        <li>Teachers Timetable, Assign Class Teacher and Promote Students</li>
+                    </ul>
+                </article>
+                <article class="module-card">
+                    <h2>Attendance</h2>
+                    <p>Mark who is present and approve leave.</p>
+                    <ul>
+                        <li>Student Attendance and Attendance By Date</li>
+                        <li>Approve Leave for students</li>
+                        <li>QR Code Attendance for faster daily marking</li>
+                    </ul>
+                </article>
+                <article class="module-card">
+                    <h2>Lesson Plan</h2>
+                    <p>Plan teaching and track syllabus progress.</p>
+                    <ul>
+                        <li>Manage Lesson Plan on the calendar</li>
+                        <li>Manage Syllabus Status by class, section and subject</li>
+                        <li>Lesson, Topic and Copy Old Lessons</li>
+                    </ul>
+                </article>
+                <article class="module-card">
+                    <h2>Examinations</h2>
+                    <p>Run school exams and CBSE exams.</p>
+                    <ul>
+                        <li>Exam Group, Schedule, Result, Admit Card and Marksheet</li>
+                        <li>Marks Grade and Marks Division</li>
+                        <li>CBSE Exam, Assessment, Term, Grade, Observation and Reports</li>
+                    </ul>
+                </article>
+                <article class="module-card">
+                    <h2>Online Examination &amp; Courses</h2>
+                    <p>Deliver digital learning and tests.</p>
+                    <ul>
+                        <li>Online Exam and Question Bank</li>
+                        <li>Online Course, Course Category, Certificate Template</li>
+                        <li>Offline payment and course purchase reports</li>
+                    </ul>
+                </article>
+                <article class="module-card">
+                    <h2>Homework &amp; Behaviour</h2>
+                    <p>Assign work and record student behaviour.</p>
+                    <ul>
+                        <li>Add Homework and Daily Assignment</li>
+                        <li>Assign Incident, Incidents and Behaviour Reports</li>
+                        <li>Behaviour settings for points and comments</li>
+                    </ul>
+                </article>
+                <article class="module-card">
+                    <h2>Human Resource</h2>
+                    <p>Manage staff, payroll and leave.</p>
+                    <ul>
+                        <li>Staff Directory, Attendance and Disabled Staff</li>
+                        <li>Payroll, Apply Leave, Approve Leave and Leave Type</li>
+                        <li>Department, Designation and Teachers Rating</li>
+                    </ul>
+                </article>
+                <article class="module-card">
+                    <h2>Income, Expenses &amp; Inventory</h2>
+                    <p>Track money that is not student fees.</p>
+                    <ul>
+                        <li>Add / Search Income and Income Head</li>
+                        <li>Add / Search Expense and Expense Head</li>
+                        <li>Items, Stock, Issue Item, Store, Category and Supplier</li>
+                    </ul>
+                </article>
+                <article class="module-card">
+                    <h2>Library, Transport &amp; Hostel</h2>
+                    <p>Run books, buses and boarding.</p>
+                    <ul>
+                        <li>Book List, Import Book, Issue-Return, Student and Staff members</li>
+                        <li>Routes, Vehicles, Pickup Points and Transport Fees</li>
+                        <li>Hostel, Room Type and Hostel Rooms</li>
+                    </ul>
+                </article>
+                <article class="module-card">
+                    <h2>Communicate</h2>
+                    <p>Reach staff, students and parents.</p>
+                    <ul>
+                        <li>Notice Board, Send Email, Send SMS and logs</li>
+                        <li>Login Credentials Send, Email and SMS templates</li>
+                        <li>In-app Chat with per-user unread notifications</li>
+                    </ul>
+                </article>
+                <article class="module-card">
+                    <h2>Certificates, Download Center &amp; Student CV</h2>
+                    <p>Print IDs and share files.</p>
+                    <ul>
+                        <li>Student / Staff ID Card, Transfer Certificate and Generate Certificate</li>
+                        <li>Upload/Share Content, Video Tutorial and Content Type</li>
+                        <li>Build CV and Download CV</li>
+                    </ul>
+                </article>
+                <article class="module-card">
+                    <h2>Live Classes, CMS &amp; Alumni</h2>
+                    <p>Meet online and publish the school website.</p>
+                    <ul>
+                        <li>Google Meet and Zoom live classes and meetings</li>
+                        <li>Front CMS pages, news, gallery, events, menus and banners</li>
+                        <li>Manage Alumni and Alumni Events</li>
+                    </ul>
+                </article>
+                <article class="module-card">
+                    <h2>Reports, Multi Branch &amp; System Setting</h2>
+                    <p>See the whole school and configure it.</p>
+                    <ul>
+                        <li>Student, Finance, Attendance, Exam, Library, Transport and more reports</li>
+                        <li>Multi Branch overview, report and setting</li>
+                        <li>General Setting, Session, Roles, Theme, Language, Backup and Notifications</li>
+                    </ul>
+                </article>
+                <article class="module-card">
+                    <h2>Student &amp; Parent portals</h2>
+                    <p>Families use a separate login from staff.</p>
+                    <ul>
+                        <li>Student login for homework, exams, fees, attendance and profile</li>
+                        <li>Parent login to follow linked children</li>
+                        <li>Use User Login on the login page, not Admin Login</li>
+                    </ul>
+                </article>
+            </div>
+        </section>
+
+        <footer th:replace="~{fragments/welcome-nav :: footer}"></footer>
+    </div>
+    <div th:replace="~{fragments/language-i18n-init :: language-i18n-init}"></div>
+</body>
+</html>

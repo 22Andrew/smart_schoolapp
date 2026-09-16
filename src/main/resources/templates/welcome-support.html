@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <script th:src="@{/js/theme-init.js}"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${appName} + ' - Support'">Smart School - Support</title>
+    <link rel="stylesheet" th:href="@{/css/welcome.css(v=20260916-theme3)}">
+    <link rel="stylesheet" th:href="@{/css/welcome-pages.css(v=20260916-theme3)}">
+    <link rel="stylesheet" th:href="@{/css/welcome-theme.css(v=20260916-theme3)}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="welcome-site">
+    <div class="container">
+        <nav th:replace="~{fragments/welcome-nav :: navbar}"></nav>
+
+        <section class="page-hero">
+            <p class="page-kicker">Get help</p>
+            <h1>Support</h1>
+            <p>Start with the documentation. If you are stuck on a live school record, use the contacts below so we can reproduce the issue quickly.</p>
+            <a href="/help" class="btn btn-help">Open Help &amp; Documentation</a>
+        </section>
+
+        <section class="page-body">
+            <div class="support-grid">
+                <article class="module-card">
+                    <h2>Before you contact us</h2>
+                    <ul>
+                        <li>Read the matching topic on <a href="/help">Help &amp; Documentation</a></li>
+                        <li>Note the menu path (for example Front Office → Admission Enquiry)</li>
+                        <li>Note the login role (Super Admin, Teacher, Student, and so on)</li>
+                        <li>Note the class, section and session you were using</li>
+                    </ul>
+                </article>
+                <article class="module-card">
+                    <h2>In-app help after login</h2>
+                    <ul>
+                        <li>Header Chat for a private message to staff who can assist</li>
+                        <li>Notice Board for school-wide announcements</li>
+                        <li>WhatsApp icon in the header when the school has configured it</li>
+                    </ul>
+                </article>
+                <article class="module-card">
+                    <h2>What to send</h2>
+                    <ul>
+                        <li>What you clicked, what you expected, and what happened</li>
+                        <li>A screenshot of the screen (not passwords)</li>
+                        <li>Approximate time of the problem</li>
+                    </ul>
+                </article>
+            </div>
+
+            <div class="role-flow">
+                <h2>Need a walkthrough instead?</h2>
+                <p>The <a href="/how-it-works">How it Works</a> page explains the full school process. The <a href="/features">Features</a> page lists every module. Login is always at <a href="/login">/login</a>.</p>
+            </div>
+        </section>
+
+        <footer th:replace="~{fragments/welcome-nav :: footer}"></footer>
+    </div>
+    <div th:replace="~{fragments/language-i18n-init :: language-i18n-init}"></div>
+</body>
+</html>

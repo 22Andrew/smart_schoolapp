@@ -3,6 +3,7 @@ package com.kantechsolution.smart_school.controller;
 import com.kantechsolution.smart_school.model.AdmissionEnquiry;
 import com.kantechsolution.smart_school.model.AdmissionEnquiryFollowUp;
 import com.kantechsolution.smart_school.service.AdmissionEnquiryService;
+import com.kantechsolution.smart_school.service.SchoolClassService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ import java.util.Map;
 public class AdmissionEnquiryController {
     
     private final AdmissionEnquiryService service;
+    private final SchoolClassService schoolClassService;
     
     /**
      * Show admission enquiry page
@@ -32,6 +34,7 @@ public class AdmissionEnquiryController {
     public String showAdmissionEnquiryPage(Model model) {
         List<AdmissionEnquiry> enquiries = service.getAllEnquiries();
         model.addAttribute("enquiries", enquiries);
+        model.addAttribute("schoolClasses", schoolClassService.listClassOptions());
         return "admission-enquiry";
     }
     

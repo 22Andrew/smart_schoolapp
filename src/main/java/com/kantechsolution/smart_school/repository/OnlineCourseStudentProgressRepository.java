@@ -10,6 +10,8 @@ public interface OnlineCourseStudentProgressRepository extends JpaRepository<Onl
 
     List<OnlineCourseStudentProgress> findByStudentAdmissionId(Long studentAdmissionId);
 
+    List<OnlineCourseStudentProgress> findByCourseId(Long courseId);
+
     Optional<OnlineCourseStudentProgress> findByStudentAdmissionIdAndCourseId(Long studentAdmissionId, Long courseId);
 
     long countByStudentAdmissionId(Long studentAdmissionId);

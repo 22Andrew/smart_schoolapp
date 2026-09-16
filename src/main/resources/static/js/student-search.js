@@ -168,11 +168,13 @@ document.addEventListener('DOMContentLoaded', function () {
     function fillClassSelect() {
         if (!classSelect) return;
         const current = classSelect.value;
-        classSelect.innerHTML = '<option value="">Select</option>';
+        classSelect.innerHTML = '<option value="">Select the Class</option>';
         classes.forEach(function (item) {
+            const name = item && (item.name || item.className);
+            if (!name) return;
             const option = document.createElement('option');
-            option.value = String(item.id);
-            option.textContent = item.name;
+            option.value = String(item.id != null ? item.id : name);
+            option.textContent = name;
             classSelect.appendChild(option);
         });
         if (current) classSelect.value = current;
@@ -367,7 +369,11 @@ document.addEventListener('DOMContentLoaded', function () {
     async function loadClasses() {
         const response = await fetch('/api/classes');
         if (!response.ok) throw new Error('Failed to load classes');
-        classes = await response.json();
+        const rows = await response.json();
+        if (!Array.isArray(rows) || !rows.length) {
+            return;
+        }
+        classes = rows;
         fillClassSelect();
         fillSectionSelect();
     }

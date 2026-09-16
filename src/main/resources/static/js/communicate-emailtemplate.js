@@ -118,6 +118,7 @@ function initCKEditor() {
 
     CKEDITOR.replace('templateBody', {
         height: 280,
+        versionCheck: false,
         removePlugins: 'elementspath',
         resize_enabled: false
     });

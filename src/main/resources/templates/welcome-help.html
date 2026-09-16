@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <script th:src="@{/js/theme-init.js}"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${appName} + ' - Help & Documentation'">Smart School - Help &amp; Documentation</title>
+    <link rel="stylesheet" th:href="@{/css/welcome.css(v=20260916-theme3)}">
+    <link rel="stylesheet" th:href="@{/css/welcome-pages.css(v=20260916-theme3)}">
+    <link rel="stylesheet" th:href="@{/css/welcome-theme.css(v=20260916-theme3)}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="welcome-site">
+    <div class="container">
+        <nav th:replace="~{fragments/welcome-nav :: navbar}"></nav>
+
+        <section class="page-hero">
+            <p class="page-kicker">Guides</p>
+            <h1>Help &amp; Documentation</h1>
+            <p>Use this page to log in, find a module, and complete everyday school tasks. For a live issue, open <a href="/support">Support</a>.</p>
+        </section>
+
+        <section class="page-body help-layout">
+            <nav class="help-toc">
+                <h2>On this page</h2>
+                <a href="#getting-started">Getting started</a>
+                <a href="#demo-logins">Demo logins</a>
+                <a href="#common-tasks">Common tasks</a>
+                <a href="#roles">Roles and menus</a>
+                <a href="#faq">Frequently asked questions</a>
+            </nav>
+
+            <div class="help-content">
+                <article id="getting-started">
+                    <h2>Getting started</h2>
+                    <ol>
+                        <li>Go to <a href="/login">Login</a> and choose Admin Login for staff or User Login for student/parent.</li>
+                        <li>After login you land on a dashboard. The left sidebar is the map of the application.</li>
+                        <li>Set the current session from the header if the school year shown is wrong.</li>
+                        <li>Confirm Academics → Class and Section already contain the classes you will use. Admission Enquiry and Student Details read that class table.</li>
+                    </ol>
+                </article>
+
+                <article id="demo-logins">
+                    <h2>Demo logins</h2>
+                    <p>The login page includes shortcut buttons that fill a demo account. Use those buttons rather than guessing passwords. Typical staff usernames are:</p>
+                    <ul>
+                        <li><strong>superadmin@gmail.com</strong> — entire application</li>
+                        <li><strong>admin@gmail.com</strong> — school administration</li>
+                        <li><strong>teacher@gmail.com</strong> — teaching menus only</li>
+                        <li><strong>accountant@gmail.com</strong> — fees and finance</li>
+                        <li><strong>receptionist@gmail.com</strong> — front office</li>
+                        <li><strong>librarian@gmail.com</strong> — library</li>
+                        <li><strong>std1</strong> / <strong>parent1</strong> — student and parent portals (User Login)</li>
+                    </ul>
+                </article>
+
+                <article id="common-tasks">
+                    <h2>Common tasks</h2>
+                    <div class="task-grid">
+                        <div>
+                            <h3>Admit a student</h3>
+                            <p>Front Office → Admission Enquiry, then Student Information → Student Admission. Pick Class from the class table, complete required fields, and save.</p>
+                        </div>
+                        <div>
+                            <h3>Find a student</h3>
+                            <p>Student Information → Student Details. Choose Class (required), optional Section, then Search. Or search by name, admission number or roll number.</p>
+                        </div>
+                        <div>
+                            <h3>Collect fees</h3>
+                            <p>Fees Collection → Collect Fees. Search the student, open Collect Fees, enter payment against the fee master rows.</p>
+                        </div>
+                        <div>
+                            <h3>Mark attendance</h3>
+                            <p>Attendance → Student Attendance. Filter class and section, mark Present / Absent / Late / Half Day, then save.</p>
+                        </div>
+                        <div>
+                            <h3>Plan a lesson</h3>
+                            <p>Lesson Plan → Manage Lesson Plan. Filter class, section, subject group and subject. Use the calendar view/edit icons. Syllabus Status uses the same filter.</p>
+                        </div>
+                        <div>
+                            <h3>Send a message</h3>
+                            <p>Use Communicate for notices, email or SMS. Use the header Chat icon for private threads. Unread badges appear only for the logged-in user.</p>
+                        </div>
+                    </div>
+                </article>
+
+                <article id="roles">
+                    <h2>Roles and menus</h2>
+                    <p>Menus are role-based. If you cannot see a screen, you are logged in as a role that does not include it. Super Admin can open everything, including CBSE Setting. Teachers see teaching menus and a read-only Class Teacher list. Accountants see finance. Receptionists see Front Office. Librarians see Library.</p>
+                    <p>Full module list: <a href="/features">Features</a>. Process overview: <a href="/how-it-works">How it Works</a>.</p>
+                </article>
+
+                <article id="faq">
+                    <h2>Frequently asked questions</h2>
+                    <details>
+                        <summary>The Class dropdown is empty.</summary>
+                        <p>Add classes under Academics → Class. Admission Enquiry and Student Details load names from that table.</p>
+                    </details>
+                    <details>
+                        <summary>The dashboard looks empty after login.</summary>
+                        <p>Confirm you are Super Admin or Admin for the full dashboard. Hard-refresh the page. If the site was just deployed, wait for the server rebuild to finish.</p>
+                    </details>
+                    <details>
+                        <summary>A teacher cannot edit a form.</summary>
+                        <p>Several screens are list-only for teachers (for example Class Teacher assignment and some exam settings). Log in as Super Admin or Admin to change them.</p>
+                    </details>
+                    <details>
+                        <summary>Chat shows other people’s conversations.</summary>
+                        <p>It should not. Each user only sees threads they own. If you still see extra contacts, log out and in again so the latest chat privacy rules load.</p>
+                    </details>
+                    <details>
+                        <summary>I forgot a password.</summary>
+                        <p>Use Forgot Password on the login page, or ask Super Admin to reset the staff record. Demo accounts can be filled from the shortcut buttons on Login.</p>
+                    </details>
+                </article>
+            </div>
+        </section>
+
+        <footer th:replace="~{fragments/welcome-nav :: footer}"></footer>
+    </div>
+    <div th:replace="~{fragments/language-i18n-init :: language-i18n-init}"></div>
+</body>
+</html>

@@ -462,15 +462,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     initDashboardCharts();
 
-    // Hamburger menu toggle functionality
-    const hamburgerBtn = document.querySelector('.hamburger-btn');
-    const sidebar = document.querySelector('.sidebar');
-
-    if (hamburgerBtn && sidebar) {
-        hamburgerBtn.addEventListener('click', function() {
-            sidebar.classList.toggle('collapsed');
-        });
-    }
+    /* Sidebar toggle: sidebar-mobile.js (loaded via theme-init.js) */
 
     function findSubmenu(expandable) {
         const wrapper = expandable.closest('.menu-item-wrapper, .submenu-group');

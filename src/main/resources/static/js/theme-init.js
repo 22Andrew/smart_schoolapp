@@ -330,9 +330,12 @@
 
     ensureTableToolbarScript();
     ensureCurrencyScript();
+    ensureResponsiveStylesheet();
 
     document.addEventListener('DOMContentLoaded', function () {
         ensureThemeOverridesStylesheet();
+        ensureResponsiveStylesheet();
+        ensureSidebarMobileScript();
         window.applyBackendTheme();
         ensureTableToolbarScript();
         ensureCurrencyScript();
@@ -346,12 +349,37 @@
             link = document.createElement('link');
             link.id = 'app-theme-overrides';
             link.rel = 'stylesheet';
-            link.href = '/css/app-theme-overrides.css';
+            link.href = '/css/app-theme-overrides.css?v=20260916-report-bg2';
         }
         document.head.appendChild(link);
         ensureProfileDocumentsStylesheet();
         ensureProfileTimelineStylesheet();
         ensureProfileBehaviourStylesheet();
+    }
+
+    function ensureResponsiveStylesheet() {
+        if (document.getElementById('app-responsive-css')) {
+            return;
+        }
+        var link = document.createElement('link');
+        link.id = 'app-responsive-css';
+        link.rel = 'stylesheet';
+        link.href = '/css/app-responsive.css?v=20260916-mobile1';
+        document.head.appendChild(link);
+    }
+
+    function ensureSidebarMobileScript() {
+        if (!document.querySelector('.sidebar') || !document.querySelector('.hamburger-btn')) {
+            return;
+        }
+        if (document.getElementById('app-sidebar-mobile')) {
+            return;
+        }
+        var script = document.createElement('script');
+        script.id = 'app-sidebar-mobile';
+        script.src = '/js/sidebar-mobile.js?v=20260916-mobile1';
+        script.async = false;
+        (document.head || document.documentElement).appendChild(script);
     }
 
     function ensureProfileBehaviourStylesheet() {

@@ -838,3 +838,23 @@ html.theme-dark .uscp-page .uscp-start-btn.lesson:hover {
     background: var(--theme-primary-dark) !important;
     background-color: var(--theme-primary-dark) !important;
 }
+
+html.theme-light main.main-content[class*="report"],
+html.theme-dark main.main-content[class*="report"],
+html.theme-light main.main-content.attendance-by-date-page,
+html.theme-dark main.main-content.attendance-by-date-page,
+html.theme-light main.main-content.feesearchr-page,
+html.theme-dark main.main-content.feesearchr-page,
+html.theme-light main.main-content.income-incomesearch-page,
+html.theme-dark main.main-content.income-incomesearch-page,
+html.theme-light main.main-content.expense-searchexpense-page,
+html.theme-dark main.main-content.expense-searchexpense-page {
+    background: var(--theme-primary, #8b5cf6) !important;
+    background-color: var(--theme-primary, #8b5cf6) !important;
+}
+
+html.theme-light main.main-content.onlinecourse-report-page,
+html.theme-dark main.main-content.onlinecourse-report-page {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+}

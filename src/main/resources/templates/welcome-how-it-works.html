@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <script th:src="@{/js/theme-init.js}"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${appName} + ' - How it Works'">Smart School - How it Works</title>
+    <link rel="stylesheet" th:href="@{/css/welcome.css(v=20260916-theme3)}">
+    <link rel="stylesheet" th:href="@{/css/welcome-pages.css(v=20260916-theme3)}">
+    <link rel="stylesheet" th:href="@{/css/welcome-theme.css(v=20260916-theme3)}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="welcome-site">
+    <div class="container">
+        <nav th:replace="~{fragments/welcome-nav :: navbar}"></nav>
+
+        <section class="page-hero">
+            <p class="page-kicker">End-to-end process</p>
+            <h1>How Smart School works</h1>
+            <p>The application follows the same path a school already uses: set up the year, admit students, run the day, examine, collect fees, and report.</p>
+        </section>
+
+        <section class="page-body">
+            <ol class="process-list">
+                <li>
+                    <span class="process-num">1</span>
+                    <div>
+                        <h2>Sign in with the right panel</h2>
+                        <p>Open <a href="/login">Login</a>. Staff (Super Admin, Admin, Teacher, Accountant, Receptionist, Librarian) use Admin Login. Students and parents use User Login. Each role opens a dashboard with only the menus they are allowed to use.</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="process-num">2</span>
+                    <div>
+                        <h2>Configure the school once</h2>
+                        <p>Super Admin starts in System Setting: school name, session, roles, theme and language. Then Academics creates the live Class and Section records. Subject Groups and Subjects attach to those classes. The current session is shown in the header and is used by fees, attendance and reports.</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="process-num">3</span>
+                    <div>
+                        <h2>Bring students into the school</h2>
+                        <p>Front Office captures Admission Enquiry against a real class. When the family is ready, Student Admission creates the student, assigns class/section, fee group and login. Student Details is the search screen for that directory. Online Admission can collect applications without a front-desk form.</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="process-num">4</span>
+                    <div>
+                        <h2>Build the timetable and teaching plan</h2>
+                        <p>Assign Class Teacher links a teacher to a class. Class Timetable and Teacher Timetable show the week. Lesson Plan stores what will be taught; Manage Syllabus Status shows how far that class has progressed for a subject.</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="process-num">5</span>
+                    <div>
+                        <h2>Run the school day</h2>
+                        <p>Teachers or admin mark Student Attendance (or QR Attendance). Homework and Daily Assignment go to the class. Behaviour incidents can be assigned and later reported. Staff mark their own attendance and apply for leave. Chat and Notice Board carry messages to the people who should see them.</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="process-num">6</span>
+                    <div>
+                        <h2>Collect fees and other money</h2>
+                        <p>Fees Master defines what a class owes for the session. Collect Fees records payments, discounts and balances. Accountant dashboards show awaiting payment, monthly collection and expenses. Income and Expense heads track non-fee money. Inventory issues stock separately from fees.</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="process-num">7</span>
+                    <div>
+                        <h2>Examine and print results</h2>
+                        <p>Create an Exam Group, link exams, enter marks, then print admit cards and marksheets. CBSE Examination uses categories, terms, assessments and grades. Online Exam delivers tests in the browser. Certificates and ID cards print from the same student record.</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="process-num">8</span>
+                    <div>
+                        <h2>Support services around the student</h2>
+                        <p>Library issues books against a student or staff member. Transport assigns a route, vehicle and pickup point. Hostel assigns a room. Download Center shares files. Live Classes (Meet or Zoom) hold online sessions. Front CMS publishes the public school site. Alumni keeps former students.</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="process-num">9</span>
+                    <div>
+                        <h2>Review, report and continue the next session</h2>
+                        <p>Reports pull attendance, finance, exams, library, transport and more. Multi Branch compares sites if you run more than one campus. At year end, Promote Students moves a class forward, Fees Carry Forward keeps balances, and a new session is selected in the header.</p>
+                    </div>
+                </li>
+            </ol>
+
+            <div class="role-flow">
+                <h2>Who does which part</h2>
+                <div class="role-grid">
+                    <article>
+                        <h3>Super Admin</h3>
+                        <p>Full access. Configures settings, roles, classes, and can open every module.</p>
+                    </article>
+                    <article>
+                        <h3>Admin</h3>
+                        <p>Runs day-to-day school operations across students, academics and most reports.</p>
+                    </article>
+                    <article>
+                        <h3>Teacher</h3>
+                        <p>Sees assigned classes: attendance, lesson plan, homework, exams and student details.</p>
+                    </article>
+                    <article>
+                        <h3>Accountant</h3>
+                        <p>Fees, income, expenses, inventory and finance reports.</p>
+                    </article>
+                    <article>
+                        <h3>Receptionist</h3>
+                        <p>Front Office enquiries, visitors, calls, postal and complaints.</p>
+                    </article>
+                    <article>
+                        <h3>Librarian</h3>
+                        <p>Books, issue/return and library members.</p>
+                    </article>
+                    <article>
+                        <h3>Student / Parent</h3>
+                        <p>User Login. View homework, fees, attendance, exams and profile for that student.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <footer th:replace="~{fragments/welcome-nav :: footer}"></footer>
+    </div>
+    <div th:replace="~{fragments/language-i18n-init :: language-i18n-init}"></div>
+</body>
+</html>

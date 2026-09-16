@@ -36,7 +36,10 @@
                         <div class="form-group class-group">
                             <label for="classSelect">Class <span class="required">*</span></label>
                             <select id="classSelect" class="form-select">
-                                <option value="">Select</option>
+                                <option value="">Select the Class</option>
+                                <option th:each="schoolClass : ${schoolClasses}"
+                                        th:value="${schoolClass.id}"
+                                        th:text="${schoolClass.name}"></option>
                             </select>
                         </div>
                         <div class="form-group section-group">
@@ -386,7 +389,7 @@
     </div>
 
     <script th:src="@{/js/dashboard.js}"></script>
-    <script th:src="@{/js/student-search.js(v=20260903-11)}"></script>
+    <script th:src="@{/js/student-search.js(v=20260916-class-table)}"></script>
 </body>
 </html>
 

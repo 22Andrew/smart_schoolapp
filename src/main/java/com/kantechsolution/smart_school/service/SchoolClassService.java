@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -21,8 +23,23 @@ public class SchoolClassService {
     @Autowired
     private SchoolClassRepository schoolClassRepository;
 
+    @Transactional(readOnly = true)
     public List<SchoolClass> getAllClasses() {
         return schoolClassRepository.findAllByOrderByIdAsc();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Map<String, Object>> listClassOptions() {
+        List<Map<String, Object>> rows = new ArrayList<>();
+        for (SchoolClass schoolClass : schoolClassRepository.findAllByOrderByIdAsc()) {
+            Map<String, Object> row = new LinkedHashMap<>();
+            row.put("id", schoolClass.getId());
+            row.put("name", schoolClass.getName());
+            row.put("sections", new ArrayList<>(
+                    schoolClass.getSections() == null ? List.of() : schoolClass.getSections()));
+            rows.add(row);
+        }
+        return rows;
     }
 
     public Optional<SchoolClass> getClassById(Long id) {

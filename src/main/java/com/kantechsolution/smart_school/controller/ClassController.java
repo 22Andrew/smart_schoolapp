@@ -29,11 +29,11 @@ public class ClassController {
 
     @GetMapping("/api/classes")
     @ResponseBody
-    public ResponseEntity<List<SchoolClass>> getAllClasses() {
+    public ResponseEntity<List<Map<String, Object>>> getAllClasses() {
         try {
-            return ResponseEntity.ok(schoolClassService.getAllClasses());
+            return ResponseEntity.ok(schoolClassService.listClassOptions());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(List.of());
         }
     }
 

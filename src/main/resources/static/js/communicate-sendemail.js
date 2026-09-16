@@ -40,6 +40,7 @@ function initCKEditor() {
 
     CKEDITOR.replace('emailMessage', {
         height: 280,
+        versionCheck: false,
         removePlugins: 'elementspath',
         resize_enabled: false
     });

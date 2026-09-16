@@ -100,10 +100,10 @@ function initEditors() {
         return;
     }
     if (document.getElementById('onlineAdmissionInstructions')) {
-        instructionsEditor = CKEDITOR.replace('onlineAdmissionInstructions', { height: 220 });
+        instructionsEditor = CKEDITOR.replace('onlineAdmissionInstructions', { height: 220, versionCheck: false });
     }
     if (document.getElementById('onlineAdmissionTerms')) {
-        termsEditor = CKEDITOR.replace('onlineAdmissionTerms', { height: 220 });
+        termsEditor = CKEDITOR.replace('onlineAdmissionTerms', { height: 220, versionCheck: false });
     }
 }
 

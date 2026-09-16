@@ -2,15 +2,7 @@
     'use strict';
 
     function initSidebarToggle() {
-        var hamburger = document.querySelector('.hamburger-btn');
-        var sidebar = document.querySelector('.sidebar');
-        if (!hamburger || !sidebar) {
-            return;
-        }
-
-        hamburger.addEventListener('click', function () {
-            sidebar.classList.toggle('collapsed');
-        });
+        /* Handled by sidebar-mobile.js (theme-init.js) */
     }
 
     function initSubmenus() {

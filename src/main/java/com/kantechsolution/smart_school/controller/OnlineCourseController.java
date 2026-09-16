@@ -5,6 +5,7 @@ import com.kantechsolution.smart_school.service.OnlineCourseCertificateTemplateS
 import com.kantechsolution.smart_school.service.OnlineCourseManageService;
 import com.kantechsolution.smart_school.service.OnlineCourseOfflinePaymentService;
 import com.kantechsolution.smart_school.service.OnlineCoursePurchaseService;
+import com.kantechsolution.smart_school.service.OnlineCourseReportDataService;
 import com.kantechsolution.smart_school.service.OnlineCourseQuestionService;
 import com.kantechsolution.smart_school.service.OnlineCourseQuestionTagService;
 import com.kantechsolution.smart_school.service.OnlineCourseService;
@@ -44,6 +45,9 @@ public class OnlineCourseController {
 
     @Autowired
     private OnlineCoursePurchaseService onlineCoursePurchaseService;
+
+    @Autowired
+    private OnlineCourseReportDataService onlineCourseReportDataService;
 
     @Autowired
     private OnlineCourseCategoryService onlineCourseCategoryService;
@@ -191,6 +195,70 @@ public class OnlineCourseController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(errorBody("Failed to load course purchase report"));
+        }
+    }
+
+    @GetMapping("/api/online-course-reports/ratings")
+    @ResponseBody
+    public ResponseEntity<?> getCourseRatingReport() {
+        try {
+            return ResponseEntity.ok(onlineCourseReportDataService.getRatingReport());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorBody("Failed to load course rating report"));
+        }
+    }
+
+    @GetMapping("/api/online-course-reports/ratings/details")
+    @ResponseBody
+    public ResponseEntity<?> getCourseRatingDetails(
+            @RequestParam(required = false) Long courseId,
+            @RequestParam(required = false) String title
+    ) {
+        try {
+            return ResponseEntity.ok(onlineCourseReportDataService.getRatingDetails(courseId, title));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorBody("Failed to load rating details"));
+        }
+    }
+
+    @DeleteMapping("/api/online-course-reports/ratings/details/{id}")
+    @ResponseBody
+    public ResponseEntity<?> deleteCourseRatingDetail(@PathVariable Long id) {
+        try {
+            onlineCourseReportDataService.deleteRatingReview(id);
+            return ResponseEntity.ok(Map.of("success", true));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(errorBody(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorBody("Failed to delete rating"));
+        }
+    }
+
+    @GetMapping("/api/online-course-reports/guests")
+    @ResponseBody
+    public ResponseEntity<?> getGuestReport() {
+        try {
+            return ResponseEntity.ok(onlineCourseReportDataService.getGuestReport());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorBody("Failed to load guest report"));
+        }
+    }
+
+    @DeleteMapping("/api/online-course-reports/guests/{id}")
+    @ResponseBody
+    public ResponseEntity<?> deleteGuest(@PathVariable Long id) {
+        try {
+            onlineCourseReportDataService.deleteGuest(id);
+            return ResponseEntity.ok(Map.of("success", true));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(errorBody(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errorBody("Failed to delete guest"));
         }
     }
 

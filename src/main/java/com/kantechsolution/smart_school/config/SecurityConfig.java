@@ -45,7 +45,8 @@ public class SecurityConfig {
                 .requestMatchers("/site/forgotpassword", "/forgot-password", "/site/resetpassword/**", "/reset-password/**").permitAll()
                 .requestMatchers("/user/**").hasAnyRole("STUDENT", "PARENT")
                 .requestMatchers("/", "/home", "/login", "/perform-login", "/logout", "/css/**", "/js/**",
-                        "/images/**", "/uploads/**", "/about", "/features", "/contact", "/register").permitAll()
+                        "/images/**", "/uploads/**", "/about", "/features", "/how-it-works", "/help",
+                        "/support", "/contact", "/register").permitAll()
                 .requestMatchers("/api/schsettings/branding").permitAll()
                 .requestMatchers("/api/schsettings/login-background").permitAll()
                 .requestMatchers("/api/schsettings/backend-theme").permitAll()

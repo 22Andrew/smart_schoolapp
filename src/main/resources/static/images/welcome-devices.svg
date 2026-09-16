@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" fill="none" aria-hidden="true">
+    <ellipse cx="360" cy="430" rx="170" ry="18" fill="#0b0d1c" opacity="0.55"/>
+    <rect x="148" y="42" width="380" height="268" rx="28" fill="#7b6cff"/>
+    <rect x="162" y="56" width="352" height="240" rx="18" fill="url(#screenGrad)"/>
+    <rect x="178" y="78" width="78" height="196" rx="12" fill="#5b4fd6" opacity="0.85"/>
+    <rect x="272" y="78" width="224" height="92" rx="12" fill="#c4b8ff" opacity="0.55"/>
+    <rect x="272" y="182" width="224" height="92" rx="12" fill="#9d8eff" opacity="0.7"/>
+    <rect x="300" y="310" width="76" height="18" rx="4" fill="#6d63e8"/>
+    <rect x="250" y="326" width="176" height="10" rx="5" fill="#4c46a8"/>
+    <rect x="220" y="248" width="168" height="214" rx="26" fill="#6f63f2"/>
+    <rect x="232" y="268" width="144" height="168" rx="16" fill="url(#tabletGrad)"/>
+    <circle cx="304" cy="448" r="10" fill="#3d3a8a"/>
+    <rect x="458" y="196" width="92" height="168" rx="18" fill="#7a6ef0"/>
+    <rect x="466" y="208" width="76" height="132" rx="12" fill="url(#phoneGrad)"/>
+    <circle cx="504" cy="352" r="6" fill="#3d3a8a"/>
+    <defs>
+        <linearGradient id="screenGrad" x1="162" y1="56" x2="514" y2="296" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#9b8cff"/>
+            <stop offset="1" stop-color="#6a5af0"/>
+        </linearGradient>
+        <linearGradient id="tabletGrad" x1="232" y1="268" x2="376" y2="436" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#8f82ff"/>
+            <stop offset="1" stop-color="#5e52e4"/>
+        </linearGradient>
+        <linearGradient id="phoneGrad" x1="466" y1="208" x2="542" y2="340" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#8b7dff"/>
+            <stop offset="1" stop-color="#6458e8"/>
+        </linearGradient>
+    </defs>
+</svg>

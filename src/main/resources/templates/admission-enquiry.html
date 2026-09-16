@@ -35,9 +35,12 @@
                 <form class="criteria-form">
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="class">Class</label>
-                            <select id="class" class="form-select">
-                                <option value="">Select</option>
+                            <label for="enquiryClassFilter">Class</label>
+                            <select id="enquiryClassFilter" class="form-select">
+                                <option value="">Select the Class</option>
+                                <option th:each="schoolClass : ${schoolClasses}"
+                                        th:value="${schoolClass.name}"
+                                        th:text="${schoolClass.name}"></option>
                             </select>
                         </div>
 
@@ -308,7 +311,10 @@
                         <div class="form-group-modal">
                             <label for="enquiryClass">Class</label>
                             <select id="enquiryClass" name="className" class="form-select-modal">
-                                <option value="">Select</option>
+                                <option value="">Select the Class</option>
+                                <option th:each="schoolClass : ${schoolClasses}"
+                                        th:value="${schoolClass.name}"
+                                        th:text="${schoolClass.name}"></option>
                             </select>
                         </div>
                         <div class="form-group-modal">
@@ -1189,15 +1195,24 @@
 
             let schoolClasses = [];
 
+            function classOptionName(schoolClass) {
+                if (!schoolClass) return '';
+                return String(schoolClass.name || schoolClass.className || '').trim();
+            }
+
             function populateClassSelect(selectEl, selectedValue) {
                 if (!selectEl) return;
-                selectEl.innerHTML = '<option value="">Select</option>';
-                schoolClasses.forEach(function (schoolClass) {
-                    const option = document.createElement('option');
-                    option.value = schoolClass.name;
-                    option.textContent = schoolClass.name;
-                    selectEl.appendChild(option);
-                });
+                if (schoolClasses.length) {
+                    selectEl.innerHTML = '<option value="">Select the Class</option>';
+                    schoolClasses.forEach(function (schoolClass) {
+                        const name = classOptionName(schoolClass);
+                        if (!name) return;
+                        const option = document.createElement('option');
+                        option.value = name;
+                        option.textContent = name;
+                        selectEl.appendChild(option);
+                    });
+                }
                 if (selectedValue) {
                     selectEl.value = selectedValue;
                     if (selectEl.value !== selectedValue) {
@@ -1219,9 +1234,15 @@
                         return response.json();
                     })
                     .then(function (classes) {
-                        schoolClasses = Array.isArray(classes) ? classes : [];
-                        populateClassSelect(document.getElementById('class'), '');
-                        populateClassSelect(document.getElementById('enquiryClass'), '');
+                        const rows = Array.isArray(classes) ? classes : [];
+                        if (!rows.length) {
+                            return;
+                        }
+                        schoolClasses = rows;
+                        const classFilter = document.getElementById('enquiryClassFilter');
+                        const enquiryClass = document.getElementById('enquiryClass');
+                        populateClassSelect(classFilter, classFilter ? classFilter.value : '');
+                        populateClassSelect(enquiryClass, enquiryClass ? enquiryClass.value : '');
                     })
                     .catch(function (error) {
                         console.error('Error loading classes:', error);
@@ -1839,7 +1860,7 @@
             
             // 1. Criteria Form Search (Filter functionality)
             const criteriaForm = document.querySelector('.criteria-form');
-            const classSelect = document.getElementById('class');
+            const classSelect = document.getElementById('enquiryClassFilter');
             const sourceSelect = document.getElementById('source');
             const enquiryFromDate = document.getElementById('enquiryFromDate');
             const enquiryToDate = document.getElementById('enquiryToDate');
