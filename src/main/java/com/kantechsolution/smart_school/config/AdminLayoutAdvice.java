@@ -94,7 +94,11 @@ public class AdminLayoutAdvice {
 
     @ModelAttribute("chatUnreadCount")
     public long chatUnreadCount() {
-        return chatService.unreadCount();
+        try {
+            return chatService.unreadCount();
+        } catch (RuntimeException ex) {
+            return 0L;
+        }
     }
 
     @ModelAttribute("chatPageActive")

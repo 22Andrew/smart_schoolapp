@@ -262,7 +262,7 @@
         </main>
 
         <!-- Admin / Super Admin dashboard -->
-        <main th:if="${dashboardLayout == 'admin'}" class="main-content admin-dashboard-main admin-full-dashboard-main">
+        <main th:if="${dashboardLayout == null or dashboardLayout == 'admin'}" class="main-content admin-dashboard-main admin-full-dashboard-main">
             <div class="admin-full-mini-stats">
                 <div class="admin-full-mini-stats-row">
                 <div class="accountant-mini-stat">
@@ -784,6 +784,6 @@
         };
     </script>
     <script th:src="@{/js/language-picker.js(v=20260831-4)}"></script>
-    <script th:src="@{/js/dashboard.js(v=20260903-11)}"></script>
+    <script th:src="@{/js/dashboard.js(v=20260916-superadmin-dashboard)}"></script>
 </body>
 </html>

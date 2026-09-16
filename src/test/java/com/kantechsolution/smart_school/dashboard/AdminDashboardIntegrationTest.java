@@ -25,6 +25,14 @@ class AdminDashboardIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "superadmin@gmail.com", roles = "SUPER_ADMIN")
+    void superAdminDashboardRenders() throws Exception {
+        mockMvc.perform(get("/admin/admin/dashboard"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("dashboard"));
+    }
+
+    @Test
     @WithMockUser(username = TestAccounts.DEMO_ADMIN, roles = "ADMIN")
     void chatPageRenders() throws Exception {
         mockMvc.perform(get("/admin/chat"))

@@ -2104,6 +2104,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         const selectedMenus = settings.selectedMenus || [];
+        if (!selectedMenus.length) {
+            return;
+        }
         const selectedSlugs = new Set(selectedMenus.map(function (menu) { return menu.slug; }));
         const submenusByParent = settings.submenus || {};
 

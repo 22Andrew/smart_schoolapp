@@ -122,6 +122,7 @@ public class AdminDashboardService {
 
     @Transactional(readOnly = true)
     public void populateDashboard(Model model, Authentication authentication) {
+        model.addAttribute("dashboardLayout", "admin");
         loginPageService.populateLoginModel(model);
         model.addAttribute("appName", model.getAttribute("schoolName"));
         model.addAttribute("currentSession", academicSessionService.getCurrentSessionName());
@@ -168,13 +169,17 @@ public class AdminDashboardService {
         model.addAttribute("staffPresentTodayPercent", formatPercent(percent(displayStaffPresent, totalStaff)));
         model.addAttribute("totalTeachers", countStaffByRole(activeStaff, "Teacher"));
 
+        boolean superAdminLayout = authentication != null && roleSidebarMenuService.isSuperAdmin(authentication);
         boolean teacherLayout = authentication != null && roleSidebarMenuService.isTeacher(authentication);
         boolean receptionistLayout = authentication != null && roleSidebarMenuService.isReceptionist(authentication);
         boolean accountantLayout = authentication != null && roleSidebarMenuService.isAccountant(authentication);
         boolean librarianLayout = authentication != null && roleSidebarMenuService.isLibrarian(authentication);
         boolean adminLayout = authentication != null && roleSidebarMenuService.isAdminDashboardUser(authentication);
 
-        if (teacherLayout) {
+        if (superAdminLayout) {
+            model.addAttribute("dashboardLayout", "admin");
+            populateAdminDashboard(model, today, activeStaff, studentHeadCount);
+        } else if (teacherLayout) {
             model.addAttribute("dashboardLayout", "teacher");
         } else if (receptionistLayout) {
             model.addAttribute("dashboardLayout", "receptionist");
