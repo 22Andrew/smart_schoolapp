@@ -120,9 +120,16 @@ public class AdminDashboardService {
         this.libraryRepository = libraryRepository;
     }
 
-    @Transactional(readOnly = true)
     public void populateDashboard(Model model, Authentication authentication) {
         model.addAttribute("dashboardLayout", "admin");
+        try {
+            populateDashboardBody(model, authentication);
+        } catch (RuntimeException ex) {
+            populateAdminDashboardFallbacks(model);
+        }
+    }
+
+    private void populateDashboardBody(Model model, Authentication authentication) {
         loginPageService.populateLoginModel(model);
         model.addAttribute("appName", model.getAttribute("schoolName"));
         model.addAttribute("currentSession", academicSessionService.getCurrentSessionName());
@@ -178,7 +185,7 @@ public class AdminDashboardService {
 
         if (superAdminLayout) {
             model.addAttribute("dashboardLayout", "admin");
-            populateAdminDashboard(model, today, activeStaff, studentHeadCount);
+            populateAdminDashboardSafely(model, today, activeStaff, studentHeadCount);
         } else if (teacherLayout) {
             model.addAttribute("dashboardLayout", "teacher");
         } else if (receptionistLayout) {
@@ -192,11 +199,58 @@ public class AdminDashboardService {
             populateAccountantCharts(model, today, activeStaff, studentHeadCount);
         } else if (adminLayout) {
             model.addAttribute("dashboardLayout", "admin");
-            populateAdminDashboard(model, today, activeStaff, studentHeadCount);
+            populateAdminDashboardSafely(model, today, activeStaff, studentHeadCount);
         } else {
             model.addAttribute("dashboardLayout", "admin");
-            populateAdminDashboard(model, today, activeStaff, studentHeadCount);
+            populateAdminDashboardSafely(model, today, activeStaff, studentHeadCount);
         }
+    }
+
+    private void populateAdminDashboardSafely(Model model, LocalDate today, List<StaffMember> activeStaff, long studentHeadCount) {
+        try {
+            populateAdminDashboard(model, today, activeStaff, studentHeadCount);
+        } catch (RuntimeException ex) {
+            populateAdminDashboardFallbacks(model);
+        }
+    }
+
+    private void populateAdminDashboardFallbacks(Model model) {
+        model.addAttribute("feesAwaitingLabel", "0/0");
+        model.addAttribute("feesAwaitingPercent", 0.0);
+        model.addAttribute("staffApprovedLeaveLabel", "0/0");
+        model.addAttribute("staffApprovedLeavePercent", 0.0);
+        model.addAttribute("studentApprovedLeaveLabel", "0/0");
+        model.addAttribute("studentApprovedLeavePercent", 0.0);
+        model.addAttribute("staffPresentTodayLabel", "0/0");
+        model.addAttribute("staffPresentTodayPercent", 0.0);
+        model.addAttribute("studentPresentTodayLabel", "0/0");
+        model.addAttribute("studentPresentTodayPercent", 0.0);
+        model.addAttribute("studentTodayAttendance", List.of());
+        model.addAttribute("totalStudents", 0L);
+        model.addAttribute("studentHeadCount", 0L);
+        model.addAttribute("totalTeachers", 0L);
+        model.addAttribute("totalStaff", 0L);
+        model.addAttribute("dashboardMonthTitle", "");
+        model.addAttribute("dashboardSessionTitle", "");
+        model.addAttribute("feesOverview", List.of());
+        model.addAttribute("enquiryOverview", List.of());
+        model.addAttribute("libraryOverview", List.of());
+        model.addAttribute("monthlyFeesCollection", "0");
+        model.addAttribute("monthlyExpensesTotal", "0");
+        model.addAttribute("totalAdmins", 0L);
+        model.addAttribute("totalAccountants", 0L);
+        model.addAttribute("totalLibrarians", 0L);
+        model.addAttribute("totalReceptionists", 0L);
+        model.addAttribute("chartDayLabels", List.of());
+        model.addAttribute("chartDailyFees", List.of());
+        model.addAttribute("chartDailyExpenses", List.of());
+        model.addAttribute("chartSessionMonths", Arrays.asList(SESSION_MONTHS));
+        model.addAttribute("chartSessionFees", List.of());
+        model.addAttribute("chartSessionExpenses", List.of());
+        model.addAttribute("chartIncomeLabels", List.of());
+        model.addAttribute("chartIncomeValues", List.of());
+        model.addAttribute("chartExpenseLabels", List.of());
+        model.addAttribute("chartExpenseValues", List.of());
     }
 
     private void populateAdminDashboard(Model model, LocalDate today, List<StaffMember> activeStaff, long studentHeadCount) {

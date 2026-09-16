@@ -17,7 +17,13 @@ public class AdminDashboardController {
 
     @GetMapping({"/dashboard", "/dashboard/"})
     public String dashboard(Model model, Authentication authentication) {
-        adminDashboardService.populateDashboard(model, authentication);
+        try {
+            adminDashboardService.populateDashboard(model, authentication);
+        } catch (RuntimeException ex) {
+            if (model.getAttribute("dashboardLayout") == null) {
+                model.addAttribute("dashboardLayout", "admin");
+            }
+        }
         return "dashboard";
     }
 }

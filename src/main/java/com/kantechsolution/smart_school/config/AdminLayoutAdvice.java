@@ -96,7 +96,7 @@ public class AdminLayoutAdvice {
     public long chatUnreadCount() {
         try {
             return chatService.unreadCount();
-        } catch (RuntimeException ex) {
+        } catch (Exception ex) {
             return 0L;
         }
     }

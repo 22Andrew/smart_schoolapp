@@ -118,7 +118,7 @@
                     <span id="chatUnreadBadge"
                           class="notification-badge chat-unread-badge"
                           th:classappend="${chatUnreadCount == null or chatUnreadCount == 0} ? ' is-empty' : ''"
-                          th:text="${chatUnreadCount != null and chatUnreadCount > 0} ? (chatUnreadCount > 99 ? '99+' : chatUnreadCount) : ''"
+                          th:text="${(chatUnreadCount != null and chatUnreadCount > 0) ? (chatUnreadCount > 99 ? '99+' : chatUnreadCount) : ''}"
                           th:attr="hidden=${chatUnreadCount == null or chatUnreadCount == 0}, aria-hidden=${chatUnreadCount == null or chatUnreadCount == 0}"></span>
                 </a>
 
